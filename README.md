@@ -2,7 +2,8 @@
 
 This project provides a workflow for processing ALTO XML files with NLP services. It takes raw ALTO 
 XMLs and transforms them into structured statistics tables and extracts high-level linguistic features like 
-Named Entities (NER) with tags and CONLL-U files with lemmas & part-of-sentence tags.
+Named Entities (NER) with tags and CONLL-U files with lemmas & part-of-sentence tags, and extraction of 
+keywords (KER) per document.
 
 ---
 
