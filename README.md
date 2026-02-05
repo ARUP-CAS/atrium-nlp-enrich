@@ -297,7 +297,7 @@ where short flag meanings are (listed in the same order as used above):
 * **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
 
 This process creates `.csv` table with the columns like `file`, and pairs of `kw-<N>` (N-th keyword)) 
-and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_master.csv](keywords_master.csv) 📎.
+and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_master.csv](data_samples/keywords_master.csv) 📎.
 
 Example of per-document CSV file with keywords: [KW_PER_DOC](data_samples/KW_PER_DOC) 📁.
 
