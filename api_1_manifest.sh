@@ -3,16 +3,16 @@ source ./api_util/api_common.sh
 
 echo "=========================================="
 echo " STEP 1: MANIFEST GENERATION (CSV INGEST)"
-echo " Source: ../../ARUP/DOC_LINE_LANG_CLASS"
+echo " Source: ../../ARUB/DOC_LINE_LANG_CLASS"
 echo "=========================================="
 
 # 1. Configuration
 # We hardcode the input location relative to where the script runs
-INPUT_DIR="../../ARUP/DOC_LINE_LANG_CLASS"
+#INPUT_DIR="../../ARUB/DOC_LINE_LANG_CLASS"
 
 # We create a cache directory for the extracted text
 TEXT_CACHE_DIR="$WORK_DIR/TEXT_CACHE"
-MANIFEST="$WORK_DIR/manifest.tsv"
+MANIFEST="$OUTPUT_DIR/manifest.tsv"
 
 mkdir -p "$WORK_DIR" "$TEXT_CACHE_DIR"
 
@@ -118,3 +118,4 @@ echo "Please run ./api_2_udp.sh next."
 #echo "Done. Please run ./api_2_udp.sh next."
 #
 #
+

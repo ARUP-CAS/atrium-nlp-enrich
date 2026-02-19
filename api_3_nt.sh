@@ -14,7 +14,7 @@ count=0
 # Define chunk size (lines). 3000 lines is usually safe (~500KB - 1MB depending on density)
 CHUNK_SIZE=3000
 
-for conllu_file in "$WORK_DIR/UDPIPE"/*.conllu; do
+for conllu_file in "$OUTPUT_DIR/UDP"/*.conllu; do
     [ -e "$conllu_file" ] || continue
 
     filename=$(basename "$conllu_file")

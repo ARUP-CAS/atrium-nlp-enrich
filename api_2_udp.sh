@@ -9,8 +9,8 @@ echo " Model: $MODEL_UDPIPE"
 echo "=========================================="
 
 # 2. Setup Directories
-mkdir -p "$WORK_DIR/UDPIPE" "$WORK_DIR/CHUNKS"
-MANIFEST="$WORK_DIR/manifest.tsv"
+mkdir -p "$OUTPUT_DIR/UDP" "$WORK_DIR/CHUNKS"
+MANIFEST="$OUTPUT_DIR/manifest.tsv"
 
 # 3. Check Manifest (Dependence Maintained)
 if [ ! -f "$MANIFEST" ]; then
@@ -74,7 +74,7 @@ find "$INPUT_DIR" -name "*.csv" | sort | while read csv_file; do
 
     # Extract ID (filename without extension, e.g., CTX193202973)
     doc_id=$(basename "$csv_file" .csv)
-    final_conllu="$OUTPUT_DIR/${doc_id}.conllu"
+    final_conllu="$OUTPUT_DIR/UDP/${doc_id}.conllu"
 
     # Skip if output already exists and is not empty (Resume capability)
     if [ -s "$final_conllu" ]; then

@@ -5,7 +5,7 @@ echo "=========================================="
 echo " STEP 4: SUMMARIZATION & STATISTICS"
 echo "=========================================="
 
-INPUT_UDP_DIR="$WORK_DIR/UDPIPE"
+INPUT_UDP_DIR="$OUTPUT_DIR/UDP"
 INPUT_TSV_DIR="$OUTPUT_DIR/NE"
 SUMMARY_OUT_DIR="$OUTPUT_DIR/UDP_NE"
 STATS_FILE="$OUTPUT_DIR/summary_ne_counts.csv"
