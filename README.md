@@ -16,13 +16,7 @@ Before you begin, set up your environment.
     ```bash
     pip install -r requirements.txt
     ```
-3.  Clone and install `alto-tools` 🔧, which is used for statistics and text extraction:
-    ```bash
-    git clone https://github.com/cneud/alto-tools.git
-    cd alto-tools
-    pip install .
-    cd .. 
-    ```
+3. Review and update the [config_api.env](config_api.env) 📎 file with your specific paths and API configurations.
 You are now ready to start the workflow.
 
 ---
@@ -32,60 +26,39 @@ You are now ready to start the workflow.
 The process is divided into sequential steps, starting from raw ALTO files and ending 
 with extracted linguistic and statistic data.
 
-### ▶ Step 1: Prepare text files from Page-Specific ALTOs
+### ▶ Step 1: Prepare CSVs with texts from Page-Specific ALTOs
 
 > [!IMPORTANT]
-> If you already have a directory of extracted text files from ALTO XMLs, 
-> you can skip Step 1 and proceed directly to Step 2.
+> If you already have a directory of CSV tables with `text` column containing extracted text
+> files from ALTO XMLs, you can skip Step 1 and proceed directly to Step 2.
 
-First, ensure you have a directory 📁 containing your page-level `<file>.alto.xml` files: 
+The `../CSVS_with_TEXT/` directory mentioned later is the result of ALTO XML postprocessing pipeline described 
+in the separate repository [^2]. It contains document-specific CSV files with the `text` column containing 
+extracted textual content from the ALTO XML files. Each CSV file corresponds to a document and contains rows
+for each page with a line number column for the proper ordering (`page_num` and `line_num`).
+
 ```
-PAGE_ALTO/
-├── <file1>
-│   ├── <file1>-<page>.alto.xml 
-│   └── ...
-├── <file2>
-│   ├── <file2>-<page>.alto.xml 
-│   └── ...
+CSVS_with_TEXT/
+├── docname1.csv
+├── document2.csv
 └── ...
 ```
-Each page-specific file retains the header from its original source document. Then run:
-
-    python3 api_0_extract_TXT.py
-
-The script uses the directory as input to generate a foundational CSV 
-statistics file, capturing metadata (counts of XML elements like texts, graphics, etc) 
-for each page (e.g. `alto_statistics.csv`):
-
-    file, page, textlines, illustrations, graphics, strings, path
-    CTX200205348, 1, 33, 1, 10, 163, /lnet/.../A-PAGE/CTX200205348/CTX200205348-1.alto.xml
-    CTX200205348, 2, 0, 1, 12, 0, /lnet/.../A-PAGE/CTX200205348/CTX200205348-2.alto.xml
-    ...
-
-
-The next part of the script runs in parallel (using multiple **CPU** cores) to extract text from 
-ALTO XMLs into `.txt` files. It reads the CSV with stats and process paths into output text files. 
-The extraction is powered by the **alto-tools** framework [^1].
-
-
-* **Input:** `../PAGE_ALTO/` (directory containing per-page ALTO XML files)
-* **Output 1:** `alto_statistics.csv` (table of page-level statistics and ALTO file paths)
-* **Output 2:** `../PAGE_TXT/` (directory containing per-page raw text files)
-
+with the structure of each CSV file like:
 ```
-PAGE_TXT/
-├── <file1>
-│   ├── <file1>-<page>.txt 
-│   └── ...
-├── <file2>
-│   ├── <file2>-<page>.txt 
-│   └── ...
-└── ...
+file,page_num,line_num,text,split_ws,split_we,lang,lang_score,perplex,categ
+CTX201504033,1,8,2012,,,N/A,0,0,Non-text
+CTX201504033,2,2,1,,,N/A,0,0,Non-text
+CTX201504033,3,2,2,,,N/A,0,0,Non-text
+...
 ```
+Where `split_ws` and `split_we` are the start and end character offsets of the words split in the original ALTO XML.
+The `lang` and `lang_score` columns indicate the detected language and its confidence score,
+while `perplex` and `categ` provide additional metadata about the text classification.
 
 > [!TIP]
-> More about this step ypu can find in [GitHub repository](https://github.com/K4TEL/atrium-alto-postprocess.git) of ATRIUM project dedicated to ALTO XML
-> processing into TXT and collection of statistics and keywords from these files [^2]. 
+> More about this step ypu can find in [GitHub repository](https://github.com/K4TEL/atrium-alto-postprocess.git) 
+> of ATRIUM project dedicated to ALTO XML processing into TXT and collection of statistics and keywords 
+> from these files [^2].
 
 ### ▶ Step 2: Extract NER and CONLL-U
 
@@ -102,15 +75,15 @@ directory paths, API endpoints, and model selection.
 
 ```bash
 # Example settings in config_api.env
-INPUT_DIR="../PAGE_TXT"        # Source of text files (from Step 3.1)
-OUTPUT_DIR="../OUT_API"        # Destination for results
+INPUT_DIR="../OUT/CSVS_with_TEXT"        # Source of text files (from Step 3.1)
+OUTPUT_DIR="../OUT"        # Destination for results
 WORK_DIR="./TEMP"              # Working directory for intermediate files
 
 LOG_FILE="$OUTPUT_DIR/processing.log"
 
-CONLLU_INPUT_DIR="./TEMP/UDPIPE"
-TSV_INPUT_DIR="../../OUT_API/NE"
-SUMMARY_OUTPUT_DIR="../../OUT_API/NE_UDP"
+CONLLU_INPUT_DIR="$OUTPUT_DIR/UDP"
+TSV_INPUT_DIR="$OUTPUT_DIR/NE"
+SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/NE_UDP"
 
 MODEL_UDPIPE="czech-pdt-ud-2.15-241121"
 MODEL_NAMETAG="nametag3-czech-cnec2.0-240830"
@@ -134,15 +107,15 @@ Maps input text files to document IDs and page numbers to ensure correct process
 ./api_1_manifest.sh
 ```
 
-* **Input:** `../PAGE_TXT/` (raw text files in subdirectories from Step 1).
-* **Output:** `TEMP/manifest.tsv`.
+* **Input:** `../CSVS_with_TEXT/` (raw text files in subdirectories from Step 1).
+* **Output:** `OUTPUT_DIR/manifest.tsv`.
 
 Example output file [manifest.tsv](data_samples/manifest.tsv) 📎 with **file**, **page**
 number, and **path** columns. It lists all text files to be processed in the next steps.
 Run the following command to see how many pages will be processed:
 
 ```bash
-wc -l TEMP/manifest.tsv
+wc -l OUTPUT_DIR/manifest.tsv
 ```
 which returns the total number of lines (pages) in the manifest (including the header line).
 
@@ -155,19 +128,19 @@ Sends text to the UDPipe API [^5]. Large pages are automatically split into chun
 ./api_2_udp.sh
 ```
 
-* **Input 1:** `TEMP/manifest.tsv` (mapping of text files to document IDs and page numbers).
-* **Input 2:** `../PAGE_TXT/` (raw text files in subdirectories from Step 1).
-* **Output:** `TEMP/UDPIPE/*.conllu` (Intermediate per-document CoNLL-U files).
+* **Input 1:** `OUTPUT_DIR/manifest.tsv` (mapping of text files to document IDs and page numbers).
+* **Input 2:** `../CSVS_with_TEXT/` (raw text files in subdirectories from Step 1).
+* **Output:** `OUTPUT_DIR/UDP/*.conllu` (Intermediate per-document CoNLL-U files).
 
 Run the following command to see how many documents have been processed into CoNLL-U files:
 
 ```bash
-ls -l TEMP/UDPIPE/ | wc -l
+ls -l <OUTPUT_DIR>/UDP/ | wc -l
 ```
 which returns the total number of CoNLL-U files created (each file corresponds to a document).
 
 
-Example output directory [UDPIPE](data_samples%2FUDPIPE) 📁 contains per-document CoNLL-U files.
+Example output directory [UDP](data_samples%2FUDP) 📁 contains per-document CoNLL-U files.
 
 > [!TIP]
 > You can launch the next step when a portion of CoNLL-U files are ready, 
@@ -184,8 +157,7 @@ Takes the valid CoNLL-U files and passes them through the NameTag API [^6] to an
 ./api_3_nt.sh
 ```
 
-* **Input 1:** `TEMP/manifest.tsv` (mapping of text files to document IDs and page numbers).
-* **Input 2:** `TEMP/UDPIPE/*.conllu` (Intermediate per-document CoNLL-U files).
+* **Input:** `OUTPUT_DIR/UDP/*.conllu` (Intermediate per-document CoNLL-U files).
 * **Output:** `OUTPUT_DIR/NE/*/*.tsv` (NE annotated per-page files)
 
 Run the following command to see how many documents have been processed into TSV files:
@@ -208,7 +180,7 @@ into human-readable categories (e.g., "Geographical name", "First name", "Compan
 ```
 
 * **Input 1:** `OUTPUT_DIR/NE/*/*.tsv` (NE annotated per-page files).
-* **Input 2:** `TEMP/UDPIPE/*.conllu` (Intermediate per-document CoNLL-U files).
+* **Input 2:** `OUTPUT_DIR/UDP/*.conllu` (Intermediate per-document CoNLL-U files).
 * **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv`.
 * **Output 2:** `OUTPUT_DIR/UDP_NE/*/*.csv` (per-page CSV files with NE and UDPipe features).
 
@@ -229,15 +201,10 @@ Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-page 
 After completing the pipeline, your working and output directories will be organized as follows:
 ```
 TEMP/
-├── UDPIPE/  
-│   ├── <doc_id>.conllu
-│   ├── <doc_id>.conllu
-│   └── ...
 ├── CHUNKS/
 │   └── ...
 ├── nametag_response_docname1.conllu.json
-├── ...
-└── manifest.tsv
+└── ...
 ```
 AND
 ```
@@ -250,6 +217,10 @@ AND
 │   │   ├── <doc_id>-<page_num>.csv     
 │   │   └── ...
 │   └── ...
+├── UDP/  
+│   ├── <doc_id>.conllu
+│   ├── <doc_id>.conllu
+│   └── ...
 ├── NE/           
 │   ├── <doc_id>     
 │   │   ├── <doc_id>-<page_num>.tsv     
@@ -259,14 +230,16 @@ AND
 │   │   └── ...
 │   └── ...
 ├── processing.log
-└── summary_ne_counts.csv  
+├── summary_ne_counts.csv  
+└── manifest.tsv
+
 ```
 
 The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎 contains aggregated Named Entity 
 statistics across all processed pages.
 
 > [!NOTE]
-> Now you can delete `UDPIPE/` from `TEMP/` if you no longer need the raw CoNLL-U files.
+> Now you can delete `UDP/` from `<OUTPUT_DIR>/` if you no longer need the raw CoNLL-U files.
 > The final per-page CSV files with UDPipe features are in `<OUTPUT_DIR>/UDP_NE/`.
 
 If you do not plan to rerun any part of the pipeline, you can also delete 
@@ -275,8 +248,9 @@ the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest.tsv)
 
 ### EXTRA: Extract Keywords (KER) based on tf-idf
 
-Finally, you can extract keywords 🔎 from your text. This script runs on a directory of subdirectories with
-page-specific files `.txt` (e.g., `../PAGE_TXT/`).
+Finally, you can extract keywords 🔎 from your text. This script runs on a directory of
+document-specific files `.csv` (e.g., `../CSVS_with_TEXT/`) with `text` column holding document text
+contents ordered by page and line numbers.
 
     python3 keywords.py -i <input_dir> -l <lang> -w <integer> -n <integer> -d <output_dir> -o <output_file>.csv
 
@@ -292,7 +266,7 @@ where short flag meanings are (listed in the same order as used above):
 > [!WARNING]
 > Make sure KER data (tf-idf table per language) is stored in [ker_data](ker_data) 📁 before running this script.
 
-* **Input:** `../PAGE_TXT/` (directory with page-specific text files from Step 3)
+* **Input:** `../CSVS_with_TEXT/` (directory with page-specific text files from Step 3)
 * **Output 1:** `keywords_master.csv` (summary table with keywords per document)
 * **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
 

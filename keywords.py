@@ -2,7 +2,6 @@ import os
 import csv
 import argparse
 import sys
-import re
 import multiprocessing
 import shutil
 from pathlib import Path
@@ -10,22 +9,41 @@ from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multi_rake import Rake
 
-
 # --- Configuration ---
-# Regex to extract Document ID from filename stem.
-ONEPAGER_DOC_REGEX = re.compile(r"(.*)[-_](\d+)$")
-
 # Default directory for individual CSV files
 DEFAULT_INDIVIDUAL_OUTPUT_DIR = "data_samples/KW_PER_DOC"
 
 
-def get_text_from_file(file_path: str) -> list[str]:
-    """Reads a text file line by line."""
+def get_text_from_csv(file_path: str) -> list[str]:
+    """Reads a CSV file, ordering the text column by page_num and line_num."""
+    rows = []
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            return [line.strip() for line in f if line.strip()]
-    except Exception:
+            reader = csv.DictReader(f)
+            for row in reader:
+                # Safely parse page and line numbers for sorting
+                try:
+                    page_num = int(row.get('page_num', 0) or 0)
+                except ValueError:
+                    page_num = 0
+
+                try:
+                    line_num = int(row.get('line_num', 0) or 0)
+                except ValueError:
+                    line_num = 0
+
+                text = row.get('text', '').strip()
+                if text:
+                    rows.append((page_num, line_num, text))
+    except Exception as e:
+        print(f"[Warning] Could not read CSV {file_path}: {e}")
         return []
+
+    # Sort primarily by page_num, then secondarily by line_num
+    rows.sort(key=lambda x: (x[0], x[1]))
+
+    # Return just the ordered text strings
+    return [row[2] for row in rows]
 
 
 def save_individual_csv(doc_id: str, keywords: list, output_dir: str):
@@ -40,7 +58,6 @@ def save_individual_csv(doc_id: str, keywords: list, output_dir: str):
     try:
         with open(file_path, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            # Header requested
             writer.writerow(["keyword", "score"])
             for kw, score in keywords:
                 writer.writerow([kw, f"{score:.2f}"])
@@ -50,10 +67,10 @@ def save_individual_csv(doc_id: str, keywords: list, output_dir: str):
 
 def process_document_task(task_data):
     """
-    Worker function to process a single document.
-    Args: task_data (tuple): (doc_id, file_paths, lang, max_w_count, chunk_size, individual_out_dir)
+    Worker function to process a single CSV document.
+    Args: task_data (tuple): (doc_id, file_path, lang, max_w_count, chunk_size, individual_out_dir)
     """
-    doc_id, file_paths, lang, max_words, chunk_size, individual_out_dir = task_data
+    doc_id, file_path, lang, max_words, chunk_size, individual_out_dir = task_data
 
     try:
         # Initialize RAKE locally per process
@@ -64,17 +81,15 @@ def process_document_task(task_data):
     aggregated_scores = defaultdict(float)
     current_lines = []
 
-    # Sort files to maintain page order
-    sorted_files = sorted(file_paths)
+    # Get ordered text lines from the CSV
+    lines = get_text_from_csv(str(file_path))
+    if not lines:
+        return None
 
-    for file_path in sorted_files:
-        lines = get_text_from_file(str(file_path))
-        if not lines:
-            continue
+    for line in lines:
+        current_lines.append(line)
 
-        current_lines.extend(lines)
-
-        # Process in chunks
+        # Process in chunks to manage memory and RAKE performance
         if len(current_lines) >= chunk_size:
             text_chunk = " ".join(current_lines)
             kw_scores = rake.apply(text_chunk)
@@ -92,10 +107,10 @@ def process_document_task(task_data):
     if not aggregated_scores:
         return None
 
-    # Sort keywords by score
+    # Sort keywords by highest score
     sorted_keywords = sorted(aggregated_scores.items(), key=lambda item: item[1], reverse=True)
 
-    # --- NEW: Write individual CSV file immediately ---
+    # Write individual CSV file immediately
     if individual_out_dir:
         save_individual_csv(doc_id, sorted_keywords, individual_out_dir)
 
@@ -121,7 +136,7 @@ def write_csv_row(output_file: str, doc_id: str, keywords: list, num_keywords: i
     for kw, score in top_kws:
         row.extend([kw, f"{score:.2f}"])
 
-    # Pad with empty strings
+    # Pad with empty strings if document has fewer keywords than requested
     missing = num_keywords - len(top_kws)
     row.extend(["", ""] * missing)
 
@@ -131,9 +146,7 @@ def write_csv_row(output_file: str, doc_id: str, keywords: list, num_keywords: i
 
 
 def sort_csv_file(csv_file: str):
-    """
-    Sorts the CSV file alphabetically by the first column (document_id).
-    """
+    """Sorts the CSV file alphabetically by the first column (document_id)."""
     print("--- Sorting Master CSV ---")
     try:
         import pandas as pd
@@ -168,64 +181,35 @@ def sort_csv_file(csv_file: str):
 
 
 def yield_document_tasks(input_dir: Path, lang: str, max_words: int, chunk_size: int, individual_out_dir: str):
-    """Generator that identifies documents and yields task data."""
+    """Generator that identifies CSV documents in the root directory and yields task data."""
     with os.scandir(input_dir) as entries:
         for entry in entries:
-            if not entry.is_dir():
-                continue
-
-            dir_name = entry.name
-            dir_path = Path(entry.path)
-
-            # CASE A: Special "onepagers" folder
-            if dir_name == "onepagers":
-                file_groups = defaultdict(list)
-                print(f"[Info] Scanning 'onepagers' directory: {dir_path}...")
-
-                with os.scandir(dir_path) as file_entries:
-                    for f_entry in file_entries:
-                        if f_entry.is_file() and f_entry.name.lower().endswith(".txt"):
-                            file_stem = Path(f_entry.name).stem
-                            match = ONEPAGER_DOC_REGEX.match(file_stem)
-                            if match:
-                                doc_id = match.group(1)
-                            else:
-                                doc_id = file_stem
-                            file_groups[doc_id].append(f_entry.path)
-
-                for doc_id, files in file_groups.items():
-                    yield (doc_id, files, lang, max_words, chunk_size, individual_out_dir)
-
-            # CASE B: Standard Document Folder
-            else:
-                files = []
-                with os.scandir(dir_path) as file_entries:
-                    for f_entry in file_entries:
-                        if f_entry.is_file() and f_entry.name.lower().endswith(".txt"):
-                            files.append(f_entry.path)
-
-                if files:
-                    yield (dir_name, files, lang, max_words, chunk_size, individual_out_dir)
+            # Look directly for CSV files
+            if entry.is_file() and entry.name.lower().endswith(".csv"):
+                # Use the filename (without extension) as the document ID
+                doc_id = Path(entry.name).stem
+                yield (doc_id, entry.path, lang, max_words, chunk_size, individual_out_dir)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Extract keywords from massive archives and save individually per document.",
+        description="Extract keywords from a directory of CSV documents and save individually and in a master file.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
-    parser.add_argument("--input_dir", "-i", default="../PAGE_TXT", help="Root directory containing document folders.")
+    # Default changed to suggest a directory of CSVs
+    parser.add_argument("--input_dir", "-i", default="../INPUT_CSVS", help="Directory containing the input CSV files.")
     parser.add_argument("--workers", "-j", type=int, default=max(1, multiprocessing.cpu_count() - 1),
                         help="Number of parallel worker processes.")
     parser.add_argument("--chunk_size", "-c", type=int, default=10000,
-                        help="Number of lines to process in one memory batch per document.")
+                        help="Number of text lines to process in one memory batch per document.")
     parser.add_argument("--num_keywords", "-n", type=int, default=10,
                         help="Number of top keywords to save per document in the MASTER file.")
     parser.add_argument("--lang", "-l", default="cs", help="Language code (e.g., 'cs', 'en').")
     parser.add_argument("--max_words", "-w", type=int, default=2, help="Maximum length (in words) of a keyword phrase.")
     parser.add_argument("--output_file", "-o", default="keywords_master.csv", help="Master summary CSV file path.")
 
-    # New Argument for individual output directory
+    # Argument for individual output directory
     parser.add_argument("--per_doc_out_dir", "-d", default=DEFAULT_INDIVIDUAL_OUTPUT_DIR,
                         help="Directory to save individual CSV files for each document.")
 
@@ -264,8 +248,10 @@ def main():
         )
 
         for task in task_generator:
+            # We map the future to the original file path instead of doc_id
+            # so we can track exactly which task finished or failed.
             future = executor.submit(process_document_task, task)
-            futures[future] = task[0]
+            futures[future] = task[0]  # task[0] is the doc_id
 
         print(f"--- Processing submitted tasks... ---")
 
