@@ -8,6 +8,75 @@ import re
 # Increase CSV field size limit just in case
 csv.field_size_limit(sys.maxsize)
 
+# --- CNEC 2.0 Type Hierarchy Mapping ---
+CNEC_TYPE_MAP = {
+    "a": "Address/Number/Time (General)",
+    "A": "Complex Address/Number/Time",
+    "ah": "Street address",
+    "at": "Phone/Fax number",
+    "az": "Zip code",
+    "g": "Geographical name (General)",
+    "G": "Geographical name (General)",
+    "g_": "Geographical name (General)",
+    "gu": "Settlement name (City/Town)",
+    "gl": "Nature/Landscape name (Mountain/River)",
+    "gq": "Urban geographical name (Street/Square)",
+    "gr": "Territorial name (State/Region)",
+    "gs": "Super-terrestrial name (Star/Planet)",
+    "gc": "States/Provinces/Regions",
+    "gt": "Continents",
+    "gh": "Hydronym (Bodies of water)",
+    "i": "Institution name (General)",
+    "i_": "Institution name (General)",
+    "I": "Institution name (General)",
+    "ia": "Conference/Contest",
+    "if": "Company/Firm",
+    "io": "Organization/Society",
+    "ic": "Cult/Educational institution",
+    "m": "Media name (General)",
+    "mn": "Periodical name (Newspaper/Magazine)",
+    "ms": "Radio/TV station",
+    "mi": "Internet links",
+    "o": "Artifact name (General)",
+    "o_": "Artifact name (General)",
+    "oa": "Cultural artifact (Book/Painting)",
+    "oe": "Measure unit",
+    "om": "Currency",
+    "or": "Directives, norms",
+    "op": "Product (General)",
+    "p": "Personal name (General)",
+    "p_": "Personal name (General)",
+    "P": "Complex personal names",
+    "pf": "First name",
+    "ps": "Surname",
+    "pm": "Second name",
+    "ph": "Nickname/Pseudonym",
+    "pc": "Inhabitant name",
+    "pd": "Academic titles",
+    "pp": "Relig./myth persons",
+    "me": "Email address",
+    "t": "Time expression (General)",
+    "T": "Complex time expressions",
+    "td": "Day",
+    "th": "Hour",
+    "tm": "Month",
+    "ty": "Year",
+    "tf": "Holiday/Feast",
+    "tt": "Time block",
+    "n": "Number expression (General)",
+    "N": "Complex number expressions",
+    "n_": "Number expression (General)",
+    "na": "Age",
+    "nb": "Volu-metric number",
+    "nc": "Cardinal number",
+    "ni": "Itemizer (1.)",
+    "no": "Ordinal number",
+    "ns": "Sport score",
+    "unk": "Unknown Type",
+    "O": "None",
+    "C": "Complex bibliographic expression",
+}
+
 
 def load_config(config_path="api_config.env"):
     if not os.path.exists(config_path):
@@ -26,6 +95,18 @@ def load_config(config_path="api_config.env"):
 
 def sanitize_filename(name):
     return re.sub(r'[\\/*?:"<>|]', '_', name)
+
+
+def get_ne_explanation(raw_tag):
+    if raw_tag == "O" or not raw_tag or raw_tag == "_":
+        return ""
+
+    if raw_tag.startswith("B-") or raw_tag.startswith("I-"):
+        primary = raw_tag.split('|')[0]
+        short_code = primary[2:]
+        return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+
+    return ""
 
 
 def get_sorted_tsv_content(doc_tsv_dir):
@@ -139,7 +220,7 @@ def write_document_csv(rows, out_path):
             elif k.startswith('udpipe.misc.'):
                 misc_keys.add(k)
 
-    header = ['page_id', 'token', 'lemma', 'position', 'nameTag'] + \
+    header = ['page_id', 'token', 'lemma', 'position', 'nameTag', 'NE'] + \
              sorted(list(feature_keys)) + sorted(list(misc_keys))
 
     try:
@@ -177,13 +258,20 @@ def process_merged_file(merged_filepath, output_csv_path):
             misc = parse_misc(parts[9])
             feats = parse_features(parts[5])
 
+            ner_tag = misc.get('NER', '')
+            # ignore O tags and record them as empty cells
+            # if ner_tag == 'O':
+            #     ner_tag = ''
+
             row = {
                 'page_id': page_counter,
                 'token': parts[1],
                 'lemma': parts[2],
                 'position': parts[0],
-                'nameTag': misc.get('NER', ''),
+                'nameTag': ner_tag,
+                'NE': get_ne_explanation(ner_tag)
             }
+
             for k, v in feats.items(): row[f'udpipe.feats.{k}'] = v
             for k, v in misc.items():
                 if k != 'NER': row[f'udpipe.misc.{k}'] = v
@@ -214,14 +302,15 @@ def process_pipeline(conllu_dir, tsv_root, output_root):
         # 1. Define paths
         doc_tsv_dir = tsv_root_obj / doc_name
         doc_out_csv = output_root_obj / f"{doc_name}.csv"
+        doc_out_conllu = output_root_obj / f"{doc_name}.conllu"
 
         if not doc_tsv_dir.exists() or not doc_tsv_dir.is_dir():
             print(f"[Skip] No TSV directory found for: {doc_name} (checked {doc_tsv_dir})")
             continue
 
-        # 2. Check if output file already exists to skip
-        if doc_out_csv.exists():
-            print(f"[Skip] {doc_name}: Output complete ({doc_out_csv.name} already exists).")
+        # 2. Check if output files already exist to skip
+        if doc_out_csv.exists() and doc_out_conllu.exists():
+            print(f"[Skip] {doc_name}: Outputs complete (CSV and CoNLL-U already exist).")
             continue
 
         print(f"[Processing] {doc_name}...")
@@ -232,16 +321,10 @@ def process_pipeline(conllu_dir, tsv_root, output_root):
             print(f"  [Warn] No valid TSV data found in {doc_tsv_dir}")
             continue
 
-        # 4. Merge
-        merged_file_path = output_root_obj / f"{doc_name}_merged.tmp"
-        if merge_and_write(conllu_file, tsv_data, merged_file_path):
-            # 5. Generate single consolidated CSV
-            process_merged_file(merged_file_path, doc_out_csv)
-            # Cleanup temp file
-            try:
-                os.remove(merged_file_path)
-            except:
-                pass
+        # 4. Merge TSV into CoNLL-U and permanently save it
+        if merge_and_write(conllu_file, tsv_data, doc_out_conllu):
+            # 5. Generate single consolidated CSV by reading the new CoNLL-U file
+            process_merged_file(doc_out_conllu, doc_out_csv)
 
     print("\nPipeline Complete.")
 
