@@ -254,7 +254,7 @@ AND
 
 ```
 
-The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎 contains aggregated Named Entity 
+The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎 contains aggregated Named Entity 
 statistics across all processed pages.
 
 > [!NOTE]
@@ -279,17 +279,17 @@ where short flag meanings are (listed in the same order as used above):
 -  `--max-words`: Number words per keyword entry.
 -  `--num_keywords`: Number of keywords to extract.
 -  `--per_doc_out_dir`: Output directory for per-document CSV files (default: `KW_PER_DOC`).
--  `--output_file`: Output CSV file for the master keywords table (default: `keywords_master.csv`).
+-  `--output_file`: Output CSV file for the master keywords table (default: `keywords_summary.csv`).
 
 > [!WARNING]
 > Make sure KER data (tf-idf table per language) is stored in [ker_data](ker_data) 📁 before running this script.
 
 * **Input:** `OUTPUT_DIR/UDP/` (directory with document-specific CoNLL-U files from Step 4.2)
-* **Output 1:** `keywords_master.csv` (summary table with keywords per document)
+* **Output 1:** `keywords_summary.csv` (summary table with keywords per document)
 * **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
 
 This process creates `.csv` table with the columns like `file`, and pairs of `kw-<N>` (N-th keyword)) 
-and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_master.csv](data_samples/keywords_master.csv) 📎.
+and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_summary.csv](data_samples/keywords_summary.csv) 📎.
 
 Example of per-document CSV file with keywords: [KW_PER_DOC](data_samples/KW_PER_DOC) 📁.
 

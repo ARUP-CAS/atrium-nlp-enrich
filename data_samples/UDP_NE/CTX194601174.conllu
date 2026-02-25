@@ -1,0 +1,141 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = Hradiště "Radischberg" česky "Hradiště" 3830m dlouhý val, 6 větších "bran, částečně z basaltových balvanů, částečně z hlíny kamene.
+1	Hradiště	hradiště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	0	root	_	NER=O
+2	"	"	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No|NER=O
+3	Radischberg	Radischberg	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	nmod	_	SpaceAfter=No|NER=B-g_
+4	"	"	PUNCT	Z:-------------	_	3	punct	_	NER=O
+5	česky	česky	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	1	dep	_	NER=O
+6	"	"	PUNCT	Z:-------------	_	7	punct	_	SpaceAfter=No|NER=O
+7	Hradiště	hradiště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	appos	_	SpaceAfter=No|NER=B-g_
+8	"	"	PUNCT	Z:-------------	_	7	punct	_	NER=O
+9	3830	3830	NUM	C=-------------	NumForm=Digit|NumType=Card	11	obl	_	SpaceAfter=No|NER=B-nc
+10	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	9	nmod	_	NER=B-oe
+11	dlouhý	dlouhý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	12	amod	_	NER=O
+12	val	val	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	SpaceAfter=No|NER=O
+13	,	,	PUNCT	Z:-------------	_	17	punct	_	NER=O
+14	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	17	nummod:gov	_	NER=B-nc
+15	větších	velký	ADJ	AAFP2----2A----	Case=Gen|Degree=Cmp|Gender=Fem|Number=Plur|Polarity=Pos	17	amod	_	NER=O
+16	"	"	PUNCT	Z:-------------	_	15	punct	_	SpaceAfter=No|NER=O
+17	bran	brana	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	12	conj	_	SpaceAfter=No|NER=O
+18	,	,	PUNCT	Z:-------------	_	19	punct	_	NER=O
+19	částečně	částečně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	1	dep	_	NER=O
+20	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	22	case	_	NER=O
+21	basaltových	basaltový	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	22	amod	_	NER=O
+22	balvanů	balvan	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	19	conj	_	SpaceAfter=No|NER=O
+23	,	,	PUNCT	Z:-------------	_	24	punct	_	NER=O
+24	částečně	částečně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	1	conj	_	NER=O
+25	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	26	case	_	NER=O
+26	hlíny	hlína	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	24	orphan	_	NER=O
+27	kamene	kámen	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	26	nmod	_	SpaceAfter=No|NER=O
+28	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 2
+# text = SV 12 dlouhý sevalm SZ a asi připojuje na zvýšeninu 7x5 m.
+1	SV	SV	NOUN	BNXXX-----A----	Abbr=Yes	4	nsubj	_	NER=O
+2	12	12	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	NER=B-nc
+3	dlouhý	dlouhý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	1	amod	_	NER=O
+4	sevalm	sevat	VERB	VpYS----R-AAP--	Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	NER=O
+5	SZ	SZ	NOUN	BNXXX-----A----	Abbr=Yes	4	obj	_	NER=O
+6	a	a	CCONJ	J^-------------	_	8	cc	_	NER=O
+7	asi	asi	PART	TT-------------	_	8	advmod	_	NER=O
+8	připojuje	připojovat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	conj	_	NER=O
+9	na	na	ADP	RR--4----------	AdpType=Prep|Case=Acc	10	case	_	NER=O
+10	zvýšeninu	zvýšenina	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	8	obl	_	NER=O
+11	7	7	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No|NER=B-nc
+12	x	x	SYM	J*-------------	ConjType=Oper	13	cc	_	SpaceAfter=No|NER=O
+13	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	11	conj	_	NER=B-nc
+14	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	11	nmod	_	SpaceAfter=No|NER=B-oe
+15	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=O
+
+# sent_id = 3
+# text = Od na JZ běží zed m dlouhá s bránou.
+1	Od	od	ADP	RR--2----------	AdpType=Prep|Case=Gen	3	case	_	NER=O
+2	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	3	case	_	NER=O
+3	JZ	JZ	NOUN	BNXXX-----A----	Abbr=Yes	4	obl	_	NER=O
+4	běží	běžet	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	NER=O
+5	zed	zed	NOUN	NNFS1-----A----	Abbr=Yes	4	nsubj	_	NER=O
+6	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	5	nmod	_	NER=B-oe
+7	dlouhá	dlouhý	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	5	amod	_	NER=O
+8	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	9	case	_	NER=O
+9	bránou	brána	NOUN	NNFS7-----A----	Case=Ins|Gender=Fem|Number=Sing	7	obl	_	SpaceAfter=No|NER=O
+10	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=O
+
+# sent_id = 4
+# text = SV kOd JZ mizející val45 26 m dlouhý.
+1	SV	SV	NOUN	BNXXX-----A----	Abbr=Yes	0	root	_	NER=O
+2	kOd	kod	NOUN	BNXXX-----A----	Abbr=Yes	1	nmod	_	NER=O
+3	JZ	JZ	NOUN	BNXXX-----A----	Abbr=Yes	2	nmod	_	NER=O
+4	mizející	mizející	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	5	amod	_	NER=O
+5	val	val	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	nmod	_	SpaceAfter=No|NER=O
+6	45	45	NUM	C=-------------	NumForm=Digit|NumType=Card	5	nummod	_	NER=B-nc
+7	26	26	NUM	C=-------------	NumForm=Digit|NumType=Card	9	obl	_	NER=I-nc
+8	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	7	nmod	_	NER=B-oe
+9	dlouhý	dlouhý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	5	amod	_	SpaceAfter=No|NER=O
+10	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 5
+# text = JZ strana uchráněna.
+1	JZ	JZ	NOUN	BNXXX-----A----	Abbr=Yes	0	root	_	NER=B-io
+2	strana	strana	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	NER=O
+3	uchráněna	uchráněný	ADJ	VsQW----X-APP--	Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	2	dep	_	SpaceAfter=No|NER=O
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 6
+# text = Ve valu střepy a náramky knovízské, nalezeny hlavne ve valu u první brány jižního valu.
+1	Ve	v	ADP	RV--6----------	AdpType=Voc|Case=Loc	2	case	_	NER=O
+2	valu	val	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	0	root	_	NER=O
+3	střepy	střep	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	2	nsubj	_	NER=O
+4	a	a	CCONJ	J^-------------	_	5	cc	_	NER=O
+5	náramky	náramek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	3	conj	_	NER=O
+6	knovízské	knovízský	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	3	amod	_	SpaceAfter=No|NER=O
+7	,	,	PUNCT	Z:-------------	_	8	punct	_	NER=O
+8	nalezeny	nalezený	ADJ	VsTP----X-APP-1	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	2	conj	_	NER=O
+9	hlavne	hlavne	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	8	advmod	_	NER=O
+10	ve	v	ADP	RV--6----------	AdpType=Voc|Case=Loc	11	case	_	NER=O
+11	valu	val	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	8	obl	_	NER=O
+12	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	14	case	_	NER=O
+13	první	první	ADJ	CrFS2----------	Case=Gen|Gender=Fem|Number=Sing|NumType=Ord	14	amod	_	NER=O
+14	brány	brána	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	11	nmod	_	NER=O
+15	jižního	jižní	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	16	amod	_	NER=O
+16	valu	val	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	14	nmod	_	SpaceAfter=No|NER=O
+17	.	.	PUNCT	Z:-------------	_	2	punct	_	NER=O
+
+# sent_id = 7
+# text = / A.f.V./ Preklad z á zqamu Z archivu A IV 0143/aä1 skartován Kal • '• 2+ v • 4-
+1	/	/	PUNCT	Z:-------------	_	6	punct	_	NER=O
+2	A	A	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	SpaceAfter=No|NER=O
+3	.	.	PUNCT	Z:-------------	_	2	punct	_	SpaceAfter=No|NER=O
+4	f	f	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	SpaceAfter=No|NER=O
+5	.	.	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+6	V	V	NOUN	Q3-------------	Abbr=Yes	0	root	_	SpaceAfter=No|NER=O
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No|NER=O
+8	/	/	PUNCT	Z:-------------	_	9	punct	_	NER=O
+9	Preklad	preklad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	6	dep	_	NER=O
+10	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	12	case	_	NER=O
+11	á	á	X	F%-------------	Foreign=Yes	12	nmod	_	NER=O
+12	zqamu	zqam	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	9	nmod	_	NER=O
+13	Z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	14	case	_	NER=O
+14	archivu	archiv	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	9	nmod	_	NER=O
+15	A	A	NOUN	Q3-------------	Abbr=Yes	14	nmod	_	NER=O
+16	IV	IV	NUM	C}-------------	NumForm=Roman|NumType=Card	15	nummod	_	NER=O
+17	0143	0143	NUM	C=-------------	NumForm=Digit|NumType=Card	16	compound	_	SpaceAfter=No|NER=O
+18	/	/	PUNCT	Z:-------------	_	19	punct	_	SpaceAfter=No|NER=O
+19	aä	aä	NOUN	Q3-------------	Abbr=Yes	9	nmod	_	SpaceAfter=No|NER=O
+20	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	19	nummod	_	NER=O
+21	skartován	skartovaný	ADJ	VsYS----X-APB--	Aspect=Imp,Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	6	dep	_	NER=O
+22	Kal	Kal	X	F%-------------	Foreign=Yes	21	obl	_	NER=O
+23	•	•	X	F%-------------	Abbr=Yes	22	nmod	_	NER=O
+24	'	'	PUNCT	Z:-------------	_	22	punct	_	SpaceAfter=No|NER=O
+25	•	•	SYM	Z:-------------	_	26	nmod	_	NER=O
+26	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	22	nummod	_	SpaceAfter=No|NER=O
+27	+	+	SYM	Z:-------------	_	28	cc	_	NER=O
+28	v	v	NOUN	Q3-------------	Abbr=Yes	26	conj	_	NER=O
+29	•	•	SYM	Z:-------------	_	30	punct	_	NER=O
+30	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	26	conj	_	SpaceAfter=No|NER=O
+31	-	-	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No|NER=O
+
