@@ -197,19 +197,25 @@ into human-readable categories (e.g., "Geographical name", "First name", "Compan
 * **Input 1:** `OUTPUT_DIR/NE/*/*.tsv` (NE annotated per-page files).
 * **Input 2:** `OUTPUT_DIR/UDP/*.conllu` (Intermediate per-document CoNLL-U files).
 * **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv`.
-* **Output 2:** `OUTPUT_DIR/UDP_NE/*/*.csv` (per-page CSV files with NE and UDPipe features).
+* **Output 2:** `OUTPUT_DIR/UDP_NE/*.csv` (per-document CSV files with NE and UDPipe features).
+* **Output 3:** `OUTPUT_DIR/UDP_NE/*.conllu` (per-document CoNLL-U files with NE).
 
 Run the following command to see how many documents have been processed into CSV files:
 
 ```bash
 ls -l OUTPUT_DIR/UDP_NE | wc -l
 ```
-which returns the total number of directories created (each subfolder corresponds to a document).
+which returns the total number of created files, both `.csv` and `.conllu` corresponding to specific documents.
 
+```bash
+ls -l OUTPUT_DIR/UDP_NE/*.csv | wc -l
+```
+returns number of processed documents.
 
 Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎.
 
-Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-page CSV tables with NE tag and columns for UDPipe features.
+Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV tables with NE tag and columns for 
+UDPipe features, plus, CoNLL-U files with NE annotations also in per-document manner.
 
 #### Output Structure
 
@@ -225,12 +231,10 @@ AND
 ```
 <OUTPUT_DIR>
 ├── UDP_NE/          
-│   ├── <doc_id>     
-│   │   ├── <doc_id>-<page_num>.csv     
-│   │   └── ...     
-│   ├── <doc_id>     
-│   │   ├── <doc_id>-<page_num>.csv     
-│   │   └── ...
+│   ├── <doc_id>.csv       
+│   ├── <doc_id>.conllu     
+│   ├── <doc_id>.csv       
+│   ├── <doc_id>.conllu     
 │   └── ...
 ├── UDP/  
 │   ├── <doc_id>.conllu
@@ -255,7 +259,7 @@ statistics across all processed pages.
 
 > [!NOTE]
 > Now you can delete `UDP/` from `<OUTPUT_DIR>/` if you no longer need the raw CoNLL-U files.
-> The final per-page CSV files with UDPipe features are in `<OUTPUT_DIR>/UDP_NE/`.
+> The final CoNLL-U files with NER features are in `<OUTPUT_DIR>/UDP_NE/`.
 
 If you do not plan to rerun any part of the pipeline, you can also delete 
 the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest.tsv) 📎.
@@ -264,14 +268,13 @@ the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest.tsv)
 ### EXTRA: Extract Keywords (KER) based on tf-idf
 
 Finally, you can extract keywords 🔎 from your text. This script runs on a directory of
-document-specific files `.csv` (e.g., `../CSVS_with_TEXT/`) with `text` column holding document text
-contents ordered by page and line numbers.
+document-specific `.conllu` files (e.g., `OUTPUT_DIR/UDP/`) containing ordered text content with word lemmas..
 
     python3 keywords.py -i <input_dir> -l <lang> -w <integer> -n <integer> -d <output_dir> -o <output_file>.csv
 
 where short flag meanings are (listed in the same order as used above):
 
--  `--input_dir`: Input directory (e.g., text files from Step 3).
+-  `--input_dir`: Input directory (e.g., CoNLL-U files from Step 4.2).
 -  `--lang`: Language for KER (`cs` for Czech or `en` for English).
 -  `--max-words`: Number words per keyword entry.
 -  `--num_keywords`: Number of keywords to extract.
@@ -281,7 +284,7 @@ where short flag meanings are (listed in the same order as used above):
 > [!WARNING]
 > Make sure KER data (tf-idf table per language) is stored in [ker_data](ker_data) 📁 before running this script.
 
-* **Input:** `../CSVS_with_TEXT/` (directory with page-specific text files from Step 3)
+* **Input:** `OUTPUT_DIR/UDP/` (directory with document-specific CoNLL-U files from Step 4.2)
 * **Output 1:** `keywords_master.csv` (summary table with keywords per document)
 * **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
 
