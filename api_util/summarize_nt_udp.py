@@ -233,8 +233,8 @@ def process_pipeline(conllu_dir, tsv_root, output_root, alto_root, teitok_out, s
 
         doc_out_conllu = doc_out_dir / f"{doc_name}.conllu"
         doc_out_csv    = doc_out_dir / f"{doc_name}.csv"
-        doc_out_teitok = teitok_out / f"{doc_name}.teitok.xml"
-        doc_in_alto    = alto_root / f"{doc_name}.alto.xml"
+        doc_out_teitok = Path(teitok_out) / f"{doc_name}.teitok.xml"
+        doc_in_alto    = Path(alto_root) / f"{doc_name}.alto.xml"
 
         required_paths = []
         if save_conllu:  required_paths.append(doc_out_conllu)
@@ -518,12 +518,14 @@ def main():
     save_teitok = bool_from_str(args.save_teitok, default=False)
 
     if save_teitok:
-        if not args.alto_dir:
+        if not Path(args.alto_dir).exists():
             print(f"ALTO XML directory is required for complete TEITOK XML generation.")
             sys.exit(1)
-        if not args.tt_dir:
+        if not Path(args.tt_dir).exists():
             print(f"TEITOK output directory is required for complete TEITOK XML generation.")
-            sys.exit(1)
+            print(f"Creating default: {args.tt_dir}")
+            Path(args.tt_dir).mkdir(parents=True, exist_ok=True)
+
 
 
     process_pipeline(args.conllu_dir, args.tsv_dir, args.out_dir, args.alto_dir, args.tt_dir,

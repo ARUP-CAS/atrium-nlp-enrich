@@ -5,11 +5,12 @@ echo "=========================================="
 echo " STEP 4: SUMMARIZATION & STATISTICS"
 echo "=========================================="
 
-INPUT_UDP_DIR="$OUTPUT_DIR/UDP"
-INPUT_TSV_DIR="$OUTPUT_DIR/NE"
-SUMMARY_OUT_DIR="$OUTPUT_DIR/UDP_NE"
-TEITOK_OUT_DIR="$OUTPUT_DIR/TEITOK"
+INPUT_UDP_DIR="$CONLLU_INPUT_DIR"
+INPUT_TSV_DIR="$TSV_INPUT_DIR"
+SUMMARY_OUT_DIR="$SUMMARY_OUTPUT_DIR"
+TEITOK_OUT_DIR="$TEITOK_OUTPUT_DIR"
 STATS_FILE="$OUTPUT_DIR/summary_ne_counts.csv"
+INPUT_ALTO_DIR="$ALTO_DIR"
 
 mkdir -p "$SUMMARY_OUT_DIR"
 mkdir -p "$(dirname "$STATS_FILE")"
@@ -22,6 +23,8 @@ python3 api_util/summarize_nt_udp.py \
     --conllu-dir "$INPUT_UDP_DIR" \
     --tsv-dir    "$INPUT_TSV_DIR" \
     --out-dir    "$SUMMARY_OUT_DIR" \
+    --alto-dir "$INPUT_ALTO_DIR" \
+    --tt-dir "$TEITOK_OUT_DIR" \
     --save-conllu-ne "${SAVE_CONLLU_NE:-1}" \
     --save-csv       "${SAVE_CSV:-1}" \
     --save-teitok    "${SAVE_TEITOK:-0}"

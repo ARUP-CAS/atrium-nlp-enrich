@@ -1,7 +1,8 @@
 # api_config.env
 
-INPUT_DIR="../../ARUP/DOC_LINE_LR_CLS"
-OUTPUT_DIR="../../ARUP"
+INPUT_DIR="../../ARUB/DOC_LINE_LR_CLS"
+OUTPUT_DIR="../../ARUB"
+ALTO_DIR="$OUTPUT_DIR/altos"
 WORK_DIR="./TEMP"
 
 LOG_FILE="$OUTPUT_DIR/processing.log"
@@ -13,7 +14,6 @@ CHUNK_DIR="./TEMP/CHUNKS"
 TSV_INPUT_DIR="$OUTPUT_DIR/NE"
 SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/UDP_NE"
 TEITOK_OUTPUT_DIR="$OUTPUT_DIR/TEITOK"
-ALTO_DIR="$OUTPUT_DIR/ALTO"
 
 UDPIPE_URL="https://lindat.mff.cuni.cz/services/udpipe/api/process"
 NAMETAG_URL="https://lindat.mff.cuni.cz/services/nametag/api/recognize"
