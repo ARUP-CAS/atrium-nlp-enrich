@@ -19,12 +19,16 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
   - [Step 2: Extract NER and CONLL-U](#-step-2-extract-ner-and-conll-u)
     - [Configuration ⚙️](#configuration-)
     - [Execution Pipeline](#execution-pipeline)
-      - [Generate Manifest](#1-generate-manifest)
-      - [UDPipe Processing (Morphology & Syntax)](#2-udpipe-processing-morphology--syntax)
-      - [NameTag Processing (NER tags)](#3-nametag-processing-ner-tags)
-      - [Generate Statistics](#4-generate-statistics)
+      - [I. Generate Manifest](#1-generate-manifest)
+      - [II. UDPipe Processing (Morphology & Syntax)](#2-udpipe-processing-morphology--syntax)
+      - [III. NameTag Processing (NER tags)](#3-nametag-processing-ner-tags)
+      - [IV. Generate Statistics](#4-generate-statistics)
 - [Output Structure](#output-structure)
 - [EXTRA: Extract Keywords (KER)](#extra-extract-keywords-ker-based-on-tf-idf)
+- [Paradata Logs](#paradata-logs)
+  - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#outputdirparadata--structured-run-logs-)
+  - [`<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄](#outputdirprocessinglog--human-readable-runtime-log-)
+  - [`TEMP/` — intermediate working files 📂](#temp--intermediate-working-files-)
 - [Acknowledgements](#acknowledgements-)
 
 ## ⚙️ Setup
@@ -412,6 +416,94 @@ TF-IDF values computed inside the system.
 > This step was considered unnecessary for the ATRIUM project
 
 ---
+
+## Paradata Logs
+
+Every pipeline script records structured provenance metadata through
+[atrium_paradata.py](atrium_paradata.py) 📎.  Two complementary log surfaces
+are produced after a run:
+
+### `<OUTPUT_DIR>/paradata/` — structured run logs 📂
+
+Each of the four pipeline scripts produces one JSON file here, named with the
+pattern:
+
+```
+YYMMDD-HHmmss_nlp-enrich.json
+```
+
+where the timestamp prefix is the UTC wall-clock time at which the script
+started.  Because every script is an independent invocation, a complete
+four-step run will create four separate files, making it straightforward to
+audit individual stages in isolation.
+
+The paradata logs capture key details about each pipeline stage, including the program name, run ID, execution 
+duration, configuration parameters, input and output statistics, and performance metrics. They also document 
+skipped files with reasons and provide a breakdown of output types and processing rates for benchmarking. This 
+structured metadata ensures traceability and facilitates auditing of the pipeline's execution.
+
+The declared output types per stage are:
+
+| Script              | Types recorded                                                                   |
+|---------------------|----------------------------------------------------------------------------------|
+| `api_1_manifest.sh` | `tsv` (one entry per input CSV/XLSX processed into the manifest)                 |
+| `api_2_udp.sh`      | `conllu` (one per document)                                                      |
+| `api_3_nt.sh`       | `tsv` (one per page — count reflects individual page TSV files)                  |
+| `api_4_stats.sh`    | `csv` always; `conllu` when `SAVE_CONLLU_NE=true`; `xml` when `SAVE_TEITOK=true` |
+
+> [!NOTE]
+> When resuming an interrupted run (steps 2–4 skip already-finished documents
+> via `[ -f "$out" ] && continue`), the resumed documents are not re-counted in
+> the paradata JSON.  The `input_files_total` field still reflects the full
+> manifest, so `skipped_files + successfully_processed` will be less than
+> `input_files_total` for partial runs.  This is expected behaviour; the
+> difference represents the documents carried over from a previous invocation.
+
+### `<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄
+
+[api_common.sh](api_util%2Fapi_common.sh) 📎 exposes a `log()` helper that timestamps and
+`tee`-appends every warning and error to this single flat file for the
+lifetime of the project directory:
+
+```
+[2026-01-15 09:42:11] [WARN] UDPipe failed (HTTP 503). Retrying in 2s…
+[2026-01-15 09:42:14] [ERR]  UDPipe failed permanently after 5 attempts.
+```
+
+This file is written to by all four scripts and accumulates across reruns;
+it is the first place to check when a document appears in
+`skipped_files_detail` but the reason is terse.
+
+### `TEMP/` — intermediate working files 📂
+
+`TEMP/` (set by `WORK_DIR` in [config_api.txt](config_api.txt) 📎) holds
+transient artefacts that are only needed during processing and can be deleted
+once the full pipeline has completed successfully:
+
+```
+TEMP/
+├── CHUNKS/
+│   ├── <doc_id>/
+│   │   ├── chunk_0.txt      # word-limited text fragment sent to UDPipe
+│   │   ├── chunk_1.txt
+│   │   └── …
+│   └── …
+└── nametag_response_<doc_id>.conllu.json   # raw JSON reply from the NameTag API
+```
+
+`CHUNKS/` is produced by [api_util/chunk.py](api_util/chunk.py) 📎 which splits
+documents that exceed `WORD_CHUNK_LIMIT` (default 900 words) into
+sentence-boundary-aware fragments before each UDPipe API call.  The per-chunk
+plain-text files and the raw NameTag JSON responses carry no provenance value
+after the CoNLL-U files have been merged and validated; they are not tracked by
+the paradata logger.
+
+> [!TIP]
+> If disk space is a concern you can safely delete `TEMP/` once
+> `<OUTPUT_DIR>/UDP/` and `<OUTPUT_DIR>/NE/` have been fully populated and
+> step 4 has completed without errors.  The paradata JSONs in
+> `<OUTPUT_DIR>/paradata/` and the `processing.log` are the only runtime
+> records worth keeping long-term.
 
 ## Acknowledgements 🙏
 
