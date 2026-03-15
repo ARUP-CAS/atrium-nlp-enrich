@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">
+  <teiHeader/>
+  <text>
+    <body>
+      <div type="document" xml:id="CTX198603682">
+        <s xml:id="CTX198603682.s1">
+          <tok xml:id="CTX198603682.s1.w1" lemma="19" upos="NUM" head="0" deprel="root" ne="B-ni" join="right">19</tok>
+          <tok xml:id="CTX198603682.s1.w2" lemma="." upos="PUNCT" head="CTX198603682.s1.w1" deprel="punct">.</tok>
+          <tok xml:id="CTX198603682.s1.w3" lemma="EQCQYBQM" upos="NOUN" head="CTX198603682.s1.w1" deprel="dep" join="right">EQCQyBQM</tok>
+          <tok xml:id="CTX198603682.s1.w4" lemma="." upos="PUNCT" head="CTX198603682.s1.w3" deprel="punct" join="right">.</tok>
+          <tok xml:id="CTX198603682.s1.w5" lemma="_" upos="PUNCT" head="CTX198603682.s1.w6" deprel="punct" join="right">_</tok>
+          <tok xml:id="CTX198603682.s1.w6" lemma="Ž" upos="NOUN" head="CTX198603682.s1.w3" deprel="nmod" join="right">Ž</tok>
+          <tok xml:id="CTX198603682.s1.w7" lemma=":" upos="PUNCT" head="CTX198603682.s1.w8" deprel="punct" join="right">:</tok>
+          <tok xml:id="CTX198603682.s1.w8" lemma="9" upos="NUM" head="CTX198603682.s1.w6" deprel="nummod" join="right">9</tok>
+          <tok xml:id="CTX198603682.s1.w9" lemma=":" upos="PUNCT" head="CTX198603682.s1.w11" deprel="punct" join="right">:</tok>
+          <tok xml:id="CTX198603682.s1.w10" lemma="_" upos="PUNCT" head="CTX198603682.s1.w11" deprel="punct" join="right">_</tok>
+          <tok xml:id="CTX198603682.s1.w11" lemma="Medvědice" upos="PROPN" head="CTX198603682.s1.w1" deprel="dep">MedvĚdice</tok>
+          <tok xml:id="CTX198603682.s1.w12" lemma="I" upos="NUM" head="CTX198603682.s1.w11" deprel="nummod" join="right">I</tok>
+          <tok xml:id="CTX198603682.s1.w13" lemma="." upos="PUNCT" head="CTX198603682.s1.w14" deprel="punct">.</tok>
+          <tok xml:id="CTX198603682.s1.w14" lemma="okolí" upos="NOUN" head="CTX198603682.s1.w1" deprel="dep">Okolí</tok>
+          <tok xml:id="CTX198603682.s1.w15" lemma="obec" upos="NOUN" head="CTX198603682.s1.w14" deprel="nmod">obce</tok>
+          <tok xml:id="CTX198603682.s1.w16" lemma="kamenný" upos="ADJ" head="CTX198603682.s1.w17" deprel="amod" ne="B-gu">Kamenný</tok>
+          <tok xml:id="CTX198603682.s1.w17" lemma="klín" upos="NOUN" head="CTX198603682.s1.w15" deprel="nmod" ne="I-gu" join="right">klín</tok>
+          <tok xml:id="CTX198603682.s1.w18" lemma="," upos="PUNCT" head="CTX198603682.s1.w20" deprel="punct">,</tok>
+          <tok xml:id="CTX198603682.s1.w19" lemma="ojeinělý" upos="ADJ" head="CTX198603682.s1.w20" deprel="amod">ojeinělý</tok>
+          <tok xml:id="CTX198603682.s1.w20" lemma="nález" upos="NOUN" head="CTX198603682.s1.w14" deprel="conj" join="right">nález</tok>
+          <tok xml:id="CTX198603682.s1.w21" lemma="," upos="PUNCT" head="CTX198603682.s1.w22" deprel="punct">,</tok>
+          <tok xml:id="CTX198603682.s1.w22" lemma="ríekaný" upos="ADJ" head="CTX198603682.s1.w14" deprel="amod">ríekán</tok>
+          <tok xml:id="CTX198603682.s1.w23" lemma="t" upos="ADP" head="CTX198603682.s1.w24" deprel="case">t</tok>
+          <tok xml:id="CTX198603682.s1.w24" lemma="rok" upos="NOUN" head="CTX198603682.s1.w22" deprel="obl">roce</tok>
+          <tok xml:id="CTX198603682.s1.w25" lemma="1917" upos="NUM" head="CTX198603682.s1.w24" deprel="nummod" ne="B-ty" join="right">1917</tok>
+          <tok xml:id="CTX198603682.s1.w26" lemma="," upos="PUNCT" head="CTX198603682.s1.w27" deprel="punct">,</tok>
+          <tok xml:id="CTX198603682.s1.w27" lemma="Neolit" upos="PROPN" head="CTX198603682.s1.w14" deprel="conj" ne="B-o_">NEOLIT</tok>
+          <tok xml:id="CTX198603682.s1.w28" lemma="(" upos="PUNCT" head="CTX198603682.s1.w27" deprel="punct" join="right">(</tok>
+          <tok xml:id="CTX198603682.s1.w29" lemma="přír" upos="NOUN" head="CTX198603682.s1.w27" deprel="dep" join="right">přír</tok>
+          <tok xml:id="CTX198603682.s1.w30" lemma="." upos="PUNCT" head="CTX198603682.s1.w29" deprel="punct" join="right">.</tok>
+          <tok xml:id="CTX198603682.s1.w31" lemma="číslo" upos="NOUN" head="CTX198603682.s1.w29" deprel="nmod" join="right">č</tok>
+          <tok xml:id="CTX198603682.s1.w32" lemma="." upos="PUNCT" head="CTX198603682.s1.w31" deprel="punct">.</tok>
+          <tok xml:id="CTX198603682.s1.w33" lemma="2" upos="NUM" head="CTX198603682.s1.w31" deprel="nummod" ne="B-n_" join="right">2</tok>
+          <tok xml:id="CTX198603682.s1.w34" lemma="/" upos="PUNCT" head="CTX198603682.s1.w35" deprel="punct" join="right">/</tok>
+          <tok xml:id="CTX198603682.s1.w35" lemma="81" upos="NUM" head="CTX198603682.s1.w33" deprel="compound" ne="B-ty" join="right">81</tok>
+          <tok xml:id="CTX198603682.s1.w36" lemma=")" upos="PUNCT" head="CTX198603682.s1.w1" deprel="punct" join="right">)</tok>
+          <tok xml:id="CTX198603682.s1.w37" lemma="." upos="PUNCT" head="CTX198603682.s1.w1" deprel="punct" join="right">.</tok>
+        </s>
+      </div>
+    </body>
+  </text>
+</TEI>

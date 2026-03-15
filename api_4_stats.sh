@@ -1,45 +1,55 @@
-#!/bin/bash
-source ./api_util/api_common.sh
+#!/usr/bin/env bash
+# api_4_stats.sh – statistics + TEITOK generation + paradata
+set -euo pipefail
+source config_api.txt
 
-echo "=========================================="
-echo " STEP 4: SUMMARIZATION & STATISTICS"
-echo "=========================================="
+# Determine which output types are active
+OUTPUT_TYPES="csv"
+[ "${SAVE_CONLLU_NE:-true}"  = "true" ] && OUTPUT_TYPES="$OUTPUT_TYPES conllu"
+[ "${SAVE_TEITOK:-true}"     = "true" ] && OUTPUT_TYPES="$OUTPUT_TYPES xml"
 
-INPUT_UDP_DIR="$OUTPUT_DIR/UDP"
-INPUT_TSV_DIR="$OUTPUT_DIR/NE"
-SUMMARY_OUT_DIR="$OUTPUT_DIR/UDP_NE"
-STATS_FILE="$OUTPUT_DIR/summary_ne_counts.csv"
+PARA_STATE=$(python3 atrium_paradata.py start \
+    --program nlp-enrich \
+    --paradata-dir "${OUTPUT_DIR}/paradata" \
+    --output-types $OUTPUT_TYPES \
+    --config \
+        "script=api_4_stats" \
+        "conllu_input_dir=${OUTPUT_DIR}/UDP" \
+        "tsv_input_dir=${OUTPUT_DIR}/NE" \
+        "output_dir=${OUTPUT_DIR}/UDP_NE" \
+        "save_conllu_ne=${SAVE_CONLLU_NE:-true}" \
+        "save_csv=${SAVE_CSV:-true}" \
+        "save_teitok=${SAVE_TEITOK:-true}" \
+        "alto_dir=${ALTO_DIR:-}")
 
-mkdir -p "$SUMMARY_OUT_DIR"
-mkdir -p "$(dirname "$STATS_FILE")"
+CONLLU_FILES=("${OUTPUT_DIR}/UDP/"*.conllu)
+TOTAL=${#CONLLU_FILES[@]}
 
-log "Starting consolidation..."
-log "Input CoNLL-U: $INPUT_UDP_DIR"
-log "Input TSV Root: $INPUT_TSV_DIR"
+for conllu in "${CONLLU_FILES[@]}"; do
+    doc=$(basename "$conllu" .conllu)
+    ne_dir="${OUTPUT_DIR}/NE/${doc}"
 
-python3 api_util/summarize_nt_udp.py \
-    --conllu-dir "$INPUT_UDP_DIR" \
-    --tsv-dir "$INPUT_TSV_DIR" \
-    --out-dir "$SUMMARY_OUT_DIR"
+    if python3 api_util/summarize_nt_udp.py \
+            --conllu     "$conllu" \
+            --ne-dir     "$ne_dir" \
+            --output-dir "${OUTPUT_DIR}/UDP_NE/${doc}" \
+            --save-conllu-ne "${SAVE_CONLLU_NE:-true}" \
+            --save-csv       "${SAVE_CSV:-true}" \
+            --save-teitok    "${SAVE_TEITOK:-true}" \
+            --alto-dir       "${ALTO_DIR:-}" \
+            --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
 
-if [ $? -eq 0 ]; then
-    log "Summarization process finished (checked new/existing files)."
-else
-    log "Error: Summarization script failed."
-    exit 1
-fi
+        python3 atrium_paradata.py success --state "$PARA_STATE" --type csv
+        [ "${SAVE_CONLLU_NE:-true}" = "true" ] && \
+            python3 atrium_paradata.py success --state "$PARA_STATE" --type conllu
+        [ "${SAVE_TEITOK:-true}" = "true" ] && \
+            python3 atrium_paradata.py success --state "$PARA_STATE" --type xml
+    else
+        python3 atrium_paradata.py skip \
+            --state "$PARA_STATE" \
+            --file  "$doc" \
+            --reason "summarize_nt_udp failed"
+    fi
+done
 
-log "Generating entity statistics from NameTag TSVs..."
-
-python3 api_util/analyze.py "$INPUT_TSV_DIR" "$STATS_FILE"
-
-if [ $? -eq 0 ]; then
-    log "Statistics saved to: $STATS_FILE"
-else
-    log "Warning: Statistics generation encountered an issue."
-fi
-
-echo "------------------------------------------"
-echo "PIPELINE COMPLETE."
-echo "Main Output: $SUMMARY_OUT_DIR"
-echo "Stats Output: $STATS_FILE"
+python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"

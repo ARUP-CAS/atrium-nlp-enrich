@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">
+  <teiHeader/>
+  <text>
+    <body>
+      <div type="document" xml:id="CTX192601095">
+        <s xml:id="CTX192601095.s1">
+          <tok xml:id="CTX192601095.s1.w1" lemma="státní" upos="ADJ" head="CTX192601095.s1.w3" deprel="amod" ne="B-ic">STÁTNÍ</tok>
+          <tok xml:id="CTX192601095.s1.w2" lemma="archaeologický" upos="ADJ" head="CTX192601095.s1.w3" deprel="amod" ne="I-ic">ARCHAEOLOGICKÝ</tok>
+          <tok xml:id="CTX192601095.s1.w3" lemma="Ú" upos="NOUN" head="0" deprel="root" ne="I-ic">Ú</tok>
+          <tok xml:id="CTX192601095.s1.w4" lemma="," upos="PUNCT" head="CTX192601095.s1.w8" deprel="punct">,</tok>
+          <tok xml:id="CTX192601095.s1.w5" lemma="y" upos="NOUN" head="CTX192601095.s1.w8" deprel="nmod">y</tok>
+          <tok xml:id="CTX192601095.s1.w6" lemma="c" upos="NOUN" head="CTX192601095.s1.w8" deprel="nmod" join="right">c</tok>
+          <tok xml:id="CTX192601095.s1.w7" lemma="." upos="PUNCT" head="CTX192601095.s1.w6" deprel="punct">.</tok>
+          <tok xml:id="CTX192601095.s1.w8" lemma="Hoq" upos="X" head="CTX192601095.s1.w3" deprel="dep" join="right">Hoq</tok>
+          <tok xml:id="CTX192601095.s1.w9" lemma="5" upos="NUM" head="CTX192601095.s1.w8" deprel="nummod" join="right">5</tok>
+          <tok xml:id="CTX192601095.s1.w10" lemma="-" upos="PUNCT" head="CTX192601095.s1.w11" deprel="punct" join="right">-</tok>
+          <tok xml:id="CTX192601095.s1.w11" lemma="osl" upos="NOUN" head="CTX192601095.s1.w8" deprel="nmod" join="right">osl</tok>
+          <tok xml:id="CTX192601095.s1.w12" lemma="0" upos="NUM" head="CTX192601095.s1.w11" deprel="nummod" join="right">0</tok>
+          <tok xml:id="CTX192601095.s1.w13" lemma="d" upos="NOUN" head="CTX192601095.s1.w8" deprel="nmod">d</tok>
+          <tok xml:id="CTX192601095.s1.w14" lemma="298" upos="NUM" head="CTX192601095.s1.w13" deprel="nummod">298</tok>
+          <tok xml:id="CTX192601095.s1.w15" lemma="26" upos="NUM" head="CTX192601095.s1.w3" deprel="dep">26</tok>
+          <tok xml:id="CTX192601095.s1.w16" lemma="§" upos="SYM" head="CTX192601095.s1.w3" deprel="dep" join="right">§</tok>
+        </s>
+      </div>
+    </body>
+  </text>
+</TEI>

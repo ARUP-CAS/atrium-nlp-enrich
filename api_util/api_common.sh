@@ -13,9 +13,9 @@ else
 fi
 
 # 2. Validation
-if [ ! -d "$INPUT_DIR" ]; then
-    echo "Error: Input directory '$INPUT_DIR' does not exist."
-    echo "Please update INPUT_DIR in config_api.txt"
+if [ ! -d "$INPUT_TABLES_DIR" ]; then
+    echo "Error: Input directory '$INPUT_TABLES_DIR' does not exist."
+    echo "Please update INPUT_TABLES_DIR in config_api.txt"
     exit 1
 fi
 

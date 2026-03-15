@@ -1,15 +1,15 @@
 # 📦 ALTO XML Files Postprocessing Pipeline - NLP Enrichment of text
 
-This project provides a workflow for processing text stored in CSV with NLP services. It takes ordered text 
+This project provides a workflow for processing text stored in CSV (XLSX) with NLP services. It takes ordered text 
 and extracts high-level linguistic features like Named Entities (NER) with tags and CONLL-U files with 
 lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 
 ---
 
 > [!CAUTION]
-> This repository is a follow-up to main ALTO XML postprocessing [GitHub repository](https://github.com/K4TEL/atrium-alto-postprocess.git), 
+> This repository is a follow-up to main ALTO XML postprocessing [GitHub repository](https://github.com/ufal/atrium-alto-postprocess), 
 > a part of ATRIUM project dedicated to ALTO-2-TXT workflow and collection of statistics and from text content
-> of the documents (text and bounding boxes ordered by LayoutReader) recorder in CSV tables as a `text` column [^2].
+> of the documents (text and bounding boxes ordered by LayoutReader) recorder in CSV (XLSX) tables as a `text` column [^2].
 
 ## Table of contents
 
@@ -48,12 +48,12 @@ The process is divided into sequential steps, each responsible for a specific pa
 ### ▶ Step 1: Prepare CSVs with texts from Page-Specific ALTOs
 
 > [!IMPORTANT]
-> If you already have a directory of CSV tables with `text` column containing extracted text
+> If you already have a directory of CSV (XLSX) tables with `text` column containing extracted text
 > files from ALTO XMLs, you can skip Step 1 and proceed directly to Step 2.
 
 The `../CSVS_with_TEXT/` directory mentioned later is the result of ALTO XML postprocessing pipeline described 
-in the separate repository [^2]. It contains document-specific CSV files with the `text` column containing 
-extracted textual content from the ALTO XML files. Each CSV file corresponds to a document and contains rows
+in the separate repository [^2]. It contains document-specific CSV (XLSX) files with the `text` column containing 
+extracted textual content from the ALTO XML files. Each CSV (XLSX) file corresponds to a document and contains rows
 for each page with a line number column for the proper ordering (`page_num` and `line_num`).
 
 ```
@@ -62,7 +62,7 @@ CSVS_with_TEXT/
 ├── document2.csv
 └── ...
 ```
-with the structure of each CSV file like:
+with the structure of each CSV (XLSX) file like:
 ```
 file,page_num,line_num,text,split_ws,split_we,lang,lang_score,perplex,categ
 CTX201504033,1,8,2012,,,N/A,0,0,Non-text
@@ -74,6 +74,8 @@ Where `split_ws` and `split_we` are the start and end character offsets of the w
 The `lang` and `lang_score` columns indicate the detected language and its confidence score,
 while `perplex` and `categ` provide additional metadata about the text classification.
 
+If the script detects an `.xlsx` file, it will iterate over all sheet names, verify if a `text` column exists 
+in each sheet, and extract the content safely for Excel tables with multiple sheets.
 
 ### ▶ Step 2: Extract NER and CONLL-U
 
@@ -90,9 +92,10 @@ directory paths, API endpoints, and model selection.
 
 ```bash
 # Example settings in config_api.env
-INPUT_DIR="../OUT/CSVS_with_TEXT"        # Source of text files (from Step 3.1)
-OUTPUT_DIR="../OUT"        # Destination for results
-WORK_DIR="./TEMP"              # Working directory for intermediate files
+OUTPUT_DIR="../../ARUB"         # Destination for results
+INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_LR_CLS"  # Directory containing input tables (from Step 1)
+ALTO_DIR="$OUTPUT_DIR/altos"    # Source of ALTO XML files (from Step 1) - for TEITOK conversion
+WORK_DIR="./TEMP"               # Working directory for intermediate files
 
 LOG_FILE="$OUTPUT_DIR/processing.log"
 
@@ -106,6 +109,10 @@ MODEL_NAMETAG="nametag3-czech-cnec2.0-240830"
 WORD_CHUNK_LIMIT=900           # Word limit per API call
 TIMEOUT=60                     # API call timeout in seconds
 MAX_RETRIES=5                  # Number of retries for failed API calls
+
+SAVE_CONLLU_NE=true   # keep merged CoNLL-U with NER in MISC
+SAVE_CSV=true         # write token-level summary CSV
+SAVE_TEITOK=true      # write TEITOK-style TEI XML (flexiconv-compatible)
 ```
 
 #### Execution Pipeline
@@ -125,7 +132,7 @@ Maps input text files to document IDs and page numbers to ensure correct process
 * **Input:** `../CSVS_with_TEXT/` (raw text files in subdirectories from Step 1).
 * **Output:** `OUTPUT_DIR/manifest.tsv`.
 
-Example output file [manifest.tsv](data_samples/manifest.tsv) 📎 with **file**, **page**
+Example output file [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎 with **file**, **page**
 number, and **path** columns. It lists all text files to be processed in the next steps.
 Run the following command to see how many pages will be processed:
 
@@ -184,38 +191,115 @@ which returns the total number of directories created (each subfolder correspond
 
 Example output directory [NE](data_samples%2FNE) 📁 contains per-page TSV files with NE annotations, where the NE tags follow the CNEC 2.0 standard [^3] which is used in the Czech Nametag model.
 
+
 ##### 4. Generate Statistics
 
-Aggregates the entity counts from the final CoNLL-U files into a summary CSV. It utilizes 
-[analyze.py](api_util/analyze.py) 📎 to map complex CNEC 2.0 tags (e.g., `g`, `pf`, `if`) 
-into human-readable categories (e.g., "Geographical name", "First name", "Company/Firm").
+This stage consolidates the linguistic data from UDPipe (CoNLL-U) and the NER data from 
+NameTag (TSV) into final per-document formats. It also generates a master summary of 
+entity counts across the entire collection and can optionally produce TEITOK-compatible 
+XML files that merge linguistic tokens with original ALTO layout coordinates.
+
+The process utilizes [summarize_nt_udp.py](api_util/summarize_nt_udp.py) 📎 to merge these 
+layers and [analyze.py](api_util/analyze.py) 📎 to map complex CNEC 2.0 tags 
+(e.g., `g`, `pf`, `if`) into human-readable categories (e.g., "Geographical name", 
+"First name", "Company/Firm"). Optionally, TEITOK-related functionality is implemented in
+[teitok_alto.py](api_util/teitok_alto.py) 📎.
 
 ```bash
 ./api_4_stats.sh
 ```
 
-* **Input 1:** `OUTPUT_DIR/NE/*/*.tsv` (NE annotated per-page files).
-* **Input 2:** `OUTPUT_DIR/UDP/*.conllu` (Intermediate per-document CoNLL-U files).
-* **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv`.
-* **Output 2:** `OUTPUT_DIR/UDP_NE/*.csv` (per-document CSV files with NE and UDPipe features).
-* **Output 3:** `OUTPUT_DIR/UDP_NE/*.conllu` (per-document CoNLL-U files with NE).
+#### Inputs and Outputs
 
-Run the following command to see how many documents have been processed into CSV files:
+* **Input 1:** `OUTPUT_DIR/UDP/*.conllu` — Per-document CoNLL-U files containing morphology and syntax.
+* **Input 2:** `OUTPUT_DIR/NE/*/*.tsv` — Per-page TSV files containing Named Entity annotations.
+* **Input 3 (Optional):** `ALTO_DIR/*.alto.xml` — Source ALTO XML files used during TEITOK conversion to provide spatial bounding box coordinates for each token.
+
+* **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv` — Global table of aggregated Named Entity statistics across all documents.
+* **Output 2:** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.csv` — Per-document CSV tables with tokens, lemmas, and human-readable NE explanations.
+* **Output 3 (Optional):** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.conllu` — Final CoNLL-U files with NER tags enriched in the `MISC` column.
+* **Output 4 (Optional):** `OUTPUT_DIR/TEITOK/<doc_id>.teitok.xml` — TEITOK-style TEI XML files ready for the **flexiconv** converter and facsimile viewing (see below).
+
+The behavior of this step is controlled by boolean flags in your [config_api.txt](config_api.txt):
+
+| Variable         | Description                                                                   | Default |
+|------------------|-------------------------------------------------------------------------------|---------|
+| `SAVE_CONLLU_NE` | Keep the enriched CoNLL-U with NER in the `MISC` field.                       | `true`  |
+| `SAVE_CSV`       | Write the token-level summary CSV per document.                               | `true`  |
+| `SAVE_TEITOK`    | Write TEITOK-style TEI XML with bounding boxes and NER spans (requires ALTO). | `true`  |
+
+
+#### ALTO-to-TEITOK XML Generation and Coordinate Alignment
+
+When `SAVE_TEITOK=true`, the script  ([teitok_alto.py](api_util/teitok_alto.py) 📎) 
+generates standard-compliant TEITOK XML by aligning UDPipe tokens to spatial bounding 
+boxes from the corresponding ALTO XML file. 
+
+This alignment is powered by an optimal sequence matching algorithm 
+(`difflib.SequenceMatcher`). By flattening all ALTO `String` elements into a single 
+NFC-normalized character sequence and mapping the token forms against it, the aligner 
+seamlessly bridges complex OCR and tokeniser mismatches (such as arbitrary word splits, 
+differing forms, or missing characters). This robust approach ensures virtually 100% 
+of available ALTO bounding boxes are successfully transferred to the output tokens.
+
+The structural and spatial hierarchy from the ALTO file is strictly preserved in the generated TEITOK XML:
+* **Tokens:** Matched coordinates are written to each `<tok>` element as `@bbox="x1 y1 x2 y2"` (absolute 
+pixel coordinates in TEITOK's hOCR-derived format). Each token also carries `@type="w"` (word) or 
+`@type="pc"` (punctuation character) derived from UDPipe's UPOS tag.
+* **Lines:** ALTO `<TextLine>` elements are preserved via `<lb>` (line break) tags, which also include 
+their own `@bbox` spatial coordinates.
+* **Blocks:** Text blocks are encapsulated within `<div type="MarginTextZone-P">` containers, satisfying 
+the core ATRIUM guidelines for classified text zones.
+* **Graphics:** Non-text elements like `Illustration` and `GraphicalElement` blocks are parsed and 
+appended to their respective pages as `<figure>` tags with strict bounding boxes.
+* **Pages:** Page boundaries are marked with `<pb n="N" id="..." facs="..."/>` elements pointing to 
+the specific document surface.
+
+Named entity spans are wrapped in `<name>` elements grouping their constituent `<tok>` nodes. 
+Two attributes encode the entity type at different levels of granularity: `@type` holds the CoNLL-style 
+category (`PER`, `ORG`, `LOC`, or `MISC`) intended for querying and interoperability, while `@cnec` carries
+the raw CNEC 2.0 code (e.g., `pf`, `gu`, `if`) for use in visualisation. For example, a span tagged as a 
+first name is written as `<name type="PER" cnec="pf">`. 
+
+> [!NOTE]
+> Thanks to the sequence matching approach, the script achieves near-perfect spatial alignment between 
+> NLP tokens and OCR coordinates, drastically improving upon older greedy matching methods that would 
+> break on minor character variations. Alignment statistics (matched vs. total tokens) are printed to
+> the console per document.
+
+
+<details>
+<summary> Commands to check progress of the script </summary>
+  Run the following command to see how many documents have been processed into CSV files:
 
 ```bash
-ls -l OUTPUT_DIR/UDP_NE | wc -l
+ls OUTPUT_DIR/UDP_NE | wc -l
 ```
-which returns the total number of created files, both `.csv` and `.conllu` corresponding to specific documents.
+which returns the total number of created files, both `.csv` and `.conllu` corresponding 
+to specific documents.
 
 ```bash
-ls -l OUTPUT_DIR/UDP_NE/*.csv | wc -l
+ls OUTPUT_DIR/UDP_NE/*/*.csv | wc -l
 ```
-returns number of processed documents.
+returns number of documents processed into tables
 
-Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎.
+```bash
+ls OUTPUT_DIR/TEITOK/*.xml | wc -l
+```
+returns number of recorded `.teitok.xml` documents.
 
-Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV tables with NE tag and columns for 
-UDPipe features, plus, CoNLL-U files with NE annotations also in per-document manner.
+</details>
+
+Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎.
+
+Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV 
+tables with NE tags and UDPipe feature columns, plus CoNLL-U files with NE annotations in 
+per-document manner.
+
+Example output directory [TEITOK](data_samples%2FTEITOK) 📁 contains per-document TEITOK 
+XML files combining UD linguistic annotations and NER spans with bounding boxes aligned 
+from the source ALTO XML.
+
 
 #### Output Structure
 
@@ -230,15 +314,21 @@ TEMP/
 AND
 ```
 <OUTPUT_DIR>
-├── UDP_NE/          
-│   ├── <doc_id>.csv       
-│   ├── <doc_id>.conllu     
-│   ├── <doc_id>.csv       
-│   ├── <doc_id>.conllu     
-│   └── ...
+├── UDP_NE/
+│   ├── <doc_id>     
+│   │   ├── <doc_id>.csv    
+│   │   └── <doc_id>.conllu     
+│   ├── <doc_id>     
+│   │   ├── <doc_id>.csv    
+│   │   └── <doc_id>.conllu     
+│   └── ...          
 ├── UDP/  
 │   ├── <doc_id>.conllu
 │   ├── <doc_id>.conllu
+│   └── ...
+├── TEITOK/  
+│   ├── <doc_id>.teitok.xml
+│   ├── <doc_id>.teitok.xml
 │   └── ...
 ├── NE/           
 │   ├── <doc_id>     
@@ -262,10 +352,15 @@ statistics across all processed pages.
 > The final CoNLL-U files with NER features are in `<OUTPUT_DIR>/UDP_NE/`.
 
 If you do not plan to rerun any part of the pipeline, you can also delete 
-the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest.tsv) 📎.
+the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎.
 
 
 ### EXTRA: Extract Keywords (KER) based on tf-idf
+
+> [!NOTE]
+> This is an optional step in NLP enrichment of your data since it can give an overview of the 
+> whole collection in a relatively short time. Moreover, this process requires lemmas 
+> of words (output of Step 2) to get informative results.
 
 Finally, you can extract keywords 🔎 from your text. This script runs on a directory of
 document-specific `.conllu` files (e.g., `OUTPUT_DIR/UDP/`) containing ordered text content with word lemmas..
@@ -289,7 +384,7 @@ where short flag meanings are (listed in the same order as used above):
 * **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
 
 This process creates `.csv` table with the columns like `file`, and pairs of `kw-<N>` (N-th keyword)) 
-and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_summary.csv](data_samples/keywords_summary.csv) 📎.
+and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_summary.csv](data_samples/keywords_summary_SHORT.csv) 📎.
 
 Example of per-document CSV file with keywords: [KW_PER_DOC](data_samples/KW_PER_DOC) 📁.
 
@@ -313,6 +408,8 @@ Where each file contains **keyword** plus its **score** in two columns sorted by
 The table above specifies how to interpret keyword scores returned by the KER algorithm based on their 
 TF-IDF values computed inside the system.
 
+> [!NOTE]
+> This step was considered unnecessary for the ATRIUM project
 
 ---
 
@@ -331,10 +428,10 @@ TF-IDF values computed inside the system.
 **©️ 2026 UFAL & ATRIUM**
 
 [^1]: https://github.com/ufal/ker
-[^2]: https://github.com/K4TEL/atrium-alto-postprocess
+[^2]: https://github.com/ufal/atrium-alto-postprocess
 [^3]: https://ufal.mff.cuni.cz/~strakova/cnec2.0/ne-type-hierarchy.pdf
 [^4]: https://atrium-research.eu/
 [^5]: https://lindat.mff.cuni.cz/services/udpipe/api-reference.php
 [^6]: https://lindat.mff.cuni.cz/services/nametag/api-reference.php
-[^8]: https://github.com/K4TEL/atrium-nlp-enrich
+[^8]: https://github.com/ufal/atrium-nlp-enrich
 [^7]: https://ufal.mff.cuni.cz/home-page
