@@ -1,0 +1,423 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = OBEC Žinkovy OKRES
+1	OBEC	obec	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	Žinkovy	Žinkův	ADJ	AUFP1M---------	Case=Nom|Gender=Fem|Gender[psor]=Masc|NameType=Giv|Number=Plur|Poss=Yes	3	amod	_	_
+3	OKRES	okres	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	nmod	_	_
+
+# sent_id = 2
+# text = I lzeň- jih vir -Blovice) c i. 6% 466 /60 Ex,. Č. poř. ČÍSLO PARCELY NÁZEV TRATI
+1	I	I	NUM	C}-------------	NumForm=Roman|NumType=Card	2	nummod	_	_
+2	lzeň	lzeň	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	0	root	_	SpaceAfter=No
+3	-	-	PUNCT	Z:-------------	_	4	punct	_	_
+4	jih	jih	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	2	nmod	_	_
+5	vir	vir	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	4	nmod	_	_
+6	-	-	PUNCT	Z:-------------	_	7	punct	_	SpaceAfter=No
+7	Blovice	Blovice	PROPN	NNFP1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Plur	5	nmod	_	SpaceAfter=No
+8	)	)	PUNCT	Z:-------------	_	2	punct	_	_
+9	c	c	NOUN	Q3-------------	Abbr=Yes	2	nmod	_	_
+10	i	i	NOUN	Q3-------------	Abbr=Yes	12	nmod	_	SpaceAfter=No
+11	.	.	PUNCT	Z:-------------	_	10	punct	_	_
+12	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	2	dep	_	SpaceAfter=No
+13	%	%	SYM	Z:-------------	_	12	nmod	_	_
+14	466	466	NUM	C=-------------	NumForm=Digit|NumType=Card	13	nummod	_	_
+15	/	/	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+16	60	60	NUM	C=-------------	NumForm=Digit|NumType=Card	14	compound	_	_
+17	Ex	Ex	NOUN	BNXXX-----A----	Abbr=Yes	14	nmod	_	SpaceAfter=No
+18	,	,	PUNCT	Z:-------------	_	22	punct	_	SpaceAfter=No
+19	.	.	PUNCT	Z:-------------	_	22	punct	_	_
+20	Č	Č	NOUN	Q3-------------	Abbr=Yes	22	nmod	_	SpaceAfter=No
+21	.	.	PUNCT	Z:-------------	_	20	punct	_	_
+22	poř	poř	NOUN	NNIXX-----A---b	Abbr=Yes|Gender=Neut	2	conj	_	SpaceAfter=No
+23	.	.	PUNCT	Z:-------------	_	22	punct	_	_
+24	ČÍSLO	číslo	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	2	nmod	_	_
+25	PARCELY	parcela	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	24	nmod	_	_
+26	NÁZEV	název	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	24	nmod	_	_
+27	TRATI	trať	NOUN	NNFS2-----A---1	Case=Gen|Gender=Fem|Number=Sing	26	nmod	_	_
+
+# sent_id = 3
+# text = PřUohy - M' Potenštejn Kultura středověk ČÍSLO MAPY kooa s« 7 • / Druh nálezu keramika a kosti Literatura A. Sedláček, lístopisný slovnik historický, str. 721. •
+1	PřUohy	Přuohy	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	1	punct	_	_
+3	M	M	NOUN	Q3-------------	Abbr=Yes	5	nmod	_	SpaceAfter=No
+4	'	'	PUNCT	Z:-------------	_	3	punct	_	_
+5	Potenštejn	Potenštejn	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	1	conj	_	_
+6	Kultura	kultura	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+7	středověk	středověk	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+8	ČÍSLO	číslo	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	dep	_	_
+9	MAPY	mapa	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	8	nmod	_	_
+10	kooa	kooa	X	F%-------------	Foreign=Yes	8	nmod	_	_
+11	s«	s«	NOUN	BNXXX-----A----	Abbr=Yes	8	nmod	_	_
+12	7	7	NUM	C=-------------	NumForm=Digit|NumType=Card	11	nummod	_	_
+13	•	•	NOUN	Q3-------------	Abbr=Yes	12	nmod	_	_
+14	/	/	PUNCT	Z:-------------	_	15	punct	_	_
+15	Druh	druh	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+16	nálezu	nález	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	15	nmod	_	_
+17	keramika	keramika	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	16	nmod	_	_
+18	a	a	CCONJ	J^-------------	_	19	cc	_	_
+19	kosti	kost	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	17	conj	_	_
+20	Literatura	literatura	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	15	nmod	_	_
+21	A	A	NOUN	Q3-------------	Abbr=Yes	23	nmod	_	SpaceAfter=No
+22	.	.	PUNCT	Z:-------------	_	21	punct	_	_
+23	Sedláček	Sedláček	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	20	nmod	_	SpaceAfter=No
+24	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+25	lístopisný	lístopisný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	26	amod	_	_
+26	slovnik	slovnik	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	23	nmod	_	_
+27	historický	historický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	26	amod	_	SpaceAfter=No
+28	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+29	str	strana	NOUN	NNFXX-----A---a	Abbr=Yes|Gender=Fem	23	nmod	_	SpaceAfter=No
+30	.	.	PUNCT	Z:-------------	_	29	punct	_	_
+31	721	721	NUM	C=-------------	NumForm=Digit|NumType=Card	29	nummod	_	SpaceAfter=No
+32	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+33	•	•	NOUN	Z:-------------	_	1	nmod	_	_
+
+# sent_id = 4
+# text = Uložení OS Blovi ca čís. inv. t Dno 20. dubna l%0 jsem na výsva správee 6kresního muzea v Blovi- eích o ním prohlódla zříceninu hrd "ku Poten3te jna, k.o. Žinkovy.
+1	Uložení	uložení	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	30	nsubj	_	_
+2	OS	OS	NOUN	BNXXX-----A----	Abbr=Yes	1	nmod	_	_
+3	Blovi	Blovi	PROPN	F%-------------	Foreign=Yes	2	nmod	_	_
+4	ca	ca	X	F%-------------	Foreign=Yes	3	nmod	_	_
+5	čís	čís	NOUN	F%-------------	Abbr=Yes	3	nmod	_	SpaceAfter=No
+6	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+7	inv	inv	NOUN	F%-------------	Abbr=Yes	3	nmod	_	SpaceAfter=No
+8	.	.	PUNCT	Z:-------------	_	7	punct	_	_
+9	t	t	NOUN	Q3-------------	Abbr=Yes	1	nmod	_	_
+10	Dno	dno	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	nmod	_	_
+11	20	20	NUM	C=-------------	NumForm=Digit|NumType=Card	13	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	11	punct	_	_
+13	dubna	duben	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	10	nmod	_	_
+14	l	litr	NOUN	Q3-------------	Abbr=Yes	13	nmod	_	SpaceAfter=No
+15	%	%	SYM	Z:-------------	_	14	nmod	_	SpaceAfter=No
+16	0	0	NUM	C=-------------	NumForm=Digit|NumType=Card	15	nummod	_	_
+17	jsem	být	AUX	VB-S---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	30	aux	_	_
+18	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	19	case	_	_
+19	výsva	výsva	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	30	obl	_	_
+20	správee	správee	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	19	nmod	_	_
+21	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	23	nummod	_	SpaceAfter=No
+22	kresního	kresní	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	23	amod	_	_
+23	muzea	muzeum	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	20	nmod	_	_
+24	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	25	case	_	_
+25	Blovi	Bla	PROPN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|NameType=Geo|Number=Sing	23	nmod	_	SpaceAfter=No
+26	-	-	PUNCT	Z:-------------	_	27	punct	_	_
+27	eích	eíec	NOUN	NNIP6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	25	nmod	_	_
+28	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	29	case	_	_
+29	ním	on	PRON	PEZS6--3-------	Case=Loc|Gender=Masc,Neut|Number=Sing|Person=3|PrepCase=Pre|PronType=Prs	30	obl	_	_
+30	prohlódla	prohlódnout	VERB	VpQW----R-AAP-1	Aspect=Perf|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+31	zříceninu	zřícenina	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	30	obj	_	_
+32	hrd	hrda	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	31	nmod	_	_
+33	"	"	PUNCT	Z:-------------	_	35	punct	_	SpaceAfter=No
+34	ku	k	ADP	RV--3---------1	AdpType=Voc|Case=Dat	35	case	_	_
+35	Poten	Poten	X	F%-------------	Foreign=Yes	31	nmod	_	SpaceAfter=No
+36	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	35	nummod	_	SpaceAfter=No
+37	te	te	X	F%-------------	Foreign=Yes	35	flat:foreign	_	_
+38	jna	jna	X	F%-------------	Foreign=Yes	35	flat:foreign	_	SpaceAfter=No
+39	,	,	PUNCT	Z:-------------	_	44	punct	_	_
+40	k	k	NOUN	Q3-------------	Abbr=Yes	44	nmod	_	SpaceAfter=No
+41	.	.	PUNCT	Z:-------------	_	40	punct	_	SpaceAfter=No
+42	o	o	NOUN	Q3-------------	Abbr=Yes	44	nmod	_	SpaceAfter=No
+43	.	.	PUNCT	Z:-------------	_	42	punct	_	_
+44	Žinkovy	Žinkovy	PROPN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Plur	35	nmod	_	SpaceAfter=No
+45	.	.	PUNCT	Z:-------------	_	30	punct	_	_
+
+# sent_id = 5
+# text = Ze zřiceníny "je odkryto adivo v Síří asi 2 m tvořící téměž tverec o straně 40 - 50 m s vehodem ve výchoní stně.
+1	Ze	z	ADP	RV--2----------	AdpType=Voc|Case=Gen	2	case	_	_
+2	zřiceníny	zřicenín	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	5	obl	_	_
+3	"	"	PUNCT	Z:-------------	_	2	punct	_	SpaceAfter=No
+4	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	5	cop	_	_
+5	odkryto	odkrytý	ADJ	VsNS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+6	adivo	adivo	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	5	advmod	_	_
+7	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+8	Síří	Síře	PROPN	NNNS6-----A----	Case=Loc|Gender=Neut|NameType=Geo|Number=Sing	5	obl	_	_
+9	asi	asi	PART	TT-------------	_	11	advmod:emph	_	_
+10	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	11	nummod	_	_
+11	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	5	nsubj	_	_
+12	tvořící	tvořící	ADJ	AGIS1-----A----	Animacy=Inan|Aspect=Imp|Case=Nom|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Pres|VerbForm=Part|Voice=Act	11	amod	_	_
+13	téměž	téměž	ADV	Db-------------	_	14	advmod:emph	_	_
+14	tverec	tverec	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	12	obj	_	_
+15	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	16	case	_	_
+16	straně	strana	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	14	nmod	_	_
+17	40	40	NUM	C=-------------	NumForm=Digit|NumType=Card	16	nummod	_	_
+18	-	-	PUNCT	Z:-------------	_	19	punct	_	_
+19	50	50	NUM	C=-------------	NumForm=Digit|NumType=Card	17	conj	_	_
+20	m	metr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	17	nmod	_	_
+21	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	22	case	_	_
+22	vehodem	vehod	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	14	nmod	_	_
+23	ve	v	ADP	RV--6----------	AdpType=Voc|Case=Loc	25	case	_	_
+24	výchoní	výchoní	ADJ	AAFS6----1A----	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	25	amod	_	_
+25	stně	stna	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	22	nmod	_	SpaceAfter=No
+26	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 6
+# text = V zemině ol hozené při o krývání alive jsme nalez2í ein slomkry keramiky posdn hradištní ho a atředověkého charaktera a četné zvířeeí kost1. rádei je .
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	2	case	_	_
+2	zemině	zemina	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	10	obl	_	_
+3	ol	ol	NOUN	BNXXX-----A----	Abbr=Yes	2	nmod	_	_
+4	hozené	hozený	ADJ	AAFS6----1A----	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	2	amod	_	_
+5	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	_
+6	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	_
+7	krývání	krývání	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	4	obl	_	_
+8	alive	alive	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	_
+9	jsme	být	AUX	VB-P---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	10	aux	_	_
+10	nalez	nalez	VERB	Vi-S---2--A-P--	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	0	root	_	SpaceAfter=No
+11	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	12	nummod	_	SpaceAfter=No
+12	í	í	X	F%-------------	Foreign=Yes	10	obl	_	_
+13	ein	ein	X	F%-------------	Foreign=Yes	14	nmod	_	_
+14	slomkry	slomkry	NOUN	NNIP4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	10	obj	_	_
+15	keramiky	keramika	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	14	nmod	_	_
+16	posdn	posdn	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	15	nmod	_	_
+17	hradištní	hradištní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	18	amod	_	_
+18	ho	on	PRON	P5ZS4--3-------	Case=Acc|Gender=Masc,Neut|Number=Sing|Person=3|PronType=Prs|Variant=Short	16	nmod	_	_
+19	a	a	CCONJ	J^-------------	_	21	cc	_	_
+20	atředověkého	atředověký	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	21	amod	_	_
+21	charaktera	charakter	NOUN	NNIS2-----A---1	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	16	conj	_	_
+22	a	a	CCONJ	J^-------------	_	25	cc	_	_
+23	četné	četný	ADJ	AAFP4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	25	amod	_	_
+24	zvířeeí	zvířeeí	ADJ	AAFS4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	25	amod	_	_
+25	kost	kost	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	14	conj	_	SpaceAfter=No
+26	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	28	nummod	_	SpaceAfter=No
+27	.	.	PUNCT	Z:-------------	_	26	punct	_	_
+28	rádei	ráde	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	25	nmod	_	_
+29	je	být	AUX	PEXP4--3-------	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	25	cop	_	_
+30	.	.	PUNCT	Z:-------------	_	10	punct	_	_
+
+# sent_id = 7
+# text = 4 umístn na ostrožnu.
+1	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	0	root	_	_
+2	umístn	umístný	VERB	Vi-S---2--A-P--	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	dep	_	_
+3	na	na	ADP	RR--4----------	AdpType=Prep|Case=Acc	4	case	_	_
+4	ostrožnu	ostrožna	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	2	obl	_	SpaceAfter=No
+5	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 8
+# text = Která vybíhá smžrem k západu o epadá ostře dolů k dnešnímu zámkcu.
+1	Která	který	DET	P4FS1----------	Case=Nom|Gender=Fem|Number=Sing|PronType=Int,Rel	2	nsubj	_	_
+2	vybíhá	vybíhat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+3	smžrem	smžr	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	2	obl	_	_
+4	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	5	case	_	_
+5	západu	západ	NOUN	NNIS3-----A----	Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	2	obl	_	_
+6	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	_
+7	epadá	epadat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	2	conj	_	_
+8	ostře	ostře	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	7	advmod	_	_
+9	dolů	dolů	ADV	Db-------------	_	7	advmod	_	_
+10	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	12	case	_	_
+11	dnešnímu	dnešní	ADJ	AAIS3----1A----	Animacy=Inan|Case=Dat|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	12	amod	_	_
+12	zámkcu	zámkek	NOUN	NNIS3-----A----	Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	7	obl	_	SpaceAfter=No
+13	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+
+# sent_id = 9
+# text = Od východu je chránn mohutnýn příčným valen se širokým příkopem;
+1	Od	od	ADP	RR--2----------	AdpType=Prep|Case=Gen	2	case	_	_
+2	východu	východ	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	4	obl	_	_
+3	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	cop	_	_
+4	chránn	chránný	ADJ	VsYS----X-API--	Aspect=Imp|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+5	mohutnýn	mohutnýn	ADJ	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	4	nsubj	_	_
+6	příčným	příčný	ADJ	AAIS7----1A----	Animacy=Inan|Case=Ins|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	7	amod	_	_
+7	valen	valen	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	4	obl	_	_
+8	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	10	case	_	_
+9	širokým	široký	ADJ	AAIS7----1A----	Animacy=Inan|Case=Ins|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	10	amod	_	_
+10	příkopem	příkop	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	7	nmod	_	SpaceAfter=No
+11	;	;	PUNCT	Z:-------------	_	4	punct	_	_
+
+# sent_id = 10
+# text = popsaná stavba není na nejvyšším bode ostrožny.
+1	popsaná	popsaný	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	2	amod	_	_
+2	stavba	stavba	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	6	nsubj	_	_
+3	není	být	AUX	VB-S---3P-NAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act	6	cop	_	_
+4	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	6	case	_	_
+5	nejvyšším	vysoký	ADJ	AAIS6----3A----	Animacy=Inan|Case=Loc|Degree=Sup|Gender=Masc|Number=Sing|Polarity=Pos	6	amod	_	_
+6	bode	bod	NOUN	NNIS6-----A---1	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	0	root	_	_
+7	ostrožny	ostrožna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	SpaceAfter=No
+8	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+
+# sent_id = 11
+# text = Tato se smren k západu zvedá, jsou na ní zbytky Siltová vže umí- stné vně ji ho západní ho rohu stavby;
+1	Tato	tento	DET	PDFS1----------	Case=Nom|Gender=Fem|Number=Sing|PronType=Dem	6	nsubj	_	_
+2	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	6	expl:pv	_	_
+3	smren	smren	NOUN	ACYS------A----	_	6	advmod	_	_
+4	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	5	case	_	_
+5	západu	západ	NOUN	NNIS3-----A----	Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	6	obl	_	_
+6	zvedá	zvedat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+7	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+8	jsou	být	AUX	VB-P---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	10	cop	_	_
+9	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	_
+10	ní	on	PRON	PEFS6--3-------	Case=Loc|Gender=Fem|Number=Sing|Person=3|PrepCase=Pre|PronType=Prs	6	conj	_	_
+11	zbytky	zbytek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	10	nsubj	_	_
+12	Siltová	Siltová	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	11	amod	_	_
+13	vže	vže	NOUN	F%-------------	Foreign=Yes	14	nsubj	_	_
+14	umí	umět	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	11	acl	_	SpaceAfter=No
+15	-	-	PUNCT	Z:-------------	_	16	punct	_	_
+16	stné	stný	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	14	conj	_	_
+17	vně	vně	ADP	RR--2----------	AdpType=Prep|Case=Gen	18	case	_	_
+18	ji	on	PRON	PEFS4--3-------	Case=Acc|Gender=Fem|Number=Sing|Person=3|PrepCase=Npr|PronType=Prs	14	obl	_	_
+19	ho	on	PRON	P5ZS2--3-------	Case=Acc|Gender=Masc,Neut|Number=Sing|Person=3|PronType=Prs|Variant=Short	22	nmod	_	_
+20	západní	západní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	22	amod	_	_
+21	ho	on	PRON	P5ZS2--3-------	Case=Acc|Gender=Masc,Neut|Number=Sing|Person=3|PronType=Prs|Variant=Short	22	nmod	_	_
+22	rohu	roh	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	14	obl:arg	_	_
+23	stavby	stavba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	22	nmod	_	SpaceAfter=No
+24	;	;	PUNCT	Z:-------------	_	6	punct	_	_
+
+# sent_id = 12
+# text = terén zle je velmi nerový a pravpodobně kryje zíeeniny njakých dalších stavb.
+1	terén	terén	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	5	nsubj	_	_
+2	zle	zle	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	5	advmod	_	_
+3	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	5	cop	_	_
+4	velmi	velmi	ADV	Db-------------	_	5	advmod	_	_
+5	nerový	nerový	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	0	root	_	_
+6	a	a	CCONJ	J^-------------	_	8	cc	_	_
+7	pravpodobně	pravpodobně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	8	advmod	_	_
+8	kryje	krýt	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	5	conj	_	_
+9	zíeeniny	zíeenina	NOUN	NNFP4-----A----	Case=Acc|Gender=Fem|Number=Plur	8	obj	_	_
+10	njakých	njaký	DET	PZXP2----------	Case=Gen|Number=Plur|PronType=Ind	12	det	_	_
+11	dalších	další	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	12	amod	_	_
+12	stavb	stavba	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	9	nmod	_	SpaceAfter=No
+13	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 13
+# text = Val, který obepíná celý vrebol kopoc, je zde trojnásobný, přičemš nejméně snatel ný je val vnější.
+1	Val	val	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	11	nsubj	_	SpaceAfter=No
+2	,	,	PUNCT	Z:-------------	_	4	punct	_	_
+3	který	který	DET	P4YS1----------	Case=Nom|Gender=Masc|Number=Sing|PronType=Int,Rel	4	nsubj	_	_
+4	obepíná	obepínat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	1	acl:relcl	_	_
+5	celý	celý	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	6	amod	_	_
+6	vrebol	vrebol	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	4	obj	_	_
+7	kopoc	kopoc	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	6	nmod	_	SpaceAfter=No
+8	,	,	PUNCT	Z:-------------	_	4	punct	_	_
+9	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	11	cop	_	_
+10	zde	zde	ADV	Db-------------	PronType=Dem	11	advmod	_	_
+11	trojnásobný	trojnásobný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	0	root	_	SpaceAfter=No
+12	,	,	PUNCT	Z:-------------	_	16	punct	_	_
+13	přičemš	přičemš	ADV	Db-------------	PronType=Rel	16	advmod	_	_
+14	nejméně	méně	ADV	Dg-------3A----	Degree=Sup|Polarity=Pos	15	advmod	_	_
+15	snatel	snatel	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	16	obl	_	_
+16	ný	ný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	11	conj	_	_
+17	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	16	cop	_	_
+18	val	val	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	16	nsubj	_	_
+19	vnější	vnější	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	SpaceAfter=No
+20	.	.	PUNCT	Z:-------------	_	11	punct	_	_
+
+# sent_id = 14
+# text = fálezy ze sběru byly předány Ol v Blovicích.
+1	fálezy	fález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	5	nsubj:pass	_	_
+2	ze	z	ADP	RV--2----------	AdpType=Voc|Case=Gen	3	case	_	_
+3	sběru	sběr	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	1	nmod	_	_
+4	byly	být	AUX	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	5	aux:pass	_	_
+5	předány	předaný	ADJ	VsTP----X-APP--	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+6	Ol	Ol	NOUN	BNXXX-----A----	Abbr=Yes	5	obj	_	_
+7	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+8	Blovicích	Blovice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	6	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 15
+# text = Hrúdek byl posteven v !• 12521259 Ptou z Křimic, trval v eúbělm 13. a 1. stol* , počátkem 16. stole byl již zpustlý a vrch zarost- 1$ 4 . Sedláčelt, Místopisný slovník historický, str.721).
+1	Hrúdek	hrúdek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	3	nsubj:pass	_	_
+2	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	3	aux:pass	_	_
+3	posteven	postevený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+4	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+5	!	!	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No
+6	•	•	SYM	Z:-------------	Abbr=Yes	7	nmod	_	_
+7	12521259	12521259	NUM	C=-------------	NumForm=Digit|NumType=Card	8	nummod	_	_
+8	Ptou	Pta	PROPN	NNMS7-----A----	Animacy=Anim|Case=Ins|Gender=Masc|NameType=Giv|Number=Sing	3	obl	_	_
+9	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	10	case	_	_
+10	Křimic	Křimice	PROPN	NNFP2-----A----	Case=Gen|Gender=Fem|NameType=Geo|Number=Plur	8	nmod	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	trval	trvat	VERB	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	3	conj	_	_
+13	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	14	case	_	_
+14	eúbělm	eúběl	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	12	obl	_	_
+15	13	13	NUM	C=-------------	NumForm=Digit|NumType=Card	20	nummod	_	SpaceAfter=No
+16	.	.	PUNCT	Z:-------------	_	15	punct	_	_
+17	a	a	CCONJ	J^-------------	_	18	cc	_	_
+18	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	15	conj	_	SpaceAfter=No
+19	.	.	PUNCT	Z:-------------	_	18	punct	_	_
+20	stol	stol	NOUN	NNNP2-----A----	Case=Gen|Gender=Neut|Number=Plur	14	nmod	_	SpaceAfter=No
+21	*	*	PUNCT	Z:-------------	_	20	punct	_	_
+22	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+23	počátkem	počátek	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	26	case	_	_
+24	16	16	NUM	C=-------------	NumForm=Digit|NumType=Card	26	nummod	_	SpaceAfter=No
+25	.	.	PUNCT	Z:-------------	_	24	punct	_	_
+26	stole	stůl	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	29	obl	_	_
+27	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	29	cop	_	_
+28	již	již	ADV	Db-------------	_	29	advmod	_	_
+29	zpustlý	zpustlý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	3	conj	_	_
+30	a	a	CCONJ	J^-------------	_	32	cc	_	_
+31	vrch	vrch	ADV	NNIS1-----A----	_	29	conj	_	_
+32	zarost	zarost	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	29	conj	_	SpaceAfter=No
+33	-	-	PUNCT	Z:-------------	_	38	punct	_	_
+34	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	38	nummod	_	SpaceAfter=No
+35	$	$	SYM	Z:-------------	_	34	nmod	_	_
+36	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	38	nummod	_	_
+37	.	.	PUNCT	Z:-------------	_	36	punct	_	_
+38	Sedláčelt	Sedláčelt	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	3	conj	_	SpaceAfter=No
+39	,	,	PUNCT	Z:-------------	_	41	punct	_	_
+40	Místopisný	místopisný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	41	amod	_	_
+41	slovník	slovník	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	38	conj	_	_
+42	historický	historický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	41	amod	_	SpaceAfter=No
+43	,	,	PUNCT	Z:-------------	_	44	punct	_	_
+44	str	strana	NOUN	NNFXX-----A---a	Abbr=Yes|Gender=Fem	38	dep	_	SpaceAfter=No
+45	.721	.721	NUM	C=-------------	NumForm=Digit|NumType=Card	44	nummod	_	SpaceAfter=No
+46	)	)	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No
+47	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 16
+# text = Pokud nálezy hradištní keranikry souvisí se hrdkem, nebo pokud by patrily otarším ocí^Q-nl slovonskému, nebylo při zbžné pronlídce možno zjistit.
+1	Pokud	pokud	SCONJ	J,-------------	_	5	mark	_	_
+2	nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	5	nsubj	_	_
+3	hradištní	hradištní	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	4	amod	_	_
+4	keranikry	keranikr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	2	nmod	_	_
+5	souvisí	souviset	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	25	advcl	_	_
+6	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	7	case	_	_
+7	hrdkem	hrdek	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	5	obl:arg	_	SpaceAfter=No
+8	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+9	nebo	nebo	CCONJ	J^-------------	_	12	cc	_	_
+10	pokud	pokud	SCONJ	J,-------------	_	12	mark	_	_
+11	by	být	AUX	Vc----------I--	Aspect=Imp|Mood=Cnd|VerbForm=Fin	12	aux	_	_
+12	patrily	patrit	VERB	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	5	conj	_	_
+13	otarším	otarý	ADJ	AAFP3----2A----	Case=Dat|Degree=Cmp|Gender=Fem|Number=Plur|Polarity=Pos	14	amod	_	_
+14	ocí	oc	NOUN	NNFP3-----A----	Case=Dat|Gender=Fem|Number=Plur	12	obl:arg	_	SpaceAfter=No
+15	^	^	PUNCT	Z:-------------	_	18	punct	_	SpaceAfter=No
+16	Q	Q	NOUN	Q3-------------	Abbr=Yes	18	nmod	_	SpaceAfter=No
+17	-	-	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+18	nl	nl	NOUN	Q3-------------	Abbr=Yes	14	nmod	_	_
+19	slovonskému	slovonský	ADJ	AANS3----1A----	Animacy=Inan|Case=Dat|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	SpaceAfter=No
+20	,	,	PUNCT	Z:-------------	_	5	punct	_	_
+21	nebylo	být	AUX	VpNS----R-NAI--	Aspect=Imp|Gender=Neut|Number=Sing|Polarity=Neg|Tense=Past|VerbForm=Part|Voice=Act	25	cop	_	_
+22	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	24	case	_	_
+23	zbžné	zbžný	ADJ	AAFS6----1A----	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	24	amod	_	_
+24	pronlídce	pronlídka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	25	obl	_	_
+25	možno	možný	ADJ	ACNS------A----	Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short	0	root	_	_
+26	zjistit	zjistit	VERB	Vf--------A-P--	Aspect=Perf|Polarity=Pos|VerbForm=Inf	25	csubj	_	SpaceAfter=No
+27	.	.	PUNCT	Z:-------------	_	25	punct	_	_
+
+# sent_id = 17
+# text = $) /. (ren. - Ald, , 8.12.1960.
+1	$	$	SYM	BNXXX-----A----	_	0	root	_	SpaceAfter=No
+2	)	)	PUNCT	Z:-------------	_	1	punct	_	_
+3	/	/	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	(	(	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No
+6	ren	ren	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Giv	1	dep	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	-	-	PUNCT	Z:-------------	_	9	punct	_	_
+9	Ald	Ald	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	6	conj	_	SpaceAfter=No
+10	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	8.12	8.12	NUM	C=-------------	NumForm=Digit|NumType=Card	6	conj	_	SpaceAfter=No
+13	.	.	PUNCT	Z:-------------	_	12	punct	_	SpaceAfter=No
+14	1960	1960	NUM	C=-------------	NumForm=Digit|NumType=Card	12	compound	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 18
+# text = Ar. V. Stefgnovi-Seldov /
+1	Ar	Ar	NOUN	Q3-------------	Abbr=Yes	5	nmod	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	V	V	NOUN	Q3-------------	Abbr=Yes	5	nmod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+5	Stefgnovi	Stefgn	PROPN	NNMS3-----A----	Animacy=Anim|Case=Dat|Gender=Masc|NameType=Giv|Number=Sing	0	root	_	SpaceAfter=No
+6	-	-	PUNCT	Z:-------------	_	7	punct	_	SpaceAfter=No
+7	Seldov	Seldov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	5	conj	_	_
+8	/	/	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No
+

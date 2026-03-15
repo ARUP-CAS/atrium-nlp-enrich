@@ -1,0 +1,399 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = Č. akce 45938 ARCHEOLOGICKÝ ÚSTAV AKADEMIE VĚD ČR, Praha, v.v.i.
+1	Č	český	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	akce	akce	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	1	nmod	_	_
+4	45938	45938	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	ARCHEOLOGICKÝ	archeologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	6	amod	_	_
+6	ÚSTAV	ústav	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+7	AKADEMIE	akademie	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	_
+8	VĚD	věda	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	7	nmod	_	_
+9	ČR	ČR	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Geo	8	nmod	_	SpaceAfter=No
+10	,	,	PUNCT	Z:-------------	_	11	punct	_	_
+11	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	6	nmod	_	SpaceAfter=No
+12	,	,	PUNCT	Z:-------------	_	17	punct	_	_
+13	v	v	NOUN	Q3-------------	Abbr=Yes	17	nmod	_	SpaceAfter=No
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+15	v	v	NOUN	Q3-------------	Abbr=Yes	17	nmod	_	SpaceAfter=No
+16	.	.	PUNCT	Z:-------------	_	15	punct	_	SpaceAfter=No
+17	i	i	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	SpaceAfter=No
+18	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 2
+# text = 118 01 Praha 1 - Malá Strana, Letenská 4 Pracoviště Kutná Hora, Hloušecká 609, 284 01 Kutná Hora tel.: 327 511 730, e-mail: archeologiekh@seznam.cz V Kutné Hoře 1.7.2014 Ing. Jan Přibyl Mgr. Jana Přibylová Spodní 682 Spodní 682 625 00 Brno 625 00 Brno VĚC: zpráva o provedení záchranného archeologického výzkumu při akci - Čáslav - novostavba rodinného domu na ppč. 1642/17,18 v k.ú. Čáslav.
+1	118	118	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+2	01	01	NUM	C=-------------	NumForm=Digit|NumType=Card	1	compound	_	_
+3	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	0	root	_	_
+4	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	-	-	PUNCT	Z:-------------	_	7	punct	_	_
+6	Malá	malý	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	7	amod	_	_
+7	Strana	strana	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	nmod	_	SpaceAfter=No
+8	,	,	PUNCT	Z:-------------	_	9	punct	_	_
+9	Letenská	letenský	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	3	amod	_	_
+10	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	_
+11	Pracoviště	pracoviště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	3	nmod	_	_
+12	Kutná	Kutná	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	13	nmod	_	_
+13	Hora	hora	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	11	nmod	_	SpaceAfter=No
+14	,	,	PUNCT	Z:-------------	_	15	punct	_	_
+15	Hloušecká	hloušecký	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	21	amod	_	_
+16	609	609	NUM	C=-------------	NumForm=Digit|NumType=Card	15	nummod	_	SpaceAfter=No
+17	,	,	PUNCT	Z:-------------	_	18	punct	_	_
+18	284	284	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	_
+19	01	01	NUM	C=-------------	NumForm=Digit|NumType=Card	18	compound	_	_
+20	Kutná	Kutná	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	21	nmod	_	_
+21	Hora	hora	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	nmod	_	_
+22	tel	telefon	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	21	nmod	_	SpaceAfter=No
+23	.	.	PUNCT	Z:-------------	_	22	punct	_	SpaceAfter=No
+24	:	:	PUNCT	Z:-------------	_	25	punct	_	_
+25	327	327	NUM	C=-------------	NumForm=Digit|NumType=Card	22	nummod	_	_
+26	511	511	NUM	C=-------------	NumForm=Digit|NumType=Card	25	compound	_	_
+27	730	730	NUM	C=-------------	NumForm=Digit|NumType=Card	26	compound	_	SpaceAfter=No
+28	,	,	PUNCT	Z:-------------	_	31	punct	_	_
+29	e	e	ADJ	Q3-------------	Abbr=Yes	31	amod	_	SpaceAfter=No
+30	-	-	PUNCT	Z:-------------	_	29	punct	_	SpaceAfter=No
+31	mail	mail	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	22	conj	_	SpaceAfter=No
+32	:	:	PUNCT	Z:-------------	_	33	punct	_	_
+33	archeologiekh@seznam.cz	archeologiekh@seznam.cz	X	F%-------------	Foreign=Yes	31	nmod	_	_
+34	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	36	case	_	_
+35	Kutné	Kutná	PROPN	NNFS6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Sing	36	nmod	_	_
+36	Hoře	hora	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	33	nmod	_	_
+37	1.7.2014	1.7.2014	NUM	C=-------------	NumForm=Digit|NumType=Card	33	nummod	_	_
+38	Ing	Ing	NOUN	BNXXX-----A----	Abbr=Yes	40	nmod	_	SpaceAfter=No
+39	.	.	PUNCT	Z:-------------	_	38	punct	_	_
+40	Jan	Jan	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	33	nmod	_	_
+41	Přibyl	Přibyl	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	40	flat	_	_
+42	Mgr	Mgr	NOUN	BNXXX-----A----	Abbr=Yes	40	nmod	_	SpaceAfter=No
+43	.	.	PUNCT	Z:-------------	_	42	punct	_	_
+44	Jana	Jana	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	40	flat	_	_
+45	Přibylová	Přibylová	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	40	flat	_	_
+46	Spodní	spodní	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	52	amod	_	_
+47	682	682	NUM	C=-------------	NumForm=Digit|NumType=Card	46	nummod	_	_
+48	Spodní	spodní	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	52	amod	_	_
+49	682	682	NUM	C=-------------	NumForm=Digit|NumType=Card	46	nummod	_	_
+50	625	625	NUM	C=-------------	NumForm=Digit|NumType=Card	52	nummod	_	_
+51	00	00	NUM	C=-------------	NumForm=Digit|NumType=Card	50	compound	_	_
+52	Brno	Brno	PROPN	NNNS1-----A----	Case=Nom|Gender=Neut|NameType=Geo|Number=Sing	33	nmod	_	_
+53	625	625	NUM	C=-------------	NumForm=Digit|NumType=Card	52	nummod	_	_
+54	00	00	NUM	C=-------------	NumForm=Digit|NumType=Card	53	compound	_	_
+55	Brno	Brno	PROPN	NNNS1-----A----	Case=Nom|Gender=Neut|NameType=Geo|Number=Sing	3	nmod	_	_
+56	VĚC	věc	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	dep	_	SpaceAfter=No
+57	:	:	PUNCT	Z:-------------	_	58	punct	_	_
+58	zpráva	zpráva	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	56	appos	_	_
+59	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	60	case	_	_
+60	provedení	provedení	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	58	nmod	_	_
+61	záchranného	záchranný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	63	amod	_	_
+62	archeologického	archeologický	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	63	amod	_	_
+63	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	60	nmod	_	_
+64	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	65	case	_	_
+65	akci	akce	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	60	nmod	_	_
+66	-	-	PUNCT	Z:-------------	_	67	punct	_	_
+67	Čáslav	Čáslav	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	65	nmod	_	_
+68	-	-	PUNCT	Z:-------------	_	69	punct	_	_
+69	novostavba	novostavba	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	67	appos	_	_
+70	rodinného	rodinný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	71	amod	_	_
+71	domu	dům	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	69	nmod	_	_
+72	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	73	case	_	_
+73	ppč	ppč	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	71	nmod	_	SpaceAfter=No
+74	.	.	PUNCT	Z:-------------	_	73	punct	_	_
+75	1642	1642	NUM	C=-------------	NumForm=Digit|NumType=Card	73	nummod	_	SpaceAfter=No
+76	/	/	PUNCT	Z:-------------	_	77	punct	_	SpaceAfter=No
+77	17	17	NUM	C=-------------	NumForm=Digit|NumType=Card	75	compound	_	SpaceAfter=No
+78	,	,	PUNCT	Z:-------------	_	79	punct	_	SpaceAfter=No
+79	18	18	NUM	C=-------------	NumForm=Digit|NumType=Card	73	nummod	_	_
+80	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	83	case	_	_
+81	k	k	ADJ	AAXXX----1A---b	Abbr=Yes|Degree=Pos|Polarity=Pos	83	amod	_	SpaceAfter=No
+82	.	.	PUNCT	Z:-------------	_	81	punct	_	SpaceAfter=No
+83	ú	ú	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	71	nmod	_	SpaceAfter=No
+84	.	.	PUNCT	Z:-------------	_	83	punct	_	_
+85	Čáslav	Čáslav	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	83	nmod	_	SpaceAfter=No
+86	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 3
+# text = V souladu se zněním zákona č.20/87 Sb. v platném znění byl na základě ohlášení zahájení výkopových prací proveden archeologický dohled při akci: Čáslav - novostavba rodinného domu na ppč. 1642/17, 18 v k.ú. Čáslav.
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	case	_	_
+2	souladu	soulad	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	1	fixed	_	_
+3	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	1	fixed	_	_
+4	zněním	znění	NOUN	NNNS7-----A----	Case=Ins|Gender=Neut|Number=Sing|VerbForm=Vnoun	22	obl	_	_
+5	zákona	zákon	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	4	nmod	_	_
+6	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	5	nmod	_	SpaceAfter=No
+7	.20	.20	NUM	C=-------------	NumForm=Digit|NumType=Card	6	nummod	_	SpaceAfter=No
+8	/	/	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+9	87	87	NUM	C=-------------	NumForm=Digit|NumType=Card	7	compound	_	_
+10	Sb	sbírka	NOUN	NNFXX-----A---b	Abbr=Yes|Gender=Fem	5	nmod	_	SpaceAfter=No
+11	.	.	PUNCT	Z:-------------	_	10	punct	_	_
+12	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	14	case	_	_
+13	platném	platný	ADJ	AANS6----1A----	Case=Loc|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	14	amod	_	_
+14	znění	znění	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	5	nmod	_	_
+15	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	22	aux:pass	_	_
+16	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	18	case	_	_
+17	základě	základ	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	16	fixed	_	_
+18	ohlášení	ohlášení	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	22	obl	_	_
+19	zahájení	zahájení	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	18	nmod	_	_
+20	výkopových	výkopový	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	21	amod	_	_
+21	prací	práce	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	19	nmod	_	_
+22	proveden	provedený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+23	archeologický	archeologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	24	amod	_	_
+24	dohled	dohled	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	22	nsubj:pass	_	_
+25	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	26	case	_	_
+26	akci	akce	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	24	nmod	_	SpaceAfter=No
+27	:	:	PUNCT	Z:-------------	_	28	punct	_	_
+28	Čáslav	Čáslav	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	26	nmod	_	_
+29	-	-	PUNCT	Z:-------------	_	30	punct	_	_
+30	novostavba	novostavba	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	28	appos	_	_
+31	rodinného	rodinný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	32	amod	_	_
+32	domu	dům	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	30	nmod	_	_
+33	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	34	case	_	_
+34	ppč	ppč	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	32	nmod	_	SpaceAfter=No
+35	.	.	PUNCT	Z:-------------	_	34	punct	_	_
+36	1642	1642	NUM	C=-------------	NumForm=Digit|NumType=Card	34	nummod	_	SpaceAfter=No
+37	/	/	PUNCT	Z:-------------	_	38	punct	_	SpaceAfter=No
+38	17	17	NUM	C=-------------	NumForm=Digit|NumType=Card	36	compound	_	SpaceAfter=No
+39	,	,	PUNCT	Z:-------------	_	40	punct	_	_
+40	18	18	NUM	C=-------------	NumForm=Digit|NumType=Card	36	compound	_	_
+41	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	44	case	_	_
+42	k	k	NOUN	AAXXX----1A---b	Abbr=Yes	44	amod	_	SpaceAfter=No
+43	.	.	PUNCT	Z:-------------	_	42	punct	_	SpaceAfter=No
+44	ú	ú	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	28	nmod	_	SpaceAfter=No
+45	.	.	PUNCT	Z:-------------	_	44	punct	_	_
+46	Čáslav	Čáslav	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	44	nmod	_	SpaceAfter=No
+47	.	.	PUNCT	Z:-------------	_	22	punct	_	_
+
+# sent_id = 4
+# text = Akce probíhala na západním okraji města v poloze „Vodranty“.
+1	Akce	akce	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	2	nsubj	_	_
+2	probíhala	probíhat	VERB	VpQW----R-AAI--	Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+3	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	5	case	_	_
+4	západním	západní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	5	amod	_	_
+5	okraji	okraj	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	2	obl	_	_
+6	města	město	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	5	nmod	_	_
+7	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+8	poloze	poloha	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	2	obl	_	_
+9	„	"	PUNCT	Z:-------------	_	10	punct	_	SpaceAfter=No
+10	Vodranty“	Vodranty“	X	F%-------------	Foreign=Yes	8	nmod	_	SpaceAfter=No
+11	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+
+# sent_id = 5
+# text = V těsném sousedství stavby došlo v minulosti k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že v průběhu akce dojde k poškození důležitých archeologických situací.
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	3	case	_	_
+2	těsném	těsný	ADJ	AANS6----1A----	Case=Loc|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	3	amod	_	_
+3	sousedství	sousedství	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	5	obl	_	_
+4	stavby	stavba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	3	nmod	_	_
+5	došlo	dojít	VERB	VpNS----R-AAP--	Aspect=Perf|Gender=Neut|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+6	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	_
+7	minulosti	minulost	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	obl	_	_
+8	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	9	case	_	_
+9	zachycení	zachycení	NOUN	NNNS3-----A----	Case=Dat|Gender=Neut|Number=Sing|VerbForm=Vnoun	5	obl:arg	_	_
+10	polykulturního	polykulturní	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	14	amod	_	_
+11	pravěkého	pravěký	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	14	amod	_	_
+12	a	a	CCONJ	J^-------------	_	13	cc	_	_
+13	středověkého	středověký	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	11	conj	_	_
+14	osídlení	osídlení	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	9	nmod	_	SpaceAfter=No
+15	,	,	PUNCT	Z:-------------	_	17	punct	_	_
+16	proto	proto	CCONJ	J^-------------	_	17	cc	_	_
+17	nešlo	jít	VERB	VpNS----R-NAI--	Aspect=Imp|Gender=Neut|Number=Sing|Polarity=Neg|Tense=Past|VerbForm=Part|Voice=Act	5	conj	_	_
+18	dopředu	dopředu	ADV	Db-------------	_	17	advmod	_	_
+19	vyloučit	vyloučit	VERB	Vf--------A-P--	Aspect=Perf|Polarity=Pos|VerbForm=Inf	17	csubj	_	_
+20	možnost	možnost	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	19	obj	_	SpaceAfter=No
+21	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+22	že	že	SCONJ	J,-------------	_	26	mark	_	_
+23	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	25	case	_	_
+24	průběhu	průběh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	23	fixed	_	_
+25	akce	akce	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	26	obl	_	_
+26	dojde	dojít	VERB	VB-S---3P-AAP--	Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	20	acl	_	_
+27	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	28	case	_	_
+28	poškození	poškození	NOUN	NNNS3-----A----	Case=Dat|Gender=Neut|Number=Sing|VerbForm=Vnoun	26	obl:arg	_	_
+29	důležitých	důležitý	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	31	amod	_	_
+30	archeologických	archeologický	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	31	amod	_	_
+31	situací	situace	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	28	nmod	_	SpaceAfter=No
+32	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 6
+# text = Archeologický dohled při stavbě proběhl formou revize (20.6.2014) skrývky ornice a výkopů základových pasů pro rodinný dům.
+1	Archeologický	archeologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	2	amod	_	_
+2	dohled	dohled	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	5	nsubj	_	_
+3	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	case	_	_
+4	stavbě	stavba	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	2	nmod	_	_
+5	proběhl	proběhnout	VERB	VpYS----R-AAP-1	Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+6	formou	forma	NOUN	NNFS7-----A----	Case=Ins|Gender=Fem|Number=Sing	5	obl	_	_
+7	revize	revize	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	5	obl	_	_
+8	(	(	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+9	20.6.2014	20.6.2014	NUM	C=-------------	NumForm=Digit|NumType=Card	7	dep	_	SpaceAfter=No
+10	)	)	PUNCT	Z:-------------	_	9	punct	_	_
+11	skrývky	skrývka	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	_
+12	ornice	ornice	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	11	nmod	_	_
+13	a	a	CCONJ	J^-------------	_	14	cc	_	_
+14	výkopů	výkop	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	11	conj	_	_
+15	základových	základový	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	16	amod	_	_
+16	pasů	pas	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	14	nmod	_	_
+17	pro	pro	ADP	RR--4----------	AdpType=Prep|Case=Acc	19	case	_	_
+18	rodinný	rodinný	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	19	amod	_	_
+19	dům	dům	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	16	nmod	_	SpaceAfter=No
+20	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 7
+# text = Na profilech výkopů bylo patrné souvrství hnědé ornice s podorničím na intaktním podloží, které tvořila intaktní spraš.
+1	Na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	2	case	_	_
+2	profilech	profil	NOUN	NNIP6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	5	obl	_	_
+3	výkopů	výkop	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	2	nmod	_	_
+4	bylo	být	AUX	VpNS----R-AAI--	Aspect=Imp|Gender=Neut|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	5	cop	_	_
+5	patrné	patrný	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	0	root	_	_
+6	souvrství	souvrství	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	5	nsubj	_	_
+7	hnědé	hnědý	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	8	amod	_	_
+8	ornice	ornice	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	_
+9	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	10	case	_	_
+10	podorničím	podorničí	NOUN	NNNS7-----A----	Case=Ins|Gender=Neut|Number=Sing	8	nmod	_	_
+11	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	_
+12	intaktním	intaktní	ADJ	AANS6----1A----	Case=Loc|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	13	amod	_	_
+13	podloží	podloží	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	6	nmod	_	SpaceAfter=No
+14	,	,	PUNCT	Z:-------------	_	16	punct	_	_
+15	které	který	DET	P4NS4----------	Case=Acc|Gender=Neut|Number=Sing|PronType=Int,Rel	16	obj	_	_
+16	tvořila	tvořit	VERB	VpQW----R-AAI--	Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	13	acl:relcl	_	_
+17	intaktní	intaktní	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	18	amod	_	_
+18	spraš	spraš	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	16	nsubj	_	SpaceAfter=No
+19	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 8
+# text = K zachycení archeologických situací ani materiálu při akci nedošlo.
+1	K	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	2	case	_	_
+2	zachycení	zachycení	NOUN	NNNS3-----A----	Case=Dat|Gender=Neut|Number=Sing|VerbForm=Vnoun	9	obl:arg	_	_
+3	archeologických	archeologický	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	4	amod	_	_
+4	situací	situace	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	2	nmod	_	_
+5	ani	ani	CCONJ	J^-------------	_	6	cc	_	_
+6	materiálu	materiál	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	4	conj	_	_
+7	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+8	akci	akce	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	2	nmod	_	_
+9	nedošlo	dojít	VERB	VpNS----R-NAP--	Aspect=Perf|Gender=Neut|Number=Sing|Polarity=Neg|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	SpaceAfter=No
+10	.	.	PUNCT	Z:-------------	_	9	punct	_	_
+
+# sent_id = 9
+# text = Vzhledem k negativním archeologickým zjištěním byl prostor stavby po ukončení dohledu uvolněn pro dokončení akce.
+1	Vzhledem	vzhledem	ADP	RF-------------	AdpType=Comprep	5	case	_	_
+2	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	1	fixed	_	_
+3	negativním	negativní	ADJ	AANP3----1A----	Case=Dat|Degree=Pos|Gender=Neut|Number=Plur|Polarity=Pos	5	amod	_	_
+4	archeologickým	archeologický	ADJ	AANP3----1A----	Case=Dat|Degree=Pos|Gender=Neut|Number=Plur|Polarity=Pos	5	amod	_	_
+5	zjištěním	zjištění	NOUN	NNNP3-----A----	Case=Dat|Gender=Neut|Number=Plur|VerbForm=Vnoun	12	obl	_	_
+6	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	12	aux:pass	_	_
+7	prostor	prostor	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	12	nsubj:pass	_	_
+8	stavby	stavba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	_
+9	po	po	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	_
+10	ukončení	ukončení	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	12	obl	_	_
+11	dohledu	dohled	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	10	nmod	_	_
+12	uvolněn	uvolněný	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+13	pro	pro	ADP	RR--4----------	AdpType=Prep|Case=Acc	14	case	_	_
+14	dokončení	dokončení	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	12	obl	_	_
+15	akce	akce	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	14	nmod	_	SpaceAfter=No
+16	.	.	PUNCT	Z:-------------	_	12	punct	_	_
+
+# sent_id = 10
+# text = Archeologický dohled při stavbě provedl Mgr. Filip Velímský, Ph.D. (ARÚ AV ČR, Praha, v.v.i., pracoviště Kutná Hora).
+1	Archeologický	archeologický	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	2	amod	_	_
+2	dohled	dohled	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	5	obj	_	_
+3	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	case	_	_
+4	stavbě	stavba	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	2	nmod	_	_
+5	provedl	provést	VERB	VpYS----R-AAP--	Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+6	Mgr	Mgr	NOUN	BNXXX-----A----	Abbr=Yes	8	nmod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	Filip	Filip	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	5	nsubj	_	_
+9	Velímský	Velímský	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	8	flat	_	SpaceAfter=No
+10	,	,	PUNCT	Z:-------------	_	13	punct	_	_
+11	Ph	ph	NOUN	Q3-------------	Abbr=Yes	13	nmod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	11	punct	_	SpaceAfter=No
+13	D	D	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	_
+15	(	(	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+16	ARÚ	ARÚ	NOUN	BNXXX-----A----	Abbr=Yes	8	dep	_	_
+17	AV	AV	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Oth	16	nmod	_	_
+18	ČR	ČR	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Geo	17	nmod	_	SpaceAfter=No
+19	,	,	PUNCT	Z:-------------	_	20	punct	_	_
+20	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	17	nmod	_	SpaceAfter=No
+21	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+22	v	v	NOUN	Q3-------------	Abbr=Yes	26	nmod	_	SpaceAfter=No
+23	.	.	PUNCT	Z:-------------	_	22	punct	_	SpaceAfter=No
+24	v	v	NOUN	Q3-------------	Abbr=Yes	26	nmod	_	SpaceAfter=No
+25	.	.	PUNCT	Z:-------------	_	24	punct	_	SpaceAfter=No
+26	i	i	NOUN	Q3-------------	Abbr=Yes	20	nmod	_	SpaceAfter=No
+27	.	.	PUNCT	Z:-------------	_	26	punct	_	SpaceAfter=No
+28	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+29	pracoviště	pracoviště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	16	conj	_	_
+30	Kutná	Kutná	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	31	nmod	_	_
+31	Hora	hora	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	29	nmod	_	SpaceAfter=No
+32	)	)	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+33	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+
+# sent_id = 11
+# text = Terénní dokumentace je uložena v Archeologickém ústavu AV ČR, Praha, v.v.i., pracoviště Kutná Hora.
+1	Terénní	terénní	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	2	amod	_	_
+2	dokumentace	dokumentace	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	4	nsubj	_	_
+3	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	cop	_	_
+4	uložena	uložený	ADJ	VsQW----X-APP--	Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+5	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	_
+6	Archeologickém	archeologický	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	7	amod	_	_
+7	ústavu	ústav	NOUN	NNIS6-----A---1	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	4	obl	_	_
+8	AV	AV	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Oth	7	nmod	_	_
+9	ČR	ČR	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Geo	8	nmod	_	SpaceAfter=No
+10	,	,	PUNCT	Z:-------------	_	11	punct	_	_
+11	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	7	nmod	_	SpaceAfter=No
+12	,	,	PUNCT	Z:-------------	_	17	punct	_	_
+13	v	v	NOUN	Q3-------------	Abbr=Yes	17	nmod	_	SpaceAfter=No
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+15	v	v	NOUN	Q3-------------	Abbr=Yes	17	nmod	_	SpaceAfter=No
+16	.	.	PUNCT	Z:-------------	_	15	punct	_	SpaceAfter=No
+17	i	i	NOUN	Q3-------------	Abbr=Yes	11	nmod	_	SpaceAfter=No
+18	.	.	PUNCT	Z:-------------	_	17	punct	_	SpaceAfter=No
+19	,	,	PUNCT	Z:-------------	_	20	punct	_	_
+20	pracoviště	pracoviště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	7	nmod	_	_
+21	Kutná	Kutná	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	22	nmod	_	_
+22	Hora	hora	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	20	nmod	_	SpaceAfter=No
+23	.	.	PUNCT	Z:-------------	_	4	punct	_	_
+
+# sent_id = 12
+# text = Závěrem je možno konstatovat, že byla dodržena všechna zákonná ustanovení o ochraně archeologických památek.
+1	Závěrem	závěr	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	3	obl	_	_
+2	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	cop	_	_
+3	možno	možný	ADJ	ACNS------A----	Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short	0	root	_	_
+4	konstatovat	konstatovat	VERB	Vf--------A-B--	Aspect=Imp,Perf|Polarity=Pos|VerbForm=Inf	3	csubj	_	SpaceAfter=No
+5	,	,	PUNCT	Z:-------------	_	8	punct	_	_
+6	že	že	SCONJ	J,-------------	_	8	mark	_	_
+7	byla	být	AUX	VpQW----R-AAI--	Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	8	aux:pass	_	_
+8	dodržena	dodržený	ADJ	VsQW----X-APP--	Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	4	ccomp	_	_
+9	všechna	všechen	DET	PLNP1----------	Case=Nom|Gender=Neut|Number=Plur|PronType=Tot	11	det	_	_
+10	zákonná	zákonný	ADJ	AANP1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Plur|Polarity=Pos	11	amod	_	_
+11	ustanovení	ustanovení	NOUN	NNNP1-----A----	Case=Nom|Gender=Neut|Number=Plur|VerbForm=Vnoun	8	nsubj:pass	_	_
+12	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	_
+13	ochraně	ochrana	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	11	nmod	_	_
+14	archeologických	archeologický	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	15	amod	_	_
+15	památek	památka	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	13	nmod	_	SpaceAfter=No
+16	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 13
+# text = PhDr. Radka Šumberová, Ph.D. Vedoucí pracoviště Kutná Hora Zpracoval: Mgr. Filip Velímský, Ph.D.
+1	PhDr	PhDr	NOUN	BNXXX-----A----	Abbr=Yes	3	nmod	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	Radka	Radka	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	14	nsubj	_	_
+4	Šumberová	Šumberová	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	3	flat	_	SpaceAfter=No
+5	,	,	PUNCT	Z:-------------	_	8	punct	_	_
+6	Ph	ph	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No
+8	D	D	NOUN	Q3-------------	Abbr=Yes	3	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	Vedoucí	vedoucí	ADJ	AGNS1-----A----	Aspect=Imp|Case=Nom|Gender=Neut|Number=Sing|Polarity=Pos|Tense=Pres|VerbForm=Part|Voice=Act	11	amod	_	_
+11	pracoviště	pracoviště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	3	nmod	_	_
+12	Kutná	Kutná	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	13	nmod	_	_
+13	Hora	hora	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	11	nmod	_	_
+14	Zpracoval	zpracovat	VERB	VpYS----R-AAP--	Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	SpaceAfter=No
+15	:	:	PUNCT	Z:-------------	_	18	punct	_	_
+16	Mgr	Mgr	NOUN	BNXXX-----A----	Abbr=Yes	18	nmod	_	SpaceAfter=No
+17	.	.	PUNCT	Z:-------------	_	16	punct	_	_
+18	Filip	Filip	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	14	nsubj	_	_
+19	Velímský	Velímský	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	18	flat	_	SpaceAfter=No
+20	,	,	PUNCT	Z:-------------	_	23	punct	_	_
+21	Ph	ph	NOUN	BNXXX-----A----	Abbr=Yes	23	nmod	_	SpaceAfter=No
+22	.	.	PUNCT	Z:-------------	_	21	punct	_	SpaceAfter=No
+23	D	D	NOUN	Q3-------------	Abbr=Yes	18	nmod	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	14	punct	_	SpaceAfter=No
+

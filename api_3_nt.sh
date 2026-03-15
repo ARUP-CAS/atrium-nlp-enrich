@@ -18,16 +18,19 @@ PARA_STATE=$(python3 atrium_paradata.py start \
 CONLLU_FILES=("${OUTPUT_DIR}/UDP/"*.conllu)
 TOTAL=${#CONLLU_FILES[@]}
 
+mkdir -p "${OUTPUT_DIR}/NE"
+
 for conllu in "${CONLLU_FILES[@]}"; do
     doc=$(basename "$conllu" .conllu)
     out_dir="${OUTPUT_DIR}/NE/${doc}"
     [ -d "$out_dir" ] && continue
 
     if python3 api_util/call_nametag.py \
-            --input "$conllu" \
-            --model "$MODEL_NAMETAG" \
+            --input      "$conllu" \
+            --model      "$MODEL_NAMETAG" \
             --output-dir "$out_dir" \
-            --timeout "$TIMEOUT" --retries "$MAX_RETRIES"; then
+            --timeout    "$TIMEOUT" \
+            --retries    "$MAX_RETRIES"; then
         n_pages=$(ls "$out_dir"/*.tsv 2>/dev/null | wc -l)
         python3 atrium_paradata.py success \
             --state "$PARA_STATE" --type tsv --count "$n_pages"

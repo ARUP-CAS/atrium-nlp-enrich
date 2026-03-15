@@ -19,15 +19,25 @@ PARA_STATE=$(python3 atrium_paradata.py start \
 TOTAL=$(wc -l < "${OUTPUT_DIR}/manifest.tsv")
 TOTAL=$((TOTAL - 1))  # subtract header
 
+mkdir -p "${OUTPUT_DIR}/UDP"
+
 while IFS=$'\t' read -r file page path; do
     [ "$file" = "file" ] && continue   # skip header
     out="${OUTPUT_DIR}/UDP/${file}.conllu"
     [ -f "$out" ] && continue          # resume-capable: already done
 
-    if python3 api_util/chunk.py "$path" | \
-       python3 api_util/call_udpipe.py --model "$MODEL_UDPIPE" \
-                --timeout "$TIMEOUT" --retries "$MAX_RETRIES" \
-                --output "$out"; then
+    chunk_dir="${CHUNK_DIR}/${file}"
+    mkdir -p "$chunk_dir"
+
+    # chunk.py requires: <infile> <outdir> <word_limit>
+    # call_udpipe.py then reads all chunk_*.txt files from that directory
+    if python3 api_util/chunk.py "$path" "$chunk_dir" "$WORD_CHUNK_LIMIT" && \
+       python3 api_util/call_udpipe.py \
+           --chunk-dir "$chunk_dir" \
+           --model     "$MODEL_UDPIPE" \
+           --output    "$out" \
+           --timeout   "$TIMEOUT" \
+           --retries   "$MAX_RETRIES"; then
         python3 atrium_paradata.py success --state "$PARA_STATE" --type conllu
     else
         python3 atrium_paradata.py skip \

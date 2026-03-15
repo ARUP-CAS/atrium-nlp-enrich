@@ -1,0 +1,959 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = SKU H R O V N A D B Ě L O U Hrad, sběry 1998 Muzeum a galerie v Rychnově n. Kn.
+1	SKU	SKU	NOUN	BNXXX-----A----	Abbr=Yes	0	root	_	_
+2	H	H	NOUN	Q3-------------	Abbr=Yes	1	nmod	_	_
+3	R	R	NOUN	Q3-------------	Abbr=Yes	2	nmod	_	_
+4	O	O	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	_
+5	V	v	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	_
+6	N	N	NOUN	Q3-------------	Abbr=Yes	2	nmod	_	_
+7	A	a	CCONJ	J^-------------	_	8	cc	_	_
+8	D	D	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	_
+9	B	B	NOUN	Q3-------------	Abbr=Yes	14	nmod	_	_
+10	Ě	ě	NOUN	F%-------------	Foreign=Yes	14	nmod	_	_
+11	L	L	NOUN	Q3-------------	Abbr=Yes	14	nmod	_	_
+12	O	O	NOUN	Q3-------------	Abbr=Yes	14	nmod	_	_
+13	U	u	NOUN	RR--2----------	Abbr=Yes	14	nmod	_	_
+14	Hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	2	nmod	_	SpaceAfter=No
+15	,	,	PUNCT	Z:-------------	_	16	punct	_	_
+16	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	conj	_	_
+17	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	16	nummod	_	_
+18	Muzeum	muzeum	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	conj	_	_
+19	a	a	CCONJ	J^-------------	_	20	cc	_	_
+20	galerie	galerie	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	18	conj	_	_
+21	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	22	case	_	_
+22	Rychnově	Rychnov	PROPN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|NameType=Geo|Number=Sing	18	nmod	_	_
+23	n	n	ADP	RR--7----------	AdpType=Prep|Case=Ins	25	case	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	25	punct	_	_
+25	Kn	KN	NOUN	BNXXX-----A----	Abbr=Yes	22	nmod	_	SpaceAfter=No
+26	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 2
+# text = PhDr. Martina Beková Bohumír Dragoun SKUHROV NAD BĚLOU hrad, sběry 1998 Geomorfologický popis Hrad se nachází na ostrožně nad řekou Bělou, na úpatí svahů svírajících tok Bělé v rámci skuhrovské části Podorlické pahorkatiny (SLÁDEK, J. 1977: Zeměpisné vymezení a regionální členění in: Příroda Orlických hor a Podorlicka, Praha 1977, 13-87).
+1	PhDr	PhDr	NOUN	BNXXX-----A----	Abbr=Yes	3	nmod	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	Martina	Martina	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	0	root	_	_
+4	Beková	Beková	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	3	flat	_	_
+5	Bohumír	Bohumír	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	3	dep	_	_
+6	Dragoun	Dragoun	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	3	flat	_	_
+7	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	3	dep	_	_
+8	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	9	case	_	_
+9	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	7	nmod	_	_
+10	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	3	dep	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	3	dep	_	_
+13	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	12	nummod	_	_
+14	Geomorfologický	geomorfologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	15	amod	_	_
+15	popis	popis	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	3	dep	_	_
+16	Hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	18	nsubj	_	_
+17	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	18	expl:pv	_	_
+18	nachází	nacházet	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	3	dep	_	_
+19	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	20	case	_	_
+20	ostrožně	ostrožna	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	18	obl	_	_
+21	nad	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	22	case	_	_
+22	řekou	řeka	NOUN	NNFS7-----A----	Case=Ins|Gender=Fem|Number=Sing	20	nmod	_	_
+23	Bělou	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	22	nmod	_	SpaceAfter=No
+24	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+25	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	26	case	_	_
+26	úpatí	úpatí	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	20	appos	_	_
+27	svahů	svah	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	26	nmod	_	_
+28	svírajících	svírající	ADJ	AGIP2-----A----	Animacy=Inan|Aspect=Imp|Case=Gen|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Pres|VerbForm=Part|Voice=Act	27	amod	_	_
+29	tok	tok	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	28	obj	_	_
+30	Bělé	Bělá	PROPN	NNFS2-----A----	Case=Gen|Gender=Fem|NameType=Geo|Number=Sing	29	nmod	_	_
+31	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	34	case	_	_
+32	rámci	rámec	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	31	fixed	_	_
+33	skuhrovské	skuhrovský	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	34	amod	_	_
+34	části	část	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	28	obl	_	_
+35	Podorlické	podorlický	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	36	amod	_	_
+36	pahorkatiny	pahorkatina	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	34	nmod	_	_
+37	(	(	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No
+38	SLÁDEK	Sládek	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	18	dep	_	SpaceAfter=No
+39	,	,	PUNCT	Z:-------------	_	40	punct	_	_
+40	J	J	NOUN	Q3-------------	Abbr=Yes	38	nmod	_	SpaceAfter=No
+41	.	.	PUNCT	Z:-------------	_	40	punct	_	_
+42	1977	1977	NUM	C=-------------	NumForm=Digit|NumType=Card	40	nummod	_	SpaceAfter=No
+43	:	:	PUNCT	Z:-------------	_	45	punct	_	_
+44	Zeměpisné	zeměpisný	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	45	amod	_	_
+45	vymezení	vymezení	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	38	conj	_	_
+46	a	a	CCONJ	J^-------------	_	48	cc	_	_
+47	regionální	regionální	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	48	amod	_	_
+48	členění	členění	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	45	conj	_	_
+49	in	in	X	F%-------------	Abbr=Yes	48	nmod	_	SpaceAfter=No
+50	:	:	PUNCT	Z:-------------	_	51	punct	_	_
+51	Příroda	příroda	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	49	nmod	_	_
+52	Orlických	orlický	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	53	amod	_	_
+53	hor	hora	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	51	nmod	_	_
+54	a	a	CCONJ	J^-------------	_	55	cc	_	_
+55	Podorlicka	Podorlicko	PROPN	NNNS2-----A----	Case=Gen|Gender=Neut|NameType=Geo|Number=Sing	53	conj	_	SpaceAfter=No
+56	,	,	PUNCT	Z:-------------	_	57	punct	_	_
+57	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	51	nmod	_	_
+58	1977	1977	NUM	C=-------------	NumForm=Digit|NumType=Card	57	nummod	_	SpaceAfter=No
+59	,	,	PUNCT	Z:-------------	_	60	punct	_	_
+60	13	13	NUM	C=-------------	NumForm=Digit|NumType=Card	51	nummod	_	SpaceAfter=No
+61	-	-	PUNCT	Z:-------------	_	62	punct	_	SpaceAfter=No
+62	87	87	NUM	C=-------------	NumForm=Digit|NumType=Card	60	conj	_	SpaceAfter=No
+63	)	)	PUNCT	Z:-------------	_	38	punct	_	SpaceAfter=No
+64	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 3
+# text = Podloží a půdní pokryv Oglejené půdy na fylitech ( NÁLEVKA, B. 1977: Půdní poměry, in: Příroda Orlických hor a Podorlicka, Praha 1977, 287-308.).
+1	Podloží	podloží	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	0	root	_	_
+2	a	a	CCONJ	J^-------------	_	4	cc	_	_
+3	půdní	půdní	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	4	amod	_	_
+4	pokryv	pokryv	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	_
+5	Oglejené	oglejený	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	6	amod	_	_
+6	půdy	půda	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	1	nmod	_	_
+7	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	_
+8	fylitech	fylit	NOUN	NNIP6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	6	nmod	_	_
+9	(	(	PUNCT	Z:-------------	_	1	punct	_	_
+10	NÁLEVKA	Nálevka	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	1	dep	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	B	B	NOUN	Q3-------------	Abbr=Yes	10	conj	_	SpaceAfter=No
+13	.	.	PUNCT	Z:-------------	_	12	punct	_	_
+14	1977	1977	NUM	C=-------------	NumForm=Digit|NumType=Card	12	nummod	_	SpaceAfter=No
+15	:	:	PUNCT	Z:-------------	_	17	punct	_	_
+16	Půdní	půdní	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	17	amod	_	_
+17	poměry	poměry	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	conj	_	SpaceAfter=No
+18	,	,	PUNCT	Z:-------------	_	19	punct	_	_
+19	in	in	X	F%-------------	Foreign=Yes	1	conj	_	SpaceAfter=No
+20	:	:	PUNCT	Z:-------------	_	21	punct	_	_
+21	Příroda	příroda	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	19	nmod	_	_
+22	Orlických	orlický	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	23	amod	_	_
+23	hor	hora	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	21	nmod	_	_
+24	a	a	CCONJ	J^-------------	_	25	cc	_	_
+25	Podorlicka	Podorlicko	PROPN	NNNS2-----A----	Case=Gen|Gender=Neut|NameType=Geo|Number=Sing	23	conj	_	SpaceAfter=No
+26	,	,	PUNCT	Z:-------------	_	27	punct	_	_
+27	Praha	Praha	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Sing	21	nmod	_	_
+28	1977	1977	NUM	C=-------------	NumForm=Digit|NumType=Card	27	nummod	_	SpaceAfter=No
+29	,	,	PUNCT	Z:-------------	_	30	punct	_	_
+30	287	287	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	SpaceAfter=No
+31	-	-	PUNCT	Z:-------------	_	32	punct	_	SpaceAfter=No
+32	308	308	NUM	C=-------------	NumForm=Digit|NumType=Card	30	conj	_	SpaceAfter=No
+33	.	.	PUNCT	Z:-------------	_	30	punct	_	SpaceAfter=No
+34	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+35	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 4
+# text = Historie naleziště Hrad na ostrožně, dvojdílný (předhradí a vlastní hradní areál, patrně plášťový).
+1	Historie	historie	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	0	root	_	_
+2	naleziště	naleziště	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	1	nmod	_	_
+3	Hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	2	nmod	_	_
+4	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	5	case	_	_
+5	ostrožně	ostrožna	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	3	nmod	_	SpaceAfter=No
+6	,	,	PUNCT	Z:-------------	_	7	punct	_	_
+7	dvojdílný	dvojdílný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	1	amod	_	_
+8	(	(	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+9	předhradí	předhradí	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	7	dep	_	_
+10	a	a	CCONJ	J^-------------	_	13	cc	_	_
+11	vlastní	vlastní	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	13	amod	_	_
+12	hradní	hradní	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	13	amod	_	_
+13	areál	areál	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	9	conj	_	SpaceAfter=No
+14	,	,	PUNCT	Z:-------------	_	16	punct	_	_
+15	patrně	patrně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	16	advmod	_	_
+16	plášťový	plášťový	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	9	amod	_	SpaceAfter=No
+17	)	)	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+18	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 5
+# text = Patrně založen Tasem ze Skuhrova kolem r. 1320, za Jiřího z Poděbrad pustne, v roce 1558 jmenován jako pustý (Musil, F., Svoboda, L. 1998: Hrady zámky a tvrze okresu Rychnov nad Kněžnou, s. 153-156).
+1	Patrně	patrně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	2	advmod	_	_
+2	založen	založený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+3	Tasem	Tas	PROPN	NNMS7-----A----	Animacy=Anim|Case=Ins|Gender=Masc|NameType=Giv|Number=Sing	2	obl:arg	_	_
+4	ze	z	ADP	RV--2----------	AdpType=Voc|Case=Gen	5	case	_	_
+5	Skuhrova	Skuhrov	PROPN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|NameType=Geo|Number=Sing	3	nmod	_	_
+6	kolem	kolem	ADP	RR--2----------	AdpType=Prep|Case=Gen	7	case	_	_
+7	r	rok	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	2	obl	_	SpaceAfter=No
+8	.	.	PUNCT	Z:-------------	_	7	punct	_	_
+9	1320	1320	NUM	C=-------------	NumForm=Digit|NumType=Card	7	nummod	_	SpaceAfter=No
+10	,	,	PUNCT	Z:-------------	_	15	punct	_	_
+11	za	za	ADP	RR--2----------	AdpType=Prep|Case=Gen	12	case	_	_
+12	Jiřího	Jiří	PROPN	NNMS2-----A----	Animacy=Anim|Case=Gen|Gender=Masc|NameType=Giv|Number=Sing	15	obl	_	_
+13	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	14	case	_	_
+14	Poděbrad	Poděbrady	PROPN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|NameType=Geo|Number=Plur	12	nmod	_	_
+15	pustne	pustnout	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	2	conj	_	SpaceAfter=No
+16	,	,	PUNCT	Z:-------------	_	20	punct	_	_
+17	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	18	case	_	_
+18	roce	rok	NOUN	NNIS6-----A---1	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	20	obl	_	_
+19	1558	1558	NUM	C=-------------	NumForm=Digit|NumType=Card	18	nummod	_	_
+20	jmenován	jmenovaný	ADJ	VsYS----X-APB--	Aspect=Imp,Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	2	conj	_	_
+21	jako	jako	SCONJ	J,-------------	_	22	mark	_	_
+22	pustý	pustý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	20	xcomp	_	_
+23	(	(	PUNCT	Z:-------------	_	2	punct	_	SpaceAfter=No
+24	Musil	Musil	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	2	dep	_	SpaceAfter=No
+25	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+26	F	F	NOUN	Q3-------------	Abbr=Yes	24	conj	_	SpaceAfter=No
+27	.	.	PUNCT	Z:-------------	_	26	punct	_	SpaceAfter=No
+28	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+29	Svoboda	Svoboda	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	24	conj	_	SpaceAfter=No
+30	,	,	PUNCT	Z:-------------	_	31	punct	_	_
+31	L	L	NOUN	Q3-------------	Abbr=Yes	24	conj	_	SpaceAfter=No
+32	.	.	PUNCT	Z:-------------	_	31	punct	_	_
+33	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	31	nummod	_	SpaceAfter=No
+34	:	:	PUNCT	Z:-------------	_	35	punct	_	_
+35	Hrady	hrad	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	2	conj	_	_
+36	zámky	zámek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	35	nmod	_	_
+37	a	a	CCONJ	J^-------------	_	38	cc	_	_
+38	tvrze	tvrz	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	36	conj	_	_
+39	okresu	okres	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	36	nmod	_	_
+40	Rychnov	Rychnov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	39	nmod	_	_
+41	nad	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	42	case	_	_
+42	Kněžnou	Kněžna	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	40	nmod	_	SpaceAfter=No
+43	,	,	PUNCT	Z:-------------	_	44	punct	_	_
+44	s	společnost	NOUN	NNFXX-----A---a	Abbr=Yes|Gender=Fem	35	nmod	_	SpaceAfter=No
+45	.	.	PUNCT	Z:-------------	_	44	punct	_	_
+46	153	153	NUM	C=-------------	NumForm=Digit|NumType=Card	44	nummod	_	SpaceAfter=No
+47	-	-	PUNCT	Z:-------------	_	48	punct	_	SpaceAfter=No
+48	156	156	NUM	C=-------------	NumForm=Digit|NumType=Card	46	conj	_	SpaceAfter=No
+49	)	)	PUNCT	Z:-------------	_	2	punct	_	SpaceAfter=No
+50	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+
+# sent_id = 6
+# text = Okolnosti a cíl výzkumu Sběr.
+1	Okolnosti	okolnost	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	0	root	_	_
+2	a	a	CCONJ	J^-------------	_	3	cc	_	_
+3	cíl	cíl	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	_
+4	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	1	nmod	_	_
+5	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	4	nmod	_	SpaceAfter=No
+6	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 7
+# text = 1. Sběr J. Slavík, Památkový ústav Pardubice.
+1	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nmod	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+4	J	J	NOUN	Q3-------------	Abbr=Yes	6	nmod	_	SpaceAfter=No
+5	.	.	PUNCT	Z:-------------	_	4	punct	_	_
+6	Slavík	slavík	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	3	nmod	_	SpaceAfter=No
+7	,	,	PUNCT	Z:-------------	_	9	punct	_	_
+8	Památkový	památkový	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	9	amod	_	_
+9	ústav	ústav	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	3	conj	_	_
+10	Pardubice	Pardubice	PROPN	NNFP1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Plur	9	nmod	_	SpaceAfter=No
+11	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 8
+# text = 2.
+1	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 9
+# text = Sběr archeologický kroužek Villa Nova pod vedením D. Vícha.
+1	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	archeologický	archeologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	3	amod	_	_
+3	kroužek	kroužek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+4	Villa	Villa	X	NNFS1-----A----	Foreign=Yes	3	nmod	_	_
+5	Nova	Nova	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Oth|Number=Sing	4	nmod	_	_
+6	pod	pod	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	vedením	vedení	NOUN	NNNS7-----A----	Case=Ins|Gender=Neut|Number=Sing|VerbForm=Vnoun	3	nmod	_	_
+8	D	D	NOUN	Q3-------------	Abbr=Yes	10	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	Vícha	Vích	PROPN	NNMS2-----A----	Animacy=Anim|Case=Gen|Gender=Masc|NameType=Giv|Number=Sing	7	nmod	_	SpaceAfter=No
+11	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 10
+# text = 3. Sběr Slavík, Památkový ústav Pardubice Metoda výzkumu Povrchový sběr.
+1	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+4	Slavík	slavík	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+5	,	,	PUNCT	Z:-------------	_	7	punct	_	_
+6	Památkový	památkový	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	7	amod	_	_
+7	ústav	ústav	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	3	nmod	_	_
+8	Pardubice	Pardubice	PROPN	NNFP1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Plur	7	nmod	_	_
+9	Metoda	metoda	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+10	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	9	nmod	_	_
+11	Povrchový	povrchový	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	12	amod	_	_
+12	sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	9	nmod	_	SpaceAfter=No
+13	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 11
+# text = Zaměření Zaměření provedla autorka zprávy dle popisu sběračů do plánů hradu.
+1	Zaměření	zaměření	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	3	obj	_	_
+2	Zaměření	zaměření	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	1	nmod	_	_
+3	provedla	provést	VERB	VpQW----R-AAP--	Aspect=Perf|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+4	autorka	autorka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	nsubj	_	_
+5	zprávy	zpráva	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	4	nmod	_	_
+6	dle	dle	ADP	RR--2----------	AdpType=Prep|Case=Gen	7	case	_	_
+7	popisu	popis	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	3	obl	_	_
+8	sběračů	sběrač	NOUN	NNMP2-----A----	Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur	7	nmod	_	_
+9	do	do	ADP	RR--2----------	AdpType=Prep|Case=Gen	10	case	_	_
+10	plánů	plán	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	7	nmod	_	_
+11	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	10	nmod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 12
+# text = Popis terénní situace 1.
+1	Popis	popis	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	terénní	terénní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	3	amod	_	_
+3	situace	situace	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	1	nmod	_	_
+4	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	SpaceAfter=No
+5	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 13
+# text = Sběr J. Slavík nad vnitřním příkopem jak ze strany předhradí tak vlastního hradu (viz plánek polohy 1).
+1	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	J	J	NOUN	Q3-------------	Abbr=Yes	4	nmod	_	SpaceAfter=No
+3	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+4	Slavík	Slavík	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	1	dep	_	_
+5	nad	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+6	vnitřním	vnitřní	ADJ	AAIS7----1A----	Animacy=Inan|Case=Ins|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	7	amod	_	_
+7	příkopem	příkop	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	1	dep	_	_
+8	jak	jak	ADV	Db-------------	PronType=Int,Rel	11	cc	_	_
+9	ze	z	ADP	RV--2----------	AdpType=Voc|Case=Gen	11	case	_	_
+10	strany	strana	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	9	fixed	_	_
+11	předhradí	předhradí	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	7	nmod	_	_
+12	tak	tak	ADV	Db-------------	PronType=Dem	14	cc	_	_
+13	vlastního	vlastní	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	14	amod	_	_
+14	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	11	conj	_	_
+15	(	(	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+16	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	parataxis	_	_
+17	plánek	plánek	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	16	obj	_	_
+18	polohy	poloha	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	17	nmod	_	_
+19	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	18	nummod	_	SpaceAfter=No
+20	)	)	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+21	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 14
+# text = Nalezeny 4 fragmenty keramiky.
+1	Nalezeny	nalezený	ADJ	VsTP----X-APP-1	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+2	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+3	fragmenty	fragment	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	nsubj:pass	_	_
+4	keramiky	keramika	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	3	nmod	_	SpaceAfter=No
+5	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 15
+# text = 5. 3. 1998 2.
+1	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	3	compound	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	0	root	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+5	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	3	compound	_	_
+6	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	3	compound	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	3	punct	_	_
+
+# sent_id = 16
+# text = Sběr archeologický kroužek Villa Nova 11. 8. 1998, úbočí hradního kopce směrem k vesnici (viz. plánek poloha 2).
+1	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	archeologický	archeologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	3	amod	_	_
+3	kroužek	kroužek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+4	Villa	Villa	X	F%-------------	Foreign=Yes	3	nmod	_	_
+5	Nova	Nova	X	F%-------------	Foreign=Yes	4	flat:foreign	_	_
+6	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	8	compound	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	8	8	NUM	C=-------------	NumForm=Digit|NumType=Card	1	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	8	compound	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	úbočí	úbočí	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	conj	_	_
+13	hradního	hradní	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	14	amod	_	_
+14	kopce	kopec	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	12	nmod	_	_
+15	směrem	směr	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	17	case	_	_
+16	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	15	fixed	_	_
+17	vesnici	vesnice	NOUN	NNFS3-----A----	Case=Dat|Gender=Fem|Number=Sing	12	nmod	_	_
+18	(	(	PUNCT	Z:-------------	_	19	punct	_	SpaceAfter=No
+19	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	parataxis	_	SpaceAfter=No
+20	.	.	PUNCT	Z:-------------	_	19	punct	_	_
+21	plánek	plánek	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	19	obj	_	_
+22	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	21	nmod	_	_
+23	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	22	nummod	_	SpaceAfter=No
+24	)	)	PUNCT	Z:-------------	_	19	punct	_	SpaceAfter=No
+25	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 17
+# text = Nalezeno 14 drobnějších fragmentů, okraje a zl. zásobnice, vše 14. -15. stol. 3.
+1	Nalezeno	nalezený	ADJ	VsNS----X-APP-1	Aspect=Perf|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+2	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	4	nummod:gov	_	_
+3	drobnějších	drobný	ADJ	AAIP2----2A----	Animacy=Inan|Case=Gen|Degree=Cmp|Gender=Masc|Number=Plur|Polarity=Pos	4	amod	_	_
+4	fragmentů	fragment	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	1	nsubj:pass	_	SpaceAfter=No
+5	,	,	PUNCT	Z:-------------	_	6	punct	_	_
+6	okraje	okraj	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	4	appos	_	_
+7	a	a	CCONJ	J^-------------	_	10	cc	_	_
+8	zl	zl	NOUN	AAXXX----1A---b	Abbr=Yes	10	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	zásobnice	zásobnice	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	6	conj	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	vše	všechen	DET	PLNS1---------1	Case=Nom|Gender=Neut|Number=Sing|PronType=Tot	4	dep	_	_
+13	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	18	nummod	_	SpaceAfter=No
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	_
+15	-	-	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No
+16	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	13	conj	_	SpaceAfter=No
+17	.	.	PUNCT	Z:-------------	_	16	punct	_	_
+18	stol	stol	NOUN	NNIXX-----A---b	Abbr=Yes|Gender=Neut	12	nmod	_	SpaceAfter=No
+19	.	.	PUNCT	Z:-------------	_	18	punct	_	_
+20	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	18	nummod	_	SpaceAfter=No
+21	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 18
+# text = Sběr J. Slavík, jádro hradu (viz plánek polohy 3).
+1	Sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	J	J	NOUN	Q3-------------	Abbr=Yes	4	nmod	_	SpaceAfter=No
+3	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+4	Slavík	slavík	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+5	,	,	PUNCT	Z:-------------	_	6	punct	_	_
+6	jádro	jádro	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	4	appos	_	_
+7	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	6	nmod	_	_
+8	(	(	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+9	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	parataxis	_	_
+10	plánek	plánek	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	9	obj	_	_
+11	polohy	poloha	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	10	nmod	_	_
+12	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	11	nummod	_	SpaceAfter=No
+13	)	)	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No
+14	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 19
+# text = Nalezeny 3 fragmenty keramiky.
+1	Nalezeny	nalezený	ADJ	VsTP----X-APP-1	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	_
+2	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+3	fragmenty	fragment	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	nsubj:pass	_	_
+4	keramiky	keramika	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	3	nmod	_	SpaceAfter=No
+5	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 20
+# text = 5. 3.1998 Zhodnocení a interpretace výsledků výzkumu Nalezeny zlomky keramiky z kulturních vrstev existence hradu, 14. -15. stol., naprostá převaha zl. z 15. stol. Seznam nálezů Viz příloha Přír.č.
+1	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	3	compound	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	39	obl	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No
+5	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	3	compound	_	_
+6	Zhodnocení	zhodnocení	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	3	dep	_	_
+7	a	a	CCONJ	J^-------------	_	8	cc	_	_
+8	interpretace	interpretace	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	6	conj	_	_
+9	výsledků	výsledek	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	6	nmod	_	_
+10	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	9	nmod	_	_
+11	Nalezeny	nalezený	ADJ	VsTP----X-APP-1	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	6	amod	_	_
+12	zlomky	zlomek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	11	nsubj:pass	_	_
+13	keramiky	keramika	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	12	nmod	_	_
+14	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	16	case	_	_
+15	kulturních	kulturní	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	16	amod	_	_
+16	vrstev	vrstva	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	13	nmod	_	_
+17	existence	existence	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	16	nmod	_	_
+18	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	17	nmod	_	SpaceAfter=No
+19	,	,	PUNCT	Z:-------------	_	25	punct	_	_
+20	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	25	nummod	_	SpaceAfter=No
+21	.	.	PUNCT	Z:-------------	_	20	punct	_	_
+22	-	-	PUNCT	Z:-------------	_	23	punct	_	SpaceAfter=No
+23	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	20	conj	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	23	punct	_	_
+25	stol	stol	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	17	appos	_	SpaceAfter=No
+26	.	.	PUNCT	Z:-------------	_	25	punct	_	SpaceAfter=No
+27	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+28	naprostá	naprostý	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	29	amod	_	_
+29	převaha	převaha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	12	conj	_	_
+30	zl	zl	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	29	nmod	_	SpaceAfter=No
+31	.	.	PUNCT	Z:-------------	_	30	punct	_	_
+32	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	35	case	_	_
+33	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	35	nummod	_	SpaceAfter=No
+34	.	.	PUNCT	Z:-------------	_	33	punct	_	_
+35	stol	stol	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	30	nmod	_	SpaceAfter=No
+36	.	.	PUNCT	Z:-------------	_	39	punct	_	_
+37	Seznam	seznam	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	39	obj	_	_
+38	nálezů	nález	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	37	nmod	_	_
+39	Viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	0	root	_	_
+40	příloha	příloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	39	nsubj	_	_
+41	Přír	přír	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	40	nmod	_	SpaceAfter=No
+42	.	.	PUNCT	Z:-------------	_	41	punct	_	SpaceAfter=No
+43	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	41	nmod	_	SpaceAfter=No
+44	.	.	PUNCT	Z:-------------	_	39	punct	_	_
+
+# sent_id = 21
+# text = Název Počet Výzkum Poloha Inv. č. Poznámka A678/2015 keramika 4 Skuhrov hrad sběr Slavík J. (viz. NZ Skuhrov 1998, poloha 1) A1737 3 atypické zlomky z výdutí nepolévaných nádob, prakticky bílé zboží, 2. pol. 15. stol. + zlomek okraje - velmi nizké vysazené okruží, červená linka na okruží, další na podhrdlí, váha 90,9g. A679/2015 keramika 23 Skuhrov hrad sběr arch. kroužek(viz.
+1	Název	název	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	_
+2	Počet	počet	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+3	Výzkum	výzkum	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	2	nmod	_	_
+4	Poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+5	Inv	taknvaný	ADJ	AAXXX----1A---b	Abbr=Yes|Degree=Pos|Polarity=Pos	7	amod	_	SpaceAfter=No
+6	.	.	PUNCT	Z:-------------	_	5	punct	_	_
+7	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	4	nmod	_	SpaceAfter=No
+8	.	.	PUNCT	Z:-------------	_	7	punct	_	_
+9	Poznámka	poznámka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	9	nmod	_	SpaceAfter=No
+11	678	678	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	_
+14	keramika	keramika	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+15	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	16	nummod	_	_
+16	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+17	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+18	sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+19	Slavík	slavík	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	16	nmod	_	_
+20	J	J	NOUN	Q3-------------	Abbr=Yes	19	nmod	_	SpaceAfter=No
+21	.	.	PUNCT	Z:-------------	_	20	punct	_	_
+22	(	(	PUNCT	Z:-------------	_	23	punct	_	SpaceAfter=No
+23	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	parataxis	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	23	punct	_	_
+25	NZ	NZ	NOUN	BNXXX-----A----	Abbr=Yes	23	obj	_	_
+26	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	25	nmod	_	_
+27	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	26	nummod	_	SpaceAfter=No
+28	,	,	PUNCT	Z:-------------	_	29	punct	_	_
+29	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	25	nmod	_	_
+30	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	29	nummod	_	SpaceAfter=No
+31	)	)	PUNCT	Z:-------------	_	23	punct	_	_
+32	A	A	NOUN	Q3-------------	Abbr=Yes	36	nmod	_	SpaceAfter=No
+33	1737	1737	NUM	C=-------------	NumForm=Digit|NumType=Card	36	nummod	_	_
+34	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	36	nummod	_	_
+35	atypické	atypický	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	36	amod	_	_
+36	zlomky	zlomek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	dep	_	_
+37	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	38	case	_	_
+38	výdutí	výdutí	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	36	nmod	_	_
+39	nepolévaných	polévaný	ADJ	AAFP2----1N----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Neg|VerbForm=Part|Voice=Pass	40	amod	_	_
+40	nádob	nádoba	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	38	nmod	_	SpaceAfter=No
+41	,	,	PUNCT	Z:-------------	_	44	punct	_	_
+42	prakticky	prakticky	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	43	advmod	_	_
+43	bílé	bílý	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	44	amod	_	_
+44	zboží	zboží	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	36	conj	_	SpaceAfter=No
+45	,	,	PUNCT	Z:-------------	_	48	punct	_	_
+46	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	48	nummod	_	SpaceAfter=No
+47	.	.	PUNCT	Z:-------------	_	46	punct	_	_
+48	pol	polovina	NOUN	NNFXX-----A---b	Abbr=Yes|Gender=Fem	36	nmod	_	SpaceAfter=No
+49	.	.	PUNCT	Z:-------------	_	48	punct	_	_
+50	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	52	nummod	_	SpaceAfter=No
+51	.	.	PUNCT	Z:-------------	_	50	punct	_	_
+52	stol	stol	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	48	nmod	_	SpaceAfter=No
+53	.	.	PUNCT	Z:-------------	_	52	punct	_	_
+54	+	+	SYM	Z:-------------	_	55	cc	_	_
+55	zlomek	zlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	36	conj	_	_
+56	okraje	okraj	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	55	nmod	_	_
+57	-	-	PUNCT	Z:-------------	_	61	punct	_	_
+58	velmi	velmi	ADV	Db-------------	_	59	advmod	_	_
+59	nizké	nizký	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	61	amod	_	_
+60	vysazené	vysazený	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	61	amod	_	_
+61	okruží	okruží	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	55	dep	_	SpaceAfter=No
+62	,	,	PUNCT	Z:-------------	_	64	punct	_	_
+63	červená	červený	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	64	amod	_	_
+64	linka	linka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	61	conj	_	_
+65	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	66	case	_	_
+66	okruží	okruží	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	64	nmod	_	SpaceAfter=No
+67	,	,	PUNCT	Z:-------------	_	68	punct	_	_
+68	další	další	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	61	conj	_	_
+69	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	70	case	_	_
+70	podhrdlí	podhrdlí	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	64	nmod	_	SpaceAfter=No
+71	,	,	PUNCT	Z:-------------	_	72	punct	_	_
+72	váha	váha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	conj	_	_
+73	90	90	NUM	C=-------------	NumForm=Digit|NumType=Card	72	nummod	_	SpaceAfter=No
+74	,	,	PUNCT	Z:-------------	_	75	punct	_	SpaceAfter=No
+75	9	9	NUM	C=-------------	NumForm=Digit|NumType=Card	73	conj	_	SpaceAfter=No
+76	g	gok	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	75	nmod	_	SpaceAfter=No
+77	.	.	PUNCT	Z:-------------	_	84	punct	_	_
+78	A	A	NOUN	Q3-------------	Abbr=Yes	84	nmod	_	SpaceAfter=No
+79	679	679	NUM	C=-------------	NumForm=Digit|NumType=Card	78	nummod	_	SpaceAfter=No
+80	/	/	PUNCT	Z:-------------	_	81	punct	_	SpaceAfter=No
+81	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	79	compound	_	_
+82	keramika	keramika	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	dep	_	_
+83	23	23	NUM	C=-------------	NumForm=Digit|NumType=Card	82	nummod	_	_
+84	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+85	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+86	sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	_
+87	arch	arch	ADJ	AAXXX----1A---b	Abbr=Yes|Degree=Pos|Polarity=Pos	89	amod	_	SpaceAfter=No
+88	.	.	PUNCT	Z:-------------	_	87	punct	_	_
+89	kroužek	kroužek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	86	nmod	_	SpaceAfter=No
+90	(	(	PUNCT	Z:-------------	_	91	punct	_	SpaceAfter=No
+91	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	1	parataxis	_	SpaceAfter=No
+92	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 22
+# text = NZ Skuhrov 1998,poloha 2) A1738 14 atypických zlomků keramiky 14./15. st. + 1 zl. masivnější zásobnice + 3 zl. okrajů (okruží+mísa se zahnutým okrajem) + 1 zl. ucha + výdutě nádob se stopami vytáčení + 1 mazanice, váha 182,1g. A680/2015 keramika 3 Skuhrov hrad sběr Slavík J. (viz. NZ Skuhrov 1998, poloha 3) A1739 2 drobné atypické zlomky + 1 zlomek dna - bílé zboží, 2. pol. 15. století, váha 14,6g. Terénní a obrazová dokumentace Obr. 1. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	NZ	NZ	NOUN	BNXXX-----A----	Abbr=Yes	0	root	_	_
+2	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	nmod	_	_
+3	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	SpaceAfter=No
+4	,	,	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No
+5	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	nmod	_	_
+6	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	5	nummod	_	SpaceAfter=No
+7	)	)	PUNCT	Z:-------------	_	1	punct	_	_
+8	A	A	NOUN	Q3-------------	Abbr=Yes	1	nmod	_	SpaceAfter=No
+9	1738	1738	NUM	C=-------------	NumForm=Digit|NumType=Card	8	nummod	_	_
+10	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	12	nummod:gov	_	_
+11	atypických	atypický	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	12	amod	_	_
+12	zlomků	zlomek	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	1	dep	_	_
+13	keramiky	keramika	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	12	nmod	_	_
+14	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	19	nummod	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	14	punct	_	SpaceAfter=No
+16	/	/	PUNCT	Z:-------------	_	17	punct	_	SpaceAfter=No
+17	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	14	conj	_	SpaceAfter=No
+18	.	.	PUNCT	Z:-------------	_	17	punct	_	_
+19	st	stupeň	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	13	nmod	_	SpaceAfter=No
+20	.	.	PUNCT	Z:-------------	_	19	punct	_	_
+21	+	+	SYM	Z:-------------	_	23	cc	_	_
+22	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	23	nummod	_	_
+23	zl	zl	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	26	conj	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	23	punct	_	_
+25	masivnější	masivní	ADJ	AAFS2----2A----	Case=Gen|Degree=Cmp|Gender=Fem|Number=Sing|Polarity=Pos	26	amod	_	_
+26	zásobnice	zásobnice	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	12	nmod	_	_
+27	+	+	SYM	Z:-------------	_	29	cc	_	_
+28	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	29	nummod	_	_
+29	zl	zl	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	26	nmod	_	SpaceAfter=No
+30	.	.	PUNCT	Z:-------------	_	29	punct	_	_
+31	okrajů	okraj	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	29	nmod	_	_
+32	(	(	PUNCT	Z:-------------	_	33	punct	_	SpaceAfter=No
+33	okruží	okruží	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	31	dep	_	SpaceAfter=No
+34	+	+	SYM	Z:-------------	_	35	cc	_	SpaceAfter=No
+35	mísa	mísa	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	33	conj	_	_
+36	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	38	case	_	_
+37	zahnutým	zahnutý	ADJ	AAIS7----1A----	Animacy=Inan|Case=Ins|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	38	amod	_	_
+38	okrajem	okraj	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	35	nmod	_	SpaceAfter=No
+39	)	)	PUNCT	Z:-------------	_	33	punct	_	_
+40	+	+	SYM	Z:-------------	_	44	cc	_	_
+41	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	44	nummod	_	_
+42	zl	zl	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	44	nmod	_	SpaceAfter=No
+43	.	.	PUNCT	Z:-------------	_	42	punct	_	_
+44	ucha	ucho	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	33	conj	_	_
+45	+	+	SYM	Z:-------------	_	46	cc	_	_
+46	výdutě	výduta	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	33	conj	_	_
+47	nádob	nádoba	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	46	nmod	_	_
+48	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	49	case	_	_
+49	stopami	stopa	NOUN	NNFP7-----A----	Case=Ins|Gender=Fem|Number=Plur	47	nmod	_	_
+50	vytáčení	vytáčení	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	49	nmod	_	_
+51	+	+	SYM	Z:-------------	_	53	cc	_	_
+52	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	53	nummod	_	_
+53	mazanice	mazanice	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	12	conj	_	SpaceAfter=No
+54	,	,	PUNCT	Z:-------------	_	55	punct	_	_
+55	váha	váha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	12	conj	_	_
+56	182	182	NUM	C=-------------	NumForm=Digit|NumType=Card	55	nummod	_	SpaceAfter=No
+57	,	,	PUNCT	Z:-------------	_	58	punct	_	SpaceAfter=No
+58	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	56	compound	_	SpaceAfter=No
+59	g	gok	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	56	nmod	_	SpaceAfter=No
+60	.	.	PUNCT	Z:-------------	_	65	punct	_	_
+61	A	A	NOUN	Q3-------------	Abbr=Yes	12	nmod	_	SpaceAfter=No
+62	680	680	NUM	C=-------------	NumForm=Digit|NumType=Card	61	nummod	_	SpaceAfter=No
+63	/	/	PUNCT	Z:-------------	_	64	punct	_	SpaceAfter=No
+64	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	62	compound	_	_
+65	keramika	keramika	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	12	nmod	_	_
+66	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	65	nummod	_	_
+67	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	65	nmod	_	_
+68	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	65	nmod	_	_
+69	sběr	sběr	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	65	nmod	_	_
+70	Slavík	slavík	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	65	nmod	_	_
+71	J	J	NOUN	Q3-------------	Abbr=Yes	70	nmod	_	SpaceAfter=No
+72	.	.	PUNCT	Z:-------------	_	71	punct	_	_
+73	(	(	PUNCT	Z:-------------	_	74	punct	_	SpaceAfter=No
+74	viz	viz	VERB	Vi-S---2--A-P-1	Aspect=Perf|Mood=Imp|Number=Sing|Person=2|Polarity=Pos|VerbForm=Fin	65	parataxis	_	SpaceAfter=No
+75	.	.	PUNCT	Z:-------------	_	74	punct	_	_
+76	NZ	NZ	NOUN	BNXXX-----A----	Abbr=Yes	74	obj	_	_
+77	Skuhrov	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	76	nmod	_	_
+78	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	77	nummod	_	SpaceAfter=No
+79	,	,	PUNCT	Z:-------------	_	80	punct	_	_
+80	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	76	conj	_	_
+81	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	80	nummod	_	SpaceAfter=No
+82	)	)	PUNCT	Z:-------------	_	74	punct	_	_
+83	A	A	NOUN	Q3-------------	Abbr=Yes	88	nmod	_	SpaceAfter=No
+84	1739	1739	NUM	C=-------------	NumForm=Digit|NumType=Card	83	nummod	_	_
+85	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	88	nummod	_	_
+86	drobné	drobný	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	88	amod	_	_
+87	atypické	atypický	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	88	amod	_	_
+88	zlomky	zlomek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	conj	_	_
+89	+	+	SYM	Z:-------------	_	91	cc	_	_
+90	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	91	nummod	_	_
+91	zlomek	zlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	88	conj	_	_
+92	dna	dno	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	91	nmod	_	_
+93	-	-	PUNCT	Z:-------------	_	95	punct	_	_
+94	bílé	bílý	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	95	amod	_	_
+95	zboží	zboží	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	91	appos	_	SpaceAfter=No
+96	,	,	PUNCT	Z:-------------	_	99	punct	_	_
+97	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	99	nummod	_	SpaceAfter=No
+98	.	.	PUNCT	Z:-------------	_	97	punct	_	_
+99	pol	polovina	NOUN	NNFXX-----A---b	Abbr=Yes|Gender=Fem	95	conj	_	SpaceAfter=No
+100	.	.	PUNCT	Z:-------------	_	99	punct	_	_
+101	15	15	NUM	C=-------------	NumForm=Digit|NumType=Card	103	nummod	_	SpaceAfter=No
+102	.	.	PUNCT	Z:-------------	_	101	punct	_	_
+103	století	století	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	99	nmod	_	SpaceAfter=No
+104	,	,	PUNCT	Z:-------------	_	105	punct	_	_
+105	váha	váha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	88	conj	_	_
+106	14	14	NUM	C=-------------	NumForm=Digit|NumType=Card	105	nummod	_	SpaceAfter=No
+107	,	,	PUNCT	Z:-------------	_	108	punct	_	SpaceAfter=No
+108	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	106	compound	_	SpaceAfter=No
+109	g	gok	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	108	nmod	_	SpaceAfter=No
+110	.	.	PUNCT	Z:-------------	_	114	punct	_	_
+111	Terénní	terénní	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	114	amod	_	_
+112	a	a	CCONJ	J^-------------	_	113	cc	_	_
+113	obrazová	obrazový	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	111	conj	_	_
+114	dokumentace	dokumentace	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	88	conj	_	_
+115	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	114	nmod	_	SpaceAfter=No
+116	.	.	PUNCT	Z:-------------	_	115	punct	_	_
+117	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	115	nummod	_	SpaceAfter=No
+118	.	.	PUNCT	Z:-------------	_	115	punct	_	_
+119	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	114	nmod	_	_
+120	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	121	case	_	_
+121	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	119	nmod	_	_
+122	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	114	dep	_	SpaceAfter=No
+123	,	,	PUNCT	Z:-------------	_	124	punct	_	_
+124	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	114	dep	_	_
+125	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	124	nummod	_	SpaceAfter=No
+126	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 23
+# text = Umístění lokality a plánek hradu se zákresem sběrů.
+1	Umístění	umístění	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	0	root	_	_
+2	lokality	lokalita	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	1	nmod	_	_
+3	a	a	CCONJ	J^-------------	_	4	cc	_	_
+4	plánek	plánek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	_
+5	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	4	nmod	_	_
+6	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	7	case	_	_
+7	zákresem	zákres	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	4	nmod	_	_
+8	sběrů	sběr	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	7	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 24
+# text = Obr. 2. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+6	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	_
+8	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+9	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+10	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	8	conj	_	_
+11	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 25
+# text = Nálezy -poloha 1 (př. č. A678/2015).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	3	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	678	678	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 26
+# text = Obr. 3. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+6	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	_
+8	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+9	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+10	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	8	conj	_	_
+11	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 27
+# text = Nálezy -poloha 2 (př. č. A679/201).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	679	679	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	201	201	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 28
+# text = Obr. 4. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+6	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	_
+8	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+9	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+10	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	8	conj	_	_
+11	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 29
+# text = Nálezy - poloha 3 (př. č. A680/2015).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	_
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	3	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	680	680	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 30
+# text = V Rychnově nad Kněžnou dne 27. 11. 2015 PhDr. Martina Beková Bohumír Dragoun Obr. 1. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	2	case	_	_
+2	Rychnově	Rychnov	PROPN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|NameType=Geo|Number=Sing	0	root	_	_
+3	nad	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	4	case	_	_
+4	Kněžnou	Kněžna	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	2	nmod	_	_
+5	dne	den	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	2	dep	_	_
+6	27	27	NUM	C=-------------	NumForm=Digit|NumType=Card	8	compound	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	5	nummod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	8	compound	_	_
+11	PhDr	PhDr	NOUN	BNXXX-----A----	Abbr=Yes	13	nmod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	11	punct	_	_
+13	Martina	Martina	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	2	dep	_	_
+14	Beková	Beková	PROPN	NNFS1-----A----	Case=Nom|Gender=Fem|NameType=Giv|Number=Sing	13	flat	_	_
+15	Bohumír	Bohumír	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	2	dep	_	_
+16	Dragoun	Dragoun	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	13	flat	_	_
+17	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	2	dep	_	SpaceAfter=No
+18	.	.	PUNCT	Z:-------------	_	17	punct	_	_
+19	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	17	nummod	_	SpaceAfter=No
+20	.	.	PUNCT	Z:-------------	_	17	punct	_	_
+21	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	17	nmod	_	_
+22	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	23	case	_	_
+23	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	21	nmod	_	_
+24	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	2	dep	_	SpaceAfter=No
+25	,	,	PUNCT	Z:-------------	_	26	punct	_	_
+26	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	24	conj	_	_
+27	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	26	nummod	_	SpaceAfter=No
+28	.	.	PUNCT	Z:-------------	_	2	punct	_	_
+
+# sent_id = 31
+# text = Umístění lokality a plánek hradu se zákresem sběrů.
+1	Umístění	umístění	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	0	root	_	_
+2	lokality	lokalita	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	1	nmod	_	_
+3	a	a	CCONJ	J^-------------	_	4	cc	_	_
+4	plánek	plánek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	_
+5	hradu	hrad	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	4	nmod	_	_
+6	se	s	ADP	RV--7----------	AdpType=Voc|Case=Ins	7	case	_	_
+7	zákresem	zákres	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	4	nmod	_	_
+8	sběrů	sběr	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	7	nmod	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 32
+# text = Obr. 2. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+6	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	_
+8	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+9	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+10	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	8	conj	_	_
+11	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 33
+# text = Nálezy - poloha 1 (př. č. A678/2015).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	_
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	3	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	678	678	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 34
+# text = Obr. 3. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+3	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+5	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+6	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	7	case	_	_
+7	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	_
+8	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+9	,	,	PUNCT	Z:-------------	_	10	punct	_	_
+10	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	8	conj	_	_
+11	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 35
+# text = Nálezy - poloha 2 (př. č. A679/2015).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	_
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	679	679	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 36
+# text = Stitrr ■ Seil ■■ Tu, Skulrov nD-lou, hrad sbrč.2 <or Sloufk J. 4998 AG802045 Obr. 4. SKUHROV NAD BĚLOU hrad, sběry 1998.
+1	Stitrr	Stitrr	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	0	root	_	_
+2	■	■	ADP	F%-------------	Foreign=Yes	1	nmod	_	_
+3	Seil	Seil	X	F%-------------	Foreign=Yes	1	dep	_	_
+4	■■	■■	X	F%-------------	Foreign=Yes	5	case	_	_
+5	Tu	Tu	X	F%-------------	Foreign=Yes	1	dep	_	SpaceAfter=No
+6	,	,	PUNCT	Z:-------------	_	7	punct	_	_
+7	Skulrov	Skulrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	conj	_	_
+8	nD	ND	NOUN	Q3-------------	Abbr=Yes	10	nmod	_	SpaceAfter=No
+9	-	-	PUNCT	Z:-------------	_	8	punct	_	SpaceAfter=No
+10	lou	lou	NOUN	F%-------------	Foreign=Yes	7	nmod	_	SpaceAfter=No
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	_
+12	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	conj	_	_
+13	sbrč	sbrč	NOUN	BNXXX-----A----	Abbr=Yes	1	dep	_	SpaceAfter=No
+14	.2	.2	NUM	C=-------------	NumForm=Digit|NumType=Card	13	nummod	_	_
+15	<	<	SYM	Z:-------------	_	16	nmod	_	SpaceAfter=No
+16	or	or	X	F%-------------	Foreign=Yes	1	dep	_	_
+17	Sloufk	Sloufk	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	1	dep	_	_
+18	J	J	NOUN	Q3-------------	Abbr=Yes	1	dep	_	SpaceAfter=No
+19	.	.	PUNCT	Z:-------------	_	18	punct	_	_
+20	4998	4998	NUM	C=-------------	NumForm=Digit|NumType=Card	1	dep	_	_
+21	AG	AG	NOUN	BNXXX-----A----	Abbr=Yes	1	dep	_	SpaceAfter=No
+22	802045	802045	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	_
+23	Obr	obrázek	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	1	dep	_	SpaceAfter=No
+24	.	.	PUNCT	Z:-------------	_	23	punct	_	_
+25	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	23	nummod	_	SpaceAfter=No
+26	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+27	SKUHROV	Skuhrov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	1	dep	_	_
+28	NAD	nad	ADP	RR--7----------	AdpType=Prep|Case=Ins	29	case	_	_
+29	BĚLOU	Běla	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Geo|Number=Sing	27	nmod	_	_
+30	hrad	hrad	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	dep	_	SpaceAfter=No
+31	,	,	PUNCT	Z:-------------	_	32	punct	_	_
+32	sběry	sběr	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	dep	_	_
+33	1998	1998	NUM	C=-------------	NumForm=Digit|NumType=Card	32	nummod	_	SpaceAfter=No
+34	.	.	PUNCT	Z:-------------	_	1	punct	_	_
+
+# sent_id = 37
+# text = Nálezy - poloha 3 (př. č. A680/2015).
+1	Nálezy	nález	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	_
+2	-	-	PUNCT	Z:-------------	_	3	punct	_	_
+3	poloha	poloha	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	appos	_	_
+4	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	_
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+6	př	př	NOUN	AAXXX----1A---b	Abbr=Yes	8	amod	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	_
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	3	dep	_	SpaceAfter=No
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	_
+10	A	A	NOUN	Q3-------------	Abbr=Yes	8	nmod	_	SpaceAfter=No
+11	680	680	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	SpaceAfter=No
+12	/	/	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No
+13	2015	2015	NUM	C=-------------	NumForm=Digit|NumType=Card	11	compound	_	SpaceAfter=No
+14	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+15	.	.	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+

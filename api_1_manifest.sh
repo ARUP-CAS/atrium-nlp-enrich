@@ -14,13 +14,24 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "output_manifest=${OUTPUT_DIR}/manifest.tsv")
 # ── end paradata start ────────────────────────────────────────────────────────
 
+mkdir -p "${OUTPUT_DIR}"
+
+# Write header if manifest does not exist yet
+if [ ! -f "${OUTPUT_DIR}/manifest.tsv" ]; then
+    echo -e "file\tpage\tpath" > "${OUTPUT_DIR}/manifest.tsv"
+fi
+
 TOTAL=0
 ERRORS=0
 
 for csv_file in "${INPUT_TABLES_DIR}"/*.csv "${INPUT_TABLES_DIR}"/*.xlsx; do
     [ -f "$csv_file" ] || continue
     TOTAL=$((TOTAL + 1))
-    if python3 api_util/build_manifest_row.py "$csv_file" >> "${OUTPUT_DIR}/manifest.tsv"; then
+    # build_manifest_row.py reads one CSV/XLSX, writes a temp .txt, and prints
+    # a single TSV row:  doc_id <TAB> page_count <TAB> /path/to/text_file
+    if python3 api_util/build_manifest_row.py "$csv_file" \
+            --text-dir "${TEMP_TXT_DIR:-./TEMP/TXT_EXTRACT}" \
+            >> "${OUTPUT_DIR}/manifest.tsv"; then
         python3 atrium_paradata.py success --state "$PARA_STATE" --type tsv
     else
         python3 atrium_paradata.py skip \
