@@ -437,7 +437,7 @@ started.  Because every script is an independent invocation, a complete
 four-step run will create four separate files, making it straightforward to
 audit individual stages in isolation.
 
-The paradata logs capture key details about each pipeline stage, including the program name, run ID, execution 
+The paradata logs (samples in directory [paradata](paradata) 📂) capture key details about each pipeline stage, including the program name, run ID, execution 
 duration, configuration parameters, input and output statistics, and performance metrics. They also document 
 skipped files with reasons and provide a breakdown of output types and processing rates for benchmarking. This 
 structured metadata ensures traceability and facilitates auditing of the pipeline's execution.
