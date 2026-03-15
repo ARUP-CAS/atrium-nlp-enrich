@@ -1,88 +1,46 @@
-#!/bin/bash
-source ./api_util/api_common.sh
+#!/usr/bin/env bash
+# api_1_manifest.sh – generate manifest + paradata
+set -euo pipefail
+source config_api.txt   # loads OUTPUT_DIR, INPUT_TABLES_DIR, LOG_FILE, etc.
 
-echo "=========================================="
-echo " STEP 1: MANIFEST GENERATION"
-echo "=========================================="
-echo " Input dir  : $INPUT_TABLES_DIR"
-echo " Manifest   : $OUTPUT_DIR/manifest.tsv"
-echo " Text cache : $WORK_DIR/TEXT_CACHE"
-echo "=========================================="
+# ── paradata: start ───────────────────────────────────────────────────────────
+PARA_STATE=$(python3 atrium_paradata.py start \
+    --program nlp-enrich \
+    --paradata-dir "${OUTPUT_DIR}/paradata" \
+    --output-types tsv \
+    --config \
+        "script=api_1_manifest" \
+        "input_dir=${INPUT_TABLES_DIR}" \
+        "output_manifest=${OUTPUT_DIR}/manifest.tsv")
+# ── end paradata start ────────────────────────────────────────────────────────
 
-# We create a cache directory for the extracted text
-TEXT_CACHE_DIR="$WORK_DIR/TEXT_CACHE"
-MANIFEST="$OUTPUT_DIR/manifest.tsv"
+mkdir -p "${OUTPUT_DIR}"
 
-mkdir -p "$WORK_DIR" "$TEXT_CACHE_DIR"
-
-# Python Helper: Extract & Sort Text
-# Reads a CSV, sorts by page/line, and prints the full text.
-extract_csv_text() {
-    python3 -c "
-import sys, csv
-
-try:
-    with open('$1', 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        data = []
-        for row in reader:
-            try: p = int(row.get('page_num', 0))
-            except: p = 0
-            try: l = int(row.get('line_num', 0))
-            except: l = 0
-
-            if row.get('text') and str(row.get('text')).strip():
-                data.append({'p': p, 'l': l, 'text': row['text']})
-
-    data.sort(key=lambda x: (x['p'], x['l']))
-
-    for item in data:
-        print(item['text'])
-
-except Exception as e:
-    sys.stderr.write(f'[Error parsing $1]: {e}\n')
-"
-}
-
-# Check if directory exists
-if [ ! -d "$INPUT_TABLES_DIR" ]; then
-    echo "Error: Input directory does not exist: $INPUT_TABLES_DIR"
-    exit 1
+# Write header if manifest does not exist yet
+if [ ! -f "${OUTPUT_DIR}/manifest.tsv" ]; then
+    echo -e "file\tpage\tpath" > "${OUTPUT_DIR}/manifest.tsv"
 fi
 
-# Initialize/Clear manifest
-: > "$MANIFEST"
+TOTAL=0
+ERRORS=0
 
-echo "Scanning: $INPUT_TABLES_DIR"
-echo "------------------------------------------"
-
-count=0
-skipped=0
-
-find "$INPUT_TABLES_DIR" -name "*.csv" | sort | while read -r csv_file; do
-
-    filename=$(basename "$csv_file")
-    doc_id="${filename%.*}"
-    target_txt="$TEXT_CACHE_DIR/${doc_id}.txt"
-
-    extract_csv_text "$csv_file" > "$target_txt"
-
-    if [ -s "$target_txt" ]; then
-        echo -e "${doc_id}\t1\t${target_txt}" >> "$MANIFEST"
-        ((count++))
-        echo -ne "  Indexed : $count docs\r"
+for csv_file in "${INPUT_TABLES_DIR}"/*.csv "${INPUT_TABLES_DIR}"/*.xlsx; do
+    [ -f "$csv_file" ] || continue
+    TOTAL=$((TOTAL + 1))
+    # build_manifest_row.py reads one CSV/XLSX, writes a temp .txt, and prints
+    # a single TSV row:  doc_id <TAB> page_count <TAB> /path/to/text_file
+    if python3 api_util/build_manifest_row.py "$csv_file" \
+            --text-dir "${TEMP_TXT_DIR:-./TEMP/TXT_EXTRACT}" \
+            >> "${OUTPUT_DIR}/manifest.tsv"; then
+        python3 atrium_paradata.py success --state "$PARA_STATE" --type tsv
     else
-        rm -f "$target_txt"
-        ((skipped++))
-        echo "  Skipped : $doc_id  (empty or unreadable)"
+        python3 atrium_paradata.py skip \
+            --state "$PARA_STATE" \
+            --file  "$csv_file" \
+            --reason "manifest row generation failed"
+        ERRORS=$((ERRORS + 1))
     fi
 done
 
-echo ""
-echo "------------------------------------------"
-echo " Indexed  : $count documents"
-echo " Skipped  : $skipped documents"
-echo " Manifest : $MANIFEST"
-echo " Cache    : $TEXT_CACHE_DIR"
-echo "------------------------------------------"
-echo "Next: ./api_2_udp.sh"
+python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"
+echo "[manifest] done: $TOTAL total, $ERRORS errors"

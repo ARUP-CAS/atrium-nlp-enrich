@@ -5,6 +5,7 @@ import multiprocessing
 from pathlib import Path
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from atrium_paradata import ParadataLogger
 
 # --- Configuration ---
 DEFAULT_INDIVIDUAL_OUTPUT_DIR = "data_samples/KW_PER_DOC"
@@ -108,13 +109,24 @@ def main():
     parser = argparse.ArgumentParser(description="Extract keywords from CoNLL-U files.")
     parser.add_argument('-i', '--input_dir', required=True, default=DEFAULT_INPUT_CONLLU_DIR,
                         help="Directory containing .conllu files")
-    parser.add_argument('-o', '--output_file', default="keywords_master.csv", help="Master CSV output")
-    parser.add_argument('-n', '--num_keywords', type=int, default=20, help="Number of keywords per document")
-    parser.add_argument('--workers', type=int, default=multiprocessing.cpu_count(), help="Max CPU workers")
+    parser.add_argument('-o', '--output_file', default="keywords_master.csv",
+                        help="Master CSV output file path")
+    parser.add_argument('-n', '--num_keywords', type=int, default=20,
+                        help="Number of keywords to extract per document")
+    # FIX: the three flags referenced in the paradata config block were missing
+    parser.add_argument('-l', '--lang', default='cs',
+                        help="Language code for keyword extraction (e.g. 'cs', 'en')")
+    parser.add_argument('-w', '--max_words', type=int, default=3,
+                        help="Maximum number of words per keyword entry")
+    parser.add_argument('-d', '--per_doc_out_dir', default=DEFAULT_INDIVIDUAL_OUTPUT_DIR,
+                        help="Output directory for per-document keyword CSV files")
+    parser.add_argument('--workers', type=int, default=multiprocessing.cpu_count(),
+                        help="Maximum number of parallel worker processes")
     args = parser.parse_args()
 
     input_path = Path(args.input_dir)
-    indiv_out_path = Path(DEFAULT_INDIVIDUAL_OUTPUT_DIR)
+    # Use -d/--per_doc_out_dir instead of the hard-coded DEFAULT_INDIVIDUAL_OUTPUT_DIR
+    indiv_out_path = Path(args.per_doc_out_dir)
     indiv_out_path.mkdir(parents=True, exist_ok=True)
 
     if not input_path.exists() or not input_path.is_dir():
@@ -138,25 +150,48 @@ def main():
     processed_count = 0
     futures_map = {}
 
+    _logger = ParadataLogger(
+        program="nlp-enrich",
+        config={
+            "script":          "keywords",
+            "input_dir":       str(args.input_dir),
+            "lang":            str(args.lang),           # FIX: now defined
+            "max_words":       int(args.max_words),      # FIX: now defined
+            "num_keywords":    int(args.num_keywords),
+            "per_doc_out_dir": str(args.per_doc_out_dir), # FIX: now defined
+            "output_file":     str(args.output_file),
+        },
+        paradata_dir="paradata",
+        output_types=["csv"],
+    )
+    _total_inputs = 0
+
     print(f"--- Starting Keyword Lemmatization Process on {len(tasks)} documents ---")
 
-    with ProcessPoolExecutor(max_workers=args.workers) as executor:
-        for task in tasks:
-            future = executor.submit(process_document_task, task)
-            futures_map[future] = task[0]
+    _total_inputs = len(tasks)
 
-        for future in as_completed(futures_map):
-            doc_path = futures_map[future]
-            try:
-                result = future.result()
-                if result:
-                    res_doc_id, keywords = result
-                    write_csv_row(args.output_file, res_doc_id, keywords, args.num_keywords)
-                    processed_count += 1
-                    if processed_count % 100 == 0:
-                        print(f"Processed {processed_count} documents...")
-            except Exception as e:
-                print(f"[Error] Failed processing document '{doc_path}': {e}")
+    try:
+        with ProcessPoolExecutor(max_workers=args.workers) as executor:
+            for task in tasks:
+                future = executor.submit(process_document_task, task)
+                futures_map[future] = task[0]
+
+            for future in as_completed(futures_map):
+                doc_path = futures_map[future]
+                try:
+                    result = future.result()
+                    if result:
+                        res_doc_id, keywords = result
+                        write_csv_row(args.output_file, res_doc_id, keywords, args.num_keywords)
+                        processed_count += 1
+                        _logger.log_success("csv", count=2)  # per-doc csv + summary row
+                        if processed_count % 100 == 0:
+                            print(f"Processed {processed_count} documents...")
+                except Exception as e:
+                    print(f"[Error] Failed processing document '{doc_path}': {e}")
+                    _logger.log_skip(str(doc_path), str(e))
+    finally:
+        _logger.finalize(input_total=_total_inputs)
 
     print("\n--- Processing Complete. Sorting Master Results... ---")
     sort_csv_file(args.output_file)

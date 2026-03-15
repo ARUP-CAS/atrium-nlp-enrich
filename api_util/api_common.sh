@@ -20,7 +20,8 @@ if [ ! -d "$INPUT_TABLES_DIR" ]; then
 fi
 
 # Check for required Python scripts
-for script in manifest.py chunk.py analyze.py; do
+for script in manifest.py chunk.py analyze.py \
+              build_manifest_row.py call_udpipe.py call_nametag.py; do
     if [ ! -f "$SCRIPT_DIR/$script" ]; then
         echo "Error: Helper script '$script' not found in $SCRIPT_DIR"
         exit 1
