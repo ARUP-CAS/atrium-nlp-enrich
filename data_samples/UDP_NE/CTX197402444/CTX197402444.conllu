@@ -1,0 +1,386 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = o P ATOVICEn.Le
+1	o	o	NOUN	Q3-------------	Abbr=Yes	3	nmod	_	NER=O
+2	P	P	NOUN	Q3-------------	Abbr=Yes	3	nmod	_	NER=O
+3	ATOVICEn.Le	Atovicen.le	PROPN	F%-------------	Foreign=Yes	0	root	_	NER=O
+
+# sent_id = 2
+# text = Kat. obec: Osada: Trať: Pardubice Okres: Druh a kultura: Lužické sídliště Zpráva XXWžkumu XAterenta kmixxxx ved.
+1	Kat	kat	ADJ	AAXXX----1A---b	Abbr=Yes|Degree=Pos|Polarity=Pos	3	amod	_	SpaceAfter=No|NER=O
+2	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+3	obec	obec	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	0	root	_	SpaceAfter=No|NER=O
+4	:	:	PUNCT	Z:-------------	_	5	punct	_	NER=O
+5	Osada	osada	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	appos	_	SpaceAfter=No|NER=O
+6	:	:	PUNCT	Z:-------------	_	7	punct	_	NER=O
+7	Trať	trať	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	5	appos	_	SpaceAfter=No|NER=O
+8	:	:	PUNCT	Z:-------------	_	9	punct	_	NER=O
+9	Pardubice	Pardubice	PROPN	NNFP1-----A----	Case=Nom|Gender=Fem|NameType=Geo|Number=Plur	7	appos	_	NER=B-gu
+10	Okres	okres	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	9	nmod	_	SpaceAfter=No|NER=O
+11	:	:	PUNCT	Z:-------------	_	12	punct	_	NER=O
+12	Druh	druh	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	10	appos	_	NER=O
+13	a	a	CCONJ	J^-------------	_	14	cc	_	NER=O
+14	kultura	kultura	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	12	conj	_	SpaceAfter=No|NER=O
+15	:	:	PUNCT	Z:-------------	_	17	punct	_	NER=O
+16	Lužické	lužický	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	17	amod	_	NER=O
+17	sídliště	sídliště	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	12	appos	_	NER=O
+18	Zpráva	zpráva	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	17	nmod	_	NER=O
+19	XXWžkumu	xxwžkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	18	nmod	_	NER=O
+20	XAterenta	xaterenta	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	19	nmod	_	NER=O
+21	kmixxxx	kmixxxx	X	F%-------------	Foreign=Yes	20	nmod	_	NER=O
+22	ved	ved	NOUN	Q3-------------	Abbr=Yes	18	nmod	_	SpaceAfter=No|NER=O
+23	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 3
+# text = oddělení za období: 19.111.1974
+1	oddělení	oddělení	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	0	root	_	NER=O
+2	za	za	ADP	RR--4----------	AdpType=Prep|Case=Acc	3	case	_	NER=O
+3	období	období	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing	1	nmod	_	SpaceAfter=No|NER=O
+4	:	:	PUNCT	Z:-------------	_	7	punct	_	NER=O
+5	19	19	NUM	C=-------------	NumForm=Digit|NumType=Card	7	compound	_	SpaceAfter=No|NER=B-T|B-td
+6	.	.	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=I-T|I-td
+7	111	111	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	SpaceAfter=No|NER=I-T|B-tm
+8	.1974	.1974	NUM	C=-------------	NumForm=Digit|NumType=Card	7	compound	_	NER=I-T|I-tm
+
+# sent_id = 4
+# text = Dne 19.III.1974 jsije navštívili pískovnu JZD v Opatovicích n.L., známou z velkého záchraného výzkumu AŮ ČSAV v Praze v letech 1956-1959.
+1	Dne	den	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	6	obl	_	NER=O
+2	19.III	19.iii	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No|NER=B-T|B-td
+3	.	.	PUNCT	Z:-------------	_	2	punct	_	SpaceAfter=No|NER=I-T|I-td
+4	1974	1974	NUM	C=-------------	NumForm=Digit|NumType=Card	2	compound	_	NER=I-T|B-ty
+5	jsije	být	AUX	NNFP1-----A----	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	6	nsubj	_	NER=O
+6	navštívili	navštívit	VERB	VpMP----R-AAP--	Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	NER=O
+7	pískovnu	pískovna	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	6	obj	_	NER=O
+8	JZD	JZD	NOUN	BNXXX-----A----	Abbr=Yes	7	nmod	_	NER=B-g_
+9	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	NER=O
+10	Opatovicích	Opatovice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	8	nmod	_	NER=B-gu
+11	n	n	ADP	Q3-------------	AdpType=Prep|Case=Ins	13	case	_	SpaceAfter=No|NER=I-gu
+12	.	.	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No|NER=I-gu
+13	L	L	NOUN	Q3-------------	Abbr=Yes	10	nmod	_	SpaceAfter=No|NER=I-gu
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No|NER=I-gu
+15	,	,	PUNCT	Z:-------------	_	16	punct	_	NER=O
+16	známou	známý	ADJ	AAFS4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	7	amod	_	NER=O
+17	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	20	case	_	NER=O
+18	velkého	velký	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	20	amod	_	NER=O
+19	záchraného	záchraný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	20	amod	_	NER=O
+20	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	16	obl	_	NER=O
+21	AŮ	a	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	20	nmod	_	NER=B-ia
+22	ČSAV	ČSAV	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Oth	21	nmod	_	NER=I-ia|B-io
+23	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	24	case	_	NER=O
+24	Praze	Praha	PROPN	NNFS6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Sing	21	nmod	_	NER=B-gu
+25	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	26	case	_	NER=O
+26	letech	léta	NOUN	NNNP6-----A----	Case=Loc|Gender=Neut|Number=Plur	20	nmod	_	NER=O
+27	1956	1956	NUM	C=-------------	NumForm=Digit|NumType=Card	26	nummod	_	SpaceAfter=No|NER=B-ty
+28	-	-	PUNCT	Z:-------------	_	29	punct	_	SpaceAfter=No|NER=O
+29	1959	1959	NUM	C=-------------	NumForm=Digit|NumType=Card	27	conj	_	SpaceAfter=No|NER=B-ty
+30	.	.	PUNCT	Z:-------------	_	6	punct	_	NER=O
+
+# sent_id = 5
+# text = Tehdy práce v pískovně byla zastavena a proto výzkum byl přerušen.
+1	Tehdy	tehdy	ADV	Db-------------	PronType=Dem	6	advmod	_	NER=O
+2	práce	práce	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	6	nsubj:pass	_	NER=O
+3	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	case	_	NER=O
+4	pískovně	pískovna	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	2	nmod	_	NER=O
+5	byla	být	AUX	VpQW----R-AAI--	Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	6	aux:pass	_	NER=O
+6	zastavena	zastavený	ADJ	VsQW----X-APP--	Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+7	a	a	CCONJ	J^-------------	_	11	cc	_	NER=O
+8	proto	proto	CCONJ	J^-------------	_	11	cc	_	NER=O
+9	výzkum	výzkum	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	11	nsubj:pass	_	NER=O
+10	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	11	aux:pass	_	NER=O
+11	přerušen	přerušený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	6	conj	_	SpaceAfter=No|NER=O
+12	.	.	PUNCT	Z:-------------	_	6	punct	_	NER=O
+
+# sent_id = 6
+# text = Zjistili jsme, že práce v pískovně byly obnoveny, rozsah pískovny se zvětšil i za hranice záchranného výzkumu.
+1	Zjistili	zjistit	VERB	VpMP----R-AAP--	Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	NER=O
+2	jsme	být	AUX	VB-P---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	1	aux	_	SpaceAfter=No|NER=O
+3	,	,	PUNCT	Z:-------------	_	9	punct	_	NER=O
+4	že	že	SCONJ	J,-------------	_	9	mark	_	NER=O
+5	práce	práce	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	9	nsubj:pass	_	NER=O
+6	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	pískovně	pískovna	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	byly	být	AUX	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	9	aux:pass	_	NER=O
+9	obnoveny	obnovený	ADJ	VsTP----X-APP--	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	1	ccomp	_	SpaceAfter=No|NER=O
+10	,	,	PUNCT	Z:-------------	_	14	punct	_	NER=O
+11	rozsah	rozsah	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	14	nsubj	_	NER=O
+12	pískovny	pískovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	11	nmod	_	NER=O
+13	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	14	expl:pv	_	NER=O
+14	zvětšil	zvětšit	VERB	VpYS----R-AAP--	Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	9	conj	_	NER=O
+15	i	i	CCONJ	J^-------------	_	17	advmod:emph	_	NER=O
+16	za	za	ADP	RR--4----------	AdpType=Prep|Case=Acc	17	case	_	NER=O
+17	hranice	hranice	NOUN	NNFP4-----A----	Case=Acc|Gender=Fem|Number=Plur	14	obl	_	NER=O
+18	záchranného	záchranný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	19	amod	_	NER=O
+19	výzkumu	výzkum	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	17	nmod	_	SpaceAfter=No|NER=O
+20	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 7
+# text = Na bagrem skryté ploše jsou znatelné 3—4 hlubší objekty, skrývka však šla velmi hluboko, takže mad± mělčí objekty byly zcela zničeny
+1	Na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	case	_	NER=O
+2	bagrem	bagr	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	3	obl	_	NER=O
+3	skryté	skrytý	ADJ	AAFS6----1A----	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	4	amod	_	NER=O
+4	ploše	plocha	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	6	obl	_	NER=O
+5	jsou	být	AUX	VB-P---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	6	cop	_	NER=O
+6	znatelné	znatelný	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	0	root	_	NER=O
+7	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	11	nummod	_	SpaceAfter=No|NER=B-nc
+8	—	—	PUNCT	Z:-------------	_	9	cc	_	SpaceAfter=No|NER=O
+9	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	7	conj	_	NER=B-nc
+10	hlubší	hluboký	ADJ	AAIP1----2A----	Animacy=Inan|Case=Nom|Degree=Cmp|Gender=Masc|Number=Plur|Polarity=Pos	11	amod	_	NER=O
+11	objekty	objekt	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	6	nsubj	_	SpaceAfter=No|NER=O
+12	,	,	PUNCT	Z:-------------	_	15	punct	_	NER=O
+13	skrývka	skrývka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	15	nsubj	_	NER=O
+14	však	však	CCONJ	J^-------------	_	15	cc	_	NER=O
+15	šla	jít	VERB	VpQW----R-AAI--	Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	6	conj	_	NER=O
+16	velmi	velmi	ADV	Db-------------	_	17	advmod	_	NER=O
+17	hluboko	hluboko	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	15	advmod	_	SpaceAfter=No|NER=O
+18	,	,	PUNCT	Z:-------------	_	26	punct	_	NER=O
+19	takže	takže	SCONJ	J,-------------	_	26	mark	_	NER=O
+20	mad	mad	X	F%-------------	Foreign=Yes	23	nmod	_	SpaceAfter=No|NER=O
+21	±	±	PUNCT	Z:-------------	_	20	punct	_	NER=O
+22	mělčí	mělký	ADJ	AAIP1----2A----	Animacy=Inan|Case=Nom|Degree=Cmp|Gender=Masc|Number=Plur|Polarity=Pos	23	amod	_	NER=O
+23	objekty	objekt	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	26	nsubj:pass	_	NER=O
+24	byly	být	AUX	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	26	aux:pass	_	NER=O
+25	zcela	zcela	ADV	Db-------------	_	26	advmod	_	NER=O
+26	zničeny	zničený	ADJ	VsTP----X-APP--	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	15	advcl	_	NER=O
+
+# sent_id = 8
+# text = Podle teréního pozorování je ještě část sídliště zachována na parc.č. 1503, kde jsme sběrem získali lžickou kera- miku.
+1	Podle	podle	ADP	RR--2----------	AdpType=Prep|Case=Gen	3	case	_	NER=O
+2	teréního	teréní	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	3	amod	_	NER=O
+3	pozorování	pozorování	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	8	obl	_	NER=O
+4	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	8	aux:pass	_	NER=O
+5	ještě	ještě	ADV	Db-------------	_	8	advmod	_	NER=O
+6	část	část	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	8	nsubj:pass	_	NER=O
+7	sídliště	sídliště	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	6	nmod	_	NER=O
+8	zachována	zachovaný	ADJ	VsQW----X-API--	Aspect=Imp|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+9	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	NER=O
+10	parc	paec	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	8	obl	_	SpaceAfter=No|NER=O
+11	.	.	PUNCT	Z:-------------	_	10	punct	_	SpaceAfter=No|NER=O
+12	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	10	nmod	_	SpaceAfter=No|NER=O
+13	.	.	PUNCT	Z:-------------	_	12	punct	_	NER=O
+14	1503	1503	NUM	C=-------------	NumForm=Digit|NumType=Card	12	nummod	_	SpaceAfter=No|NER=B-n_
+15	,	,	PUNCT	Z:-------------	_	19	punct	_	NER=O
+16	kde	kde	ADV	Db-------------	PronType=Int,Rel	19	advmod	_	NER=O
+17	jsme	být	AUX	VB-P---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	19	aux	_	NER=O
+18	sběrem	sběr	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	19	obl	_	NER=O
+19	získali	získat	VERB	VpMP----R-AAP--	Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	10	acl:relcl	_	NER=O
+20	lžickou	lžický	ADJ	AAFS4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	23	amod	_	NER=O
+21	kera	kera	ADJ	S2--------A----	Degree=Pos|Hyph=Yes|Polarity=Pos	23	amod	_	SpaceAfter=No|NER=O
+22	-	-	PUNCT	Z:-------------	_	21	punct	_	NER=O
+23	miku	mika	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	19	obj	_	SpaceAfter=No|NER=O
+24	.	.	PUNCT	Z:-------------	_	8	punct	_	NER=O
+
+# sent_id = 9
+# text = Další střepy jsme našli na parc.č. 1510, scvernt od pískovny Ty však mohou pocházet z rozrušených žárových hrobů.
+1	Další	další	ADJ	AAIP4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	2	amod	_	NER=O
+2	střepy	střep	NOUN	NNIP4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	4	obj	_	NER=O
+3	jsme	být	AUX	VB-P---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	aux	_	NER=O
+4	našli	najít	VERB	VpMP----R-AAP--	Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	NER=O
+5	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	6	case	_	NER=O
+6	parc	paec	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	4	obl	_	SpaceAfter=No|NER=O
+7	.	.	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No|NER=O
+8	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	6	nmod	_	SpaceAfter=No|NER=O
+9	.	.	PUNCT	Z:-------------	_	8	punct	_	NER=O
+10	1510	1510	NUM	C=-------------	NumForm=Digit|NumType=Card	8	nummod	_	SpaceAfter=No|NER=B-n_
+11	,	,	PUNCT	Z:-------------	_	12	punct	_	NER=O
+12	scvernt	scvernt	NOUN	NNIS1-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	6	appos	_	NER=O
+13	od	od	ADP	RR--2----------	AdpType=Prep|Case=Gen	14	case	_	NER=O
+14	pískovny	pískovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	12	nmod	_	NER=O
+15	Ty	ten	DET	PDIP1----------	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur|PronType=Dem	17	nsubj	_	NER=O
+16	však	však	CCONJ	J^-------------	_	17	cc	_	NER=O
+17	mohou	moci	VERB	VB-P---3P-AAI-1	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	4	conj	_	NER=O
+18	pocházet	pocházet	VERB	Vf--------A-I--	Aspect=Imp|Polarity=Pos|VerbForm=Inf	17	xcomp	_	NER=O
+19	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	22	case	_	NER=O
+20	rozrušených	rozrušený	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos|VerbForm=Part|Voice=Pass	22	amod	_	NER=O
+21	žárových	žárový	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	22	amod	_	NER=O
+22	hrobů	hrob	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	18	obl	_	SpaceAfter=No|NER=O
+23	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=O
+
+# sent_id = 10
+# text = Domnáváme se, že AÚ ČSAV v Praze by měl dokončit
+1	Domnáváme	domnávat	VERB	VB-P---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	NER=O
+2	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	1	expl:pv	_	SpaceAfter=No|NER=O
+3	,	,	PUNCT	Z:-------------	_	10	punct	_	NER=O
+4	že	že	SCONJ	J,-------------	_	10	mark	_	NER=O
+5	AÚ	AÚ	NOUN	BNXXX-----A----	Abbr=Yes	10	nsubj	_	NER=B-ia
+6	ČSAV	ČSAV	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Oth	5	nmod	_	NER=I-ia
+7	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	NER=O
+8	Praze	Praha	PROPN	NNFS6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Sing	5	nmod	_	NER=B-gu
+9	by	být	AUX	Vc----------I--	Aspect=Imp|Mood=Cnd|VerbForm=Fin	10	aux	_	NER=O
+10	měl	mít	VERB	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	1	ccomp	_	NER=O
+11	dokončit	dokončit	VERB	Vf--------A-P--	Aspect=Perf|Polarity=Pos|VerbForm=Inf	10	xcomp	_	NER=O
+
+# sent_id = 11
+# text = Výzkum tohoto důležitého lužického sídliště, aby tak byl ukázán poprvé celý půdorys pravěké vesnice i s pohřebištěm V Hradci Králové, 27.111.1974 .předejte prosím Dr.J.Ratajo | ver,výzkumu v Opatovicích.
+1	Výzkum	výzkum	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	tohoto	tento	DET	PDZS2----------	Case=Gen|Gender=Masc,Neut|Number=Sing|PronType=Dem	5	det	_	NER=O
+3	důležitého	důležitý	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	5	amod	_	NER=O
+4	lužického	lužický	ADJ	AANS2----1A----	Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	5	amod	_	NER=O
+5	sídliště	sídliště	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	1	nmod	_	SpaceAfter=No|NER=O
+6	,	,	PUNCT	Z:-------------	_	11	punct	_	NER=O
+7-8	aby	_	_	_	_	_	_	_	_
+7	aby	aby	SCONJ	J,-------------	_	11	mark	_	NER=O
+8	by	být	AUX	Vc-------------	Aspect=Imp|Mood=Cnd|VerbForm=Fin	11	aux	_	NER=O
+9	tak	tak	ADV	Db-------------	PronType=Dem	11	advmod	_	NER=O
+10	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	11	aux:pass	_	NER=O
+11	ukázán	ukázaný	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	1	dep	_	NER=O
+12	poprvé	poprvé	ADV	Db-------------	_	11	advmod	_	NER=O
+13	celý	celý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	14	amod	_	NER=O
+14	půdorys	půdorys	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	11	nsubj:pass	_	NER=O
+15	pravěké	pravěký	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	16	amod	_	NER=O
+16	vesnice	vesnice	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	14	nmod	_	NER=O
+17	i	i	CCONJ	J^-------------	_	19	advmod:emph	_	NER=O
+18	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	19	case	_	NER=O
+19	pohřebištěm	pohřebiště	NOUN	NNNS7-----A----	Case=Ins|Gender=Neut|Number=Sing	16	nmod	_	NER=O
+20	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	21	case	_	NER=B-gu
+21	Hradci	Hradec	PROPN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|NameType=Geo|Number=Sing	11	obl	_	NER=I-gu
+22	Králové	Králové	PROPN	NNFS2-----A----	Case=Gen|Gender=Fem|NameType=Geo|Number=Sing	21	nmod	_	SpaceAfter=No|NER=O
+23	,	,	PUNCT	Z:-------------	_	26	punct	_	NER=B-T|B-td
+24	27	27	NUM	C=-------------	NumForm=Digit|NumType=Card	26	compound	_	SpaceAfter=No|NER=I-T|I-td
+25	.	.	PUNCT	Z:-------------	_	24	punct	_	SpaceAfter=No|NER=I-T|B-tm
+26	111	111	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	SpaceAfter=No|NER=I-T|I-tm
+27	.	.	PUNCT	Z:-------------	_	26	punct	_	SpaceAfter=No|NER=I-T|B-ty
+28	1974	1974	NUM	C=-------------	NumForm=Digit|NumType=Card	26	compound	_	NER=O
+29	.	.	PUNCT	Z:-------------	_	30	punct	_	SpaceAfter=No|NER=O
+30	předejte	předat	VERB	Vi-P---2--A-P--	Aspect=Perf|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin	1	conj	_	NER=O
+31	prosím	prosit	VERB	VB-S---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	30	xcomp	_	NER=B-P|B-pd
+32	Dr.J.Ratajo	Dr.j.rataj	PROPN	NNMS4-----A----	Animacy=Anim|Case=Acc|Gender=Masc|NameType=Giv|Number=Sing	30	obj	_	NER=I-P|B-pf
+33	|	|	PUNCT	Z:-------------	_	32	punct	_	NER=I-P|B-ps
+34	ver	ver	NOUN	F%-------------	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	32	nmod	_	SpaceAfter=No|NER=O
+35	,	,	PUNCT	Z:-------------	_	36	punct	_	SpaceAfter=No|NER=O
+36	výzkumu	výzkum	NOUN	NNIS3-----A----	Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	30	obl:arg	_	NER=O
+37	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	38	case	_	NER=B-gu
+38	Opatovicích	Opatovice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	36	nmod	_	SpaceAfter=No|NER=O
+39	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 12
+# text = Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr V.Vokolek by mohl-vzhledem k blízkosti svého pracoviště zahájit jednání s ústavem o další výzkum na sídlišti .
+1	Domnívám	domnívat	VERB	VB-S---1P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	NER=O
+2	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	1	expl:pv	_	SpaceAfter=No|NER=O
+3	,	,	PUNCT	Z:-------------	_	15	punct	_	NER=O
+4	že	že	SCONJ	J,-------------	_	15	mark	_	NER=O
+5	druhý	druhý	ADJ	CrMS1----------	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing|NumType=Ord	6	amod	_	NER=O
+6	vedoucfvýzkumu	vedoucfvýzkum	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	15	nsubj	_	NER=O
+7	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	NER=B-gq
+8	Opatovicích	Opatovice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	6	nmod	_	NER=O
+9	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	NER=O
+10	sídlišti	sídliště	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	8	nmod	_	SpaceAfter=No|NER=O
+11	,	,	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No|NER=B-P|B-pd
+12	Dr	Dr	NOUN	BNXXX-----A----	Abbr=Yes	13	nmod	_	NER=I-P|B-pf
+13	V.Vokolek	V.vokolek	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	6	appos	_	NER=I-P
+14	by	být	AUX	Vc----------I--	Aspect=Imp|Mood=Cnd|VerbForm=Fin	15	aux	_	NER=I-P
+15	mohl	moci	VERB	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	1	ccomp	_	SpaceAfter=No|NER=I-P
+16	-	-	PUNCT	Z:-------------	_	19	punct	_	SpaceAfter=No|NER=I-P
+17	vzhledem	vzhledem	ADP	RF-------------	AdpType=Comprep	19	case	_	NER=I-P
+18	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	17	fixed	_	NER=I-P
+19	blízkosti	blízkost	NOUN	NNFS3-----A----	Case=Dat|Gender=Fem|Number=Sing	15	obl	_	NER=I-P
+20	svého	svůj	DET	P8ZS2----------	Case=Gen|Gender=Masc,Neut|Number=Sing|Poss=Yes|PronType=Prs|Reflex=Yes	21	det	_	NER=I-P
+21	pracoviště	pracoviště	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	19	nmod	_	NER=O
+22	zahájit	zahájit	VERB	Vf--------A-P--	Aspect=Perf|Polarity=Pos|VerbForm=Inf	15	xcomp	_	NER=O
+23	jednání	jednání	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	22	obj	_	NER=O
+24	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	25	case	_	NER=O
+25	ústavem	ústav	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	23	nmod	_	NER=O
+26	o	o	ADP	RR--4----------	AdpType=Prep|Case=Acc	28	case	_	NER=O
+27	další	další	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	28	amod	_	NER=O
+28	výzkum	výzkum	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	22	obl:arg	_	NER=O
+29	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	30	case	_	NER=O
+30	sídlišti	sídliště	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing	28	nmod	_	NER=O
+31	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 13
+# text = Doporučuji, aby tento výzkum mu byl svěřen.
+1	Doporučuji	doporučovat	VERB	VB-S---1P-AAI-1	Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No|NER=O
+2	,	,	PUNCT	Z:-------------	_	9	punct	_	NER=O
+3-4	aby	_	_	_	_	_	_	_	_
+3	aby	aby	SCONJ	J,-------------	_	9	mark	_	NER=O
+4	by	být	AUX	Vc-------------	Aspect=Imp|Mood=Cnd|VerbForm=Fin	9	aux	_	NER=O
+5	tento	tento	DET	PDYS1----------	Case=Nom|Gender=Masc|Number=Sing|PronType=Dem	6	det	_	NER=O
+6	výzkum	výzkum	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	9	nsubj:pass	_	NER=O
+7	mu	on	PRON	P5ZS3--3-------	Case=Dat|Gender=Masc,Neut|Number=Sing|Person=3|PronType=Prs|Variant=Short	9	obl:arg	_	NER=O
+8	byl	být	AUX	VpYS----R-AAI--	Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	9	aux:pass	_	NER=O
+9	svěřen	svěřený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	1	ccomp	_	SpaceAfter=No|NER=O
+10	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=B-gu
+
+# sent_id = 14
+# text = ov Praze dne 7.5.1974.
+1	ov	ov	ADP	RR--6----------	AdpType=Prep|Case=Loc	0	root	_	NER=O
+2	Praze	Praha	PROPN	NNFS6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Sing	1	dep	_	NER=B-T|B-td
+3	dne	den	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	1	dep	_	NER=I-T|I-td
+4	7.5	7.5	NUM	C=-------------	NumForm=Digit|NumType=Card	3	nummod	_	SpaceAfter=No|NER=I-T|B-ty
+5	.	.	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+6	1974	1974	NUM	C=-------------	NumForm=Digit|NumType=Card	4	compound	_	SpaceAfter=No|NER=O
+7	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 15
+# text = R_
+1	R	R	NOUN	Q3-------------	Abbr=Yes	0	root	_	SpaceAfter=No|NER=O
+2	_	_	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 16
+# text = Poznámka: Pište pokud možno strojem.
+1	Poznámka	poznámka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	0	root	_	SpaceAfter=No|NER=O
+2	:	:	PUNCT	Z:-------------	_	3	punct	_	NER=O
+3	Pište	psát	VERB	Vi-P---2--A-I--	Aspect=Imp|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin	1	appos	_	NER=O
+4	pokud	pokud	SCONJ	J,-------------	_	5	mark	_	NER=O
+5	možno	možný	ADJ	ACNS------A----	Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short	3	obl	_	NER=O
+6	strojem	stroj	NOUN	NNIS7-----A----	Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	3	obl	_	SpaceAfter=No|NER=O
+7	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 17
+# text = Na konci uveďte datum odeslání a čitelný podpis.
+1	Na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	2	case	_	NER=O
+2	konci	konec	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	3	obl	_	NER=O
+3	uveďte	uvést	VERB	Vi-P---2--A-P--	Aspect=Perf|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin	0	root	_	NER=O
+4	datum	datum	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing	3	obj	_	NER=O
+5	odeslání	odeslání	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	4	nmod	_	NER=O
+6	a	a	CCONJ	J^-------------	_	8	cc	_	NER=O
+7	čitelný	čitelný	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	8	amod	_	NER=O
+8	podpis	podpis	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	4	conj	_	SpaceAfter=No|NER=O
+9	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 18
+# text = Zprávy koreferenta komisí 7) vyhotovte dvojmo.
+1	Zprávy	zpráva	NOUN	NNFP4-----A----	Case=Acc|Gender=Fem|Number=Plur	6	obj	_	NER=O
+2	koreferenta	koreferent	NOUN	NNMS2-----A----	Animacy=Anim|Case=Gen|Gender=Masc|Number=Sing	1	nmod	_	NER=B-ni
+3	komisí	komise	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	2	nmod	_	NER=O
+4	7	7	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	SpaceAfter=No|NER=O
+5	)	)	PUNCT	Z:-------------	_	6	punct	_	NER=O
+6	vyhotovte	vyhotovit	VERB	Vi-P---2--A-P--	Aspect=Perf|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin	0	root	_	NER=O
+7	dvojmo	dvojmo	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	6	advmod	_	SpaceAfter=No|NER=O
+8	.	.	PUNCT	Z:-------------	_	6	punct	_	NER=O
+
+# sent_id = 19
+# text = ; v^UlíLa uq (AAuu Aud.
+1	;	;	PUNCT	Z:-------------	_	4	punct	_	NER=O
+2	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	4	nmod	_	SpaceAfter=No|NER=O
+3	^	^	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+4	UlíLa	Ulíla	X	F%-------------	Foreign=Yes	0	root	_	NER=O
+5	uq	uq	X	F%-------------	Foreign=Yes	4	flat:foreign	_	NER=O
+6	(	(	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+7	AAuu	Aauu	X	F%-------------	Foreign=Yes	4	dep	_	NER=O
+8	Aud	Aud	X	F%-------------	Foreign=Yes	7	flat:foreign	_	SpaceAfter=No|NER=O
+9	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=O
+
+# sent_id = 20
+# text = AnMlut V r Wrr (ia 7 TcedLir).
+1	AnMlut	Anmlut	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	0	root	_	NER=O
+2	V	V	NOUN	Q3-------------	Abbr=Yes	1	nmod	_	NER=O
+3	r	r	X	F%-------------	Foreign=Yes	1	nmod	_	NER=O
+4	Wrr	Wrr	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	1	flat	_	NER=O
+5	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=O
+6	ia	ia	NOUN	Q3-------------	Abbr=Yes	1	dep	_	NER=O
+7	7	7	NUM	C=-------------	NumForm=Digit|NumType=Card	6	nummod	_	NER=O
+8	TcedLir	Tcedlir	NOUN	F%-------------	Foreign=Yes	1	dep	_	SpaceAfter=No|NER=O
+9	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=B-nc
+10	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 21
+# text = 2 { y.
+1	2	2	NUM	C=-------------	NumForm=Digit|NumType=Card	0	root	_	NER=O
+2	{	{	PUNCT	Z:-------------	_	1	punct	_	NER=O
+3	y	y	NOUN	Q3-------------	Abbr=Yes	1	dep	_	SpaceAfter=No
+4	.	.	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No
+

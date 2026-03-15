@@ -1,0 +1,28 @@
+{
+  "license": "CC BY-NC 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "program": "nlp-enrich",
+  "repository": "https://github.com/ufal/atrium-nlp-enrich",
+  "python_version": "3.11.0 (main, Oct 27 2022, 10:26:58) [GCC 11.3.0]",
+  "run_id": "260315-153224",
+  "start_time": "2026-03-15T15:32:24.809008+00:00",
+  "end_time": "2026-03-15T15:32:29.095252+00:00",
+  "duration_seconds": 4.286,
+  "config": {
+    "script": "api_1_manifest",
+    "input_dir": "data_samples/DOC_LINE_LANG_CLASS",
+    "output_manifest": "data_samples/manifest.tsv"
+  },
+  "statistics": {
+    "input_files_total": 13,
+    "successfully_processed": 13,
+    "skipped_files": 0,
+    "output_counts_by_type": {
+      "tsv": 13
+    },
+    "performance_per_minute": {
+      "tsv": 181.9775
+    }
+  },
+  "skipped_files_detail": []
+}

@@ -1,0 +1,564 @@
+# generator = UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe
+# udpipe_model = czech-pdt-ud-2.15-241121
+# udpipe_model_licence = CC BY-NC-SA
+# newdoc
+# newpar
+# sent_id = 1
+# text = r Antropologický posudek o žárových pozůstatcích z halštatské mohyly č. 1 v Kšicích o. Tachov.
+1	r	r	NOUN	Q3-------------	Abbr=Yes	3	nmod	_	NER=O
+2	Antropologický	antropologický	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	3	amod	_	NER=O
+3	posudek	posudek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+4	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	6	case	_	NER=O
+5	žárových	žárový	ADJ	AAIP6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	6	amod	_	NER=O
+6	pozůstatcích	pozůstatek	NOUN	NNIP6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	3	nmod	_	NER=O
+7	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	9	case	_	NER=O
+8	halštatské	halštatský	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	9	amod	_	NER=O
+9	mohyly	mohyla	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	NER=O
+10	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	9	nmod	_	SpaceAfter=No|NER=O
+11	.	.	PUNCT	Z:-------------	_	10	punct	_	NER=O
+12	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	NER=B-n_
+13	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	14	case	_	NER=O
+14	Kšicích	Kšice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	9	nmod	_	NER=B-gu
+15	o	o	NOUN	Q3-------------	Abbr=Yes	17	nmod	_	SpaceAfter=No|NER=O
+16	.	.	PUNCT	Z:-------------	_	15	punct	_	NER=O
+17	Tachov	Tachov	PROPN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing	14	nmod	_	SpaceAfter=No|NER=B-gu
+18	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 2
+# text = Lidské žárové pozůstatky, dodané k antropologickému rozboru, byly získány dr. V. Stefanovou při záchranném výzkumu halštatské mohyly č.21 v Kšicích u Tachova v roce 1971.
+1	Lidské	lidský	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	3	amod	_	NER=O
+2	žárové	žárový	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	3	amod	_	NER=O
+3	pozůstatky	pozůstatek	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	11	nsubj:pass	_	SpaceAfter=No|NER=O
+4	,	,	PUNCT	Z:-------------	_	5	punct	_	NER=O
+5	dodané	dodaný	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos|VerbForm=Part|Voice=Pass	3	amod	_	NER=O
+6	k	k	ADP	RR--3----------	AdpType=Prep|Case=Dat	8	case	_	NER=O
+7	antropologickému	antropologický	ADJ	AAIS3----1A----	Animacy=Inan|Case=Dat|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	8	amod	_	NER=O
+8	rozboru	rozbor	NOUN	NNIS3-----A----	Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	5	obl	_	SpaceAfter=No|NER=O
+9	,	,	PUNCT	Z:-------------	_	5	punct	_	NER=O
+10	byly	být	AUX	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	11	aux:pass	_	NER=O
+11	získány	získaný	ADJ	VsTP----X-APP--	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+12	dr	dr	NOUN	BNXXX-----A----	Abbr=Yes	16	nmod	_	SpaceAfter=No|NER=B-P|B-pd
+13	.	.	PUNCT	Z:-------------	_	12	punct	_	NER=I-P|I-pd
+14	V	V	NOUN	Q3-------------	Abbr=Yes	16	nmod	_	SpaceAfter=No|NER=I-P|B-pf
+15	.	.	PUNCT	Z:-------------	_	14	punct	_	NER=I-P|I-pf
+16	Stefanovou	Stefanová	PROPN	NNFS7-----A----	Case=Ins|Gender=Fem|NameType=Giv|Number=Sing	11	obl:arg	_	NER=I-P|B-ps
+17	při	při	ADP	RR--6----------	AdpType=Prep|Case=Loc	19	case	_	NER=O
+18	záchranném	záchranný	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	19	amod	_	NER=O
+19	výzkumu	výzkum	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	11	obl	_	NER=O
+20	halštatské	halštatský	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	21	amod	_	NER=O
+21	mohyly	mohyla	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	19	nmod	_	NER=O
+22	č.21	č.21	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	NER=O
+23	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	24	case	_	NER=O
+24	Kšicích	Kšice	PROPN	NNFP6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Plur	21	nmod	_	NER=B-gu
+25	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	26	case	_	NER=I-gu
+26	Tachova	Tachov	PROPN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|NameType=Geo|Number=Sing	24	nmod	_	NER=I-gu|B-gu
+27	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	28	case	_	NER=O
+28	roce	rok	NOUN	NNIS6-----A---1	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	11	obl	_	NER=O
+29	1971	1971	NUM	C=-------------	NumForm=Digit|NumType=Card	28	nummod	_	SpaceAfter=No|NER=B-ty
+30	.	.	PUNCT	Z:-------------	_	11	punct	_	NER=O
+
+# sent_id = 3
+# text = Kůstky byly vyzved vyzvedpo částech a dodány v několika sáčcích: Sáček č.39 (kůstky u nádoby 1 v severovýchodním rohu hrobu): Po rozplavení zjištěn jediný drobný úlomek kostní kompakty bez charakteristických znaků.
+1	Kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	3	nsubj	_	NER=O
+2	byly	být	AUX	VpTP----R-AAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	3	aux	_	NER=O
+3	vyzved	vyzved	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+4	vyzvedpo	vyzvedpo	ADV	Db-------------	_	3	advmod	_	NER=O
+5	částech	část	NOUN	NNFP6-----A----	Case=Loc|Gender=Fem|Number=Plur	3	obl	_	NER=O
+6	a	a	CCONJ	J^-------------	_	7	cc	_	NER=O
+7	dodány	dodaný	ADJ	VsTP----X-APP--	Animacy=Inan|Aspect=Perf|Degree=Pos|Gender=Fem,Masc|Number=Plur|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	3	conj	_	NER=O
+8	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	10	case	_	NER=O
+9	několika	několik	DET	Ca--6----------	Case=Loc|NumType=Card|PronType=Ind	10	det:nummod	_	NER=O
+10	sáčcích	sáček	NOUN	NNIP6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	7	obl	_	SpaceAfter=No|NER=O
+11	:	:	PUNCT	Z:-------------	_	12	punct	_	NER=O
+12	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	10	appos	_	NER=O
+13	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	12	nmod	_	SpaceAfter=No|NER=O
+14	.39	.39	NUM	C=-------------	NumForm=Digit|NumType=Card	13	nummod	_	NER=O
+15	(	(	PUNCT	Z:-------------	_	16	punct	_	SpaceAfter=No|NER=O
+16	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	12	dep	_	NER=O
+17	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	18	case	_	NER=O
+18	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	16	nmod	_	NER=O
+19	1	1	NUM	C=-------------	NumForm=Digit|NumType=Card	18	nummod	_	NER=B-n_
+20	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	22	case	_	NER=O
+21	severovýchodním	severovýchodní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	22	amod	_	NER=O
+22	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	16	nmod	_	NER=O
+23	hrobu	hrob	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	22	nmod	_	SpaceAfter=No|NER=O
+24	)	)	PUNCT	Z:-------------	_	12	punct	_	SpaceAfter=No|NER=O
+25	:	:	PUNCT	Z:-------------	_	28	punct	_	NER=O
+26	Po	po	ADP	RR--6----------	AdpType=Prep|Case=Loc	27	case	_	NER=O
+27	rozplavení	rozplavení	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	28	obl	_	NER=O
+28	zjištěn	zjištěný	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	12	conj	_	NER=O
+29	jediný	jediný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	31	amod	_	NER=O
+30	drobný	drobný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	31	amod	_	NER=O
+31	úlomek	úlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	28	nsubj:pass	_	NER=O
+32	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	33	amod	_	NER=O
+33	kompakty	kompakta	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	31	nmod	_	NER=O
+34	bez	bez	ADP	RR--2----------	AdpType=Prep|Case=Gen	36	case	_	NER=O
+35	charakteristických	charakteristický	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	36	amod	_	NER=O
+36	znaků	znak	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	31	nmod	_	SpaceAfter=No|NER=O
+37	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 4
+# text = Sáček č.41 (kůstky na hromádce u nádoby 11 v jihozápadním rohu): Malé množství necharakteristické kostní drti;
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.41	.41	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+5	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+6	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	hromádce	hromádka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	9	case	_	NER=O
+9	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+10	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-n_
+11	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	NER=O
+12	jihozápadním	jihozápadní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	13	amod	_	NER=O
+13	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	5	nmod	_	SpaceAfter=No|NER=O
+14	)	)	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+15	:	:	PUNCT	Z:-------------	_	17	punct	_	NER=O
+16	Malé	malý	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	17	amod	_	NER=O
+17	množství	množství	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	appos	_	NER=O
+18	necharakteristické	charakteristický	ADJ	AAFS2----1N----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Neg	20	amod	_	NER=O
+19	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	20	amod	_	NER=O
+20	drti	drt	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	17	nmod	_	SpaceAfter=No|NER=O
+21	;	;	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 5
+# text = části dosti graoilní kompakty;
+1	části	část	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	0	root	_	NER=O
+2	dosti	dost	ADV	Dg-------1A---1	Degree=Pos|Polarity=Pos	3	advmod	_	NER=O
+3	graoilní	graoilní	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	4	amod	_	NER=O
+4	kompakty	kompakt	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	1	dep	_	SpaceAfter=No|NER=O
+5	;	;	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 6
+# text = spongiosní fragmenty vykazují nejisté náznaky počínající osteoporotické přestavby kostní trámčiny.
+1	spongiosní	spongiosní	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	2	amod	_	NER=O
+2	fragmenty	fragment	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	3	nsubj	_	NER=O
+3	vykazují	vykazovat	VERB	VB-P---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	NER=O
+4	nejisté	jistý	ADJ	AAIP4----1N----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Neg	5	amod	_	NER=O
+5	náznaky	náznak	NOUN	NNIP4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	3	obj	_	NER=O
+6	počínající	počínající	ADJ	AGFS2-----A----	Aspect=Imp|Case=Gen|Gender=Fem|Number=Sing|Polarity=Pos|Tense=Pres|VerbForm=Part|Voice=Act	8	amod	_	NER=O
+7	osteoporotické	osteoporotický	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	8	amod	_	NER=O
+8	přestavby	přestavba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+9	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	10	amod	_	NER=O
+10	trámčiny	trámčina	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	8	nmod	_	SpaceAfter=No|NER=O
+11	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 7
+# text = Sáček č.54 (kůstky na hromádce u nádoby 11 v jihozápadním rohu, pokračování): Větší počet fragmentů mozkovny (tlouštka 4-5 mm, drobný úlomek temporální pyramidy), malý úlomek krčního obratle (výška těla asi 11 mm).
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.54	.54	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+5	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	appos	_	NER=O
+6	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	hromádce	hromádka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	9	case	_	NER=O
+9	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	NER=O
+10	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-n_
+11	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	NER=O
+12	jihozápadním	jihozápadní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	13	amod	_	NER=O
+13	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	7	nmod	_	SpaceAfter=No|NER=O
+14	,	,	PUNCT	Z:-------------	_	15	punct	_	NER=O
+15	pokračování	pokračování	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	1	dep	_	SpaceAfter=No|NER=O
+16	)	)	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+17	:	:	PUNCT	Z:-------------	_	19	punct	_	NER=O
+18	Větší	velký	ADJ	AAIS1----2A----	Animacy=Inan|Case=Nom|Degree=Cmp|Gender=Masc|Number=Sing|Polarity=Pos	19	amod	_	NER=O
+19	počet	počet	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	appos	_	NER=O
+20	fragmentů	fragment	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	19	nmod	_	NER=O
+21	mozkovny	mozkovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	20	nmod	_	NER=O
+22	(	(	PUNCT	Z:-------------	_	23	punct	_	SpaceAfter=No|NER=O
+23	tlouštka	tlouštka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	20	dep	_	NER=O
+24	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	23	nummod	_	SpaceAfter=No|NER=B-nc
+25	-	-	PUNCT	Z:-------------	_	26	punct	_	SpaceAfter=No|NER=O
+26	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	24	conj	_	NER=B-nc
+27	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	24	nmod	_	SpaceAfter=No|NER=B-oe
+28	,	,	PUNCT	Z:-------------	_	30	punct	_	NER=O
+29	drobný	drobný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	30	amod	_	NER=O
+30	úlomek	úlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	23	conj	_	NER=O
+31	temporální	temporální	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	32	amod	_	NER=O
+32	pyramidy	pyramida	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	30	nmod	_	SpaceAfter=No|NER=O
+33	)	)	PUNCT	Z:-------------	_	23	punct	_	SpaceAfter=No|NER=O
+34	,	,	PUNCT	Z:-------------	_	36	punct	_	NER=O
+35	malý	malý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	36	amod	_	NER=O
+36	úlomek	úlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	19	conj	_	NER=O
+37	krčního	krční	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	38	amod	_	NER=O
+38	obratle	obratel	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	36	nmod	_	NER=O
+39	(	(	PUNCT	Z:-------------	_	36	punct	_	SpaceAfter=No|NER=O
+40	výška	výška	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	36	dep	_	NER=O
+41	těla	tělo	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing	40	nmod	_	NER=O
+42	asi	asi	PART	TT-------------	_	43	advmod:emph	_	NER=O
+43	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	36	dep	_	NER=B-nc
+44	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	43	nmod	_	SpaceAfter=No|NER=B-oe
+45	)	)	PUNCT	Z:-------------	_	36	punct	_	SpaceAfter=No|NER=O
+46	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 8
+# text = Kompakta končetinových kostí (síla dosahuje až 5 mm) a rela relavětší množství kostní drti.
+1	Kompakta	kompakta	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	0	root	_	NER=O
+2	končetinových	končetinový	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	3	amod	_	NER=O
+3	kostí	kost	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	1	nmod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No|NER=O
+5	síla	síla	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	6	nsubj	_	NER=O
+6	dosahuje	dosahovat	VERB	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	1	parataxis	_	NER=O
+7	až	až	PART	TT-------------	_	8	advmod:emph	_	NER=O
+8	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	6	obl	_	NER=B-nc
+9	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	8	nmod	_	SpaceAfter=No|NER=B-oe
+10	)	)	PUNCT	Z:-------------	_	6	punct	_	NER=O
+11	a	a	CCONJ	J^-------------	_	14	cc	_	NER=O
+12	rela	rela	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	1	conj	_	NER=O
+13	relavětší	relavětší	ADJ	AANS1----2A----	Case=Nom|Degree=Cmp|Gender=Neut|Number=Sing|Polarity=Pos	14	amod	_	NER=O
+14	množství	množství	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	1	conj	_	NER=O
+15	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	16	amod	_	NER=O
+16	drti	drt	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	14	nmod	_	SpaceAfter=No|NER=O
+17	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 9
+# text = Sáček č.66 (kůstky na hromádce u nádoby 11 v jihozáp.
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.66	.66	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+5	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+6	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	hromádce	hromádka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	9	case	_	NER=O
+9	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+10	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-n_
+11	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	12	case	_	NER=O
+12	jihozáp	jihozáp	NOUN	NNIS1-----A----	Abbr=Yes	5	nmod	_	SpaceAfter=No|NER=O
+13	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 10
+# text = rohu, pokračování) Několik zlomků mozkovny o tlouštce 5 mm, fragment drobného kořene zubu a kostní drt s několika částečkami kompakty o síle až 6 mm.
+1	rohu	roh	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	0	root	_	SpaceAfter=No|NER=O
+2	,	,	PUNCT	Z:-------------	_	3	punct	_	NER=O
+3	pokračování	pokračování	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	1	conj	_	SpaceAfter=No|NER=O
+4	)	)	PUNCT	Z:-------------	_	1	punct	_	NER=O
+5	Několik	několik	DET	Ca--1----------	Case=Nom|NumType=Card|PronType=Ind	6	det:numgov	_	NER=O
+6	zlomků	zlomek	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	1	dep	_	NER=O
+7	mozkovny	mozkovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	NER=O
+8	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	9	case	_	NER=O
+9	tlouštce	tlouštka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	7	nmod	_	NER=O
+10	5	5	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-nc
+11	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	10	nmod	_	SpaceAfter=No|NER=B-oe
+12	,	,	PUNCT	Z:-------------	_	13	punct	_	NER=O
+13	fragment	fragment	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	6	conj	_	NER=O
+14	drobného	drobný	ADJ	AAIS2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	15	amod	_	NER=O
+15	kořene	kořen	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	13	nmod	_	NER=O
+16	zubu	zub	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	15	nmod	_	NER=O
+17	a	a	CCONJ	J^-------------	_	19	cc	_	NER=O
+18	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	19	amod	_	NER=O
+19	drt	drta	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	15	conj	_	NER=O
+20	s	s	ADP	RR--7----------	AdpType=Prep|Case=Ins	22	case	_	NER=O
+21	několika	několik	DET	Ca--7----------	Case=Ins|NumType=Card|PronType=Ind	22	det:nummod	_	NER=O
+22	částečkami	částečka	NOUN	NNFP7-----A----	Case=Ins|Gender=Fem|Number=Plur	19	nmod	_	NER=O
+23	kompakty	kompakt	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	22	nmod	_	NER=O
+24	o	o	ADP	RR--6----------	AdpType=Prep|Case=Loc	25	case	_	NER=O
+25	síle	síla	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	23	nmod	_	NER=O
+26	až	až	PART	TT-------------	_	27	advmod:emph	_	NER=O
+27	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	25	nummod	_	NER=B-nc
+28	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	27	nmod	_	SpaceAfter=No|NER=B-oe
+29	.	.	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=O
+
+# sent_id = 1
+# text = Sáček č. 82 (kůstky na hromádce u nádoby 11 v jihozáp.
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.	.	PUNCT	Z:-------------	_	2	punct	_	NER=O
+4	82	82	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=B-n_
+5	(	(	PUNCT	Z:-------------	_	6	punct	_	SpaceAfter=No|NER=O
+6	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+7	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	8	case	_	NER=O
+8	hromádce	hromádka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	6	nmod	_	NER=O
+9	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	10	case	_	NER=O
+10	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	NER=O
+11	11	11	NUM	C=-------------	NumForm=Digit|NumType=Card	10	nummod	_	NER=B-n_
+12	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	NER=O
+13	jihozáp	jihozáp	NOUN	NNIS1-----A----	Abbr=Yes	6	nmod	_	SpaceAfter=No|NER=O
+14	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 2
+# text = rohu, pokrač.):
+1	rohu	roh	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	0	root	_	SpaceAfter=No|NER=O
+2	,	,	PUNCT	Z:-------------	_	3	punct	_	NER=O
+3	pokrač	pokrač	NOUN	NNFXX-----A---b	Abbr=Yes|Gender=Fem	1	nmod	_	SpaceAfter=No|NER=O
+4	.	.	PUNCT	Z:-------------	_	3	punct	_	SpaceAfter=No|NER=O
+5	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=O
+6	:	:	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 3
+# text = Několik drobných zlomků mozkovny štěpené v diploe, malá část temporální pyramidy, fragmenty kompakty končetinových kostí (tlouštka až 6 mm), menší množství kostní drti.
+1	Několik	několik	DET	Ca--1----------	Case=Nom|NumType=Card|PronType=Ind	3	det:numgov	_	NER=O
+2	drobných	drobný	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	3	amod	_	NER=O
+3	zlomků	zlomek	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	0	root	_	NER=O
+4	mozkovny	mozkovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	3	nmod	_	NER=O
+5	štěpené	štěpený	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	4	amod	_	NER=O
+6	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	diploe	diploe	NOUN	F%-------------	Foreign=Yes	5	obl	_	SpaceAfter=No|NER=O
+8	,	,	PUNCT	Z:-------------	_	10	punct	_	NER=O
+9	malá	malý	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	10	amod	_	NER=O
+10	část	část	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	3	conj	_	NER=O
+11	temporální	temporální	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	12	amod	_	NER=O
+12	pyramidy	pyramida	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	10	nmod	_	SpaceAfter=No|NER=O
+13	,	,	PUNCT	Z:-------------	_	14	punct	_	NER=O
+14	fragmenty	fragment	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	3	conj	_	NER=O
+15	kompakty	kompakt	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	14	nmod	_	NER=O
+16	končetinových	končetinový	ADJ	AAFP2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	17	amod	_	NER=O
+17	kostí	kost	NOUN	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	15	nmod	_	NER=O
+18	(	(	PUNCT	Z:-------------	_	17	punct	_	SpaceAfter=No|NER=O
+19	tlouštka	tlouštka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	17	dep	_	NER=O
+20	až	až	PART	TT-------------	_	21	advmod:emph	_	NER=O
+21	6	6	NUM	C=-------------	NumForm=Digit|NumType=Card	19	nummod	_	NER=B-nc
+22	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	21	nmod	_	SpaceAfter=No|NER=B-oe
+23	)	)	PUNCT	Z:-------------	_	19	punct	_	SpaceAfter=No|NER=O
+24	,	,	PUNCT	Z:-------------	_	26	punct	_	NER=O
+25	menší	malý	ADJ	AANS1----2A----	Case=Nom|Degree=Cmp|Gender=Neut|Number=Sing|Polarity=Pos	26	amod	_	NER=O
+26	množství	množství	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	3	conj	_	NER=O
+27	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	28	amod	_	NER=O
+28	drti	drt	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	26	nmod	_	SpaceAfter=No|NER=O
+29	.	.	PUNCT	Z:-------------	_	3	punct	_	NER=O
+
+# sent_id = 4
+# text = Sáček č.52 (kůstky u nádoby 16 v severovýchodním rohu):
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.52	.52	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=O
+5	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+6	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	7	case	_	NER=O
+7	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	16	16	NUM	C=-------------	NumForm=Digit|NumType=Card	7	nummod	_	NER=B-n_
+9	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	11	case	_	NER=O
+10	severovýchodním	severovýchodní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	11	amod	_	NER=O
+11	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	5	nmod	_	SpaceAfter=No|NER=O
+12	)	)	PUNCT	Z:-------------	_	1	punct	_	SpaceAfter=No|NER=O
+13	:	:	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 5
+# text = Pouze 3 drobné fragmenty kostní kompakty; blíže neurčitelné.
+1	Pouze	pouze	ADV	Db-------------	_	4	advmod:emph	_	NER=O
+2	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	4	nummod	_	NER=B-nc
+3	drobné	drobný	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	4	amod	_	NER=O
+4	fragmenty	fragment	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	0	root	_	NER=O
+5	kostní	kostní	ADJ	AAIP1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	6	amod	_	NER=O
+6	kompakty	kompakt	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	4	nmod	_	SpaceAfter=No|NER=O
+7	;	;	PUNCT	Z:-------------	_	9	punct	_	NER=O
+8	blíže	blízko	ADV	Dg-------2A---1	Degree=Cmp|Polarity=Pos	9	advmod	_	NER=O
+9	neurčitelné	určitelný	ADJ	AAIP1----1N----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Neg	4	amod	_	SpaceAfter=No|NER=O
+10	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=O
+
+# sent_id = 6
+# text = Sáček č.57 (kůstky v jamce u nádoby 20 v severozápadním rohu): Jediný drobný zlomeček kostní kompakty.
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	1	nmod	_	SpaceAfter=No|NER=O
+3	.57	.57	NUM	C=-------------	NumForm=Digit|NumType=Card	2	nummod	_	NER=O
+4	(	(	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+5	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+6	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	7	case	_	NER=O
+7	jamce	jamka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	5	nmod	_	NER=O
+8	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	9	case	_	NER=O
+9	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	7	nmod	_	NER=O
+10	20	20	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-n_
+11	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	13	case	_	NER=O
+12	severozápadním	severozápadní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	13	amod	_	NER=O
+13	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	5	nmod	_	SpaceAfter=No|NER=O
+14	)	)	PUNCT	Z:-------------	_	5	punct	_	SpaceAfter=No|NER=O
+15	:	:	PUNCT	Z:-------------	_	18	punct	_	NER=O
+16	Jediný	jediný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	NER=O
+17	drobný	drobný	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	NER=O
+18	zlomeček	zlomeček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	appos	_	NER=O
+19	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	20	amod	_	NER=O
+20	kompakty	kompakta	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	18	nmod	_	SpaceAfter=No|NER=O
+21	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 7
+# text = Sáček 8.83 (kůstky v jamce u nádoby 20 v severozápadním rohu, pokračování): Malý zlomek mozkovny (tlouštka 3-4 mm) a 3 částky kostní drti bez charakteristických znaků.
+1	Sáček	sáček	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	NER=O
+2	8.83	8.83	NUM	C=-------------	NumForm=Digit|NumType=Card	1	nummod	_	NER=B-n_
+3	(	(	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+4	kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	1	dep	_	NER=O
+5	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	6	case	_	NER=O
+6	jamce	jamka	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	4	nmod	_	NER=O
+7	u	u	ADP	RR--2----------	AdpType=Prep|Case=Gen	8	case	_	NER=O
+8	nádoby	nádoba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	6	nmod	_	NER=O
+9	20	20	NUM	C=-------------	NumForm=Digit|NumType=Card	8	nummod	_	NER=B-n_
+10	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	12	case	_	NER=O
+11	severozápadním	severozápadní	ADJ	AAIS6----1A----	Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	12	amod	_	NER=O
+12	rohu	roh	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	6	nmod	_	SpaceAfter=No|NER=O
+13	,	,	PUNCT	Z:-------------	_	14	punct	_	NER=O
+14	pokračování	pokračování	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing|VerbForm=Vnoun	4	conj	_	SpaceAfter=No|NER=O
+15	)	)	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No|NER=O
+16	:	:	PUNCT	Z:-------------	_	18	punct	_	NER=O
+17	Malý	malý	ADJ	AAIS1----1A----	Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	NER=O
+18	zlomek	zlomek	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	1	appos	_	NER=O
+19	mozkovny	mozkovna	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	18	nmod	_	NER=O
+20	(	(	PUNCT	Z:-------------	_	21	punct	_	SpaceAfter=No|NER=O
+21	tlouštka	tlouštka	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	18	dep	_	NER=O
+22	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	21	nummod	_	SpaceAfter=No|NER=B-nc
+23	-	-	PUNCT	Z:-------------	_	24	punct	_	SpaceAfter=No|NER=O
+24	4	4	NUM	C=-------------	NumForm=Digit|NumType=Card	22	conj	_	NER=B-nc
+25	mm	milimetr	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	22	nmod	_	SpaceAfter=No|NER=B-oe
+26	)	)	PUNCT	Z:-------------	_	18	punct	_	NER=O
+27	a	a	CCONJ	J^-------------	_	29	cc	_	NER=O
+28	3	3	NUM	C=-------------	NumForm=Digit|NumType=Card	29	nummod	_	NER=B-nc
+29	částky	částka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	18	conj	_	NER=O
+30	kostní	kostní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	31	amod	_	NER=O
+31	drti	drt	NOUN	NNFS2-----A---1	Case=Gen|Gender=Fem|Number=Sing	29	nmod	_	NER=O
+32	bez	bez	ADP	RR--2----------	AdpType=Prep|Case=Gen	34	case	_	NER=O
+33	charakteristických	charakteristický	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	34	amod	_	NER=O
+34	znaků	znak	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	31	nmod	_	SpaceAfter=No|NER=O
+35	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 8
+# text = V tomto materiálu bylo nalezeno též několik uhlíků.
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	3	case	_	NER=O
+2	tomto	tento	DET	PDZS6----------	Case=Loc|Gender=Masc,Neut|Number=Sing|PronType=Dem	3	det	_	NER=O
+3	materiálu	materiál	NOUN	NNIS6-----A----	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	5	obl	_	NER=O
+4	bylo	být	AUX	VpNS----R-AAI--	Aspect=Imp|Gender=Neut|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	5	aux:pass	_	NER=O
+5	nalezeno	nalezený	ADJ	VsNS----X-APP-1	Aspect=Perf|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+6	též	též	ADV	Db-------------	_	7	advmod:emph	_	NER=O
+7	několik	několik	DET	Ca--1----------	Case=Nom|NumType=Card|PronType=Ind	8	det:numgov	_	NER=O
+8	uhlíků	uhlík	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	5	nsubj:pass	_	SpaceAfter=No|NER=O
+9	.	.	PUNCT	Z:-------------	_	5	punct	_	NER=O
+
+# sent_id = 9
+# text = Souhrn: Materiály z jednotlivých sáčků (celkové množství 19 dkg) mají jednot jednotcharakter: dokonalý stupeň spálení, nažloutlé zbarvení, jednotný morfologický vzhled, neopakují se anatomické části.
+1	Souhrn	souhrn	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	0	root	_	SpaceAfter=No|NER=O
+2	:	:	PUNCT	Z:-------------	_	13	punct	_	NER=O
+3	Materiály	materiál	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	13	nsubj	_	NER=O
+4	z	z	ADP	RR--2----------	AdpType=Prep|Case=Gen	6	case	_	NER=O
+5	jednotlivých	jednotlivý	ADJ	AAIP2----1A----	Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos	6	amod	_	NER=O
+6	sáčků	sáček	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	3	nmod	_	NER=O
+7	(	(	PUNCT	Z:-------------	_	9	punct	_	SpaceAfter=No|NER=O
+8	celkové	celkový	ADJ	AANS1----1A----	Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	9	amod	_	NER=O
+9	množství	množství	NOUN	NNNS1-----A----	Case=Nom|Gender=Neut|Number=Sing	3	dep	_	NER=O
+10	19	19	NUM	C=-------------	NumForm=Digit|NumType=Card	9	nummod	_	NER=B-nc
+11	dkg	dkilogram	NOUN	NNIXX-----A---b	Abbr=Yes|Animacy=Inan|Gender=Masc	10	nmod	_	SpaceAfter=No|NER=B-oe
+12	)	)	PUNCT	Z:-------------	_	9	punct	_	NER=O
+13	mají	mít	VERB	VB-P---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	1	appos	_	NER=O
+14	jednot	jednot	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	15	nmod	_	NER=O
+15	jednotcharakter	jednotcharakter	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	13	obj	_	SpaceAfter=No|NER=O
+16	:	:	PUNCT	Z:-------------	_	18	punct	_	NER=O
+17	dokonalý	dokonalý	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	18	amod	_	NER=O
+18	stupeň	stupeň	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	15	appos	_	NER=O
+19	spálení	spálení	NOUN	NNNS2-----A----	Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun	18	nmod	_	SpaceAfter=No|NER=O
+20	,	,	PUNCT	Z:-------------	_	22	punct	_	NER=O
+21	nažloutlé	nažloutlý	ADJ	AANS4----1A----	Case=Acc|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	22	amod	_	NER=O
+22	zbarvení	zbarvení	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	18	conj	_	SpaceAfter=No|NER=O
+23	,	,	PUNCT	Z:-------------	_	26	punct	_	NER=O
+24	jednotný	jednotný	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	26	amod	_	NER=O
+25	morfologický	morfologický	ADJ	AAIS4----1A----	Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos	26	amod	_	NER=O
+26	vzhled	vzhled	NOUN	NNIS4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	18	conj	_	SpaceAfter=No|NER=O
+27	,	,	PUNCT	Z:-------------	_	28	punct	_	NER=O
+28	neopakují	opakovat	VERB	VB-P---3P-NAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act	13	conj	_	NER=O
+29	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	28	expl:pass	_	NER=O
+30	anatomické	anatomický	ADJ	AAFP1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos	31	amod	_	NER=O
+31	části	část	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	28	nsubj:pass	_	SpaceAfter=No|NER=O
+32	.	.	PUNCT	Z:-------------	_	1	punct	_	NER=O
+
+# sent_id = 10
+# text = Nic tedy nena nenaže by mohlo jít o pozůstatky více jedinců, na druhé straně ovšem zase nelze příslušnost jedinému individuu (snad nejspíše dospě dospěosobě gracilní až střední tělesné stavby) bezpečně prokázat.
+1	Nic	nic	PRON	PY--1----------	Case=Nom|PronType=Neg	6	nsubj	_	NER=O
+2	tedy	tedy	CCONJ	J^-------------	_	6	cc	_	NER=O
+3	nena	nena	PART	TT-------------	_	6	advmod:emph	_	NER=O
+4	nenaže	nenaže	VERB	J,-------------	_	6	xcomp	_	NER=O
+5	by	být	AUX	Vc----------I--	Aspect=Imp|Mood=Cnd|VerbForm=Fin	6	aux	_	NER=O
+6	mohlo	moci	VERB	VpNS----R-AAI--	Aspect=Imp|Gender=Neut|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	NER=O
+7	jít	jít	VERB	Vf--------A-I--	Aspect=Imp|Polarity=Pos|VerbForm=Inf	6	xcomp	_	NER=O
+8	o	o	ADP	RR--4----------	AdpType=Prep|Case=Acc	9	case	_	NER=O
+9	pozůstatky	pozůstatek	NOUN	NNIP4-----A----	Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	7	obl:arg	_	NER=O
+10	více	více	ADV	Dg-------2A----	Degree=Cmp|Polarity=Pos	11	advmod	_	NER=O
+11	jedinců	jedinec	NOUN	NNMP2-----A----	Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur	9	nmod	_	SpaceAfter=No|NER=O
+12	,	,	PUNCT	Z:-------------	_	18	punct	_	NER=O
+13	na	na	ADP	RR--6----------	AdpType=Prep|Case=Loc	15	case	_	NER=O
+14	druhé	druhý	ADJ	CrFS6----------	Case=Loc|Gender=Fem|Number=Sing|NumType=Ord	15	amod	_	NER=O
+15	straně	strana	NOUN	NNFS6-----A----	Case=Loc|Gender=Fem|Number=Sing	18	obl	_	NER=O
+16	ovšem	ovšem	PART	TT-------------	_	18	cc	_	NER=O
+17	zase	zase	ADV	Db-------------	_	18	advmod	_	NER=O
+18	nelze	lze	VERB	VB-S---3P-NAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act	6	conj	_	NER=O
+19	příslušnost	příslušnost	NOUN	NNFS4-----A----	Case=Acc|Gender=Fem|Number=Sing	34	obj	_	NER=O
+20	jedinému	jediný	ADJ	AANS3----1A----	Case=Dat|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	21	amod	_	NER=O
+21	individuu	individuum	NOUN	NNNS3-----A----	Case=Dat|Gender=Neut|Number=Sing	19	nmod	_	NER=O
+22	(	(	PUNCT	Z:-------------	_	21	punct	_	SpaceAfter=No|NER=O
+23	snad	snad	PART	TT-------------	_	21	dep	_	NER=O
+24	nejspíše	nejspíš	PART	TT------------1	_	21	dep	_	NER=O
+25	dospě	dospě	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	26	advmod	_	NER=O
+26	dospěosobě	dospěosobě	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	21	dep	_	NER=O
+27	gracilní	gracilní	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	31	amod	_	NER=O
+28	až	až	CCONJ	J^-------------	_	29	cc	_	NER=O
+29	střední	střední	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	27	conj	_	NER=O
+30	tělesné	tělesný	ADJ	AAFS2----1A----	Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	31	amod	_	NER=O
+31	stavby	stavba	NOUN	NNFS2-----A----	Case=Gen|Gender=Fem|Number=Sing	26	nmod	_	SpaceAfter=No|NER=O
+32	)	)	PUNCT	Z:-------------	_	21	punct	_	NER=O
+33	bezpečně	bezpečně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	34	advmod	_	NER=O
+34	prokázat	prokázat	VERB	Vf--------A-P--	Aspect=Perf|Polarity=Pos|VerbForm=Inf	18	csubj	_	SpaceAfter=No|NER=O
+35	.	.	PUNCT	Z:-------------	_	6	punct	_	NER=O
+
+# sent_id = 11
+# text = Kůstky jsou velmi drobně drcené, takže se nezachovaly znaky nezbyt nezbytpro spolehlivější určení.
+1	Kůstky	kůstka	NOUN	NNFP1-----A----	Case=Nom|Gender=Fem|Number=Plur	5	nsubj	_	NER=O
+2	jsou	být	AUX	VB-P---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	5	cop	_	NER=O
+3	velmi	velmi	ADV	Db-------------	_	4	advmod	_	NER=O
+4	drobně	drobně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	5	advmod	_	NER=O
+5	drcené	drcený	ADJ	AAFP1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Plur|Polarity=Pos|VerbForm=Part|Voice=Pass	0	root	_	SpaceAfter=No|NER=O
+6	,	,	PUNCT	Z:-------------	_	9	punct	_	NER=O
+7	takže	takže	SCONJ	J,-------------	_	9	mark	_	NER=O
+8	se	se	PRON	P7-X4----------	Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short	9	expl:pass	_	NER=O
+9	nezachovaly	zachovat	VERB	VpTP----R-NAI--	Animacy=Inan|Aspect=Imp|Gender=Fem,Masc|Number=Plur|Polarity=Neg|Tense=Past|VerbForm=Part|Voice=Act	5	advcl	_	NER=O
+10	znaky	znak	NOUN	NNIP1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	9	nsubj:pass	_	NER=O
+11	nezbyt	zbyt	ADJ	NNFP2-----A----	Case=Gen|Gender=Fem|Number=Plur	10	amod	_	NER=O
+12	nezbytpro	zbytpro	ADP	Dg-------1N----	_	14	case	_	NER=O
+13	spolehlivější	spolehlivý	ADJ	AANS4----2A----	Case=Acc|Degree=Cmp|Gender=Neut|Number=Sing|Polarity=Pos	14	amod	_	NER=O
+14	určení	určení	NOUN	NNNS4-----A----	Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun	11	obl	_	SpaceAfter=No|NER=O
+15	.	.	PUNCT	Z:-------------	_	5	punct	_	NER=O
+
+# sent_id = 12
+# text = Převážná většina fragmentů je více či méně intensivně zabarvena oxydováným železem, Pozn.: Materiál uložen v antropologickém oddělení AÚ ČSAV pod inv.č. ž-1865.
+1	Převážná	převážný	ADJ	AAFS1----1A----	Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos	2	amod	_	NER=O
+2	většina	většina	NOUN	NNFS1-----A----	Case=Nom|Gender=Fem|Number=Sing	9	nsubj	_	NER=O
+3	fragmentů	fragment	NOUN	NNIP2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	2	nmod	_	NER=O
+4	je	být	AUX	VB-S---3P-AAI--	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act	9	cop	_	NER=O
+5	více	více	ADV	Dg-------2A----	Degree=Cmp|Polarity=Pos	9	advmod	_	NER=O
+6	či	či	CCONJ	J^-------------	_	7	cc	_	NER=O
+7	méně	méně	ADV	Dg-------2A----	Degree=Cmp|Polarity=Pos	5	conj	_	NER=O
+8	intensivně	intensivně	ADV	Dg-------1A----	Degree=Pos|Polarity=Pos	9	advmod	_	NER=O
+9	zabarvena	zabarvený	ADJ	VsQW----X-APP--	Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	0	root	_	NER=O
+10	oxydováným	oxydováný	ADJ	AANS7----1A----	Case=Ins|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass	11	amod	_	NER=O
+11	železem	železo	NOUN	NNNS7-----A----	Case=Ins|Gender=Neut|Number=Sing	9	obl	_	SpaceAfter=No|NER=O
+12	,	,	PUNCT	Z:-------------	_	13	punct	_	NER=O
+13	Pozn	poznámka	NOUN	NNFXX-----A---b	Abbr=Yes|Gender=Fem	9	dep	_	SpaceAfter=No|NER=O
+14	.	.	PUNCT	Z:-------------	_	13	punct	_	SpaceAfter=No|NER=O
+15	:	:	PUNCT	Z:-------------	_	17	punct	_	NER=O
+16	Materiál	materiál	NOUN	NNIS1-----A----	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	17	nsubj:pass	_	NER=O
+17	uložen	uložený	ADJ	VsYS----X-APP--	Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass	13	appos	_	NER=O
+18	v	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	20	case	_	NER=O
+19	antropologickém	antropologický	ADJ	AANS6----1A----	Case=Loc|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos	20	amod	_	NER=O
+20	oddělení	oddělení	NOUN	NNNS6-----A----	Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun	17	obl	_	NER=O
+21	AÚ	AÚ	NOUN	BNXXX-----A----	Abbr=Yes	20	nmod	_	NER=B-ic
+22	ČSAV	ČSAV	PROPN	BNXXX-----A----	Abbr=Yes|NameType=Oth	21	nmod	_	NER=I-ic
+23	pod	pod	ADP	RR--7----------	AdpType=Prep|Case=Ins	26	case	_	NER=O
+24	inv	inv	ADJ	AAXXX----1A---b	Abbr=Yes|Degree=Pos|Polarity=Pos	26	amod	_	SpaceAfter=No|NER=O
+25	.	.	PUNCT	Z:-------------	_	24	punct	_	SpaceAfter=No|NER=O
+26	č	číslo	NOUN	NNNXX-----A---b	Abbr=Yes|Gender=Neut	17	obl	_	SpaceAfter=No|NER=O
+27	.	.	PUNCT	Z:-------------	_	26	punct	_	NER=O
+28	ž	ž	NOUN	Q3-------------	Abbr=Yes	26	nmod	_	SpaceAfter=No|NER=B-ty
+29	-	-	PUNCT	Z:-------------	_	30	punct	_	SpaceAfter=No|NER=O
+30	1865	1865	NUM	C=-------------	NumForm=Digit|NumType=Card	28	nummod	_	SpaceAfter=No|NER=B-ty
+31	.	.	PUNCT	Z:-------------	_	9	punct	_	NER=O
+
+# sent_id = 13
+# text = V Praze dne 8. února 1972 i A Dr. Jaromír Chochol
+1	V	v	ADP	RR--6----------	AdpType=Prep|Case=Loc	2	case	_	NER=O
+2	Praze	Praha	PROPN	NNFS6-----A----	Case=Loc|Gender=Fem|NameType=Geo|Number=Sing	0	root	_	NER=B-gu
+3	dne	den	NOUN	NNIS2-----A----	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	2	dep	_	NER=O
+4	8	8	NUM	C=-------------	NumForm=Digit|NumType=Card	6	nummod	_	SpaceAfter=No|NER=B-T|B-td
+5	.	.	PUNCT	Z:-------------	_	4	punct	_	NER=I-T|I-td
+6	února	únor	NOUN	NNIS2-----A---1	Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	3	nmod	_	NER=I-T|B-tm
+7	1972	1972	NUM	C=-------------	NumForm=Digit|NumType=Card	6	nummod	_	NER=I-T|B-ty
+8	i	i	CCONJ	J^-------------	_	12	advmod:emph	_	NER=O
+9	A	A	NOUN	Q3-------------	Abbr=Yes	12	nmod	_	NER=B-P|B-pd
+10	Dr	Dr	NOUN	BNXXX-----A----	Abbr=Yes	12	nmod	_	SpaceAfter=No|NER=I-P|B-pd
+11	.	.	PUNCT	Z:-------------	_	10	punct	_	NER=I-P|I-pd
+12	Jaromír	Jaromír	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	2	dep	_	NER=I-P|B-pf
+13	Chochol	Chochol	PROPN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing	12	flat	_	SpaceAfter=No|NER=I-P|B-ps
+
