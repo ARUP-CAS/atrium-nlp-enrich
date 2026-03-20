@@ -25,7 +25,7 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "save_conllu_ne=${SAVE_CONLLU_NE:-true}" \
         "save_csv=${SAVE_CSV:-true}" \
         "save_teitok=${SAVE_TEITOK:-true}" \
-        "alto_dir=${ALTO_DIR:-}" \
+        "alto_dir=${INPUT_ALTO_DIR:-}" \
         "pages_dir=${INPUT_PAGES_DIR:-}")
 
 CONLLU_FILES=("${OUTPUT_DIR}/UDP/"*.conllu)
@@ -58,7 +58,7 @@ for conllu in "${CONLLU_FILES[@]}"; do
             --save-conllu-ne "${SAVE_CONLLU_NE:-true}" \
             --save-csv       "${SAVE_CSV:-true}" \
             --save-teitok    "${SAVE_TEITOK:-true}" \
-            --alto-dir       "${ALTO_DIR:-}" \
+            --alto-dir       "${INPUT_INPUT_ALTO_DIR:-}" \
             --pages-dir      "${INPUT_PAGES_DIR:-}" \
             --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
 

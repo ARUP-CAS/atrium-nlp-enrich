@@ -95,28 +95,38 @@ Before running the pipeline, review the [api_config.txt](config_api.txt) 📎 fi
 directory paths, API endpoints, and model selection.
 
 ```bash
-# Example settings in config_api.env
-OUTPUT_DIR="../../ARUB"         # Destination for results
-INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_LR_CLS"  # Directory containing input tables (from Step 1)
-ALTO_DIR="$OUTPUT_DIR/altos"    # Source of ALTO XML files (from Step 1) - for TEITOK conversion
-WORK_DIR="./TEMP"               # Working directory for intermediate files
+# config_api.txt
+OUTPUT_DIR="../../ARUB"                          # Destination for results
+INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_LR_CLS"  # Input tables from Step 1
+
+WORK_DIR="./TEMP"                                # Working directory for intermediate files
 
 LOG_FILE="$OUTPUT_DIR/processing.log"
-
 CONLLU_INPUT_DIR="$OUTPUT_DIR/UDP"
+TEMP_TXT_DIR="./TEMP/TXT_EXTRACT"
+CHUNK_DIR="./TEMP/CHUNKS"
+
 TSV_INPUT_DIR="$OUTPUT_DIR/NE"
-SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/NE_UDP"
+SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/UDP_NE"
+
+TEITOK_OUTPUT_DIR="$OUTPUT_DIR/TEITOK"
+INPUT_ALTO_DIR="$OUTPUT_DIR/altos"              # Source ALTO XML files - for TEITOK conversion
+INPUT_PAGES_DIR="$OUTPUT_DIR/pages"             # Per-page images (doc-N.png) - for bbox scaling
+
+UDPIPE_URL="https://lindat.mff.cuni.cz/services/udpipe/api/process"
+NAMETAG_URL="https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
 MODEL_UDPIPE="czech-pdt-ud-2.15-241121"
 MODEL_NAMETAG="nametag3-czech-cnec2.0-240830"
 
-WORD_CHUNK_LIMIT=900           # Word limit per API call
 TIMEOUT=60                     # API call timeout in seconds
 MAX_RETRIES=5                  # Number of retries for failed API calls
+BACKOFF_FACTOR=1.5
+WORD_CHUNK_LIMIT=900           # Word limit per API call
 
-SAVE_CONLLU_NE=true   # keep merged CoNLL-U with NER in MISC
-SAVE_CSV=true         # write token-level summary CSV
-SAVE_TEITOK=true      # write TEITOK-style TEI XML (flexiconv-compatible)
+SAVE_CSV=true                  # write token-level summary CSV
+SAVE_CONLLU_NE=true            # keep merged CoNLL-U with NER in MISC
+SAVE_TEITOK=true               # write TEITOK-style TEI XML (flexiconv-compatible)
 ```
 
 #### Execution Pipeline
@@ -217,7 +227,8 @@ layers and [analyze.py](api_util/analyze.py) 📎 to map complex CNEC 2.0 tags
 
 * **Input 1:** `OUTPUT_DIR/UDP/*.conllu` — Per-document CoNLL-U files containing morphology and syntax.
 * **Input 2:** `OUTPUT_DIR/NE/*/*.tsv` — Per-page TSV files containing Named Entity annotations.
-* **Input 3 (Optional):** `ALTO_DIR/*.alto.xml` — Source ALTO XML files used during TEITOK conversion to provide spatial bounding box coordinates for each token.
+* **Input 3 (Optional):** `INPUT_ALTO_DIR/*.alto.xml` — Source ALTO XML files used during TEITOK conversion to provide spatial bounding box coordinates for each token.
+* **Input 4 (Optional):** `INPUT_PAGES_DIR/<doc_id>-N.png` — Per-page images of the scanned document. When present, the pipeline reads each image's actual pixel dimensions and applies a per-page scale factor to all bounding box coordinates, correcting for any resolution difference between ABBYY's internal scan resolution and the PNG images served to TEITOK. If omitted, raw ALTO coordinates are written unchanged.
 
 * **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv` — Global table of aggregated Named Entity statistics across all documents.
 * **Output 2:** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.csv` — Per-document CSV tables with tokens, lemmas, and human-readable NE explanations.
@@ -226,11 +237,12 @@ layers and [analyze.py](api_util/analyze.py) 📎 to map complex CNEC 2.0 tags
 
 The behavior of this step is controlled by boolean flags in your [config_api.txt](config_api.txt):
 
-| Variable         | Description                                                                   | Default |
-|------------------|-------------------------------------------------------------------------------|---------|
-| `SAVE_CONLLU_NE` | Keep the enriched CoNLL-U with NER in the `MISC` field.                       | `true`  |
-| `SAVE_CSV`       | Write the token-level summary CSV per document.                               | `true`  |
-| `SAVE_TEITOK`    | Write TEITOK-style TEI XML with bounding boxes and NER spans (requires ALTO). | `true`  |
+| Variable          | Description                                                                                                                                                            | Default   |
+|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| `SAVE_CONLLU_NE`  | Keep the enriched CoNLL-U with NER in the `MISC` field.                                                                                                                | `true`    |
+| `SAVE_CSV`        | Write the token-level summary CSV per document.                                                                                                                        | `true`    |
+| `SAVE_TEITOK`     | Write TEITOK-style TEI XML with bounding boxes and NER spans (requires ALTO).                                                                                          | `true`    |
+| `INPUT_PAGES_DIR` | Directory of per-page images (`<doc_id>-N.png`). When set, bbox coordinates are scaled to match the actual PNG resolution. Leave empty to write raw ALTO pixel values. | *(empty)* |
 
 
 #### ALTO-to-TEITOK XML Generation and Coordinate Alignment
@@ -240,11 +252,28 @@ generates standard-compliant TEITOK XML by aligning UDPipe tokens to spatial bou
 boxes from the corresponding ALTO XML file. 
 
 This alignment is powered by an optimal sequence matching algorithm 
-(`difflib.SequenceMatcher`). By flattening all ALTO `String` elements into a single 
-NFC-normalized character sequence and mapping the token forms against it, the aligner 
-seamlessly bridges complex OCR and tokeniser mismatches (such as arbitrary word splits, 
+(`difflib.SequenceMatcher`, run with `autojunk=False` so that frequent short tokens such as
+punctuation and digits are never silently dropped). By flattening all ALTO `String` elements
+into a single NFC-normalized character sequence and mapping the token forms against it, the
+aligner seamlessly bridges complex OCR and tokeniser mismatches (such as arbitrary word splits,
 differing forms, or missing characters). This robust approach ensures virtually 100% 
 of available ALTO bounding boxes are successfully transferred to the output tokens.
+
+**Coordinate scaling.** ABBYY ALTO stores all `HPOS`/`VPOS` values as absolute pixel
+coordinates measured from the top-left corner of the full scanned page (not from the
+`PrintSpace` origin). The PNG images served to TEITOK may have been produced at a different
+resolution — for example, ABBYY may have internally used 300 DPI (page 2480 × 3507 px) while
+the stored PNG is 150 DPI (1240 × 1754 px). Without correction, every word overlay appears at
+the right relative position but at roughly twice the expected offset, causing the well-known
+*displacement* symptom reported in TEITOK's facsimile view.
+
+When `INPUT_PAGES_DIR` is set, `teitok_alto.py` reads the actual pixel dimensions of each
+page image (PNG/JPEG/TIFF, no external library required) and computes a per-page scale factor
+`sx = img_width / alto_page_width` (and equivalently for the vertical axis). All coordinates
+written to `@bbox` attributes — on `<tok>`, `<lb>`, `<div>`, and `<figure>` — are multiplied
+by this factor. The `<surface lrx= lry=>` attributes in the `<facsimile>` section reflect the
+actual image dimensions so TEITOK can position overlays correctly. A diagnostic line is printed
+for every page where scaling differs from 1 × 1.
 
 The structural and spatial hierarchy from the ALTO file is strictly preserved in the generated TEITOK XML:
 * **Tokens:** Matched coordinates are written to each `<tok>` element as `@bbox="x1 y1 x2 y2"` (absolute 
@@ -341,6 +370,13 @@ AND
 │   ├── <doc_id>     
 │   │   ├── <doc_id>-<page_num>.tsv     
 │   │   └── ...
+│   └── ...
+├── altos/
+│   ├── <doc_id>.alto.xml
+│   └── ...
+├── pages/
+│   ├── <doc_id>-1.png
+│   ├── <doc_id>-2.png
 │   └── ...
 ├── processing.log
 ├── summary_ne_counts.csv  
