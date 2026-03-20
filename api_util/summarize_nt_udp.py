@@ -335,6 +335,7 @@ def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
 def process_single_document(conllu_file, ne_dir, output_dir,
                              save_conllu=True, save_csv=True, save_teitok=False,
                              alto_dir=None, teitok_out=None,
+                             pages_dir=None,
                              summary_csv=None,
                              model_udpipe=None, model_nametag=None):
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary."""
@@ -374,7 +375,8 @@ def process_single_document(conllu_file, ne_dir, output_dir,
         doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
         write_teitok_merged(
             doc_out_conllu, teitok_out_path, doc_in_alto,
-            doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag
+            doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
+            image_dir=pages_dir or None,
         )
 
     if summary_csv:
@@ -396,6 +398,7 @@ def process_single_document(conllu_file, ne_dir, output_dir,
 
 def process_pipeline(conllu_dir, tsv_dir, output_dir, alto_dir, teitok_out,
                      save_conllu=True, save_csv=True, save_teitok=False,
+                     pages_dir=None,
                      model_udpipe=None, model_nametag=None, summary_csv=None):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
@@ -431,6 +434,7 @@ def process_pipeline(conllu_dir, tsv_dir, output_dir, alto_dir, teitok_out,
             save_teitok=save_teitok,
             alto_dir=alto_dir,
             teitok_out=teitok_out,
+            pages_dir=pages_dir,
             summary_csv=summary_csv,
             model_udpipe=model_udpipe,
             model_nametag=model_nametag,
@@ -461,6 +465,9 @@ def main():
     parser.add_argument('--out-dir',    default=os.getenv('SUMMARY_OUTPUT_DIR'))
     parser.add_argument('--tt-dir',     default=os.getenv('TEITOK_OUTPUT_DIR'))
     parser.add_argument('--alto-dir',   default=os.getenv('ALTO_DIR'))
+    parser.add_argument('--pages-dir',  default=os.getenv('INPUT_PAGES_DIR'),
+                        help="Directory containing per-page images (doc-N.png) used "
+                             "to scale ALTO bboxes to the actual PNG resolution.")
 
     # --- Format flags ---
     parser.add_argument('--save-conllu-ne', default=os.getenv('SAVE_CONLLU_NE', '1'),
@@ -491,6 +498,7 @@ def main():
             save_teitok=save_teitok,
             alto_dir=args.alto_dir,
             teitok_out=args.tt_dir,
+            pages_dir=args.pages_dir,
             summary_csv=args.summary_csv,
             model_udpipe=os.getenv('MODEL_UDPIPE'),
             model_nametag=os.getenv('MODEL_NAMETAG'),
@@ -522,6 +530,7 @@ def main():
         save_conllu=save_conllu,
         save_csv=save_csv,
         save_teitok=save_teitok,
+        pages_dir=args.pages_dir,
         model_udpipe=os.getenv('MODEL_UDPIPE'),
         model_nametag=os.getenv('MODEL_NAMETAG'),
         summary_csv=args.summary_csv,
