@@ -58,7 +58,8 @@ for conllu in "${CONLLU_FILES[@]}"; do
             --save-conllu-ne "${SAVE_CONLLU_NE:-true}" \
             --save-csv       "${SAVE_CSV:-true}" \
             --save-teitok    "${SAVE_TEITOK:-true}" \
-            --alto-dir       "${INPUT_INPUT_ALTO_DIR:-}" \
+            --tt-dir         "${OUTPUT_DIR}/TEITOK" \
+            --alto-dir       "${INPUT_ALTO_DIR:-}" \
             --pages-dir      "${INPUT_PAGES_DIR:-}" \
             --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
 
