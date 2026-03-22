@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt><title>CTX196102294</title></titleStmt>
+      <publicationStmt><p>Unpublished</p></publicationStmt>
+      <sourceDesc><p>Source image: CTX196102294.pdf</p></sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <appInfo>
+        <application ident="udpipe" version="2"><label>UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe</label><desc>Model: czech-pdt-ud-2.15-241121</desc></application>
+        <application ident="ocr"><label>ABBYY FineReader Server 14.0</label></application>
+      </appInfo>
+    </encodingDesc>
+    <revisionDesc>
+      <change when="2026-03-21" who="altoconvert">Converted from ALTO file CTX196102294.alto.xml</change>
+      <change when="2024-07-09" who="ABBYY FineReader Server">OCR processing</change>
+      <change when="2026-03-21" who="udpipe">NLP enrichment by UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe</change>
+    </revisionDesc>
+  </teiHeader>
+  <facsimile>
+    <surface id="CTX196102294.surface1" lrx="1265" lry="1792">
+      <graphic url="CTX196102294-1.png"/>
+    </surface>
+  </facsimile>
+  <text>
+    <body>
+      <pb n="1" id="CTX196102294.pb1" facs="CTX196102294-1.png"/>
+      <figure type="Illustration" id="Page1_Block6" bbox="804 119 1199 303"/>
+      <figure type="Illustration" id="Page1_Block12" bbox="290 1357 646 1476"/>
+      <figure type="Illustration" id="Page1_Block17" bbox="883 1278 1094 1344"/>
+      <figure type="GraphicalElement" id="Page1_Block19" bbox="121 118 574 122"/>
+      <figure type="GraphicalElement" id="Page1_Block20" bbox="122 281 574 287"/>
+      <figure type="GraphicalElement" id="Page1_Block21" bbox="121 119 124 283"/>
+      <figure type="GraphicalElement" id="Page1_Block22" bbox="571 121 574 280"/>
+      <figure type="GraphicalElement" id="Page1_Block23" bbox="822 126 935 131"/>
+      <figure type="GraphicalElement" id="Page1_Block24" bbox="983 132 1068 137"/>
+      <figure type="GraphicalElement" id="Page1_Block25" bbox="1073 136 1189 141"/>
+      <figure type="GraphicalElement" id="Page1_Block26" bbox="232 166 552 171"/>
+      <figure type="GraphicalElement" id="Page1_Block27" bbox="787 252 911 259"/>
+      <figure type="GraphicalElement" id="Page1_Block28" bbox="911 256 1047 264"/>
+      <figure type="GraphicalElement" id="Page1_Block29" bbox="1052 262 1182 268"/>
+      <figure type="GraphicalElement" id="Page1_Block30" bbox="1192 144 1198 265"/>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block1" bbox="134 140 534 167">
+        <s id="CTX196102294.s1" text="Kat.">
+          <tok id="CTX196102294.s1.w1" type="w" lemma="Kat" upos="PROPN" xpos="NNMS1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing" deprel="root" join="right" bbox="137 149 176 164">Kat</tok>
+          <tok id="CTX196102294.s1.w2" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s1.w1" deprel="punct" bbox="137 149 176 164">.</tok>
+        </s>
+        <s id="CTX196102294.s2" text="obec: Bkrouhlé Hradiště Osada: Trať: Hradištský vrch Okres: Tachov Druh a kultura: hradiště Z pozdně bronzové doby.">
+          <tok id="CTX196102294.s2.w1" type="w" lemma="obec" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" deprel="root" join="right" bbox="189 148 240 163">obec</tok>
+          <tok id="CTX196102294.s2.w2" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w4" deprel="punct" bbox="189 148 240 163">:</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s2.w3" type="w" lemma="bkrouhlý" upos="ADJ" xpos="AANS1----1A----" feats="Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos" head="CTX196102294.s2.w4" deprel="amod" bbox="273 143 393 163">Bkrouhlé</tok>
+              <tok id="CTX196102294.s2.w4" type="w" lemma="hradiště" upos="NOUN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" head="CTX196102294.s2.w1" deprel="appos" bbox="411 143 531 162">Hradiště</tok>
+          </name>
+          <tok id="CTX196102294.s2.w5" type="w" lemma="osada" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s2.w4" deprel="nmod" join="right" bbox="136 189 202 204">Osada</tok>
+          <tok id="CTX196102294.s2.w6" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w7" deprel="punct" bbox="136 189 202 204">:</tok>
+          <tok id="CTX196102294.s2.w7" type="w" lemma="trať" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s2.w4" deprel="appos" join="right" bbox="137 224 186 239">Trať</tok>
+          <tok id="CTX196102294.s2.w8" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w10" deprel="punct" bbox="137 224 186 239">:</tok>
+          <name type="LOC" cnec="gl">
+              <tok id="CTX196102294.s2.w9" type="w" lemma="hradištský" upos="ADJ" xpos="AAIS1----1A----" feats="Animacy=Inan|Case=Nom|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX196102294.s2.w10" deprel="amod" bbox="228 219 380 241">Hradištský</tok>
+              <tok id="CTX196102294.s2.w10" type="w" lemma="vrch" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX196102294.s2.w7" deprel="nmod" bbox="398 219 458 237">vrch</tok>
+          </name>
+          <tok id="CTX196102294.s2.w11" type="w" lemma="okres" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX196102294.s2.w7" deprel="nmod" join="right">Okres</tok>
+          <tok id="CTX196102294.s2.w12" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w13" deprel="punct">:</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s2.w13" type="w" lemma="Tachov" upos="PROPN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing" head="CTX196102294.s2.w11" deprel="nmod" bbox="228 258 319 276">Tachov</tok>
+          </name>
+          <tok id="CTX196102294.s2.w14" type="w" lemma="druh" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX196102294.s2.w11" deprel="nmod" bbox="123 345 171 359">Druh</tok>
+          <tok id="CTX196102294.s2.w15" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s2.w16" deprel="cc" bbox="185 349 194 359">a</tok>
+          <tok id="CTX196102294.s2.w16" type="w" lemma="kultura" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s2.w14" deprel="conj" join="right" bbox="208 345 288 359">kultura</tok>
+          <tok id="CTX196102294.s2.w17" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w18" deprel="punct" bbox="208 345 288 359">:</tok>
+          <tok id="CTX196102294.s2.w18" type="w" lemma="hradiště" upos="NOUN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" head="CTX196102294.s2.w14" deprel="appos" bbox="320 343 439 362">hradiště</tok>
+          <tok id="CTX196102294.s2.w19" type="w" lemma="z" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX196102294.s2.w22" deprel="case" bbox="462 349 471 362">Z</tok>
+          <tok id="CTX196102294.s2.w20" type="w" lemma="pozdně" upos="ADV" xpos="Dg-------1A----" feats="Degree=Pos|Polarity=Pos" head="CTX196102294.s2.w21" deprel="advmod" bbox="489 343 579 366">pozdně</tok>
+          <tok id="CTX196102294.s2.w21" type="w" lemma="bronzový" upos="ADJ" xpos="AAFS2----1A----" feats="Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX196102294.s2.w22" deprel="amod" bbox="601 343 716 362">bronzové</tok>
+          <tok id="CTX196102294.s2.w22" type="w" lemma="doba" upos="NOUN" xpos="NNFS2-----A----" feats="Case=Gen|Gender=Fem|Number=Sing" head="CTX196102294.s2.w18" deprel="nmod" join="right" bbox="736 344 807 366">doby</tok>
+          <tok id="CTX196102294.s2.w23" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s2.w1" deprel="punct" bbox="736 344 807 366">.</tok>
+        </s>
+      </div>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block8" bbox="574 437 707 485">
+        <s id="CTX196102294.s3" text="Zpráva xexoRek Zpráva o zahájení výzkumu.">
+          <tok id="CTX196102294.s3.w1" type="w" lemma="zpráva" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" deprel="root" bbox="577 441 704 482">Zpráva</tok>
+          <tok id="CTX196102294.s3.w2" type="w" lemma="xexorka" upos="NOUN" xpos="NNFP2-----A----" feats="Case=Gen|Gender=Fem|Number=Plur" head="CTX196102294.s3.w1" deprel="nmod" bbox="740 483 855 499">xexoRek</tok>
+          <tok id="CTX196102294.s3.w3" type="w" lemma="zpráva" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s3.w1" deprel="dep" bbox="245 582 334 604">Zpráva</tok>
+          <tok id="CTX196102294.s3.w4" type="w" lemma="o" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s3.w5" deprel="case" bbox="352 587 363 600">o</tok>
+          <tok id="CTX196102294.s3.w5" type="w" lemma="zahájení" upos="NOUN" xpos="NNNS6-----A----" feats="Case=Loc|Gender=Neut|Number=Sing|VerbForm=Vnoun" head="CTX196102294.s3.w3" deprel="nmod" bbox="384 581 501 604">zahájení</tok>
+          <tok id="CTX196102294.s3.w6" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s3.w5" deprel="nmod" join="right" bbox="520 582 638 604">výzkumu</tok>
+          <tok id="CTX196102294.s3.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s3.w1" deprel="punct" bbox="520 582 638 604">.</tok>
+        </s>
+      </div>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block10" bbox="239 578 1245 1221">
+        <s id="CTX196102294.s4" text="Dne 10. května 1961 byl zahájen výzkum na radištském vrchu, k.o. Okrouhlé Hradiště, o. Tachov.">
+          <tok id="CTX196102294.s4.w1" type="w" lemma="den" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s4.w7" deprel="obl" bbox="242 632 287 650">Dne</tok>
+          <name type="MISC" cnec="T">
+              <tok id="CTX196102294.s4.w2" type="w" lemma="10" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s4.w4" deprel="nummod" join="right" bbox="306 633 345 651">10</tok>
+              <tok id="CTX196102294.s4.w3" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w2" deprel="punct" bbox="306 633 345 651">.</tok>
+              <tok id="CTX196102294.s4.w4" type="w" lemma="květen" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s4.w1" deprel="nmod" bbox="367 631 458 650">května</tok>
+              <tok id="CTX196102294.s4.w5" type="w" lemma="1961" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s4.w4" deprel="nummod" bbox="475 628 533 651">1961</tok>
+          </name>
+          <tok id="CTX196102294.s4.w6" type="w" lemma="být" upos="AUX" xpos="VpYS----R-AAI--" feats="Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s4.w7" deprel="aux:pass" bbox="552 631 595 654">byl</tok>
+          <tok id="CTX196102294.s4.w7" type="w" lemma="zahájený" upos="ADJ" xpos="VsYS----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" deprel="root" bbox="615 631 720 653">zahájen</tok>
+          <tok id="CTX196102294.s4.w8" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX196102294.s4.w7" deprel="nsubj:pass" bbox="737 631 828 653">výzkum</tok>
+          <tok id="CTX196102294.s4.w9" type="w" lemma="na" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s4.w11" deprel="case" bbox="844 636 874 649">na</tok>
+          <name type="LOC" cnec="gl">
+              <tok id="CTX196102294.s4.w10" type="w" lemma="radištský" upos="ADJ" xpos="AAIS6----1A----" feats="Animacy=Inan|Case=Loc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX196102294.s4.w11" deprel="amod" bbox="908 630 1056 649">radištském</tok>
+              <tok id="CTX196102294.s4.w11" type="w" lemma="vrch" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX196102294.s4.w8" deprel="nmod" join="right" bbox="1076 630 1163 652">vrchu</tok>
+          </name>
+          <tok id="CTX196102294.s4.w12" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w15" deprel="punct" bbox="1076 630 1163 652">,</tok>
+          <tok id="CTX196102294.s4.w13" type="w" lemma="k" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s4.w15" deprel="nmod" join="right" bbox="1184 631 1238 648">k</tok>
+          <tok id="CTX196102294.s4.w14" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w13" deprel="punct" join="right" bbox="1184 631 1238 648">.</tok>
+          <tok id="CTX196102294.s4.w15" type="w" lemma="omezený" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s4.w11" deprel="nmod" join="right" bbox="1184 631 1238 648">o</tok>
+          <tok id="CTX196102294.s4.w16" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w15" deprel="punct" bbox="1184 631 1238 648">.</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s4.w17" type="w" lemma="okrouhlý" upos="ADJ" xpos="AANS1----1A----" feats="Case=Nom|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos" head="CTX196102294.s4.w18" deprel="amod" bbox="244 681 363 701">Okrouhlé</tok>
+              <tok id="CTX196102294.s4.w18" type="w" lemma="hradiště" upos="NOUN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" head="CTX196102294.s4.w15" deprel="nmod" join="right" bbox="382 681 515 703">Hradiště</tok>
+          </name>
+          <tok id="CTX196102294.s4.w19" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w22" deprel="punct" bbox="382 681 515 703">,</tok>
+          <tok id="CTX196102294.s4.w20" type="w" lemma="o" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s4.w22" deprel="nmod" join="right" bbox="536 687 560 700">o</tok>
+          <tok id="CTX196102294.s4.w21" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w20" deprel="punct" bbox="536 687 560 700">.</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s4.w22" type="w" lemma="Tachov" upos="PROPN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|NameType=Geo|Number=Sing" head="CTX196102294.s4.w18" deprel="conj" join="right" bbox="582 682 685 700">Tachov</tok>
+          </name>
+          <tok id="CTX196102294.s4.w23" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s4.w7" deprel="punct" bbox="582 682 685 700">.</tok>
+        </s>
+        <s id="CTX196102294.s5" text="Ve dnech 10.-13.5. byla postavena chata a upraveno okolí chaty, měřiči Fr. Buřil a a.">
+          <tok id="CTX196102294.s5.w1" type="w" lemma="v" upos="ADP" xpos="RV--6----------" feats="AdpType=Voc|Case=Loc" head="CTX196102294.s5.w2" deprel="case" bbox="706 682 733 699">Ve</tok>
+          <tok id="CTX196102294.s5.w2" type="w" lemma="den" upos="NOUN" xpos="NNIP6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur" head="CTX196102294.s5.w9" deprel="obl" bbox="752 681 829 700">dnech</tok>
+          <name type="MISC" cnec="T">
+              <tok id="CTX196102294.s5.w3" type="w" lemma="10" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s5.w2" deprel="nummod" join="right" bbox="847 679 975 703">10</tok>
+              <tok id="CTX196102294.s5.w4" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w3" deprel="punct" join="right" bbox="847 679 975 703">.</tok>
+              <tok id="CTX196102294.s5.w5" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w6" deprel="punct" join="right" bbox="847 679 975 703">-</tok>
+              <tok id="CTX196102294.s5.w6" type="w" lemma="13.5" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s5.w3" deprel="conj" join="right" bbox="847 679 975 703">13.5</tok>
+              <tok id="CTX196102294.s5.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w6" deprel="punct" bbox="847 679 975 703">.</tok>
+          </name>
+          <tok id="CTX196102294.s5.w8" type="w" lemma="být" upos="AUX" xpos="VpQW----R-AAI--" feats="Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s5.w9" deprel="aux:pass" bbox="999 681 1059 703">byla</tok>
+          <tok id="CTX196102294.s5.w9" type="w" lemma="postavený" upos="ADJ" xpos="VsQW----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" deprel="root" bbox="1076 681 1214 703">postavena</tok>
+          <tok id="CTX196102294.s5.w10" type="w" lemma="chata" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s5.w9" deprel="nsubj:pass" bbox="244 745 320 763">chata</tok>
+          <tok id="CTX196102294.s5.w11" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s5.w12" deprel="cc" bbox="337 749 350 762">a</tok>
+          <tok id="CTX196102294.s5.w12" type="w" lemma="upravený" upos="ADJ" xpos="VsNS----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" head="CTX196102294.s5.w9" deprel="conj" bbox="366 749 486 766">upraveno</tok>
+          <tok id="CTX196102294.s5.w13" type="w" lemma="okolí" upos="NOUN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" head="CTX196102294.s5.w12" deprel="nsubj:pass" bbox="507 743 579 762">okolí</tok>
+          <tok id="CTX196102294.s5.w14" type="w" lemma="chata" upos="NOUN" xpos="NNFS2-----A----" feats="Case=Gen|Gender=Fem|Number=Sing" head="CTX196102294.s5.w13" deprel="nmod" join="right" bbox="598 744 684 766">chaty</tok>
+          <tok id="CTX196102294.s5.w15" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w19" deprel="punct" bbox="598 744 684 766">,</tok>
+          <tok id="CTX196102294.s5.w16" type="w" lemma="měřič" upos="NOUN" xpos="NNMP1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|Number=Plur" head="CTX196102294.s5.w19" deprel="nmod" bbox="720 742 807 762">měřiči</tok>
+          <name type="PER" cnec="P">
+              <tok id="CTX196102294.s5.w17" type="w" lemma="Fr" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s5.w19" deprel="nmod" join="right" bbox="832 744 866 762">Fr</tok>
+              <tok id="CTX196102294.s5.w18" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w17" deprel="punct" bbox="832 744 866 762">.</tok>
+              <tok id="CTX196102294.s5.w19" type="w" lemma="Buřil" upos="PROPN" xpos="NNMS1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing" head="CTX196102294.s5.w9" deprel="dep" bbox="891 743 965 762">Buřil</tok>
+              <tok id="CTX196102294.s5.w20" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s5.w21" deprel="cc" bbox="984 748 997 761">a</tok>
+          </name>
+          <tok id="CTX196102294.s5.w21" type="w" lemma="a" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s5.w19" deprel="conj" join="right" bbox="1017 743 1036 762">a</tok>
+          <tok id="CTX196102294.s5.w22" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s5.w9" deprel="punct" bbox="1017 743 1036 762">.</tok>
+        </s>
+        <s id="CTX196102294.s6" text="Hub vyměřili sondy a sektory určené k výzkumu a dělnici zahájili práci vyčištěním prvního sektoru od stromů a lesního krovinatého porostu a skrýváním povrchových drnů.">
+          <tok id="CTX196102294.s6.w1" type="w" lemma="Hub" upos="PROPN" xpos="NNMS1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing" head="CTX196102294.s6.w2" deprel="nsubj" bbox="1060 743 1104 761">Hub</tok>
+          <tok id="CTX196102294.s6.w2" type="w" lemma="vyměřit" upos="VERB" xpos="VpMP----R-AAP--" feats="Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" deprel="root" bbox="1123 743 1241 766">vyměřili</tok>
+          <tok id="CTX196102294.s6.w3" type="w" lemma="sonda" upos="NOUN" xpos="NNFP4-----A----" feats="Case=Acc|Gender=Fem|Number=Plur" head="CTX196102294.s6.w2" deprel="obj" bbox="245 795 318 818">sondy</tok>
+          <tok id="CTX196102294.s6.w4" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s6.w5" deprel="cc" bbox="337 800 350 812">a</tok>
+          <tok id="CTX196102294.s6.w5" type="w" lemma="sektor" upos="NOUN" xpos="NNIP4-----A----" feats="Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur" head="CTX196102294.s6.w3" deprel="conj" bbox="368 795 472 817">sektory</tok>
+          <tok id="CTX196102294.s6.w6" type="w" lemma="určený" upos="ADJ" xpos="AAIP4----1A----" feats="Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos|VerbForm=Part|Voice=Pass" head="CTX196102294.s6.w3" deprel="amod" bbox="489 794 578 812">určené</tok>
+          <tok id="CTX196102294.s6.w7" type="w" lemma="k" upos="ADP" xpos="RR--3----------" feats="AdpType=Prep|Case=Dat" head="CTX196102294.s6.w8" deprel="case" bbox="597 795 612 812">k</tok>
+          <tok id="CTX196102294.s6.w8" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS3-----A----" feats="Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing" head="CTX196102294.s6.w6" deprel="obl" bbox="628 794 736 816">výzkumu</tok>
+          <tok id="CTX196102294.s6.w9" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s6.w11" deprel="cc" bbox="768 799 780 812">a</tok>
+          <tok id="CTX196102294.s6.w10" type="w" lemma="dělnice" upos="NOUN" xpos="NNMP1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|Number=Plur" head="CTX196102294.s6.w11" deprel="nsubj" bbox="798 793 903 812">dělnici</tok>
+          <tok id="CTX196102294.s6.w11" type="w" lemma="zahájit" upos="VERB" xpos="VpMP----R-AAP--" feats="Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Plur|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s6.w2" deprel="conj" bbox="923 793 1041 816">zahájili</tok>
+          <tok id="CTX196102294.s6.w12" type="w" lemma="práce" upos="NOUN" xpos="NNFS4-----A----" feats="Case=Acc|Gender=Fem|Number=Sing" head="CTX196102294.s6.w11" deprel="obj" bbox="1060 794 1136 815">práci</tok>
+          <tok id="CTX196102294.s6.w13" type="w" lemma="vyčištění" upos="NOUN" xpos="NNNS7-----A----" feats="Case=Ins|Gender=Neut|Number=Sing|VerbForm=Vnoun" head="CTX196102294.s6.w11" deprel="obl" bbox="245 793 1211 863">vyčištěním</tok>
+          <tok id="CTX196102294.s6.w14" type="w" lemma="první" upos="ADJ" xpos="CrIS2----------" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing|NumType=Ord" head="CTX196102294.s6.w15" deprel="amod" bbox="352 844 456 866">prvního</tok>
+          <tok id="CTX196102294.s6.w15" type="w" lemma="sektor" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s6.w13" deprel="nmod" bbox="476 845 584 863">sektoru</tok>
+          <tok id="CTX196102294.s6.w16" type="w" lemma="od" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX196102294.s6.w17" deprel="case" bbox="598 844 624 863">od</tok>
+          <tok id="CTX196102294.s6.w17" type="w" lemma="strom" upos="NOUN" xpos="NNIP2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur" head="CTX196102294.s6.w13" deprel="nmod" bbox="646 842 736 863">stromů</tok>
+          <tok id="CTX196102294.s6.w18" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s6.w21" deprel="cc" bbox="752 850 765 862">a</tok>
+          <tok id="CTX196102294.s6.w19" type="w" lemma="lesní" upos="ADJ" xpos="AAIS2----1A----" feats="Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX196102294.s6.w21" deprel="amod" bbox="784 844 888 863">lesního</tok>
+          <tok id="CTX196102294.s6.w20" type="w" lemma="krovinatý" upos="ADJ" xpos="AAIS2----1A----" feats="Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX196102294.s6.w21" deprel="amod" bbox="906 843 1073 863">krovinatého</tok>
+          <tok id="CTX196102294.s6.w21" type="w" lemma="porost" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s6.w17" deprel="conj" bbox="1092 844 1199 866">porostu</tok>
+          <tok id="CTX196102294.s6.w22" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s6.w23" deprel="cc" bbox="1214 848 1227 861">a</tok>
+          <tok id="CTX196102294.s6.w23" type="w" lemma="skrývání" upos="NOUN" xpos="NNNS7-----A----" feats="Case=Ins|Gender=Neut|Number=Sing|VerbForm=Vnoun" head="CTX196102294.s6.w13" deprel="conj" bbox="245 893 383 917">skrýváním</tok>
+          <tok id="CTX196102294.s6.w24" type="w" lemma="povrchový" upos="ADJ" xpos="AAIP2----1A----" feats="Animacy=Inan|Case=Gen|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos" head="CTX196102294.s6.w25" deprel="amod" bbox="413 894 582 917">povrchových</tok>
+          <tok id="CTX196102294.s6.w25" type="w" lemma="drn" upos="NOUN" xpos="NNIP2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur" head="CTX196102294.s6.w23" deprel="nmod" join="right" bbox="598 892 668 913">drnů</tok>
+          <tok id="CTX196102294.s6.w26" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s6.w2" deprel="punct" bbox="598 892 668 913">.</tok>
+        </s>
+        <s id="CTX196102294.s7" text="Na výzkumu pracuje 8 dělníků;">
+          <tok id="CTX196102294.s7.w1" type="w" lemma="na" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s7.w2" deprel="case" bbox="243 947 273 964">Na</tok>
+          <tok id="CTX196102294.s7.w2" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX196102294.s7.w3" deprel="obl" bbox="291 946 399 967">výzkumu</tok>
+          <tok id="CTX196102294.s7.w3" type="w" lemma="pracovat" upos="VERB" xpos="VB-S---3P-AAI--" feats="Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act" deprel="root" bbox="415 946 517 968">pracuje</tok>
+          <name type="MISC" cnec="nc">
+              <tok id="CTX196102294.s7.w4" type="w" lemma="8" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s7.w5" deprel="nummod:gov" bbox="536 945 548 963">8</tok>
+          </name>
+          <tok id="CTX196102294.s7.w5" type="w" lemma="dělník" upos="NOUN" xpos="NNMP2-----A----" feats="Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur" head="CTX196102294.s7.w3" deprel="nsubj" join="right" bbox="566 943 685 968">dělníků</tok>
+          <tok id="CTX196102294.s7.w6" type="pc" lemma=";" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s7.w3" deprel="punct" bbox="566 943 685 968">;</tok>
+        </s>
+        <s id="CTX196102294.s8" text="Vzhledem k tomu, že v lomu se denně od 14 - 15 hod. odstřeluje kámen, byla pracovní doba stanovena v pondělí a úterý od 6 - 17 hod., ostatní dny od 6 - 14 hod, v sobotu se nepracuje.">
+          <tok id="CTX196102294.s8.w1" type="w" lemma="vzhledem" upos="ADP" xpos="RF-------------" feats="AdpType=Comprep" head="CTX196102294.s8.w3" deprel="case" bbox="706 946 828 963">Vzhledem</tok>
+          <tok id="CTX196102294.s8.w2" type="w" lemma="k" upos="ADP" xpos="RR--3----------" feats="AdpType=Prep|Case=Dat" head="CTX196102294.s8.w1" deprel="fixed" bbox="844 946 858 963">k</tok>
+          <tok id="CTX196102294.s8.w3" type="w" lemma="ten" upos="DET" xpos="PDZS3----------" feats="Case=Dat|Gender=Masc,Neut|Number=Sing|PronType=Dem" head="CTX196102294.s8.w22" deprel="obl" join="right" bbox="876 946 947 967">tomu</tok>
+          <tok id="CTX196102294.s8.w4" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w16" deprel="punct" bbox="876 946 947 967">,</tok>
+          <tok id="CTX196102294.s8.w5" type="w" lemma="že" upos="SCONJ" xpos="J,-------------" head="CTX196102294.s8.w16" deprel="mark" bbox="968 944 994 962">že</tok>
+          <tok id="CTX196102294.s8.w6" type="w" lemma="v" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s8.w7" deprel="case" bbox="1014 950 1028 962">v</tok>
+          <tok id="CTX196102294.s8.w7" type="w" lemma="lom" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX196102294.s8.w16" deprel="obl" bbox="1046 945 1106 963">lomu</tok>
+          <tok id="CTX196102294.s8.w8" type="w" lemma="se" upos="PRON" xpos="P7-X4----------" feats="Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short" head="CTX196102294.s8.w16" deprel="expl:pass" bbox="1123 949 1149 962">se</tok>
+          <tok id="CTX196102294.s8.w9" type="w" lemma="denně" upos="ADV" xpos="Dg-------1A----" feats="Degree=Pos|Polarity=Pos" head="CTX196102294.s8.w16" deprel="advmod" bbox="1168 944 1242 962">denně</tok>
+          <tok id="CTX196102294.s8.w10" type="w" lemma="od" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX196102294.s8.w11" deprel="case" bbox="244 996 272 1014">od</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w11" type="w" lemma="14" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w16" deprel="obl" bbox="293 996 316 1013">14</tok>
+          </name>
+          <tok id="CTX196102294.s8.w12" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w13" deprel="punct" bbox="337 1003 348 1007">-</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w13" type="w" lemma="15" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w11" deprel="conj" bbox="368 994 394 1016">15</tok>
+          </name>
+          <tok id="CTX196102294.s8.w14" type="w" lemma="hodina" upos="NOUN" xpos="NNFXX-----A---a" feats="Abbr=Yes|Gender=Fem" head="CTX196102294.s8.w16" deprel="obl" join="right" bbox="413 996 468 1014">hod</tok>
+          <tok id="CTX196102294.s8.w15" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w14" deprel="punct" bbox="413 996 468 1014">.</tok>
+          <tok id="CTX196102294.s8.w16" type="w" lemma="odstřelovat" upos="VERB" xpos="VB-S---3P-AAI--" feats="Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Pos|Tense=Pres|VerbForm=Fin|Voice=Act" head="CTX196102294.s8.w3" deprel="acl" bbox="490 995 642 1018">odstřeluje</tok>
+          <tok id="CTX196102294.s8.w17" type="w" lemma="kámen" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX196102294.s8.w16" deprel="nsubj:pass" join="right" bbox="660 996 745 1017">kámen</tok>
+          <tok id="CTX196102294.s8.w18" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w16" deprel="punct" bbox="660 996 745 1017">,</tok>
+          <tok id="CTX196102294.s8.w19" type="w" lemma="být" upos="AUX" xpos="VpQW----R-AAI--" feats="Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s8.w22" deprel="aux:pass" bbox="768 996 826 1018">byla</tok>
+          <tok id="CTX196102294.s8.w20" type="w" lemma="pracovní" upos="ADJ" xpos="AAFS1----1A----" feats="Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX196102294.s8.w21" deprel="amod" bbox="845 994 963 1017">pracovní</tok>
+          <tok id="CTX196102294.s8.w21" type="w" lemma="doba" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX196102294.s8.w22" deprel="nsubj:pass" bbox="982 995 1043 1013">doba</tok>
+          <tok id="CTX196102294.s8.w22" type="w" lemma="stanovený" upos="ADJ" xpos="VsQW----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" deprel="root" bbox="1061 995 1196 1012">stanovena</tok>
+          <tok id="CTX196102294.s8.w23" type="w" lemma="v" upos="ADP" xpos="RR--4----------" feats="AdpType=Prep|Case=Acc" head="CTX196102294.s8.w24" deprel="case" bbox="243 1051 258 1064">v</tok>
+          <tok id="CTX196102294.s8.w24" type="w" lemma="pondělí" upos="NOUN" xpos="NNNS4-----A----" feats="Case=Acc|Gender=Neut|Number=Sing" head="CTX196102294.s8.w22" deprel="obl" bbox="274 1045 379 1069">pondělí</tok>
+          <tok id="CTX196102294.s8.w25" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s8.w26" deprel="cc" bbox="399 1051 412 1064">a</tok>
+          <tok id="CTX196102294.s8.w26" type="w" lemma="úterý" upos="NOUN" xpos="NNNS4-----A----" feats="Case=Acc|Gender=Neut|Number=Sing" head="CTX196102294.s8.w24" deprel="conj" bbox="429 1040 503 1068">úterý</tok>
+          <tok id="CTX196102294.s8.w27" type="w" lemma="od" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX196102294.s8.w28" deprel="case" bbox="521 1046 547 1064">od</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w28" type="w" lemma="6" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w22" deprel="obl" bbox="567 1042 578 1063">6</tok>
+          </name>
+          <tok id="CTX196102294.s8.w29" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w30" deprel="punct" bbox="598 1053 609 1057">-</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w30" type="w" lemma="17" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w28" deprel="conj" bbox="629 1044 657 1066">17</tok>
+          </name>
+          <tok id="CTX196102294.s8.w31" type="w" lemma="hodina" upos="NOUN" xpos="NNFXX-----A---a" feats="Abbr=Yes|Gender=Fem" head="CTX196102294.s8.w28" deprel="nmod" join="right" bbox="675 1047 746 1068">hod</tok>
+          <tok id="CTX196102294.s8.w32" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w31" deprel="punct" join="right" bbox="675 1047 746 1068">.</tok>
+          <tok id="CTX196102294.s8.w33" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w35" deprel="punct" bbox="675 1047 746 1068">,</tok>
+          <tok id="CTX196102294.s8.w34" type="w" lemma="ostatní" upos="ADJ" xpos="AAIP4----1A----" feats="Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Plur|Polarity=Pos" head="CTX196102294.s8.w35" deprel="amod" bbox="768 1045 871 1064">ostatní</tok>
+          <tok id="CTX196102294.s8.w35" type="w" lemma="den" upos="NOUN" xpos="NNIP4-----A----" feats="Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur" head="CTX196102294.s8.w22" deprel="conj" bbox="891 1046 934 1068">dny</tok>
+          <tok id="CTX196102294.s8.w36" type="w" lemma="od" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX196102294.s8.w37" deprel="case" bbox="953 1045 980 1064">od</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w37" type="w" lemma="6" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w35" deprel="orphan" bbox="998 1041 1009 1062">6</tok>
+          </name>
+          <tok id="CTX196102294.s8.w38" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w39" deprel="punct" bbox="1031 1053 1041 1056">-</tok>
+          <name type="MISC" cnec="th">
+              <tok id="CTX196102294.s8.w39" type="w" lemma="14" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s8.w37" deprel="conj" bbox="1061 1044 1088 1063">14</tok>
+          </name>
+          <tok id="CTX196102294.s8.w40" type="w" lemma="hodina" upos="NOUN" xpos="NNFXX-----A---a" feats="Abbr=Yes|Gender=Fem" head="CTX196102294.s8.w37" deprel="nmod" join="right" bbox="1107 1045 1162 1067">hod</tok>
+          <tok id="CTX196102294.s8.w41" type="pc" lemma="," upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w45" deprel="punct" bbox="1107 1045 1162 1067">,</tok>
+          <tok id="CTX196102294.s8.w42" type="w" lemma="v" upos="ADP" xpos="RR--4----------" feats="AdpType=Prep|Case=Acc" head="CTX196102294.s8.w43" deprel="case" bbox="1183 1050 1197 1063">v</tok>
+          <tok id="CTX196102294.s8.w43" type="w" lemma="sobota" upos="NOUN" xpos="NNFS4-----A----" feats="Case=Acc|Gender=Fem|Number=Sing" head="CTX196102294.s8.w45" deprel="obl" bbox="245 1097 336 1115">sobotu</tok>
+          <tok id="CTX196102294.s8.w44" type="w" lemma="se" upos="PRON" xpos="P7-X4----------" feats="Case=Acc|PronType=Prs|Reflex=Yes|Variant=Short" head="CTX196102294.s8.w45" deprel="expl:pass" bbox="353 1101 379 1114">se</tok>
+          <tok id="CTX196102294.s8.w45" type="w" lemma="pracovat" upos="VERB" xpos="VB-S---3P-NAI--" feats="Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Polarity=Neg|Tense=Pres|VerbForm=Fin|Voice=Act" head="CTX196102294.s8.w22" deprel="conj" join="right" bbox="397 1097 545 1119">nepracuje</tok>
+          <tok id="CTX196102294.s8.w46" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s8.w22" deprel="punct" bbox="397 1097 545 1119">.</tok>
+        </s>
+        <s id="CTX196102294.s9" text="Dne 15* 5. převzala vedení výzkumu dr. 0.">
+          <tok id="CTX196102294.s9.w1" type="w" lemma="den" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s9.w5" deprel="obl" bbox="242 1147 287 1165">Dne</tok>
+          <name type="MISC" cnec="T">
+              <tok id="CTX196102294.s9.w2" type="w" lemma="15*" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s9.w3" deprel="compound" bbox="306 1144 345 1166">15*</tok>
+              <tok id="CTX196102294.s9.w3" type="w" lemma="5" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s9.w1" deprel="nummod" join="right" bbox="367 1145 389 1166">5</tok>
+              <tok id="CTX196102294.s9.w4" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s9.w3" deprel="punct" bbox="367 1145 389 1166">.</tok>
+          </name>
+          <tok id="CTX196102294.s9.w5" type="w" lemma="převzít" upos="VERB" xpos="VpQW----R-AAP--" feats="Aspect=Perf|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" deprel="root" bbox="415 1145 535 1167">převzala</tok>
+          <tok id="CTX196102294.s9.w6" type="w" lemma="vedení" upos="NOUN" xpos="NNNS4-----A----" feats="Case=Acc|Gender=Neut|Number=Sing|VerbForm=Vnoun" head="CTX196102294.s9.w5" deprel="obj" bbox="567 1145 656 1163">vedení</tok>
+          <tok id="CTX196102294.s9.w7" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s9.w6" deprel="nmod" bbox="677 1146 783 1168">výzkumu</tok>
+          <name type="PER" cnec="P">
+              <tok id="CTX196102294.s9.w8" type="w" lemma="dr" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX196102294.s9.w5" deprel="nsubj" join="right" bbox="799 1146 837 1163">dr</tok>
+              <tok id="CTX196102294.s9.w9" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s9.w8" deprel="punct" bbox="799 1146 837 1163">.</tok>
+              <tok id="CTX196102294.s9.w10" type="w" lemma="0" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s9.w8" deprel="nummod" join="right" bbox="859 1146 884 1164">0</tok>
+              <tok id="CTX196102294.s9.w11" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s9.w5" deprel="punct" bbox="859 1146 884 1164">.</tok>
+          </name>
+        </s>
+        <s id="CTX196102294.s10" text="Kytlicová; podepsaná byla 16. t.m. přihlásil dělníky na ONV v Tachově.">
+          <name type="PER" cnec="ps">
+              <tok id="CTX196102294.s10.w1" type="w" lemma="Kytlicová" upos="PROPN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|NameType=Giv|Number=Sing" deprel="root" join="right" bbox="906 1145 1053 1167">Kytlicová</tok>
+          </name>
+          <tok id="CTX196102294.s10.w2" type="pc" lemma=";" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s10.w11" deprel="punct" bbox="906 1145 1053 1167">;</tok>
+          <tok id="CTX196102294.s10.w3" type="w" lemma="podepsaný" upos="ADJ" xpos="AAFS1----1A----" feats="Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos|VerbForm=Part|Voice=Pass" head="CTX196102294.s10.w11" deprel="xcomp" bbox="1076 1145 1211 1167">podepsaná</tok>
+          <tok id="CTX196102294.s10.w4" type="w" lemma="být" upos="AUX" xpos="VpQW----R-AAI--" feats="Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s10.w11" deprel="aux" bbox="261 1196 320 1218">byla</tok>
+          <name type="MISC" cnec="T">
+              <tok id="CTX196102294.s10.w5" type="w" lemma="16" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s10.w9" deprel="nummod" join="right" bbox="338 1191 376 1213">16</tok>
+              <tok id="CTX196102294.s10.w6" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s10.w5" deprel="punct" bbox="338 1191 376 1213">.</tok>
+              <tok id="CTX196102294.s10.w7" type="w" lemma="en" upos="NOUN" xpos="NNFXX-----A---a" feats="Abbr=Yes|Gender=Fem" head="CTX196102294.s10.w9" deprel="nmod" join="right" bbox="399 1196 453 1213">t</tok>
+              <tok id="CTX196102294.s10.w8" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s10.w7" deprel="punct" join="right" bbox="399 1196 453 1213">.</tok>
+              <tok id="CTX196102294.s10.w9" type="w" lemma="metr" upos="NOUN" xpos="NNIXX-----A---b" feats="Abbr=Yes|Animacy=Inan|Gender=Masc" head="CTX196102294.s10.w11" deprel="obl" join="right" bbox="399 1196 453 1213">m</tok>
+              <tok id="CTX196102294.s10.w10" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s10.w9" deprel="punct" bbox="399 1196 453 1213">.</tok>
+          </name>
+          <tok id="CTX196102294.s10.w11" type="w" lemma="přihlásit" upos="VERB" xpos="VpYS----R-AAP--" feats="Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX196102294.s10.w1" deprel="conj" bbox="475 1195 613 1217">přihlásil</tok>
+          <tok id="CTX196102294.s10.w12" type="w" lemma="dělník" upos="NOUN" xpos="NNMP7-----A----" feats="Animacy=Anim|Case=Ins|Gender=Masc|Number=Plur" head="CTX196102294.s10.w11" deprel="obl:arg" bbox="628 1195 734 1218">dělníky</tok>
+          <tok id="CTX196102294.s10.w13" type="w" lemma="na" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s10.w14" deprel="case" bbox="752 1201 782 1214">na</tok>
+          <name type="ORG" cnec="io">
+              <tok id="CTX196102294.s10.w14" type="w" lemma="ONV" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX196102294.s10.w11" deprel="obl" bbox="798 1195 843 1214">ONV</tok>
+          </name>
+          <tok id="CTX196102294.s10.w15" type="w" lemma="v" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s10.w16" deprel="case" bbox="860 1200 874 1213">v</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s10.w16" type="w" lemma="Tachov" upos="PROPN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|NameType=Geo|Number=Sing" head="CTX196102294.s10.w14" deprel="nmod" join="right" bbox="891 1194 1008 1214">Tachově</tok>
+          </name>
+          <tok id="CTX196102294.s10.w17" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s10.w1" deprel="punct" bbox="891 1194 1008 1214">.</tok>
+        </s>
+      </div>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block11" bbox="241 1288 599 1319">
+        <s id="CTX196102294.s11" text="V Plzni dne 16. 5. 1961 dr. V. Štefanové">
+          <tok id="CTX196102294.s11.w1" type="w" lemma="v" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s11.w2" deprel="case" bbox="244 1296 259 1313">V</tok>
+          <name type="LOC" cnec="gu">
+              <tok id="CTX196102294.s11.w2" type="w" lemma="Plzeň" upos="PROPN" xpos="NNFS6-----A----" feats="Case=Loc|Gender=Fem|NameType=Geo|Number=Sing" deprel="root" bbox="274 1294 349 1314">Plzni</tok>
+          </name>
+          <tok id="CTX196102294.s11.w3" type="w" lemma="den" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX196102294.s11.w2" deprel="dep" bbox="367 1296 410 1313">dne</tok>
+          <name type="MISC" cnec="T">
+              <tok id="CTX196102294.s11.w4" type="w" lemma="16" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s11.w6" deprel="compound" join="right" bbox="428 1291 468 1313">16</tok>
+              <tok id="CTX196102294.s11.w5" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s11.w4" deprel="punct" bbox="428 1291 468 1313">.</tok>
+              <tok id="CTX196102294.s11.w6" type="w" lemma="5" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s11.w3" deprel="nummod" join="right" bbox="489 1293 513 1316">5</tok>
+              <tok id="CTX196102294.s11.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s11.w6" deprel="punct" bbox="489 1293 513 1316">.</tok>
+              <tok id="CTX196102294.s11.w8" type="w" lemma="1961" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s11.w6" deprel="compound" bbox="538 1291 595 1315">1961</tok>
+          </name>
+          <name type="PER" cnec="P">
+              <tok id="CTX196102294.s11.w9" type="w" lemma="dr" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX196102294.s11.w13" deprel="nmod" join="right" bbox="829 1346 869 1363">dr</tok>
+              <tok id="CTX196102294.s11.w10" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s11.w9" deprel="punct" bbox="829 1346 869 1363">.</tok>
+              <tok id="CTX196102294.s11.w11" type="w" lemma="V" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s11.w13" deprel="nmod" join="right" bbox="892 1346 914 1363">V</tok>
+              <tok id="CTX196102294.s11.w12" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s11.w11" deprel="punct" bbox="892 1346 914 1363">.</tok>
+              <tok id="CTX196102294.s11.w13" type="w" lemma="Štefanová" upos="PROPN" xpos="NNFS2-----A----" feats="Case=Gen|Gender=Fem|NameType=Giv|Number=Sing" head="CTX196102294.s11.w2" deprel="dep" bbox="938 1339 1074 1364">Štefanové</tok>
+          </name>
+        </s>
+      </div>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block14" bbox="131 1636 1148 1684">
+        <s id="CTX196102294.s12" text="Poznámka: Pište pokud možno strojem.">
+          <tok id="CTX196102294.s12.w1" type="w" lemma="poznámka" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" deprel="root" join="right" bbox="134 1644 219 1657">Poznámka</tok>
+          <tok id="CTX196102294.s12.w2" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s12.w3" deprel="punct" bbox="134 1644 219 1657">:</tok>
+          <tok id="CTX196102294.s12.w3" type="w" lemma="psát" upos="VERB" xpos="Vi-P---2--A-I--" feats="Aspect=Imp|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin" head="CTX196102294.s12.w1" deprel="appos" bbox="229 1643 268 1656">Pište</tok>
+          <tok id="CTX196102294.s12.w4" type="w" lemma="pokud" upos="SCONJ" xpos="J,-------------" head="CTX196102294.s12.w5" deprel="mark" bbox="278 1643 325 1658">pokud</tok>
+          <tok id="CTX196102294.s12.w5" type="w" lemma="možný" upos="ADJ" xpos="ACNS------A----" feats="Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short" head="CTX196102294.s12.w3" deprel="obl" bbox="336 1643 387 1655">možno</tok>
+          <tok id="CTX196102294.s12.w6" type="w" lemma="stroj" upos="NOUN" xpos="NNIS7-----A----" feats="Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing" head="CTX196102294.s12.w3" deprel="obl" join="right" bbox="397 1643 463 1658">strojem</tok>
+          <tok id="CTX196102294.s12.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s12.w1" deprel="punct" bbox="397 1643 463 1658">.</tok>
+        </s>
+        <s id="CTX196102294.s13" text="Na konci uveďte datum odeslání a čitelný podpis.">
+          <tok id="CTX196102294.s13.w1" type="w" lemma="na" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX196102294.s13.w2" deprel="case" bbox="474 1643 494 1655">Na</tok>
+          <tok id="CTX196102294.s13.w2" type="w" lemma="konec" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX196102294.s13.w3" deprel="obl" bbox="504 1642 546 1654">konci</tok>
+          <tok id="CTX196102294.s13.w3" type="w" lemma="uvést" upos="VERB" xpos="Vi-P---2--A-P--" feats="Aspect=Perf|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin" deprel="root" bbox="557 1642 611 1654">uveďte</tok>
+          <tok id="CTX196102294.s13.w4" type="w" lemma="datum" upos="NOUN" xpos="NNNS4-----A----" feats="Case=Acc|Gender=Neut|Number=Sing" head="CTX196102294.s13.w3" deprel="obj" bbox="622 1642 673 1654">datum</tok>
+          <tok id="CTX196102294.s13.w5" type="w" lemma="odeslání" upos="NOUN" xpos="NNNS2-----A----" feats="Case=Gen|Gender=Neut|Number=Sing|VerbForm=Vnoun" head="CTX196102294.s13.w4" deprel="nmod" bbox="683 1642 748 1654">odeslání</tok>
+          <tok id="CTX196102294.s13.w6" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s13.w8" deprel="cc" bbox="758 1645 765 1653">a</tok>
+          <tok id="CTX196102294.s13.w7" type="w" lemma="čitelný" upos="ADJ" xpos="AAIS4----1A----" feats="Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX196102294.s13.w8" deprel="amod" bbox="776 1641 829 1657">čitelný</tok>
+          <tok id="CTX196102294.s13.w8" type="w" lemma="podpis" upos="NOUN" xpos="NNIS4-----A----" feats="Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing" head="CTX196102294.s13.w4" deprel="conj" join="right" bbox="840 1641 894 1657">podpis</tok>
+          <tok id="CTX196102294.s13.w9" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s13.w3" deprel="punct" bbox="840 1641 894 1657">.</tok>
+        </s>
+        <s id="CTX196102294.s14" text="Zprávy koreferentů a komisí vyhotovte dvojmo.">
+          <tok id="CTX196102294.s14.w1" type="w" lemma="zpráva" upos="NOUN" xpos="NNFP4-----A----" feats="Case=Acc|Gender=Fem|Number=Plur" head="CTX196102294.s14.w5" deprel="obj" bbox="906 1641 960 1657">Zprávy</tok>
+          <tok id="CTX196102294.s14.w2" type="w" lemma="koreferent" upos="NOUN" xpos="NNMP2-----A----" feats="Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur" head="CTX196102294.s14.w1" deprel="nmod" bbox="971 1640 1064 1653">koreferentů</tok>
+          <tok id="CTX196102294.s14.w3" type="w" lemma="a" upos="CCONJ" xpos="J^-------------" head="CTX196102294.s14.w4" deprel="cc" bbox="1075 1644 1082 1653">a</tok>
+          <tok id="CTX196102294.s14.w4" type="w" lemma="komise" upos="NOUN" xpos="NNFP2-----A----" feats="Case=Gen|Gender=Fem|Number=Plur" head="CTX196102294.s14.w2" deprel="conj" bbox="1094 1640 1145 1652">komisí</tok>
+          <tok id="CTX196102294.s14.w5" type="w" lemma="vyhotovit" upos="VERB" xpos="Vi-P---2--A-P--" feats="Aspect=Perf|Mood=Imp|Number=Plur|Person=2|Polarity=Pos|VerbForm=Fin" deprel="root" bbox="229 1665 307 1681">vyhotovte</tok>
+          <tok id="CTX196102294.s14.w6" type="w" lemma="dvojmo" upos="ADV" xpos="Dg-------1A----" feats="Degree=Pos|Polarity=Pos" head="CTX196102294.s14.w5" deprel="advmod" join="right" bbox="318 1665 381 1680">dvojmo</tok>
+          <tok id="CTX196102294.s14.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s14.w5" deprel="punct" bbox="318 1665 381 1680">.</tok>
+        </s>
+      </div>
+      <div type="MarginTextZone-P" id="CTX196102294.Page1_Block15" bbox="816 1708 1048 1747">
+        <s id="CTX196102294.s15" text="P I provedeno st 27-711-58">
+          <tok id="CTX196102294.s15.w1" type="w" lemma="P" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" deprel="root" bbox="823 1711 839 1740">P</tok>
+          <tok id="CTX196102294.s15.w2" type="w" lemma="I" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX196102294.s15.w1" deprel="nmod" bbox="852 1712 857 1737">I</tok>
+          <tok id="CTX196102294.s15.w3" type="w" lemma="provedený" upos="ADJ" xpos="VsNS----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" head="CTX196102294.s15.w1" deprel="dep" bbox="883 1715 1045 1744">provedeno</tok>
+          <tok id="CTX196102294.s15.w4" type="w" lemma="st" upos="NOUN" xpos="NNIXX-----A---b" feats="Abbr=Yes|Animacy=Inan|Gender=Masc" head="CTX196102294.s15.w3" deprel="dep" bbox="1122 1701 1135 1712">st</tok>
+          <name type="MISC" cnec="n_">
+              <tok id="CTX196102294.s15.w5" type="w" lemma="27" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s15.w4" deprel="nummod" join="right" bbox="1149 1701 1201 1712">27</tok>
+          </name>
+          <tok id="CTX196102294.s15.w6" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s15.w7" deprel="punct" join="right" bbox="1149 1701 1201 1712">-</tok>
+          <name type="MISC" cnec="n_">
+              <tok id="CTX196102294.s15.w7" type="w" lemma="711" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s15.w5" deprel="conj" join="right" bbox="1149 1701 1201 1712">711</tok>
+          </name>
+          <tok id="CTX196102294.s15.w8" type="pc" lemma="-" upos="PUNCT" xpos="Z:-------------" head="CTX196102294.s15.w9" deprel="punct" join="right" bbox="1149 1701 1201 1712">-</tok>
+          <name type="MISC" cnec="n_">
+              <tok id="CTX196102294.s15.w9" type="w" lemma="58" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX196102294.s15.w5" deprel="conj" join="right" bbox="1149 1701 1201 1712">58</tok>
+          </name>
+        </s>
+      </div>
+    </body>
+  </text>
+</TEI>
