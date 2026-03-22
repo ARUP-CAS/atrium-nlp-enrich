@@ -221,92 +221,127 @@ def write_document_csv(rows, out_path):
         print(f"  [Error] writing {out_path}: {e}", file=sys.stderr)
 
 
-def process_merged_file(merged_filepath, output_csv_path):
+# ── FIX #8: single-pass reader ───────────────────────────────────────────────
+
+def _collect_merged_rows(merged_filepath):
+    """Parse a merged CoNLL-U file in a single pass and return both the
+    per-token rows needed for the document CSV and the per-page entity
+    counts needed for the summary CSV.
+
+    FIX #8: Previously ``process_merged_file`` and ``append_summary_row``
+    each opened and iterated the merged CoNLL-U independently, causing two
+    full file reads per document.  This function does the work once and
+    returns both result sets so the caller can feed them to the appropriate
+    writers without any additional I/O.
+
+    Page-boundary detection understands two signals (see FIX #3 in
+    call_udpipe.py):
+      • ``# page_break = true``   – merged/multi-chunk files
+      • ``# sent_id = 1``         – original / legacy files
+    """
     all_rows = []
+    entities_by_page: dict = {}
     page_counter = 0
-
-    with open(merged_filepath, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith('# sent_id'):
-                parts = line.split('=', 1)
-                if len(parts) > 1 and parts[1].strip() == '1': page_counter += 1
-            if line.startswith('#') or not line: continue
-
-            parts = line.split('\t')
-            if len(parts) < 10 or '-' in parts[0]: continue
-            if page_counter == 0: page_counter = 1
-
-            misc = parse_misc(parts[9])
-            feats = parse_features(parts[5])
-            ner_tag = misc.get('NER', '')
-
-            row = {
-                'page_id': page_counter,
-                'token': parts[1],
-                'lemma': parts[2],
-                'position': parts[0],
-                'nameTag': ner_tag,
-                'NE': get_ne_explanation(ner_tag)
-            }
-            for k, v in feats.items(): row[f'udpipe.feats.{k}'] = v
-            for k, v in misc.items():
-                if k != 'NER': row[f'udpipe.misc.{k}'] = v
-            all_rows.append(row)
-
-    if all_rows: write_document_csv(all_rows, output_csv_path)
-
-
-def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
-    """Append a per-page entity-count row to the global summary CSV."""
-    from collections import Counter
-    if not summary_csv_path:
-        return
-
-    # Gather entities from the merged CoNLL-U MISC NER field
-    entities_by_page = {}
-    page_counter = 0
-    current_entity_toks = []
+    pending_page_break = False
+    current_entity_toks: list = []
     current_entity_type = None
 
-    def _flush(page):
+    def _flush_entity(page):
+        nonlocal current_entity_toks, current_entity_type
         if current_entity_toks and current_entity_type:
             text = " ".join(current_entity_toks)
             entities_by_page.setdefault(page, []).append((text, current_entity_type))
+        current_entity_toks, current_entity_type = [], None
 
     try:
-        with open(merged_conllu_path, 'r', encoding='utf-8') as fh:
+        with open(merged_filepath, 'r', encoding='utf-8') as fh:
             for line in fh:
                 line = line.strip()
+
+                # Page-boundary detection — support both signals.
+                if line == '# page_break = true':
+                    pending_page_break = True
+                    continue
+
                 if line.startswith('# sent_id'):
                     parts = line.split('=', 1)
-                    if len(parts) > 1 and parts[1].strip() == '1':
-                        _flush(page_counter)
-                        current_entity_toks, current_entity_type = [], None
-                        page_counter += 1
+                    if len(parts) > 1:
+                        val = parts[1].strip()
+                        if val == '1' or pending_page_break:
+                            _flush_entity(page_counter)
+                            page_counter += 1
+                            pending_page_break = False
+
                 if line.startswith('#') or not line:
                     continue
+
                 cols = line.split('\t')
                 if len(cols) < 10 or '-' in cols[0]:
                     continue
                 if page_counter == 0:
                     page_counter = 1
-                misc = parse_misc(cols[9])
+
+                misc  = parse_misc(cols[9])
+                feats = parse_features(cols[5])
                 ner_tag = misc.get('NER', '')
+
+                # ── token row for the document CSV ──────────────────────
+                row = {
+                    'page_id':  page_counter,
+                    'token':    cols[1],
+                    'lemma':    cols[2],
+                    'position': cols[0],
+                    'nameTag':  ner_tag,
+                    'NE':       get_ne_explanation(ner_tag),
+                }
+                for k, v in feats.items():
+                    row[f'udpipe.feats.{k}'] = v
+                for k, v in misc.items():
+                    if k != 'NER':
+                        row[f'udpipe.misc.{k}'] = v
+                all_rows.append(row)
+
+                # ── entity tracking for the summary CSV ─────────────────
                 if ner_tag.startswith('B-'):
-                    _flush(page_counter)
+                    _flush_entity(page_counter)
                     current_entity_toks = [cols[1]]
                     current_entity_type = get_ne_explanation(ner_tag)
                 elif ner_tag.startswith('I-') and current_entity_toks:
                     current_entity_toks.append(cols[1])
                 else:
-                    _flush(page_counter)
-                    current_entity_toks, current_entity_type = [], None
-            _flush(page_counter)
-    except Exception as exc:
-        print(f"  [Warn] summary row for {doc_name}: {exc}", file=sys.stderr)
-        return
+                    _flush_entity(page_counter)
 
+            _flush_entity(page_counter)
+
+    except Exception as exc:
+        print(f"  [Warn] collecting merged rows from {merged_filepath}: {exc}", file=sys.stderr)
+        return [], {}
+
+    return all_rows, entities_by_page
+
+
+def process_merged_file(merged_filepath, output_csv_path):
+    """Write a per-document CSV from a merged CoNLL-U file.
+
+    Kept for backwards compatibility; internally delegates to
+    _collect_merged_rows so that only one file read is performed when
+    called from process_single_document (which passes pre-collected rows
+    via write_document_csv directly).
+    """
+    rows, _ = _collect_merged_rows(merged_filepath)
+    if rows:
+        write_document_csv(rows, output_csv_path)
+
+
+def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
+    """Write per-page entity-count rows from pre-collected entity data.
+
+    FIX #8: This replaces the file-based append_summary_row for use inside
+    process_single_document, avoiding a second read of the merged CoNLL-U.
+    """
+    from collections import Counter
+    if not summary_csv_path or not entities_by_page:
+        return
     top_n = 20
     write_header = not os.path.isfile(summary_csv_path)
     try:
@@ -330,6 +365,17 @@ def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
         print(f"  [Warn] writing summary CSV: {exc}", file=sys.stderr)
 
 
+def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
+    """Append a per-page entity-count row to the global summary CSV.
+
+    Kept as the public API; internally uses _collect_merged_rows.
+    Direct callers outside process_single_document still use this entry
+    point and pay the cost of one file read.
+    """
+    _, entities_by_page = _collect_merged_rows(merged_conllu_path)
+    _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path)
+
+
 # ── per-document entry point (called from api_4_stats.sh) ────────────────────
 
 def process_single_document(conllu_file, ne_dir, output_dir,
@@ -338,7 +384,14 @@ def process_single_document(conllu_file, ne_dir, output_dir,
                              pages_dir=None,
                              summary_csv=None,
                              model_udpipe=None, model_nametag=None):
-    """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary."""
+    """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
+
+    FIX #8: When both a document CSV and a summary CSV are requested, the
+    merged CoNLL-U is read in a single pass via _collect_merged_rows, and
+    the collected data is passed directly to the two writers.  Previously
+    the file was read twice (once by process_merged_file and once by
+    append_summary_row).
+    """
     conllu_path = Path(conllu_file)
     doc_name = conllu_path.stem
     doc_out_dir = Path(output_dir)
@@ -368,7 +421,21 @@ def process_single_document(conllu_file, ne_dir, output_dir,
             print(f"  [Error] Failed to create merged CoNLL-U for {doc_name}", file=sys.stderr)
             return False
 
-    if save_csv and not doc_out_csv.exists():
+    # FIX #8: collect token rows and entity data in a single pass when either
+    # the document CSV or the summary CSV is needed.  This avoids reading the
+    # merged file twice.
+    need_csv     = save_csv and not doc_out_csv.exists()
+    need_summary = bool(summary_csv)
+
+    if need_csv or need_summary:
+        rows, entities_by_page = _collect_merged_rows(doc_out_conllu)
+        if need_csv:
+            write_document_csv(rows, doc_out_csv)
+        if need_summary:
+            _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv)
+    elif save_csv and not doc_out_csv.exists():
+        # Fallback: CSV only, no summary (should not normally reach here,
+        # but kept for safety).
         process_merged_file(doc_out_conllu, doc_out_csv)
 
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
@@ -378,9 +445,6 @@ def process_single_document(conllu_file, ne_dir, output_dir,
             doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
             image_dir=pages_dir or None,
         )
-
-    if summary_csv:
-        append_summary_row(doc_name, doc_out_conllu, summary_csv)
 
     if not save_conllu:
         csv_done = not save_csv or doc_out_csv.exists()
@@ -512,15 +576,21 @@ def main():
         sys.exit(1)
 
     if save_teitok:
-        if not args.alto_dir or not Path(args.alto_dir).exists():
-            print("[Error] A valid --alto-dir is required when save-teitok=true.", file=sys.stderr)
+        # FIX #5: when alto_dir is absent, emit a warning rather than a hard
+        # error — the pipeline can still produce TEITOK output without bboxes.
+        # Only exit if the directory is explicitly set but does not exist on disk,
+        # which is most likely a configuration mistake worth surfacing loudly.
+        if not args.alto_dir:
+            print("[Warn] --alto-dir not set; TEITOK output will have no bboxes.",
+                  file=sys.stderr)
+        elif not Path(args.alto_dir).exists():
+            print(f"[Error] A valid --alto-dir is required when save-teitok=true "
+                  f"('{args.alto_dir}' not found).", file=sys.stderr)
             sys.exit(1)
+
         if args.tt_dir:
             Path(args.tt_dir).mkdir(parents=True, exist_ok=True)
 
-    # FIX: process_pipeline is called unconditionally (previously it was only
-    # called inside `if save_teitok:`, so CSV/CoNLL-U output never ran when
-    # TEITOK was disabled).
     process_pipeline(
         conllu_dir=args.conllu_dir,
         tsv_dir=args.tsv_dir,

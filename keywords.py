@@ -113,7 +113,6 @@ def main():
                         help="Master CSV output file path")
     parser.add_argument('-n', '--num_keywords', type=int, default=20,
                         help="Number of keywords to extract per document")
-    # FIX: the three flags referenced in the paradata config block were missing
     parser.add_argument('-l', '--lang', default='cs',
                         help="Language code for keyword extraction (e.g. 'cs', 'en')")
     parser.add_argument('-w', '--max_words', type=int, default=3,
@@ -125,7 +124,6 @@ def main():
     args = parser.parse_args()
 
     input_path = Path(args.input_dir)
-    # Use -d/--per_doc_out_dir instead of the hard-coded DEFAULT_INDIVIDUAL_OUTPUT_DIR
     indiv_out_path = Path(args.per_doc_out_dir)
     indiv_out_path.mkdir(parents=True, exist_ok=True)
 
@@ -150,19 +148,23 @@ def main():
     processed_count = 0
     futures_map = {}
 
+    # FIX #7: Track per-doc CSVs and summary CSV rows separately.
+    # Previously log_success("csv", count=2) inflated the output count because
+    # the per-doc file and the summary row are different artefacts and should
+    # not be double-counted as a single output type.
     _logger = ParadataLogger(
         program="nlp-enrich",
         config={
             "script":          "keywords",
             "input_dir":       str(args.input_dir),
-            "lang":            str(args.lang),           # FIX: now defined
-            "max_words":       int(args.max_words),      # FIX: now defined
+            "lang":            str(args.lang),
+            "max_words":       int(args.max_words),
             "num_keywords":    int(args.num_keywords),
-            "per_doc_out_dir": str(args.per_doc_out_dir), # FIX: now defined
+            "per_doc_out_dir": str(args.per_doc_out_dir),
             "output_file":     str(args.output_file),
         },
         paradata_dir="paradata",
-        output_types=["csv"],
+        output_types=["csv_per_doc", "csv_summary_row"],
     )
     _total_inputs = 0
 
@@ -184,7 +186,11 @@ def main():
                         res_doc_id, keywords = result
                         write_csv_row(args.output_file, res_doc_id, keywords, args.num_keywords)
                         processed_count += 1
-                        _logger.log_success("csv", count=2)  # per-doc csv + summary row
+                        # FIX #7: log each output type once per document so
+                        # paradata counters reflect true file counts, not an
+                        # inflated combined total.
+                        _logger.log_success("csv_per_doc", count=1)
+                        _logger.log_success("csv_summary_row", count=1)
                         if processed_count % 100 == 0:
                             print(f"Processed {processed_count} documents...")
                 except Exception as e:

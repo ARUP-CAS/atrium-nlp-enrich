@@ -21,6 +21,7 @@ Usage
     logger.log_skip("bad_file.xml", "parse error: …")
     logger.log_success("csv")           # one csv produced
     logger.log_success("png", count=3)  # three pngs produced at once
+    logger.log_document_success()       # one input document fully processed
 
     # at the very end (call inside a finally block):
     logger.finalize(input_total=1200)
@@ -93,11 +94,18 @@ class ParadataLogger:
         # sanitise config so it stays JSON-serialisable
         self.config = _sanitise(config)
 
-        # counters
+        # per-output-type file counters
         self._output_counts: Dict[str, int] = {}
         if output_types:
             for t in output_types:
                 self._output_counts[t] = 0
+
+        # FIX #2: separate counter for fully-processed input documents.
+        # log_document_success() increments this; it is used as the primary
+        # source for "successfully_processed" in the statistics block.
+        # Falls back to max(output_counts) when never called, for backwards
+        # compatibility with callers that only use log_success().
+        self._docs_processed: int = 0
 
         self._skipped:  List[Dict[str, str]] = []
         self._input_total: int = 0
@@ -130,6 +138,23 @@ class ParadataLogger:
             self._output_counts.get(output_type, 0) + count
         )
 
+    def log_document_success(self) -> None:
+        """
+        Increment the successfully-processed document counter by one.
+
+        FIX #2: Call this once per fully-processed *input document* (not per
+        output file).  When this method is called at least once, finalize()
+        uses ``_docs_processed`` as the canonical "successfully_processed"
+        value in the statistics block, giving an accurate document count even
+        when each document produces multiple output files (e.g. ``n_pages``
+        TSV files) via log_success().
+
+        Backwards compatibility: callers that only use log_success() and never
+        call log_document_success() continue to work — finalize() falls back
+        to max(output_counts) as before.
+        """
+        self._docs_processed += 1
+
     def finalize(self, input_total: Optional[int] = None) -> str:
         """
         Write the paradata JSON file and return its path.
@@ -149,11 +174,14 @@ class ParadataLogger:
         duration_min    = duration_sec / 60.0 if duration_sec > 0 else 0.0
 
         skipped_count   = len(self._skipped)
-        success_total   = sum(self._output_counts.values())
-        # "successfully processed documents" = output files divided by the
-        # number of output types (i.e. unique input docs that produced output)
-        n_types         = max(len(self._output_counts), 1)
-        processed_docs  = max(v for v in self._output_counts.values()) if self._output_counts else 0
+
+        # FIX #2: use the explicit document counter when available; otherwise
+        # fall back to max(output_counts) for backwards compatibility with
+        # callers that only call log_success() and not log_document_success().
+        if self._docs_processed > 0:
+            processed_docs = self._docs_processed
+        else:
+            processed_docs = max(self._output_counts.values()) if self._output_counts else 0
 
         if input_total is None:
             input_total = processed_docs + skipped_count
@@ -218,6 +246,37 @@ class ParadataLogger:
                 print(f"[paradata] WARNING – could not write log: {e}", file=sys.stderr)
         return False   # do not suppress exceptions
 
+    # ── JSON state serialisation (used by CLI shim) ───────────────────────────
+
+    def _to_state_dict(self) -> Dict[str, Any]:
+        """Serialise mutable logger state to a JSON-safe dict."""
+        return {
+            "program":        self.program,
+            "config":         self.config,
+            "paradata_dir":   self.paradata_dir,
+            "output_counts":  self._output_counts,
+            "skipped":        self._skipped,
+            "docs_processed": self._docs_processed,
+            "start_iso":      self._start_dt.isoformat(),
+            "run_id":         self._run_id,
+        }
+
+    @classmethod
+    def _from_state_dict(cls, d: Dict[str, Any]) -> "ParadataLogger":
+        """Reconstruct a ParadataLogger from a state dict produced by _to_state_dict."""
+        inst = cls.__new__(cls)
+        inst.program         = d["program"]
+        inst.config          = d["config"]
+        inst.paradata_dir    = d["paradata_dir"]
+        inst._output_counts  = d["output_counts"]
+        inst._skipped        = d["skipped"]
+        inst._docs_processed = d.get("docs_processed", 0)
+        inst._run_id         = d["run_id"]
+        inst._start_dt       = datetime.fromisoformat(d["start_iso"])
+        inst._input_total    = 0
+        inst._finalised      = False
+        return inst
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # CLI shim – used by Bash scripts (atrium-nlp-enrich)
@@ -228,6 +287,11 @@ def _cli() -> None:
     Thin command-line interface so that Bash scripts can drive the logger via a
     persistent state file in the paradata directory.
 
+    FIX #14: State is now persisted as plain JSON instead of a pickle file.
+    This makes the state file human-readable and inspectable after a crash,
+    and removes the risk of AttributeError when the ParadataLogger class
+    definition changes between invocations during development.
+
     Commands
     --------
     start   --program NAME --config KEY=VAL [KEY=VAL ...]  [--paradata-dir DIR]
@@ -235,7 +299,7 @@ def _cli() -> None:
     success --state STATE_FILE --type TYPE [--count N]
     finish  --state STATE_FILE [--input-total N]
     """
-    import argparse, pickle
+    import argparse
 
     p = argparse.ArgumentParser(prog="python atrium_paradata.py")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -278,17 +342,20 @@ def _cli() -> None:
             paradata_dir=args.paradata_dir,
             output_types=args.output_types or None,
         )
+        # FIX #14: persist state as JSON, not pickle.
         state_path = os.path.join(
-            args.paradata_dir, f".state_{logger._run_id}_{args.program}.pkl"
+            args.paradata_dir, f".state_{logger._run_id}_{args.program}.json"
         )
-        with open(state_path, "wb") as fh:
-            pickle.dump(logger, fh)
+        with open(state_path, "w", encoding="utf-8") as fh:
+            json.dump(logger._to_state_dict(), fh, ensure_ascii=False)
         # print the state file path so the shell script can capture it
         print(state_path)
 
     elif args.cmd in ("skip", "success", "finish"):
-        with open(args.state, "rb") as fh:
-            logger = pickle.load(fh)
+        # FIX #14: load from JSON instead of pickle.
+        with open(args.state, "r", encoding="utf-8") as fh:
+            state_dict = json.load(fh)
+        logger = ParadataLogger._from_state_dict(state_dict)
 
         if args.cmd == "skip":
             logger.log_skip(args.file, args.reason)
@@ -300,8 +367,8 @@ def _cli() -> None:
             return
 
         # persist updated state
-        with open(args.state, "wb") as fh:
-            pickle.dump(logger, fh)
+        with open(args.state, "w", encoding="utf-8") as fh:
+            json.dump(logger._to_state_dict(), fh, ensure_ascii=False)
 
 
 # ──────────────────────────────────────────────────────────────────────────────

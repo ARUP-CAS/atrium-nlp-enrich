@@ -72,25 +72,66 @@ def call_nametag(conllu_text: str, model: str, url: str, timeout: int, retries: 
 def build_sent_page_map(conllu_path: str) -> list[int]:
     """Return a list mapping sentence index (0-based) → page number (1-based).
 
-    A new page starts whenever '# sent_id = 1' is encountered.
+    Two page-boundary signals are recognised, in order of precedence:
+
+    1. ``# page_break = true``  – injected by call_udpipe.py when chunks are
+       merged and sent_id values are renumbered globally.  This is the primary
+       signal for merged/multi-chunk files.
+
+    2. ``# sent_id = 1``        – the original convention used in single-chunk
+       and legacy CoNLL-U files where each page's sentence numbering resets
+       to 1.
+
+    Supporting both signals keeps the function compatible with files produced
+    by any pipeline version.
+
+    FIX #10: If no sent_id markers are found (e.g. malformed UDPipe output)
+    a warning is emitted and all tokens are assigned to page 1 instead of
+    silently collapsing everything into page 0.
     """
     sent_to_page: list[int] = []
     current_page = 0
+    pending_page_break = False  # FIX #3: set when # page_break = true is seen
+
     try:
         with open(conllu_path, "r", encoding="utf-8") as fh:
             for line in fh:
-                line = line.strip()
-                if not line.startswith("# sent_id"):
+                line_stripped = line.strip()
+
+                # FIX #3: explicit page-break marker from call_udpipe.py merge
+                if line_stripped == "# page_break = true":
+                    pending_page_break = True
                     continue
-                if "=" in line:
-                    val = line.split("=", 1)[1].strip()
-                    if val == "1":
+
+                if not line_stripped.startswith("# sent_id"):
+                    continue
+
+                if "=" in line_stripped:
+                    val = line_stripped.split("=", 1)[1].strip()
+                    # Legacy signal: sent_id resets to 1 → new page.
+                    # New signal:    pending_page_break flag → new page.
+                    if val == "1" or pending_page_break:
                         current_page += 1
+                        pending_page_break = False
+
+                # Fallback: ensure page never stays at 0.
                 if current_page == 0:
                     current_page = 1
+
                 sent_to_page.append(current_page)
+
     except Exception as exc:
         print(f"[Error] reading CoNLL-U {conllu_path}: {exc}", file=sys.stderr)
+
+    # FIX #10: guard against files with no sent_id markers at all.
+    if not sent_to_page:
+        print(
+            f"[Warn] No sent_id markers found in {conllu_path}; "
+            "treating entire document as a single page.",
+            file=sys.stderr,
+        )
+        sent_to_page = [1]
+
     return sent_to_page
 
 

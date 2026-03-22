@@ -5,8 +5,19 @@ a single merged CoNLL-U file.
 
 Chunk files must be named  chunk_0.txt, chunk_1.txt, …  (produced by chunk.py).
 The sent_id comment sequence is renumbered across chunks so the merged file is
-consistent.  A new page boundary is signalled by resetting sent_id to 1, so the
-original page structure is preserved when chunks are within the same page.
+consistent.
+
+Page-boundary signal
+--------------------
+The original design used ``# sent_id = 1`` resets to mark the start of a new
+page.  After global renumbering those resets are gone, so a ``# page_break =
+true`` comment is injected immediately *before* every renumbered sentence that
+had ``sent_id = 1`` in its source chunk (except the very first sentence of the
+entire document, which always remains ``sent_id = 1``).
+
+Downstream consumers (call_nametag.py, summarize_nt_udp.py, teitok_alto.py)
+detect **either** ``# page_break = true`` (merged files) **or** ``sent_id = 1``
+(original single-chunk / legacy files), so both conventions work transparently.
 
 Usage
 -----
@@ -80,21 +91,29 @@ def call_udpipe(text: str, model: str, url: str, timeout: int, retries: int) -> 
 
 def merge_conllu_chunks(chunks: list[str]) -> str:
     """
-    Concatenate CoNLL-U chunks and renumber sent_id globally so that the
-    merged file is valid (no duplicate sent_id values across chunks).
+    Concatenate CoNLL-U chunks and renumber sent_id globally so the merged
+    file is valid (no duplicate sent_id values across chunks).
 
-    Within each chunk the original sent_id = 1 reset is preserved as the
-    page-boundary signal used downstream by nametag.py.
+    FIX #3: Page-boundary preservation.
+    When a source chunk contains a ``sent_id = 1`` reset (signalling that a
+    new page starts there), a ``# page_break = true`` comment is injected
+    immediately before the renumbered sent_id line — *except* for the very
+    first sentence of the document, which retains ``sent_id = 1`` so that
+    legacy parsers that only check ``sent_id = 1`` still see the first page
+    boundary correctly.
+
+    Downstream parsers should detect EITHER signal:
+        • ``# page_break = true``   → new page in merged/renumbered files
+        • ``# sent_id = 1``         → new page in original / legacy files
     """
     out_lines: list[str] = []
     global_sent_offset = 0
-    prev_chunk_max_sent = 0
 
     for chunk_text in chunks:
         lines = chunk_text.splitlines(keepends=True)
         chunk_sent_ids: list[int] = []
 
-        # First pass: collect sent_ids in this chunk
+        # First pass: collect the sent_id values present in this chunk.
         for line in lines:
             if line.startswith("# sent_id"):
                 try:
@@ -105,11 +124,17 @@ def merge_conllu_chunks(chunks: list[str]) -> str:
 
         chunk_max = max(chunk_sent_ids, default=0)
 
-        # Second pass: rewrite sent_id values
+        # Second pass: rewrite sent_id values and inject page_break markers.
         for line in lines:
             if line.startswith("# sent_id"):
                 try:
                     val = int(line.split("=", 1)[1].strip())
+                    # Inject a page_break marker when this sentence had
+                    # sent_id = 1 in the source chunk AND it is not the very
+                    # first sentence of the whole document (global_sent_offset
+                    # is 0 only for the first chunk).
+                    if val == 1 and global_sent_offset > 0:
+                        out_lines.append("# page_break = true\n")
                     new_val = val + global_sent_offset
                     out_lines.append(f"# sent_id = {new_val}\n")
                 except ValueError:
@@ -118,7 +143,6 @@ def merge_conllu_chunks(chunks: list[str]) -> str:
                 out_lines.append(line)
 
         global_sent_offset += chunk_max
-        prev_chunk_max_sent = chunk_max
 
     return "".join(out_lines)
 

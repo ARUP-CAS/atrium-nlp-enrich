@@ -68,19 +68,25 @@ def _read_image_dimensions(path):
     if not path.exists():
         return None
     try:
+        # FIX #6: Open the file exactly once and keep the handle open for the
+        # full duration of format detection.  The previous implementation
+        # opened a second file handle for JPEG parsing even though the first
+        # handle was still in scope, wasting an OS file descriptor and making
+        # the code harder to follow.
         with open(path, 'rb') as fh:
             header = fh.read(26)
 
-        # PNG: 8-byte signature + IHDR chunk (4 len + 4 type + 4 width + 4 height)
-        if header[:8] == b'\x89PNG\r\n\x1a\n':
-            w = struct.unpack('>I', header[16:20])[0]
-            h = struct.unpack('>I', header[20:24])[0]
-            return (w, h)
+            # PNG: 8-byte signature + IHDR chunk (4 len + 4 type + 4 width + 4 height)
+            if header[:8] == b'\x89PNG\r\n\x1a\n':
+                w = struct.unpack('>I', header[16:20])[0]
+                h = struct.unpack('>I', header[20:24])[0]
+                return (w, h)
 
-        # JPEG: starts with FF D8
-        if header[:2] == b'\xff\xd8':
-            with open(path, 'rb') as fh:
-                fh.read(2)  # SOI
+            # JPEG: starts with FF D8.
+            # FIX #6: reuse the already-open handle; seek past the two SOI
+            # bytes we consumed as part of the initial 26-byte header read.
+            if header[:2] == b'\xff\xd8':
+                fh.seek(2)  # skip SOI marker (already read in the header block)
                 while True:
                     marker = fh.read(2)
                     if len(marker) < 2:
@@ -96,13 +102,12 @@ def _read_image_dimensions(path):
                         w = struct.unpack('>H', fh.read(2))[0]
                         return (w, h)
                     fh.read(seg_len - 2)
-            return None
+                return None
 
-        # TIFF: little-endian (II) or big-endian (MM)
-        if header[:2] in (b'II', b'MM'):
-            endian = '<' if header[:2] == b'II' else '>'
-            with open(path, 'rb') as fh:
-                fh.read(4)  # magic + offset placeholder
+            # TIFF: little-endian (II) or big-endian (MM)
+            if header[:2] in (b'II', b'MM'):
+                endian = '<' if header[:2] == b'II' else '>'
+                fh.seek(4)  # skip magic + offset placeholder already in header
                 ifd_offset = struct.unpack(endian + 'I', fh.read(4))[0]
                 fh.seek(ifd_offset)
                 num_entries = struct.unpack(endian + 'H', fh.read(2))[0]
@@ -415,6 +420,20 @@ def _align_tokens_to_alto(tokens, alto_strings):
         if not a_indices:
             continue
         first_a = alto_strings[a_indices[0]]
+
+        # FIX #12: warn when a single token spans ALTO strings from different
+        # pages (typically caused by OCR errors near page boundaries).  We
+        # still use the first matched string's page_idx, but the diagnostic
+        # helps the operator identify problematic regions quickly.
+        page_indices = set(alto_strings[a]['page_idx'] for a in a_indices)
+        if len(page_indices) > 1:
+            form = tokens[t_idx].get('form', '?')
+            print(
+                f"  [Warn] Token '{form}' spans pages {sorted(page_indices)}; "
+                "using first matched page for bbox assignment.",
+                file=sys.stderr,
+            )
+
         bboxes[t_idx] = {
             'left':      min(alto_strings[a]['left']   for a in a_indices),
             'top':       min(alto_strings[a]['top']    for a in a_indices),
@@ -581,6 +600,9 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
     current_tok = []
     sent_id = sent_text = None
     conllu_meta = {}
+    # FIX (page_break propagation): track pending page_break comment so that
+    # merged files produced by call_udpipe.py are handled correctly.
+    pending_page_break = False
 
     try:
         with open(conllu_path, 'r', encoding='utf-8') as fh:
@@ -594,6 +616,12 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                 if line.startswith('# udpipe_model_licence ='):
                     conllu_meta['udpipe_model_licence'] = line.split('=', 1)[1].strip()
 
+                # FIX (page_break propagation): detect explicit page-break
+                # marker injected by call_udpipe.py when merging chunks.
+                if line.strip() == '# page_break = true':
+                    pending_page_break = True
+                    continue
+
                 if line.startswith('# sent_id'):
                     sent_id = line.split('=', 1)[1].strip() if '=' in line else None
                     continue
@@ -602,8 +630,14 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                     continue
                 if not line.strip() or line.startswith('#'):
                     if not line.strip() and current_tok:
-                        sentences.append({'id': sent_id, 'text': sent_text, 'tokens': current_tok})
+                        sentences.append({
+                            'id':         sent_id,
+                            'text':       sent_text,
+                            'tokens':     current_tok,
+                            'page_break': pending_page_break,
+                        })
                         current_tok = []
+                        pending_page_break = False
                     continue
 
                 cols = line.split('\t')
@@ -623,7 +657,12 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                     'ner':         misc.get('NER', ''),
                 })
         if current_tok:
-            sentences.append({'id': sent_id, 'text': sent_text, 'tokens': current_tok})
+            sentences.append({
+                'id':         sent_id,
+                'text':       sent_text,
+                'tokens':     current_tok,
+                'page_break': pending_page_break,
+            })
     except Exception as exc:
         print(f'  [Error] Reading CoNLL-U {conllu_path}: {exc}', file=sys.stderr)
         return False
@@ -709,9 +748,6 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
             out.write('    </revisionDesc>\n  </teiHeader>\n')
 
             # ── facsimile surfaces ─────────────────────────────────────────
-            # lrx / lry should match the actual image pixel dimensions so
-            # TEITOK can position overlays correctly.  We use the image dims
-            # when available; otherwise fall back to ALTO page dims.
             if alto_pages:
                 out.write('  <facsimile>\n')
                 for pg in alto_pages:
@@ -738,7 +774,10 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                 )
 
                 # ── page breaks ───────────────────────────────────────────
-                sent_page_trigger = (sent.get('id') == '1')
+                # FIX (page_break propagation): detect EITHER the legacy
+                # sent_id == "1" signal OR the explicit page_break flag
+                # stored during CoNLL-U parsing above.
+                sent_page_trigger = (sent.get('id') == '1') or sent.get('page_break', False)
                 if first_bbox and first_bbox.get('page_idx') and \
                         first_bbox['page_idx'] != current_page:
                     sent_page_trigger = True
@@ -816,7 +855,6 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                     if b and b.get('line_id') and b['line_id'] != current_line:
                         current_line  = b['line_id']
                         lb_id         = escape(f'{doc_id_safe}.{current_line}')
-                        # Scale the raw ALTO line bbox before writing.
                         raw_lb = b.get('line_bbox', '')
                         if raw_lb:
                             parts = raw_lb.split()
@@ -844,7 +882,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         for tok in grp['tokens']:
                             _emit_lb_if_changed(tok, 12)
                             out.write('  ' + _tok_xml(tok, id_map, sx=sx, sy=sy, indent=12))
-                        out.write('          </name>\n')
+                        out.write('          </n>\n')
                     else:
                         tok = grp['tokens'][0]
                         _emit_lb_if_changed(tok, 10)

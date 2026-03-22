@@ -19,9 +19,11 @@ if [ ! -d "$INPUT_TABLES_DIR" ]; then
     exit 1
 fi
 
-# Check for required Python scripts
-for script in manifest.py chunk.py analyze.py \
-              build_manifest_row.py call_udpipe.py call_nametag.py; do
+# FIX #11: Removed manifest.py (superseded by build_manifest_row.py) and
+# analyze.py (superseded by summarize_nt_udp.py) from the required-scripts
+# list. They still exist on disk but are no longer called by any shell script,
+# so checking for them was creating false confidence.
+for script in chunk.py build_manifest_row.py call_udpipe.py call_nametag.py; do
     if [ ! -f "$SCRIPT_DIR/$script" ]; then
         echo "Error: Helper script '$script' not found in $SCRIPT_DIR"
         exit 1

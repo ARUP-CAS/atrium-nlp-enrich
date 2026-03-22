@@ -16,8 +16,10 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "manifest=${OUTPUT_DIR}/manifest.tsv" \
         "output_dir=${OUTPUT_DIR}/UDP")
 
-TOTAL=$(wc -l < "${OUTPUT_DIR}/manifest.tsv")
-TOTAL=$((TOTAL - 1))  # subtract header
+# FIX #1: use tail -n +2 to skip the header row before counting, which also
+# correctly handles files that lack a trailing newline (wc -l would undercount
+# by 1 in that case).
+TOTAL=$(tail -n +2 "${OUTPUT_DIR}/manifest.tsv" | wc -l)
 
 mkdir -p "${OUTPUT_DIR}/UDP"
 
