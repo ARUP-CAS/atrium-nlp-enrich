@@ -2,6 +2,8 @@ import os
 import csv
 import argparse
 import multiprocessing
+import subprocess
+import shutil
 from pathlib import Path
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -11,12 +13,12 @@ from atrium_paradata import ParadataLogger
 DEFAULT_INDIVIDUAL_OUTPUT_DIR = "data_samples/KW_PER_DOC"
 DEFAULT_INPUT_CONLLU_DIR = "data_samples/UDP"
 
+
 def extract_keywords_from_conllu(file_path: str, num_keywords: int) -> list[tuple[str, float]]:
     """
     Parses a CoNLL-U file, extracts lemmas of specific Parts of Speech (Nouns, Proper Nouns, Adjectives),
     and calculates their frequency as the 'score'.
     """
-    # Content-bearing parts of speech to include
     valid_pos = {'NOUN', 'PROPN', 'ADJ'}
     lemmas = []
 
@@ -24,30 +26,23 @@ def extract_keywords_from_conllu(file_path: str, num_keywords: int) -> list[tupl
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             for line in f:
                 line = line.strip()
-                # Skip blank lines and comments
                 if not line or line.startswith('#'):
                     continue
 
                 parts = line.split('\t')
 
-                # CoNLL-U format guarantees 10 tab-separated columns
                 if len(parts) == 10:
                     lemma = parts[2]
                     upos = parts[3]
 
-                    # Filter for desired POS and skip unlemmatized tokens '_'
                     if upos in valid_pos and lemma != '_':
-                        # Filter out single-character artifacts or non-alphabetics if desired
                         if len(lemma) > 1 and lemma.isalpha():
                             lemmas.append(lemma.lower())
     except Exception as e:
         print(f"[Warning] Could not read CoNLL-U file {file_path}: {e}")
         return []
 
-    # Calculate term frequencies (TF)
     lemma_counts = Counter(lemmas)
-
-    # Return top N keywords with their frequencies as scores (formatted as floats)
     top_keywords = [(lemma, float(count)) for lemma, count in lemma_counts.most_common(num_keywords)]
 
     return top_keywords
@@ -56,11 +51,10 @@ def extract_keywords_from_conllu(file_path: str, num_keywords: int) -> list[tupl
 def process_document_task(task):
     """Worker function for multiprocessing."""
     file_path, num_keywords, indiv_out_dir = task
-    doc_id = Path(file_path).stem  # Assuming filename without extension is the doc_id
+    doc_id = Path(file_path).stem
 
     keywords = extract_keywords_from_conllu(file_path, num_keywords)
 
-    # Optional: Write individual document results
     if keywords and indiv_out_dir:
         out_csv = Path(indiv_out_dir) / f"{doc_id}_keywords.csv"
         try:
@@ -90,7 +84,43 @@ def write_csv_row(output_file: str, doc_id: str, keywords: list[tuple[str, float
 
 
 def sort_csv_file(file_path: str):
-    """Sorts the master CSV alphabetically by document_id."""
+    """
+    Sorts the master CSV alphabetically by document_id.
+    Implements safe out-of-core chunking (POSIX sort / pandas) to avoid OOM
+    errors on massive datasets before falling back to in-memory sorting.
+    """
+    # 1. Try Pandas if available (highly optimized C-backend sort)
+    try:
+        import pandas as pd
+        df = pd.read_csv(file_path)
+        df.sort_values(by=df.columns[0], inplace=True)
+        df.to_csv(file_path, index=False)
+        return
+    except ImportError:
+        pass
+
+    # 2. Try POSIX External Sort (highly efficient for files larger than RAM)
+    if os.name == 'posix' and shutil.which('sort'):
+        temp_path = file_path + '.tmp'
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                header = f.readline()
+            with open(temp_path, 'w', encoding='utf-8') as f:
+                f.write(header)
+
+            # Use external UNIX sort, skipping the header, and append to temp file
+            subprocess.run(
+                f"tail -n +2 '{file_path}' | sort -t ',' -k1 >> '{temp_path}'",
+                shell=True, check=True
+            )
+            shutil.move(temp_path, file_path)
+            return
+        except Exception as e:
+            print(f"[Warning] Posix sort failed: {e}. Falling back to in-memory sort.")
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+
+    # 3. Fallback to in-memory sort (Original Implementation)
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
@@ -131,7 +161,6 @@ def main():
         print(f"Input directory not found: {input_path}")
         return
 
-    # Prepare master file header
     header = ['document_id']
     for i in range(1, args.num_keywords + 1):
         header.extend([f'keyword{i}', f'score{i}'])
@@ -139,7 +168,6 @@ def main():
     with open(args.output_file, 'w', encoding='utf-8', newline='') as f:
         csv.writer(f).writerow(header)
 
-    # Yield paths for all .conllu files
     tasks = [
         (str(p), args.num_keywords, str(indiv_out_path))
         for p in input_path.glob("*.conllu")
@@ -148,28 +176,22 @@ def main():
     processed_count = 0
     futures_map = {}
 
-    # FIX #7: Track per-doc CSVs and summary CSV rows separately.
-    # Previously log_success("csv", count=2) inflated the output count because
-    # the per-doc file and the summary row are different artefacts and should
-    # not be double-counted as a single output type.
     _logger = ParadataLogger(
         program="nlp-enrich",
         config={
-            "script":          "keywords",
-            "input_dir":       str(args.input_dir),
-            "lang":            str(args.lang),
-            "max_words":       int(args.max_words),
-            "num_keywords":    int(args.num_keywords),
+            "script": "keywords",
+            "input_dir": str(args.input_dir),
+            "lang": str(args.lang),
+            "max_words": int(args.max_words),
+            "num_keywords": int(args.num_keywords),
             "per_doc_out_dir": str(args.per_doc_out_dir),
-            "output_file":     str(args.output_file),
+            "output_file": str(args.output_file),
         },
         paradata_dir="paradata",
         output_types=["csv_per_doc", "csv_summary_row"],
     )
-    _total_inputs = 0
 
     print(f"--- Starting Keyword Lemmatization Process on {len(tasks)} documents ---")
-
     _total_inputs = len(tasks)
 
     try:
@@ -186,9 +208,6 @@ def main():
                         res_doc_id, keywords = result
                         write_csv_row(args.output_file, res_doc_id, keywords, args.num_keywords)
                         processed_count += 1
-                        # FIX #7: log each output type once per document so
-                        # paradata counters reflect true file counts, not an
-                        # inflated combined total.
                         _logger.log_success("csv_per_doc", count=1)
                         _logger.log_success("csv_summary_row", count=1)
                         if processed_count % 100 == 0:

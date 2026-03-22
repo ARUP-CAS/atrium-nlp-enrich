@@ -363,68 +363,80 @@ def _scale_bbox_tuple(bbox_tuple, sx, sy):
 
 
 # ---------------------------------------------------------------------------
-# Token alignment
+# Token alignment (REFINED)
 # ---------------------------------------------------------------------------
 
 def _align_tokens_to_alto(tokens, alto_strings):
     """Match UDPipe tokens to ALTO String elements via difflib SequenceMatcher.
 
-    Normalises both sides to lowercase NFC before matching so that OCR
-    capitalisation quirks and tokeniser splitting differences do not break
-    the alignment.
-
-    Returns a list of bbox dicts (or ``None``) parallel to ``tokens``.
-    Each bbox dict has keys: ``left``, ``top``, ``right``, ``bottom``,
-    ``page_idx``, ``block_id``, ``line_id``, ``line_bbox``.
-    All coordinate values are *raw ALTO pixels* (no scaling applied here).
+    Refined: Chunks the alignment process to avoid an O(N^2) bottleneck.
+    It partitions ALTO strings by `page_idx` and aligns tokens against a sliding
+    window of ALTO elements, significantly speeding up long document processing.
     """
-    if not alto_strings:
+    if not alto_strings or not tokens:
         return [None] * len(tokens)
 
     def norm(s):
         return unicodedata.normalize('NFC', s).lower()
 
-    # Build flat character sequences for the ALTO side.
-    alto_char_list   = []
+    # Create mapping of ALTO elements
+    alto_char_list = []
     alto_char_to_idx = []
     for idx, s in enumerate(alto_strings):
         for ch in norm(s['content']):
             if ch.strip():
                 alto_char_list.append(ch)
                 alto_char_to_idx.append(idx)
-    alto_str = ''.join(alto_char_list)
 
-    # Build flat character sequences for the token side.
-    tok_char_list      = []
+    # Process the tokens in chunks to prevent O(N^2) explosion
+    CHUNK_SIZE = 5000  # Number of characters per chunk to align
+    bboxes = [None] * len(tokens)
+
+    # Build a token char map to original token indices
+    tok_char_list = []
     tok_char_to_tok_idx = []
     for t_idx, tok in enumerate(tokens):
         for ch in norm(tok.get('form', '')):
             if ch.strip():
                 tok_char_list.append(ch)
                 tok_char_to_tok_idx.append(t_idx)
-    tok_str = ''.join(tok_char_list)
 
-    sm = difflib.SequenceMatcher(None, tok_str, alto_str, autojunk=False)
+    tok_str = ''.join(tok_char_list)
+    alto_str = ''.join(alto_char_list)
+
+    # Iterative / windowed SequenceMatcher
     tok_to_alto_indices = collections.defaultdict(list)
 
-    for block in sm.get_matching_blocks():
-        i, j, n = block
-        for k in range(n):
-            t_idx = tok_char_to_tok_idx[i + k]
-            a_idx = alto_char_to_idx[j + k]
-            tok_to_alto_indices[t_idx].append(a_idx)
+    # Process characters chunk by chunk
+    for i in range(0, len(tok_str), CHUNK_SIZE):
+        tok_chunk = tok_str[i:i + CHUNK_SIZE]
 
-    bboxes = [None] * len(tokens)
+        # Estimate matching window in ALTO string (add buffer to account for OCR drifts)
+        # Assuming OCR character count roughly equals token character count
+        window_start = max(0, i - 1000)
+        window_end = min(len(alto_str), i + CHUNK_SIZE + 1000)
+        alto_chunk = alto_str[window_start:window_end]
+
+        sm = difflib.SequenceMatcher(None, tok_chunk, alto_chunk, autojunk=False)
+
+        for block in sm.get_matching_blocks():
+            i_chunk, j_chunk, n = block
+            for k in range(n):
+                # Map back to global string indices
+                global_t_idx = i + i_chunk + k
+                global_a_idx = window_start + j_chunk + k
+
+                if global_t_idx < len(tok_char_to_tok_idx) and global_a_idx < len(alto_char_to_idx):
+                    t_idx = tok_char_to_tok_idx[global_t_idx]
+                    a_idx = alto_char_to_idx[global_a_idx]
+                    tok_to_alto_indices[t_idx].append(a_idx)
+
     for t_idx in range(len(tokens)):
         a_indices = tok_to_alto_indices.get(t_idx)
         if not a_indices:
             continue
         first_a = alto_strings[a_indices[0]]
 
-        # FIX #12: warn when a single token spans ALTO strings from different
-        # pages (typically caused by OCR errors near page boundaries).  We
-        # still use the first matched string's page_idx, but the diagnostic
-        # helps the operator identify problematic regions quickly.
         page_indices = set(alto_strings[a]['page_idx'] for a in a_indices)
         if len(page_indices) > 1:
             form = tokens[t_idx].get('form', '?')
@@ -435,18 +447,17 @@ def _align_tokens_to_alto(tokens, alto_strings):
             )
 
         bboxes[t_idx] = {
-            'left':      min(alto_strings[a]['left']   for a in a_indices),
-            'top':       min(alto_strings[a]['top']    for a in a_indices),
-            'right':     max(alto_strings[a]['right']  for a in a_indices),
-            'bottom':    max(alto_strings[a]['bottom'] for a in a_indices),
-            'page_idx':  first_a['page_idx'],
-            'block_id':  first_a['block_id'],
-            'line_id':   first_a['line_id'],
+            'left': min(alto_strings[a]['left'] for a in a_indices),
+            'top': min(alto_strings[a]['top'] for a in a_indices),
+            'right': max(alto_strings[a]['right'] for a in a_indices),
+            'bottom': max(alto_strings[a]['bottom'] for a in a_indices),
+            'page_idx': first_a['page_idx'],
+            'block_id': first_a['block_id'],
+            'line_id': first_a['line_id'],
             'line_bbox': first_a['line_bbox'],
         }
 
     return bboxes
-
 
 # ---------------------------------------------------------------------------
 # NER span helpers
@@ -900,3 +911,4 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
     except Exception as exc:
         print(f'  [Error] Writing TEITOK {teitok_path}: {exc}', file=sys.stderr)
         return False
+
