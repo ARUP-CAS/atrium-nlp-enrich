@@ -1,3 +1,14 @@
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" title="Python Version"></a>
+  <a href="https://lindat.mff.cuni.cz/services/udpipe/api-reference.php"><img src="https://img.shields.io/badge/API-UDPipe%202-0055A4.svg" title="UDPipe 2 API (Lindat)"></a>
+  <a href="https://lindat.mff.cuni.cz/services/nametag/api-reference.php"><img src="https://img.shields.io/badge/API-NameTag%203-0055A4.svg" title="NameTag 3 API (Lindat)"></a>
+  <a href="https://github.com/ufal/ker"><img src="https://img.shields.io/badge/dep-KER-lightgrey.svg" title="KER Keyword Extraction"></a>
+  <a href="https://opensource.org/license/mit/"><img src="https://img.shields.io/github/license/ufal/atrium-nlp-enrich" title="MIT License"></a>
+  <a href="https://atrium-research.eu/"><img src="https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg" title="ATRIUM Project"></a>
+</p>
+
+---
+
 # 📦 ALTO XML Files Postprocessing Pipeline - NLP Enrichment of text
 
 This project provides a workflow for processing text stored in CSV (XLSX) with NLP services. It takes ordered text 
