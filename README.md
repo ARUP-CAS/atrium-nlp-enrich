@@ -25,7 +25,7 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
       - [III. NameTag Processing (NER tags)](#3-nametag-processing-ner-tags)
       - [IV. Generate Statistics](#4-generate-statistics)
 - [Output Structure](#output-structure)
-- [EXTRA: Extract Keywords (KER)](#extra-extract-keywords-ker-based-on-tf-idf)
+- [EXTRA: Extract Keywords (KER / YAKE / KeyBERT)](#extra-extract-keywords-ker--yake--keybert)
 - [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv)
 - [Paradata Logs](#paradata-logs)
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
@@ -124,6 +124,16 @@ Before you begin, set up your environment.
     ```bash
     pip install -r requirements.txt
     ```
+    For keyword extraction, install the backend(s) you intend to use:
+    ```bash
+    # YAKE — unsupervised statistical extraction, CPU-only
+    pip install yake
+
+    # KeyBERT — embedding-based extraction, GPU-accelerated when available
+    pip install keybert sentence-transformers
+    pip install torch          # optional — enables CUDA GPU acceleration
+    ```
+    The original **legacy KER** backend requires no additional packages.
 3. Review and update the [config_api.env](config_api.env) 📎 file with your specific paths and API configurations.
 You are now ready to start the workflow.
 
@@ -494,61 +504,117 @@ If you do not plan to rerun any part of the pipeline, you can also delete
 the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎.
 
 
-### EXTRA: Extract Keywords (KER) based on tf-idf
+### EXTRA: Extract Keywords (KER / YAKE / KeyBERT)
 
 > [!NOTE]
-> This is an optional step in NLP enrichment of your data since it can give an overview of the 
-> whole collection in a relatively short time. Moreover, this process requires lemmas 
-> of words (output of Step 2) to get informative results.
+> This is an optional step in NLP enrichment of your data. It can give a fast
+> thematic overview of the whole collection and works best when UDPipe lemmas
+> (output of Step 2) are available. Three extraction backends are provided;
+> choose the one that best fits your environment and quality requirements.
 
-Finally, you can extract keywords 🔎 from your text. This script runs on a directory of
-document-specific `.conllu` files (e.g., `OUTPUT_DIR/UDP/`) containing ordered text content with word lemmas..
+Extract keywords 🔎 from your documents by running [keywords.py](keywords.py) 📎
+on a directory of CoNLL-U files produced by Step 2.
 
-    python3 keywords.py -i <input_dir> -l <lang> -w <integer> -n <integer> -d <output_dir> -o <output_file>.csv
+#### Backends
 
-where short flag meanings are (listed in the same order as used above):
+| Flag value         | Method                                        | Dependencies                                | Score semantics                       | Best for                                  |
+|--------------------|-----------------------------------------------|---------------------------------------------|---------------------------------------|-------------------------------------------|
+| `legacy`           | Original KER — NOUN/PROPN/ADJ lemma frequency | none (stdlib only)                          | raw occurrence count                  | reproducing original ATRIUM results       |
+| `yake` *(default)* | YAKE — unsupervised statistical, CPU-only     | `pip install yake`                          | normalised inverse YAKE score, [0, 1] | fast CPU runs, no model download          |
+| `keybert`          | KeyBERT — embedding-based, GPU-accelerated    | `pip install keybert sentence-transformers` | cosine similarity, [0, 1]             | highest semantic quality, GPU recommended |
 
--  `--input_dir`: Input directory (e.g., CoNLL-U files from Step 4.2).
--  `--lang`: Language for KER (`cs` for Czech or `en` for English).
--  `--max-words`: Number words per keyword entry.
--  `--num_keywords`: Number of keywords to extract.
--  `--per_doc_out_dir`: Output directory for per-document CSV files (default: `KW_PER_DOC`).
--  `--output_file`: Output CSV file for the master keywords table (default: `keywords_summary.csv`).
+#### Usage
 
-> [!WARNING]
-> Make sure KER data (tf-idf table per language) is stored in [ker_data](ker_data) 📁 before running this script.
+```bash
+python3 keywords.py -i <input_dir> -m <method> -l <lang> -w <integer> \
+                    -n <integer> -d <output_dir> -o <output_file>.csv
+```
 
-* **Input:** `OUTPUT_DIR/UDP/` (directory with document-specific CoNLL-U files from Step 4.2)
-* **Output 1:** `keywords_summary.csv` (summary table with keywords per document)
-* **Output 2:** `KW_PER_DOC/` (directory with per-document CSV files
+All flags:
 
-This process creates `.csv` table with the columns like `file`, and pairs of `kw-<N>` (N-th keyword)) 
-and `score-<N>` (N-th keyword's score). An example of the summary is available in [keywords_summary.csv](data_samples/keywords_summary_SHORT.csv) 📎.
+| Flag | Long form           | Default                                 | Description                                                                               |
+|------|---------------------|-----------------------------------------|-------------------------------------------------------------------------------------------|
+| `-i` | `--input_dir`       | *(required)*                            | CoNLL-U directory (e.g. `OUTPUT_DIR/UDP/`)                                                |
+| `-m` | `--method`          | `yake`                                  | Backend: `legacy`, `yake`, or `keybert`                                                   |
+| `-l` | `--lang`            | `cs`                                    | Language code for YAKE stopwords (`cs`, `en`, `de`, …). Ignored by `legacy` and `keybert` |
+| `-w` | `--max_words`       | `3`                                     | Maximum words per keyword phrase                                                          |
+| `-n` | `--num_keywords`    | `20`                                    | Number of keywords to extract per document                                                |
+| `-d` | `--per_doc_out_dir` | `KW_PER_DOC`                            | Output directory for per-document CSV files                                               |
+| `-o` | `--output_file`     | `keywords_summary.csv`                  | Master keywords CSV                                                                       |
+|      | `--keybert-model`   | `paraphrase-multilingual-MiniLM-L12-v2` | Sentence-Transformer model name (KeyBERT only)                                            |
+|      | `--no-mmr`          | *(off)*                                 | Disable Maximal Marginal Relevance diversification (KeyBERT only)                         |
+|      | `--diversity`       | `0.5`                                   | MMR diversity parameter, 0 = max relevance → 1 = max diversity (KeyBERT only)             |
+|      | `--workers`         | CPU count                               | Parallel worker processes. Auto-forced to 1 for KeyBERT + GPU                             |
 
-Example of per-document CSV file with keywords: [KW_PER_DOC](data_samples/KW_PER_DOC) 📁.
+#### Example commands
+
+```bash
+# YAKE — Czech, up to 3-word phrases, 20 keywords per document (default)
+python3 keywords.py -i OUTPUT_DIR/UDP -m yake -l cs -w 3 -n 20 \
+        -o keywords_summary.csv -d KW_PER_DOC
+
+# KeyBERT — multilingual model, GPU-accelerated
+python3 keywords.py -i OUTPUT_DIR/UDP -m keybert -w 3 -n 20 \
+        --keybert-model paraphrase-multilingual-MiniLM-L12-v2 \
+        -o keywords_summary.csv -d KW_PER_DOC
+
+# Legacy KER — original ATRIUM lemma-frequency approach, no extra dependencies
+python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
+        -o keywords_summary.csv -d KW_PER_DOC
+```
+
+> [!NOTE]
+> For **KeyBERT with a GPU**, the script automatically forces `--workers 1` to
+> prevent competing CUDA context initialisation across subprocesses.  On CPU,
+> any worker count is safe.
+
+#### Inputs and outputs
+
+* **Input:** `OUTPUT_DIR/UDP/` — directory of per-document CoNLL-U files from Step 2.
+* **Output 1:** `keywords_summary.csv` — master table with keywords per document.
+* **Output 2:** `KW_PER_DOC/` — per-document CSV files.
 
 ```
 KW_PER_DOC/
-├── <docname1>.csv 
-├── <docname2>.csv
+├── <docname1>_keywords.csv
+├── <docname2>_keywords.csv
 └── ...
 ```
 
-Where each file contains **keyword** plus its **score** in two columns sorted by the score in **descending order**.
+Each per-document file contains two columns — **keyword** and **score** — sorted
+by score in descending order.  The master summary uses the same column structure
+as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, …).
 
-| Score Range | Semantic Category     | Mathematical Driver | Interpretation                                |
-|-------------|-----------------------|---------------------|-----------------------------------------------|
-| 0.0         | The **Void**          | IDF ≈ 0             | Stopwords or ubiquitous terms.                |
-| 0.0-0.2     | The **Noise** Floor   | Low TF × Low IDF    | Common words with low local relevance.        |
-| 0.2-1.0     | The **Context** Layer | Mod. TF × Low IDF   | General vocabulary defining the broad topic.  |
-| 1.0-5.0     | The **Topic** Layer   | High TF × Mod. IDF  | Specific nouns and verbs central to the text. |
-| > 5.0       | The **Entity** Layer  | High TF × High IDF  | Rare terms, Neologisms, Named Entities.       |
+#### Score interpretation by backend
 
-The table above specifies how to interpret keyword scores returned by the KER algorithm based on their 
-TF-IDF values computed inside the system.
+**`legacy`** — raw lemma count; higher = more frequent in the document.
+
+| Score range | Interpretation                                           |
+|-------------|----------------------------------------------------------|
+| 1–5         | Common functional nouns, low informativeness             |
+| 5–20        | Topic-representative vocabulary                          |
+| > 20        | Dominant terms, likely named entities or domain headings |
+
+**`yake`** — normalised inverse YAKE score, [0, 1] per document.
+
+| Score range | Semantic category | Interpretation                               |
+|-------------|-------------------|----------------------------------------------|
+| 0.0–0.2     | Noise floor       | Common words, low local relevance            |
+| 0.2–0.6     | Context layer     | General vocabulary defining the broad topic  |
+| 0.6–0.9     | Topic layer       | Specific nouns and verbs central to the text |
+| 0.9–1.0     | Entity layer      | Rare terms, neologisms, named entities       |
+
+**`keybert`** — cosine similarity to document centroid, [0, 1].
+
+| Score range | Interpretation                   |
+|-------------|----------------------------------|
+| < 0.3       | Weakly related phrases           |
+| 0.3–0.6     | Contextually relevant terms      |
+| > 0.6       | Highly representative keyphrases |
 
 > [!NOTE]
-> This step was considered unnecessary for the ATRIUM project
+> This step was considered optional for the ATRIUM project but is recommended
+> for collections where thematic browsing or document-level indexing is needed.
 
 ---
 
@@ -722,6 +788,8 @@ the paradata logger.
 > `<OUTPUT_DIR>/paradata/` and the `processing.log` are the only runtime
 > records worth keeping long-term.
 
+---
+
 ## Acknowledgements 🙏
 
 **For support write to:** lutsai.k@gmail.com responsible for this GitHub repository [^8] 🔗
@@ -729,10 +797,12 @@ the paradata logger.
 - **Developed by** UFAL [^7] 👥
 - **Funded by** ATRIUM [^4]  💰
 - **Shared by** ATRIUM [^4] & UFAL [^7] 🔗
-- **Frameworks used**: 
+- **Frameworks used**:
   - Lindat/CLARIAH-CZ **NameTag 3** API [^6] 🏷
   - Lindat/CLARIAH-CZ **UDPipe 2** API [^5] 🏷
-  - local **KER** (Keyword Extraction and Ranking) [^1] 🏷
+  - local **KER** (original lemma-frequency keyword extraction) [^1] 🏷
+  - **YAKE** (Yet Another Keyword Extractor, CPU statistical keyword extraction) [^10] 🏷
+  - **KeyBERT** (embedding-based keyword extraction, GPU-accelerated) [^11] 🏷
   - UFAL **flexiconv** (format conversion to TEITOK XML) [^9] 🏷
 
 **©️ 2026 UFAL & ATRIUM**
@@ -745,3 +815,5 @@ the paradata logger.
 [^6]: https://lindat.mff.cuni.cz/services/nametag/api-reference.php
 [^8]: https://github.com/ufal/atrium-nlp-enrich
 [^9]: https://github.com/ufal/flexiconv
+[^10]: https://github.com/LIAAD/yake
+[^11]: https://github.com/MaartenGr/KeyBERT
