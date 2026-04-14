@@ -516,7 +516,7 @@ the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHOR
 
 ---
 
-### EXTRA: Extract Keywords (KER / YAKE / KeyBERT)
+## EXTRA: Extract Keywords (KER / YAKE / KeyBERT)
 
 > [!NOTE]
 > This is an optional step in NLP enrichment of your data. It can give a fast
@@ -526,7 +526,7 @@ the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHOR
 
 Extract keywords 🔎 from your documents by running `keywords.py` on a directory of CoNLL-U files produced by Step 2.
 
-#### Configuration Priority
+### Configuration Priority
 
 The keyword extraction script uses a three-tier configuration hierarchy (from highest to lowest priority):
 1. **Command-line flags** (e.g., `-m yake`, `-w 3`) always override everything else.
@@ -538,7 +538,7 @@ This means if you configure your settings in `kw_config.txt`, you can simply run
 python3 keywords.py
 ```
 
-#### Backends
+### Backends
 
 | Flag value         | Method                                        | Dependencies                                | Score semantics                       | Best for                                  |
 |--------------------|-----------------------------------------------|---------------------------------------------|---------------------------------------|-------------------------------------------|
@@ -546,7 +546,10 @@ python3 keywords.py
 | `yake` *(default)* | YAKE — unsupervised statistical, CPU-only     | `pip install yake`                          | normalised inverse YAKE score, [0, 1] | fast CPU runs, no model download          |
 | `keybert`          | KeyBERT — embedding-based, GPU-accelerated    | `pip install keybert sentence-transformers` | cosine similarity, [0, 1]             | highest semantic quality, GPU recommended |
 
-#### Usage (Command Line)
+
+<details>
+
+<summary> Command Line usage (with examples) 👀</summary>
 
 You can override any `kw_config.txt` setting via the command line:
 
@@ -571,29 +574,33 @@ All available flags:
 |      | `--diversity`       | `0.5`                                   | MMR diversity parameter, 0 = max relevance → 1 = max diversity (KeyBERT only)             |
 |      | `--workers`         | `0` *(Auto / CPU count)*                | Parallel worker processes. Auto-forced to 1 for KeyBERT + GPU                             |
 
-#### Example commands
-
-```bash
-# YAKE — Czech, up to 3-word phrases, 20 keywords per document (default)
-python3 keywords.py -i OUTPUT_DIR/UDP -m yake -l cs -w 3 -n 20 \
-        -o keywords_summary.csv -d KW_PER_DOC
-
-# KeyBERT — multilingual model, GPU-accelerated
-python3 keywords.py -i OUTPUT_DIR/UDP -m keybert -w 3 -n 20 \
-        --keybert-model paraphrase-multilingual-MiniLM-L12-v2 \
-        -o keywords_summary.csv -d KW_PER_DOC
-
-# Legacy KER — original ATRIUM lemma-frequency approach, no extra dependencies
-python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
-        -o keywords_summary.csv -d KW_PER_DOC
-```
-
-> [!NOTE]
+> [!WARNING]
 > For **KeyBERT with a GPU**, the script automatically forces `--workers 1` to
 > prevent competing CUDA context initialisation across subprocesses.  On CPU,
 > any worker count is safe.
 
-#### Inputs and outputs
+Examples:
+
+**YAKE** — Czech, up to 3-word phrases, 20 keywords per document (default)
+```bash
+python3 keywords.py -i OUTPUT_DIR/UDP -m yake -l cs -w 3 -n 20 \
+        -o keywords_summary.csv -d KW_PER_DOC
+```
+ **KeyBERT** — multilingual model, GPU-accelerated
+```bash
+python3 keywords.py -i OUTPUT_DIR/UDP -m keybert -w 3 -n 20 \
+        --keybert-model paraphrase-multilingual-MiniLM-L12-v2 \
+        -o keywords_summary.csv -d KW_PER_DOC
+```
+**Legacy KER** — (English/Czech) original ATRIUM lemma-frequency approach, no extra dependencies
+```bash
+python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
+        -o keywords_summary.csv -d KW_PER_DOC
+```
+
+</details>
+
+### Inputs and outputs
 
 * **Input:** Directory of per-document CoNLL-U files from Step 2.
 * **Output 1:** Master table with keywords per document (e.g., `keywords_summary.csv`).
@@ -610,10 +617,13 @@ Each per-document file contains two columns — **keyword** and **score** — so
 by score in descending order.  The master summary uses the same column structure
 as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, …).
 
-#### Score interpretation by backend
+### Score interpretation by backend
 
 **`legacy`** — raw lemma count; higher = more frequent in the document. Examples in directory: [KW_PER_DOC_L](data_samples/KW_PER_DOC_L) 📂 and summary file
 [kw_summary_l.csv](data_samples/kw_summary_l.csv) 📎.
+
+<details>
+<summary>KER (Legacy) scores interpretation 👀</summary>
 
 | Score range | Interpretation                                           |
 |-------------|----------------------------------------------------------|
@@ -621,8 +631,13 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 5–20        | Topic-representative vocabulary                          |
 | > 20        | Dominant terms, likely named entities or domain headings |
 
+</details>
+
 **`yake`** — normalised inverse YAKE score, [0, 1] per document. Examples in directory: [KW_PER_DOC_Y](data_samples/KW_PER_DOC_Y) 📂 and summary file
 [kw_summary_y.csv](data_samples/kw_summary_y.csv) 📎.
+
+<details>
+<summary>YAKE) scores interpretation 👀</summary>
 
 | Score range | Semantic category | Interpretation                               |
 |-------------|-------------------|----------------------------------------------|
@@ -631,14 +646,21 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 0.6–0.9     | Topic layer       | Specific nouns and verbs central to the text |
 | 0.9–1.0     | Entity layer      | Rare terms, neologisms, named entities       |
 
+</details>
+
 **`keybert`** — cosine similarity to document centroid, [0, 1]. Examples in directory: [KW_PER_DOC_KB](data_samples/KW_PER_DOC_KB) 📂 and summary file
 [kw_summary_kb.csv](data_samples/kw_summary_kb.csv) 📎.
+
+<details>
+<summary>KeyBERT scores interpretation 👀</summary>
 
 | Score range | Interpretation                   |
 |-------------|----------------------------------|
 | < 0.3       | Weakly related phrases           |
 | 0.3–0.6     | Contextually relevant terms      |
 | > 0.6       | Highly representative keyphrases |
+
+</details>
 
 ---
 
