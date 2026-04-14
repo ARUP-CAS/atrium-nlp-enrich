@@ -514,6 +514,7 @@ statistics across all processed pages.
 If you do not plan to rerun any part of the pipeline, you can also delete 
 the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎.
 
+---
 
 ### EXTRA: Extract Keywords (KER / YAKE / KeyBERT)
 
@@ -523,8 +524,19 @@ the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHOR
 > (output of Step 2) are available. Three extraction backends are provided;
 > choose the one that best fits your environment and quality requirements.
 
-Extract keywords 🔎 from your documents by running [keywords.py](keywords.py) 📎
-on a directory of CoNLL-U files produced by Step 2.
+Extract keywords 🔎 from your documents by running `keywords.py` on a directory of CoNLL-U files produced by Step 2.
+
+#### Configuration Priority
+
+The keyword extraction script uses a three-tier configuration hierarchy (from highest to lowest priority):
+1. **Command-line flags** (e.g., `-m yake`, `-w 3`) always override everything else.
+2. **`kw_config.txt`** (the `[DEFAULTS]` section) is read automatically if placed next to the script.
+3. **Hardcoded fallbacks** are used if no config file or flags are provided.
+
+This means if you configure your settings in `kw_config.txt`, you can simply run:
+```bash
+python3 keywords.py
+```
 
 #### Backends
 
@@ -534,28 +546,30 @@ on a directory of CoNLL-U files produced by Step 2.
 | `yake` *(default)* | YAKE — unsupervised statistical, CPU-only     | `pip install yake`                          | normalised inverse YAKE score, [0, 1] | fast CPU runs, no model download          |
 | `keybert`          | KeyBERT — embedding-based, GPU-accelerated    | `pip install keybert sentence-transformers` | cosine similarity, [0, 1]             | highest semantic quality, GPU recommended |
 
-#### Usage
+#### Usage (Command Line)
+
+You can override any `kw_config.txt` setting via the command line:
 
 ```bash
 python3 keywords.py -i <input_dir> -m <method> -l <lang> -w <integer> \
                     -n <integer> -d <output_dir> -o <output_file>.csv
 ```
 
-All flags:
+All available flags:
 
-| Flag | Long form           | Default                                 | Description                                                                               |
+| Flag | Long form           | Default in `kw_config.txt`              | Description                                                                               |
 |------|---------------------|-----------------------------------------|-------------------------------------------------------------------------------------------|
-| `-i` | `--input_dir`       | *(required)*                            | CoNLL-U directory (e.g. `OUTPUT_DIR/UDP/`)                                                |
+| `-i` | `--input_dir`       | `data_samples/UDP`                      | CoNLL-U directory to process                                                              |
 | `-m` | `--method`          | `yake`                                  | Backend: `legacy`, `yake`, or `keybert`                                                   |
 | `-l` | `--lang`            | `cs`                                    | Language code for YAKE stopwords (`cs`, `en`, `de`, …). Ignored by `legacy` and `keybert` |
-| `-w` | `--max_words`       | `3`                                     | Maximum words per keyword phrase                                                          |
+| `-w` | `--max_words`       | `3`                                     | Maximum words per keyword phrase (n-gram upper bound)                                     |
 | `-n` | `--num_keywords`    | `20`                                    | Number of keywords to extract per document                                                |
-| `-d` | `--per_doc_out_dir` | `KW_PER_DOC`                            | Output directory for per-document CSV files                                               |
+| `-d` | `--per_doc_out_dir` | `data_samples/KW_PER_DOC`               | Output directory for per-document CSV files                                               |
 | `-o` | `--output_file`     | `keywords_summary.csv`                  | Master keywords CSV                                                                       |
 |      | `--keybert-model`   | `paraphrase-multilingual-MiniLM-L12-v2` | Sentence-Transformer model name (KeyBERT only)                                            |
-|      | `--no-mmr`          | *(off)*                                 | Disable Maximal Marginal Relevance diversification (KeyBERT only)                         |
+|      | `--no-mmr`          | *(False)*                               | Disable Maximal Marginal Relevance diversification (KeyBERT only)                         |
 |      | `--diversity`       | `0.5`                                   | MMR diversity parameter, 0 = max relevance → 1 = max diversity (KeyBERT only)             |
-|      | `--workers`         | CPU count                               | Parallel worker processes. Auto-forced to 1 for KeyBERT + GPU                             |
+|      | `--workers`         | `0` *(Auto / CPU count)*                | Parallel worker processes. Auto-forced to 1 for KeyBERT + GPU                             |
 
 #### Example commands
 
@@ -581,9 +595,9 @@ python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
 
 #### Inputs and outputs
 
-* **Input:** `OUTPUT_DIR/UDP/` — directory of per-document CoNLL-U files from Step 2.
-* **Output 1:** `keywords_summary.csv` — master table with keywords per document.
-* **Output 2:** `KW_PER_DOC/` — per-document CSV files.
+* **Input:** Directory of per-document CoNLL-U files from Step 2.
+* **Output 1:** Master table with keywords per document (e.g., `keywords_summary.csv`).
+* **Output 2:** Per-document CSV files (e.g., `KW_PER_DOC/`).
 
 ```
 KW_PER_DOC/
@@ -598,7 +612,8 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 
 #### Score interpretation by backend
 
-**`legacy`** — raw lemma count; higher = more frequent in the document.
+**`legacy`** — raw lemma count; higher = more frequent in the document. Examples in directory: [KW_PER_DOC_L](data_samples/KW_PER_DOC_L) 📂 and summary file
+[kw_summary_l.csv](data_samples/kw_summary_l.csv) 📎.
 
 | Score range | Interpretation                                           |
 |-------------|----------------------------------------------------------|
@@ -606,7 +621,8 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 5–20        | Topic-representative vocabulary                          |
 | > 20        | Dominant terms, likely named entities or domain headings |
 
-**`yake`** — normalised inverse YAKE score, [0, 1] per document.
+**`yake`** — normalised inverse YAKE score, [0, 1] per document. Examples in directory: [KW_PER_DOC_Y](data_samples/KW_PER_DOC_Y) 📂 and summary file
+[kw_summary_y.csv](data_samples/kw_summary_y.csv) 📎.
 
 | Score range | Semantic category | Interpretation                               |
 |-------------|-------------------|----------------------------------------------|
@@ -615,17 +631,14 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 0.6–0.9     | Topic layer       | Specific nouns and verbs central to the text |
 | 0.9–1.0     | Entity layer      | Rare terms, neologisms, named entities       |
 
-**`keybert`** — cosine similarity to document centroid, [0, 1].
+**`keybert`** — cosine similarity to document centroid, [0, 1]. Examples in directory: [KW_PER_DOC_KB](data_samples/KW_PER_DOC_KB) 📂 and summary file
+[kw_summary_kb.csv](data_samples/kw_summary_kb.csv) 📎.
 
 | Score range | Interpretation                   |
 |-------------|----------------------------------|
 | < 0.3       | Weakly related phrases           |
 | 0.3–0.6     | Contextually relevant terms      |
 | > 0.6       | Highly representative keyphrases |
-
-> [!NOTE]
-> This step was considered optional for the ATRIUM project but is recommended
-> for collections where thematic browsing or document-level indexing is needed.
 
 ---
 
