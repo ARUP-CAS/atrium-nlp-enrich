@@ -12,7 +12,7 @@ Three extraction backends are supported, selected via ``--method``:
              CPU-only.  Works on reconstructed surface-form text.
              YAKE raw scores are lower-is-better; they are inverted and
              normalised per-document so the output uses a consistent
-             "higher = more relevant" convention.
+             "higher = more relevant" convention across all backends.
              Requires:  pip install yake
 
     keybert  KeyBERT — embedding-based, GPU-accelerated when available.
@@ -22,6 +22,11 @@ Three extraction backends are supported, selected via ``--method``:
              Requires:  pip install keybert sentence-transformers
              Optional:  pip install torch   (enables CUDA GPU acceleration)
 
+Configuration priority (highest → lowest):
+    1. Command-line flags  (e.g. --method yake)
+    2. kw_config.txt       ([DEFAULTS] section, looked up next to this script)
+    3. Hardcoded fallbacks (defined immediately below the imports)
+
 All three backends produce identical output schemas:
     Master CSV  : document_id, kw-1, score-1, kw-2, score-2, …
     Per-doc CSV : keyword, score   (sorted descending by score)
@@ -30,6 +35,7 @@ All three backends produce identical output schemas:
 from __future__ import annotations
 
 import argparse
+import configparser
 import csv
 import multiprocessing
 import os
@@ -44,13 +50,60 @@ from typing import List, Optional, Tuple
 from atrium_paradata import ParadataLogger
 
 # ── type alias ────────────────────────────────────────────────────────────────
+# A keyword list is a sequence of (phrase, score) pairs sorted best-first.
 Keywords = List[Tuple[str, float]]
 
-# ── defaults ──────────────────────────────────────────────────────────────────
-DEFAULT_INDIVIDUAL_OUTPUT_DIR = "data_samples/KW_PER_DOC"
-DEFAULT_INPUT_CONLLU_DIR      = "data_samples/UDP"
-DEFAULT_METHOD                = "yake"
-DEFAULT_KEYBERT_MODEL         = "paraphrase-multilingual-MiniLM-L12-v2"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Configuration loading
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Defaults are first set to hardcoded values, then optionally overridden by
+# kw_config.txt when that file exists next to this script.  The argparse
+# layer (in main()) then allows any individual setting to be further
+# overridden at the command line.  This three-tier hierarchy means:
+#   • Running the script with no flags uses kw_config.txt values.
+#   • Explicit CLI flags always win, regardless of the config file.
+#   • Removing kw_config.txt falls back to the hardcoded values below.
+
+# ── hardcoded fallbacks ───────────────────────────────────────────────────────
+DEFAULT_INPUT_DIR       = "data_samples/UDP"
+DEFAULT_OUTPUT_FILE     = "keywords_summary.csv"
+DEFAULT_PER_DOC_OUT_DIR = "data_samples/KW_PER_DOC"
+DEFAULT_METHOD          = "yake"
+DEFAULT_NUM_KEYWORDS    = 20
+DEFAULT_LANG            = "cs"
+DEFAULT_MAX_WORDS       = 3
+DEFAULT_KEYBERT_MODEL   = "paraphrase-multilingual-MiniLM-L12-v2"
+DEFAULT_NO_MMR          = False
+DEFAULT_DIVERSITY       = 0.5
+DEFAULT_WORKERS         = multiprocessing.cpu_count()   # one worker per logical CPU
+
+# ── config file override ──────────────────────────────────────────────────────
+_config      = configparser.ConfigParser()
+_config_file = Path(__file__).parent / "kw_config.txt"   # always relative to this script
+
+if _config_file.exists():
+    _config.read(_config_file)
+    if "DEFAULTS" in _config:
+        _sec = _config["DEFAULTS"]
+        # String settings — fall back to the hardcoded default if key is absent.
+        DEFAULT_INPUT_DIR       = _sec.get("INPUT_DIR",       DEFAULT_INPUT_DIR)
+        DEFAULT_OUTPUT_FILE     = _sec.get("OUTPUT_FILE",     DEFAULT_OUTPUT_FILE)
+        DEFAULT_PER_DOC_OUT_DIR = _sec.get("PER_DOC_OUT_DIR", DEFAULT_PER_DOC_OUT_DIR)
+        DEFAULT_METHOD          = _sec.get("METHOD",          DEFAULT_METHOD)
+        DEFAULT_LANG            = _sec.get("LANG",            DEFAULT_LANG)
+        DEFAULT_KEYBERT_MODEL   = _sec.get("KEYBERT_MODEL",   DEFAULT_KEYBERT_MODEL)
+        # Typed settings — configparser handles the cast; fallback on bad values.
+        DEFAULT_NUM_KEYWORDS    = _sec.getint("NUM_KEYWORDS", DEFAULT_NUM_KEYWORDS)
+        DEFAULT_MAX_WORDS       = _sec.getint("MAX_WORDS",    DEFAULT_MAX_WORDS)
+        DEFAULT_NO_MMR          = _sec.getboolean("NO_MMR",   DEFAULT_NO_MMR)
+        DEFAULT_DIVERSITY       = _sec.getfloat("DIVERSITY",  DEFAULT_DIVERSITY)
+        # WORKERS = 0 is a sentinel meaning "use cpu_count()" — only
+        # override DEFAULT_WORKERS when a positive value is set in the file.
+        _w = _sec.getint("WORKERS", 0)
+        if _w > 0:
+            DEFAULT_WORKERS = _w
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -58,11 +111,34 @@ DEFAULT_KEYBERT_MODEL         = "paraphrase-multilingual-MiniLM-L12-v2"
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _extract_surface_text(file_path: str) -> str:
-    """Reconstruct plain text from a CoNLL-U file, respecting SpaceAfter=No.
+    """Reconstruct a plain-text string from a CoNLL-U file.
 
-    Used by the YAKE and KeyBERT backends, which operate on surface-form text
-    rather than lemmas.  The reconstructed string closely mirrors the original
-    OCR output, which is important for n-gram quality.
+    Iterates over every token line and concatenates the surface form (column 1).
+    Inter-token spacing follows the ``SpaceAfter=No`` convention in the MISC
+    field (column 9): when the annotation is present the next token is joined
+    directly to the previous one without a space, reproducing the original
+    OCR surface exactly.
+
+    Multi-word tokens (IDs like ``1-2``) and empty nodes (IDs like ``1.1``)
+    are skipped because they are either covered by their constituent tokens or
+    represent syntactic nodes not present in the original text.
+
+    Comment lines (starting with ``#``) and blank sentence-separator lines
+    are ignored throughout.
+
+    Parameters
+    ----------
+    file_path:
+        Absolute or relative path to the CoNLL-U file.
+
+    Returns
+    -------
+    str
+        The reconstructed surface-form text, stripped of leading/trailing
+        whitespace.  Returns an empty string if the file cannot be read or
+        contains no usable tokens.
+
+    Used by: _extract_yake, _extract_keybert
     """
     parts: list[str] = []
     try:
@@ -75,10 +151,11 @@ def _extract_surface_text(file_path: str) -> str:
                 if len(cols) < 10:
                     continue
                 tok_id = cols[0]
-                if "-" in tok_id or "." in tok_id:   # skip MWT / empty nodes
+                if "-" in tok_id or "." in tok_id:   # MWT / empty node — skip
                     continue
                 form  = cols[1]
                 misc  = cols[9]
+                # Append a trailing space unless the annotation says otherwise.
                 space = "" if "SpaceAfter=No" in misc else " "
                 parts.append(form + space)
     except Exception as exc:
@@ -88,7 +165,34 @@ def _extract_surface_text(file_path: str) -> str:
 
 
 def _extract_lemmas(file_path: str) -> list[str]:
-    """Extract NOUN/PROPN/ADJ lemmas for the legacy frequency backend."""
+    """Extract content-word lemmas from a CoNLL-U file for frequency counting.
+
+    Collects the lowercased lemma (column 2) of every token whose Universal
+    POS tag (column 3) is NOUN, PROPN, or ADJ.  Tokens are further filtered
+    to exclude:
+        • the placeholder value ``_`` (absent lemma),
+        • single-character strings (typically punctuation or abbreviations
+          that slipped through the POS filter),
+        • strings containing non-alphabetic characters (digits, hyphens, etc.)
+          which are unlikely to be informative standalone keywords.
+
+    Multi-word tokens and empty nodes are skipped by the same ID-pattern
+    check used in ``_extract_surface_text``.
+
+    Parameters
+    ----------
+    file_path:
+        Absolute or relative path to the CoNLL-U file.
+
+    Returns
+    -------
+    list[str]
+        Flat list of valid lemma strings (lower-cased), in document order,
+        with repetitions preserved so that ``Counter`` can produce accurate
+        frequency counts.  Returns an empty list on read error.
+
+    Used by: _extract_legacy
+    """
     valid_pos = {"NOUN", "PROPN", "ADJ"}
     lemmas: list[str] = []
     try:
@@ -125,12 +229,35 @@ def _extract_legacy(
 ) -> Keywords:
     """Original KER approach: NOUN/PROPN/ADJ lemma frequency from UDPipe output.
 
-    No external dependencies required.  Score is the raw occurrence count of
-    each lemma within the document.  To reproduce the exact behaviour of the
-    original pipeline, pass ``--method legacy``.
+    Counts how often each content-word lemma appears in the document and
+    returns the top-N most frequent ones.  This is the approach used in the
+    original ATRIUM pipeline and is retained for reproducibility.
+
+    No external dependencies are required beyond the Python standard library.
+
+    Score semantics:
+        Raw occurrence count.  Higher = more frequent in this document.
+        Scores are not normalised across documents; use only for within-document
+        ranking or when comparing documents of similar length.
+
+    Extra keyword arguments (``**_``) are silently ignored so that the
+    backend can be called through the unified ``extract_keywords`` dispatcher
+    without special-casing.
+
+    Parameters
+    ----------
+    file_path:
+        Path to the CoNLL-U file.
+    num_keywords:
+        Maximum number of keywords to return.
+
+    Returns
+    -------
+    Keywords
+        List of (lemma, count) pairs, sorted by count descending.
     """
-    lemmas  = _extract_lemmas(file_path)
-    counts  = Counter(lemmas)
+    lemmas = _extract_lemmas(file_path)
+    counts = Counter(lemmas)
     return [(lemma, float(cnt))
             for lemma, cnt in counts.most_common(num_keywords)]
 
@@ -140,6 +267,22 @@ def _extract_legacy(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _load_yake():
+    """Import and return the ``yake`` module, exiting with a clear message if absent.
+
+    Deferred import keeps the module loadable even when ``yake`` is not
+    installed, which lets users run the ``legacy`` backend without any
+    additional packages.
+
+    Returns
+    -------
+    module
+        The imported ``yake`` module.
+
+    Raises
+    ------
+    SystemExit
+        If ``yake`` is not installed.
+    """
     try:
         import yake  # type: ignore
         return yake
@@ -158,28 +301,61 @@ def _extract_yake(
     max_words: int = 3,
     **_,
 ) -> Keywords:
-    """YAKE unsupervised keyword extraction (CPU-only, no model download needed).
+    """YAKE unsupervised statistical keyword extraction (CPU-only).
 
-    YAKE scores are lower-is-better; they are inverted and normalised to the
-    [0, 1] range per document so the output column uses the "higher = more
-    relevant" convention shared with the other backends.
+    YAKE scores n-gram candidates using five statistical features — casing,
+    word position, word frequency, word relatedness to context, and word
+    different sentences — without any pre-trained model.  It is therefore
+    fast, language-agnostic (given a matching stopword list), and usable
+    offline.
 
-    The language code (``--lang``) is passed directly to YAKE's stopword list
-    selector.  Supported codes include ``cs``, ``en``, ``de``, ``fr``, ``pt``.
+    The raw YAKE score is *lower = more relevant* (analogous to a cost or
+    distance).  To align with the "higher = better" convention used by the
+    other backends this function:
+        1. Inverts each score:  inv = 1 / (raw + ε)
+        2. Normalises per-document: final = inv / max(inv)
+    The resulting scores are in (0, 1] with 1.0 assigned to the best phrase.
+
+    Score semantics (after inversion + normalisation):
+        ≈ 1.0   Best candidate for this document
+        0.6–0.9 Topic-representative vocabulary
+        0.2–0.6 General contextual terms
+        < 0.2   Low-informativeness / noisy candidates
+
+    Extra keyword arguments (``**_``) are silently ignored.
+
+    Parameters
+    ----------
+    file_path:
+        Path to the CoNLL-U file.
+    num_keywords:
+        Maximum number of phrases to return.
+    lang:
+        BCP-47 language code used to select YAKE's built-in stopword list.
+        Supported values include ``cs``, ``en``, ``de``, ``fr``, ``pt``.
+        Passing an unsupported code silently disables stopword filtering.
+    max_words:
+        Upper bound on n-gram length (e.g. 3 allows up to trigrams).
+
+    Returns
+    -------
+    Keywords
+        List of (phrase, normalised_score) pairs, best first.
+        Returns an empty list if the file is unreadable or YAKE raises.
     """
-    yake   = _load_yake()
-    text   = _extract_surface_text(file_path)
+    yake = _load_yake()
+    text = _extract_surface_text(file_path)
     if not text:
         return []
 
     extractor = yake.KeywordExtractor(
-        lan=lang,
-        n=max_words,
-        dedupLim=0.9,
-        dedupFunc="seqm",
-        windowsSize=1,
-        top=num_keywords,
-        features=None,
+        lan=lang,           # stopword list language
+        n=max_words,        # max n-gram length
+        dedupLim=0.9,       # deduplication similarity threshold (Levenshtein)
+        dedupFunc="seqm",   # sequence-matcher deduplication function
+        windowsSize=1,      # co-occurrence window size (in sentences)
+        top=num_keywords,   # candidates to return before inversion
+        features=None,      # use all five default statistical features
     )
     try:
         raw_kws = extractor.extract_keywords(text)
@@ -188,6 +364,7 @@ def _extract_yake(
         return []
 
     # Invert: lower YAKE score → higher relevance.
+    # ε = 1e-10 prevents division-by-zero for near-perfect candidates.
     inverted = [(kw, 1.0 / (score + 1e-10)) for kw, score in raw_kws]
     if inverted:
         max_inv  = max(s for _, s in inverted)
@@ -200,18 +377,53 @@ def _extract_yake(
 # Backend: KeyBERT (GPU-accelerated, embedding-based)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Module-level singleton — loaded once per worker process, not once per document.
-_keybert_model_instance: object          = None
+# Module-level singleton — the model is expensive to initialise (download +
+# load weights).  Storing it here means each worker *process* initialises it
+# exactly once, regardless of how many documents that process handles.
+_keybert_model_instance: object           = None
 _keybert_model_name_loaded: Optional[str] = None
 
 
 def _get_keybert_model(model_name: str):
-    """Return (and cache) a KeyBERT model instance for the current process."""
+    """Return a cached KeyBERT model, loading it on first call per process.
+
+    Uses process-level module globals so that the model is loaded at most once
+    per worker process across all document tasks assigned to that worker.
+    If the requested model name changes mid-run (unusual but possible if
+    called programmatically), the old instance is discarded and a new one is
+    loaded.
+
+    Device selection:
+        • CUDA  — when ``torch`` is installed and a CUDA-capable GPU is found.
+        • CPU   — otherwise (includes MPS on Apple Silicon via sentence-
+                  transformers' own fallback; no special handling needed here).
+
+    Parameters
+    ----------
+    model_name:
+        A Sentence-Transformers model identifier, e.g.
+        ``"paraphrase-multilingual-MiniLM-L12-v2"``.
+        The model is downloaded from HuggingFace Hub on first use and then
+        cached locally by ``sentence-transformers``.
+
+    Returns
+    -------
+    KeyBERT
+        Initialised KeyBERT instance wrapping the loaded SentenceTransformer.
+
+    Raises
+    ------
+    SystemExit
+        If ``keybert`` / ``sentence-transformers`` are not installed, or if
+        the model cannot be loaded (e.g. network error on first download).
+    """
     global _keybert_model_instance, _keybert_model_name_loaded
 
+    # Fast path: return the cached instance if the model name matches.
     if _keybert_model_instance is not None and _keybert_model_name_loaded == model_name:
         return _keybert_model_instance
 
+    # Dependency check — deferred import keeps the script usable without KeyBERT.
     try:
         from keybert import KeyBERT  # type: ignore
     except ImportError:
@@ -222,10 +434,12 @@ def _get_keybert_model(model_name: str):
         )
         sys.exit(1)
 
+    # Determine compute device.
     try:
         import torch  # type: ignore
         device = "cuda" if torch.cuda.is_available() else "cpu"
     except ImportError:
+        # torch is optional; sentence-transformers handles CPU on its own.
         device = "cpu"
 
     tag = "CUDA" if device == "cuda" else "CPU"
@@ -237,8 +451,10 @@ def _get_keybert_model(model_name: str):
         _keybert_model_instance    = KeyBERT(model=st_model)
         _keybert_model_name_loaded = model_name
     except Exception as exc:
-        print(f"[Error] Failed to load KeyBERT model '{model_name}': {exc}",
-              file=sys.stderr)
+        print(
+            f"[Error] Failed to load KeyBERT model '{model_name}': {exc}",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     return _keybert_model_instance
@@ -255,16 +471,52 @@ def _extract_keybert(
 ) -> Keywords:
     """KeyBERT embedding-based keyword extraction, GPU-accelerated when available.
 
-    Uses Maximal Marginal Relevance (MMR, enabled by default) to balance
-    relevance against phrase redundancy.  This is especially beneficial for
-    long OCR documents that repeat domain vocabulary heavily.
+    Encodes the full document and all candidate n-gram phrases using a
+    Sentence-Transformer model, then ranks phrases by cosine similarity to
+    the document centroid embedding.
 
-    Score is cosine similarity between the candidate phrase embedding and the
-    document centroid embedding, in [0, 1].
+    When MMR (Maximal Marginal Relevance) is enabled (the default), KeyBERT
+    iteratively selects phrases that are both relevant to the document *and*
+    dissimilar to already-selected phrases, reducing redundancy.  This is
+    especially useful for long OCR documents that heavily repeat domain
+    vocabulary.
 
-    The default model (``paraphrase-multilingual-MiniLM-L12-v2``) is
-    multilingual and works well for Czech, Slovak, German, and English
-    collections.  For English-only data, ``all-MiniLM-L6-v2`` is faster.
+    The default model ``paraphrase-multilingual-MiniLM-L12-v2`` covers 50+
+    languages including Czech, Slovak, German, and English.  For English-only
+    collections, ``all-MiniLM-L6-v2`` is faster and may yield slightly
+    higher English quality.
+
+    Score semantics:
+        Cosine similarity to the document centroid embedding, in [0, 1].
+        Higher = more representative of the document's overall content.
+        Scores are comparable across documents of different lengths.
+
+    Extra keyword arguments (``**_``) are silently ignored.
+
+    Parameters
+    ----------
+    file_path:
+        Path to the CoNLL-U file.
+    num_keywords:
+        Maximum number of phrases to return.
+    max_words:
+        Upper bound on n-gram length passed to ``keyphrase_ngram_range``.
+    keybert_model:
+        Sentence-Transformer model identifier.  Loaded and cached via
+        ``_get_keybert_model``.
+    use_mmr:
+        If ``True`` (default), apply Maximal Marginal Relevance to diversify
+        results.  Set to ``False`` to return the top-N purely by similarity.
+    diversity:
+        MMR diversity parameter in [0, 1].  0.0 = maximise relevance only
+        (equivalent to plain cosine ranking); 1.0 = maximise diversity only.
+        The default of 0.5 balances both objectives.
+
+    Returns
+    -------
+    Keywords
+        List of (phrase, cosine_similarity) pairs, best first.
+        Returns an empty list if the file is unreadable or KeyBERT raises.
     """
     text = _extract_surface_text(file_path)
     if not text:
@@ -274,8 +526,9 @@ def _extract_keybert(
     try:
         results = kw_model.extract_keywords(
             text,
-            keyphrase_ngram_range=(1, max_words),
-            stop_words=None,   # multilingual models handle their own context weighting
+            keyphrase_ngram_range=(1, max_words),   # unigrams up to max_words-grams
+            stop_words=None,    # multilingual models provide their own context
+                                # weighting; explicit stopwords are not needed
             use_mmr=use_mmr,
             diversity=diversity,
             top_n=num_keywords,
@@ -288,10 +541,12 @@ def _extract_keybert(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Backend registry
+# Backend registry and public dispatcher
 # ═══════════════════════════════════════════════════════════════════════════════
 
-_BACKENDS = {
+# Maps the --method CLI flag value to the corresponding backend function.
+# Adding a new backend only requires registering it here.
+_BACKENDS: dict = {
     "legacy":  _extract_legacy,
     "yake":    _extract_yake,
     "keybert": _extract_keybert,
@@ -304,7 +559,36 @@ def extract_keywords(
     num_keywords: int,
     **kwargs,
 ) -> Keywords:
-    """Dispatch to the requested extraction backend."""
+    """Dispatch a keyword-extraction request to the specified backend.
+
+    This is the single public entry point for extraction; all three backends
+    share the same calling convention so callers do not need to import
+    individual backend functions.
+
+    Parameters
+    ----------
+    file_path:
+        Path to the CoNLL-U file to process.
+    method:
+        Backend identifier: ``"legacy"``, ``"yake"``, or ``"keybert"``.
+    num_keywords:
+        Maximum number of keywords/phrases to return.
+    **kwargs:
+        Additional parameters forwarded verbatim to the backend function.
+        Each backend documents which extra keys it consumes; unknown keys
+        are silently ignored via ``**_`` in the backend signatures.
+
+    Returns
+    -------
+    Keywords
+        Sorted (phrase, score) list from the chosen backend, or an empty list
+        on extraction failure.
+
+    Raises
+    ------
+    ValueError
+        If ``method`` is not one of the registered backend names.
+    """
     fn = _BACKENDS.get(method)
     if fn is None:
         raise ValueError(
@@ -319,22 +603,51 @@ def extract_keywords(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _process_document_task(task: tuple) -> tuple[str, Keywords]:
-    """Extract keywords for one document and write its per-document CSV."""
+    """Extract keywords for one document and write its per-document CSV.
+
+    This function is the unit of work submitted to each parallel worker
+    process.  It intentionally receives all parameters as a plain tuple (not
+    keyword arguments or a dataclass) because ``ProcessPoolExecutor`` pickles
+    arguments when using the ``spawn`` start method; a flat tuple is fast to
+    pickle and avoids issues with unpicklable closures or lambda functions.
+
+    Workflow:
+        1. Unpack the task tuple into named variables.
+        2. Derive the document ID from the filename stem.
+        3. Call ``extract_keywords`` with the requested backend.
+        4. Write a two-column per-document CSV (keyword, score) if an output
+           directory was provided and at least one keyword was found.
+        5. Return (doc_id, keywords) so the main process can append the row
+           to the master summary CSV.
+
+    Parameters
+    ----------
+    task : tuple
+        A 9-element tuple produced by ``main()``:
+        ``(file_path, method, num_keywords, indiv_out_dir,
+           lang, max_words, keybert_model, use_mmr, diversity)``
+
+    Returns
+    -------
+    tuple[str, Keywords]
+        ``(doc_id, keywords)`` — the document stem and the ranked keyword list.
+    """
     (file_path, method, num_keywords, indiv_out_dir,
      lang, max_words, keybert_model, use_mmr, diversity) = task
 
     doc_id   = Path(file_path).stem
     keywords = extract_keywords(
         file_path,
-        method       = method,
-        num_keywords = num_keywords,
-        lang         = lang,
-        max_words    = max_words,
-        keybert_model= keybert_model,
-        use_mmr      = use_mmr,
-        diversity    = diversity,
+        method        = method,
+        num_keywords  = num_keywords,
+        lang          = lang,
+        max_words     = max_words,
+        keybert_model = keybert_model,
+        use_mmr       = use_mmr,
+        diversity     = diversity,
     )
 
+    # Write the per-document CSV only when there are results to record.
     if keywords and indiv_out_dir:
         out_csv = Path(indiv_out_dir) / f"{doc_id}_keywords.csv"
         try:
@@ -358,14 +671,38 @@ def _write_csv_row(
     keywords: Keywords,
     num_keywords: int,
 ) -> None:
-    """Append one document's keywords as a single row to the master CSV."""
+    """Append one document's keywords as a single wide row to the master CSV.
+
+    The master CSV uses the schema:
+        document_id, kw-1, score-1, kw-2, score-2, … kw-N, score-N
+
+    If fewer than ``num_keywords`` phrases were found (e.g. a very short
+    document), the trailing columns are filled with empty strings so that
+    every row has the same width and downstream tools can parse the CSV
+    reliably without raising index errors.
+
+    The file is opened in append mode so this function is safe to call
+    from the main process loop after each future completes.
+
+    Parameters
+    ----------
+    output_file:
+        Path to the master summary CSV (must already exist with a header row).
+    doc_id:
+        Document identifier written to the first column.
+    keywords:
+        Ranked (phrase, score) list from the extraction backend.
+    num_keywords:
+        Total number of kw-N / score-N column pairs in the file; used to
+        pad short results to the correct row width.
+    """
     row: list = [doc_id]
     for i in range(num_keywords):
         if i < len(keywords):
             kw, score = keywords[i]
             row.extend([kw, score])
         else:
-            row.extend(["", ""])
+            row.extend(["", ""])    # pad missing slots with empty strings
     with open(output_file, "a", encoding="utf-8", newline="") as fh:
         csv.writer(fh).writerow(row)
 
@@ -373,10 +710,28 @@ def _write_csv_row(
 def _sort_csv_file(file_path: str) -> None:
     """Sort the master CSV alphabetically by document_id (column 0).
 
-    Tries pandas → POSIX external sort → in-memory sort, in that order, to
-    avoid OOM errors on very large collections.
+    Sorting makes the file easier to diff between pipeline runs and ensures
+    a reproducible row order regardless of the order futures complete.
+
+    Three strategies are tried in order of efficiency:
+
+    1. **pandas** — in-memory sort using a C-backed DataFrame; fast for files
+       that fit comfortably in RAM.
+    2. **POSIX external sort** — invokes the system ``sort`` utility which
+       performs out-of-core merge sort; handles files larger than RAM on Linux/
+       macOS without any extra Python dependencies.
+    3. **In-memory Python sort** — stdlib-only fallback using ``csv.reader``
+       and the built-in ``sorted``; works on all platforms but may be slow or
+       raise MemoryError on very large files.
+
+    The sorted result is written back to the same path in all three cases.
+
+    Parameters
+    ----------
+    file_path:
+        Path to the master CSV file to sort in place.
     """
-    # 1. pandas (fastest, handles large files efficiently)
+    # Strategy 1: pandas (fastest for moderate file sizes)
     try:
         import pandas as pd  # type: ignore
         df = pd.read_csv(file_path)
@@ -386,10 +741,11 @@ def _sort_csv_file(file_path: str) -> None:
     except ImportError:
         pass
 
-    # 2. POSIX external sort (out-of-core, no RAM limit)
+    # Strategy 2: POSIX external sort (out-of-core, no RAM limit)
     if os.name == "posix" and shutil.which("sort"):
         tmp = file_path + ".tmp"
         try:
+            # Preserve the header separately, then sort the data rows only.
             with open(file_path, "r", encoding="utf-8") as fh:
                 header = fh.readline()
             with open(tmp, "w", encoding="utf-8") as fh:
@@ -401,12 +757,14 @@ def _sort_csv_file(file_path: str) -> None:
             shutil.move(tmp, file_path)
             return
         except Exception as exc:
-            print(f"[Warning] POSIX sort failed: {exc}. Using in-memory sort.",
-                  file=sys.stderr)
+            print(
+                f"[Warning] POSIX sort failed: {exc}. Using in-memory sort.",
+                file=sys.stderr,
+            )
             if os.path.exists(tmp):
                 os.remove(tmp)
 
-    # 3. In-memory fallback
+    # Strategy 3: in-memory stdlib fallback
     try:
         with open(file_path, "r", encoding="utf-8") as fh:
             reader = csv.reader(fh)
@@ -425,92 +783,161 @@ def _sort_csv_file(file_path: str) -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def main() -> None:
+    """Entry point: parse arguments, run extraction, write outputs.
+
+    Execution flow:
+        1. Build an ArgumentParser whose defaults come from the module-level
+           DEFAULT_* variables (already overridden by kw_config.txt when
+           present), so explicit CLI flags always win over the config file,
+           and the config file always wins over hardcoded values.
+        2. For KeyBERT with a GPU, force --workers 1 to avoid competing CUDA
+           context initialisation across subprocess workers.
+        3. Validate the input directory and create output directories.
+        4. Write the master CSV header row (kw-1, score-1, … kw-N, score-N).
+        5. Build the task list — one flat tuple per .conllu file found in the
+           input directory, sorted for deterministic processing order.
+        6. Initialise the paradata logger for provenance tracking.
+        7. Dispatch tasks to a ProcessPoolExecutor using the ``spawn`` start
+           method (required for CUDA workers; safe on all platforms including
+           Windows where ``fork`` is not available).
+        8. Collect results as futures complete, append each row to the master
+           CSV, and log progress every 100 documents.
+        9. Always call ``_logger.finalize()`` (in the ``finally`` block) so
+           paradata is written even on keyboard interrupt or partial failure.
+       10. Sort the master CSV and print a completion summary.
+    """
     parser = argparse.ArgumentParser(
         description=(
             "Extract keywords from CoNLL-U files.\n"
-            "Backends: 'yake' (statistical, CPU), "
+            "Backends: 'yake' (statistical, CPU, default), "
             "'keybert' (embedding, GPU/CPU), "
-            "'legacy' (lemma frequency, original KER approach)."
+            "'legacy' (lemma frequency, original KER approach).\n\n"
+            "Defaults are read from kw_config.txt when present next to this "
+            "script; any explicit CLI flag overrides the config file value."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     # ── I/O ───────────────────────────────────────────────────────────────────
     parser.add_argument(
-        "-i", "--input_dir", required=True,
-        help="Directory containing .conllu files (e.g. OUTPUT_DIR/UDP/).",
+        "-i", "--input_dir",
+        default=DEFAULT_INPUT_DIR,
+        help=(
+            "Directory containing .conllu files to process. "
+            f"(default from config: {DEFAULT_INPUT_DIR})"
+        ),
     )
     parser.add_argument(
-        "-o", "--output_file", default="keywords_summary.csv",
-        help="Master CSV output file (default: keywords_summary.csv).",
+        "-o", "--output_file",
+        default=DEFAULT_OUTPUT_FILE,
+        help=(
+            "Master CSV output file path. "
+            f"(default from config: {DEFAULT_OUTPUT_FILE})"
+        ),
     )
     parser.add_argument(
-        "-d", "--per_doc_out_dir", default=DEFAULT_INDIVIDUAL_OUTPUT_DIR,
-        help="Output directory for per-document keyword CSVs.",
+        "-d", "--per_doc_out_dir",
+        default=DEFAULT_PER_DOC_OUT_DIR,
+        help=(
+            "Output directory for per-document keyword CSVs. "
+            f"(default from config: {DEFAULT_PER_DOC_OUT_DIR})"
+        ),
     )
 
-    # ── extraction ────────────────────────────────────────────────────────────
+    # ── extraction parameters ─────────────────────────────────────────────────
     parser.add_argument(
-        "-m", "--method", default=DEFAULT_METHOD,
+        "-m", "--method",
+        default=DEFAULT_METHOD,
         choices=list(_BACKENDS),
         help=(
-            "Extraction backend: "
-            "'yake' = YAKE statistical, CPU-only (default); "
-            "'keybert' = KeyBERT embedding-based, GPU when available; "
-            "'legacy' = original KER lemma-frequency approach, no extra deps."
+            "Extraction backend: 'yake' = YAKE statistical CPU-only; "
+            "'keybert' = KeyBERT embedding-based GPU/CPU; "
+            "'legacy' = original KER lemma-frequency, no extra deps. "
+            f"(default from config: {DEFAULT_METHOD})"
         ),
     )
     parser.add_argument(
-        "-n", "--num_keywords", type=int, default=20,
-        help="Number of top keywords to extract per document.",
-    )
-    parser.add_argument(
-        "-l", "--lang", default="cs",
+        "-n", "--num_keywords",
+        type=int,
+        default=DEFAULT_NUM_KEYWORDS,
         help=(
-            "Language code for YAKE stopword selection (e.g. 'cs', 'en', 'de'). "
-            "Ignored by the 'legacy' and 'keybert' backends."
+            "Number of top keywords to extract per document. "
+            f"(default from config: {DEFAULT_NUM_KEYWORDS})"
         ),
     )
     parser.add_argument(
-        "-w", "--max_words", type=int, default=3,
-        help="Maximum words per keyword phrase (n-gram upper bound).",
+        "-l", "--lang",
+        default=DEFAULT_LANG,
+        help=(
+            "Language code for YAKE stopword selection "
+            "(e.g. 'cs', 'en', 'de'). Ignored by 'legacy' and 'keybert'. "
+            f"(default from config: {DEFAULT_LANG})"
+        ),
+    )
+    parser.add_argument(
+        "-w", "--max_words",
+        type=int,
+        default=DEFAULT_MAX_WORDS,
+        help=(
+            "Maximum words per keyword phrase (n-gram upper bound). "
+            f"(default from config: {DEFAULT_MAX_WORDS})"
+        ),
     )
 
-    # ── KeyBERT options ───────────────────────────────────────────────────────
+    # ── KeyBERT-specific options ───────────────────────────────────────────────
     keybert_group = parser.add_argument_group(
         "KeyBERT options",
         "Only used when --method keybert.",
     )
     keybert_group.add_argument(
-        "--keybert-model", default=DEFAULT_KEYBERT_MODEL,
+        "--keybert-model",
         dest="keybert_model",
+        default=DEFAULT_KEYBERT_MODEL,
         help=(
-            f"Sentence-Transformer model name (default: {DEFAULT_KEYBERT_MODEL}). "
-            "Works for Czech, Slovak, German, English. "
-            "For English-only: 'all-MiniLM-L6-v2'."
+            "Sentence-Transformer model name. "
+            "Default is multilingual (Czech, Slovak, German, English). "
+            "For English-only collections 'all-MiniLM-L6-v2' is faster. "
+            f"(default from config: {DEFAULT_KEYBERT_MODEL})"
         ),
     )
     keybert_group.add_argument(
-        "--no-mmr", action="store_true",
-        help="Disable Maximal Marginal Relevance diversification.",
+        "--no-mmr",
+        action="store_true",
+        default=DEFAULT_NO_MMR,
+        help=(
+            "Disable Maximal Marginal Relevance diversification. "
+            "When set, keywords are ranked purely by cosine similarity "
+            "without penalising redundant phrases. "
+            f"(default from config: {DEFAULT_NO_MMR})"
+        ),
     )
     keybert_group.add_argument(
-        "--diversity", type=float, default=0.5,
-        help="MMR diversity parameter: 0.0 = max relevance, 1.0 = max diversity.",
+        "--diversity",
+        type=float,
+        default=DEFAULT_DIVERSITY,
+        help=(
+            "MMR diversity parameter: 0.0 = max relevance, 1.0 = max diversity. "
+            f"(default from config: {DEFAULT_DIVERSITY})"
+        ),
     )
 
     # ── runtime ───────────────────────────────────────────────────────────────
     parser.add_argument(
-        "--workers", type=int, default=multiprocessing.cpu_count(),
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
         help=(
-            "Parallel worker processes. "
-            "For --method keybert with GPU, this is automatically forced to 1."
+            "Number of parallel worker processes. "
+            "For --method keybert with a CUDA GPU this is automatically "
+            "forced to 1 to prevent competing context initialisation. "
+            f"(default from config: {DEFAULT_WORKERS})"
         ),
     )
 
     args = parser.parse_args()
 
-    # KeyBERT + GPU: prevent competing CUDA context init across workers.
+    # KeyBERT + GPU guard: multiple workers each loading the model into the
+    # same CUDA device causes context conflicts and silent hangs.
     if args.method == "keybert":
         try:
             import torch  # type: ignore
@@ -522,9 +949,9 @@ def main() -> None:
                 )
                 args.workers = 1
         except ImportError:
-            pass
+            pass   # torch not installed → CPU path, any worker count is safe
 
-    # ── setup ─────────────────────────────────────────────────────────────────
+    # ── directory setup ───────────────────────────────────────────────────────
     input_path    = Path(args.input_dir)
     indiv_out_dir = Path(args.per_doc_out_dir)
     indiv_out_dir.mkdir(parents=True, exist_ok=True)
@@ -533,13 +960,17 @@ def main() -> None:
         print(f"[Error] Input directory not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
-    # Write master CSV header
+    # ── master CSV header ─────────────────────────────────────────────────────
+    # Written once here; all worker results are appended by _write_csv_row.
     header = ["document_id"]
     for i in range(1, args.num_keywords + 1):
         header.extend([f"kw-{i}", f"score-{i}"])
     with open(args.output_file, "w", encoding="utf-8", newline="") as fh:
         csv.writer(fh).writerow(header)
 
+    # ── task list ─────────────────────────────────────────────────────────────
+    # Each task is a flat tuple consumed by _process_document_task.
+    # Sorted glob ensures a deterministic processing order.
     tasks = [
         (
             str(p),
@@ -549,13 +980,14 @@ def main() -> None:
             args.lang,
             args.max_words,
             args.keybert_model,
-            not args.no_mmr,
+            not args.no_mmr,   # use_mmr = True unless --no-mmr was passed
             args.diversity,
         )
         for p in sorted(input_path.glob("*.conllu"))
     ]
 
-    # ── paradata ──────────────────────────────────────────────────────────────
+    # ── paradata logger ───────────────────────────────────────────────────────
+    # Records run metadata, success/skip counts, and config for auditability.
     _logger = ParadataLogger(
         program="nlp-enrich",
         config={
@@ -567,6 +999,8 @@ def main() -> None:
             "num_keywords":    args.num_keywords,
             "per_doc_out_dir": str(args.per_doc_out_dir),
             "output_file":     str(args.output_file),
+            # KeyBERT-specific parameters are only included in paradata when
+            # that backend is active; they are irrelevant for legacy/yake runs.
             **({"keybert_model": args.keybert_model,
                 "mmr":           not args.no_mmr,
                 "diversity":     args.diversity}
@@ -581,17 +1015,31 @@ def main() -> None:
         f"{len(tasks)} documents | workers={args.workers} ---"
     )
 
+    # ── parallel execution ────────────────────────────────────────────────────
     processed_count = 0
     try:
-        with ProcessPoolExecutor(max_workers=args.workers) as executor:
-            futures = {executor.submit(_process_document_task, t): t[0]
-                       for t in tasks}
+        # Use the "spawn" start method so each worker process starts with a
+        # clean interpreter state.  This is the only method supported on
+        # Windows and is required for CUDA workers on all platforms (the
+        # "fork" method duplicates GPU state inconsistently across processes).
+        mp_context = multiprocessing.get_context("spawn")
+
+        with ProcessPoolExecutor(
+            max_workers=args.workers, mp_context=mp_context
+        ) as executor:
+            # Submit all tasks upfront; futures are keyed by the source path
+            # so error messages can identify the failing document by name.
+            futures = {
+                executor.submit(_process_document_task, t): t[0]
+                for t in tasks
+            }
             for future in as_completed(futures):
                 doc_path = futures[future]
                 try:
                     doc_id, keywords = future.result()
-                    _write_csv_row(args.output_file, doc_id, keywords,
-                                   args.num_keywords)
+                    _write_csv_row(
+                        args.output_file, doc_id, keywords, args.num_keywords
+                    )
                     processed_count += 1
                     _logger.log_success("csv_per_doc",     count=1)
                     _logger.log_success("csv_summary_row", count=1)
@@ -601,6 +1049,8 @@ def main() -> None:
                     print(f"[Error] '{doc_path}': {exc}", file=sys.stderr)
                     _logger.log_skip(str(doc_path), str(exc))
     finally:
+        # finalize() is always called so paradata is written even on
+        # keyboard interrupt or partial failure.
         _logger.finalize(input_total=len(tasks))
 
     print("--- Sorting master results … ---")
