@@ -574,11 +574,6 @@ All available flags:
 |      | `--diversity`       | `0.5`                                   | MMR diversity parameter, 0 = max relevance → 1 = max diversity (KeyBERT only)             |
 |      | `--workers`         | `0` *(Auto / CPU count)*                | Parallel worker processes. Auto-forced to 1 for KeyBERT + GPU                             |
 
-> [!WARNING]
-> For **KeyBERT with a GPU**, the script automatically forces `--workers 1` to
-> prevent competing CUDA context initialisation across subprocesses.  On CPU,
-> any worker count is safe.
-
 Examples:
 
 **YAKE** — Czech, up to 3-word phrases, 20 keywords per document (default)
@@ -599,6 +594,11 @@ python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
 ```
 
 </details>
+
+> [!WARNING]
+> For **KeyBERT with a GPU**, the script automatically forces `--workers 1` to
+> prevent competing CUDA context initialisation across subprocesses.  On CPU,
+> any worker count is safe.
 
 ### Inputs and outputs
 
