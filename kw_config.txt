@@ -14,7 +14,6 @@ MAX_WORDS = 3
 KEYBERT_MODEL = paraphrase-multilingual-MiniLM-L12-v2
 NO_MMR = False
 DIVERSITY = 0.5
+BATCH_SIZE = 16
 
-# Runtime settings
-# Set to 0 to automatically use multiprocessing.cpu_count()
 WORKERS = 0
