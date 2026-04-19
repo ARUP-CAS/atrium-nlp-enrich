@@ -1,0 +1,7 @@
+MODEL_NAME=qwen2.5:14b-instruct
+OLLAMA_HOST=http://localhost:11434
+INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
+OUTPUT_DIR=data_samples/KW_PER_DOC
+VOCAB_PATH=data_samples/teater_nested_vocab.json
+PARADATA_DIR=paradata
+LLM_TEMPERATURE=0.0

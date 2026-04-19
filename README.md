@@ -38,6 +38,7 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 - [Output Structure](#output-structure)
 - [EXTRA: Extract Keywords (KER / YAKE / KeyBERT)](#extra-extract-keywords-ker--yake--keybert)
 - [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv)
+- [EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)](#extra-llm-semantic-enrichment-vocabulary-mapping)
 - [Paradata Logs](#paradata-logs)
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
   - [`<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄](#output_dirprocessinglog--human-readable-runtime-log-)
@@ -735,6 +736,72 @@ Use flexiconv **before** running this pipeline when:
 > regularly.
 
 ---
+
+## EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)
+
+> [!NOTE]
+> This is an advanced, optional step. It utilizes a local Large Language Model (LLM) through Ollama to semantically analyze text lines and rigidly map them to a nested, controlled archaeological vocabulary (e.g., TEATER or AMCR).
+
+This pipeline goes beyond traditional keyword extraction by using **Constrained Decoding** (via Pydantic schemas). This mathematically guarantees that the LLM only outputs valid JSON structures and exclusively uses permitted terms from the injected hierarchical dictionary, entirely eliminating hallucinated formatting.
+
+### ⚙️ Configuration (`llm_config.txt`)
+
+The pipeline reads its runtime parameters from a plain text configuration file placed in the repository root. This allows you to easily swap the underlying LLM (e.g., `qwen2.5:14b-instruct` or `mistral-nemo`) depending on your local hardware capabilities.
+
+```text
+MODEL_NAME=qwen2.5:14b-instruct
+OLLAMA_HOST=http://localhost:11434
+INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
+OUTPUT_DIR=data_samples/KW_PER_DOC
+VOCAB_PATH=data_samples/teater_nested_vocab.json
+PARADATA_DIR=paradata
+LLM_TEMPERATURE=0.0
+```
+
+### 🗂 Workflow 
+
+**1. Vocabulary Harvesting (`vocab_manager.py`)**
+Before running the inference, the system must build the allowable vocabulary list. The vocabulary manager actively queries upstream APIs (via HTTP GET requests with XML pagination) to fetch Czech-English term pairs. It then structures them into a nested JSON taxonomy and caches it locally (`teater_nested_vocab.json`) to prevent exhausting the LLM's context window.
+```bash
+python3 vocab_manager.py
+```
+
+**2. LLM Inference Pipeline (`llm_pipeline.py`)**
+This script reads the page and line-ordered text chunks from the CSV files in `DOC_LINE_LANG_CLASS`, injects the nested vocabulary into the system prompt, and executes the LLM generation. 
+```bash
+python3 llm_pipeline.py
+```
+
+### 📁 Inputs and Outputs
+
+* **Input:** `DOC_LINE_LANG_CLASS/*.csv` (Contains `file_id`, `page`, `line`, and raw `text`).
+* **Output:** `KW_PER_DOC/*_enriched.json` (An array of highly structured JSON objects securely merging the deterministic CSV metadata with the LLM's semantic extraction).
+
+**Example Output Record:**
+```json
+{
+  "file_id": "CTX195603828",
+  "page": 1,
+  "line": 14,
+  "original_text": "Výzkum odhalil základy gotického kostela ze 14. století.",
+  "enrichment": {
+    "extracted_keywords_cs": ["základy", "gotický kostel"],
+    "extracted_keywords_en": ["foundations", "gothic church"],
+    "teater_broad_category": "Architecture (Architektura)",
+    "teater_narrow_category": "Church (Kostel)",
+    "confidence_score": 0.95
+  }
+}
+```
+
+### 📊 Paradata Integration
+
+Just like the main shell script pipelines, the LLM enrichment natively hooks into `atrium_paradata.py`. It automatically logs:
+* Full snapshot of `llm_config.txt`.
+* Total processed lines (`json` success events).
+* Line-level tracking of skipped entities (e.g., if a specific text line triggered an LLM inference fault or was unreadable).
+The resulting log is dropped into `<OUTPUT_DIR>/paradata/` alongside the other pipeline execution records.
+
 
 ## Paradata Logs
 
