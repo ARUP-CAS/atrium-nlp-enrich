@@ -6,6 +6,6 @@ MODEL_KEY=qwen2.5-14b-awq
 # HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
 
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
-OUTPUT_DIR=data_samples/KW_PER_DOC
+OUTPUT_DIR=data_samples/KW_PER_DOC_LLM
 VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
