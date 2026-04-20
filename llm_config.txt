@@ -1,7 +1,11 @@
-MODEL_NAME=qwen2.5:14b-instruct
-OLLAMA_HOST=http://localhost:11434
+# Switch between: qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b |
+#                 aya-expanse-8b   | bielik-11b  | llama3.1-8b
+MODEL_KEY=qwen2.5-14b-awq
+
+# Only needed for llama3.1-8b
+# HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
+
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
 OUTPUT_DIR=data_samples/KW_PER_DOC
 VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
-LLM_TEMPERATURE=0.0
