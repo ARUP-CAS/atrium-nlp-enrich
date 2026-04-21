@@ -3,7 +3,7 @@ import time
 import urllib.parse
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, List
 import requests
 
 
@@ -20,6 +20,43 @@ class VocabularyManager:
         "amcr": "https://api.aiscr.cz/schema/amcr/2.2/",
     }
 
+    THEMATIC_PREFIXES: Dict[str, List[str]] = {
+        "Site Types": [
+            "hradiště", "pohřebiště", "sídliště", "hrad", "tvrz", "kostel",
+            "mohyla", "studna", "depot", "jáma", "příkop", "val", "sklep",
+            "zaniklá", "opevnění", "areál", "objekt", "zásobní",
+        ],
+        "Find Types": [
+            "keramika", "kost", "hrob", "záušnice", "nůž", "brousek",
+            "bronz", "kámen", "sklo", "mazanice", "nádoba", "střep",
+            "oštěp", "jehlice", "mlat", "zásobnice", "mazanice", "kachel",
+            "konstrukční prvek", "navážka", "malta", "cihla", "glazura",
+            "zlomek", "fragment", "dno", "okraj", "ucho", "výduť",
+        ],
+        "Methods": [
+            "povrchový sběr", "plošný odkryv", "sonda", "výkop", "průzkum",
+            "dokumentace", "geodetický", "stavebně-historický", "záchranný",
+            "badatelský", "dohled", "terénní", "revize",
+        ],
+        "Chronology": [
+            "středověk", "eneolit", "paleolit", "neolit", "bronzová",
+            "halštatská", "laténská", "novověk", "pravěk", "datum",
+            "přesné datum", "někdy v letech", "stol", "století",
+        ],
+        "Location & Admin": [
+            "katastrální", "parcela", "okres", "obec", "lokalita",
+            "poloha", "mapa", "mapový", "sekce",
+        ],
+        "Documentation": [
+            "fotografie", "plán", "kresba", "zpráva", "hlášení", "nálezová",
+            "příloha", "plánek", "negativy", "diapozitiv",
+        ],
+        "Finds Context": [
+            "ojedinělý nález", "náhodný nález", "nález v druhotné",
+            "záchranný nález", "pohřeb", "kostrový", "žárový",
+        ],
+    }
+
     def __init__(self, vocab_path: str = "data_samples/teater_nested_vocab.json"):
         self.vocab_path = Path(vocab_path)
         self.vocab_data: Dict[str, Any] = {}
@@ -32,13 +69,15 @@ class VocabularyManager:
         term_mapping = {}
         url = f"{self.AMCR_OAI_BASE}?verb=ListRecords&metadataPrefix=oai_amcr&set=heslo"
         page = 0
+        MAX_PAGES = 500  # Guard against infinite loops on broken resumption tokens
+
         print("[AMCR] Starting OAI-PMH harvest via GET requests...")
 
         # Establish a persistent session for connection pooling
         session = requests.Session()
         session.headers.update({"User-Agent": "ATRIUM-vocabulary-manager/1.2"})
 
-        while url:
+        while url and page < MAX_PAGES:
             page += 1
             print(f"  [AMCR] Fetching page {page}...")
 
@@ -84,26 +123,37 @@ class VocabularyManager:
         print(f"[AMCR] Harvest complete. {len(term_mapping)} terms collected.")
         return term_mapping
 
+    def _assign_theme(self, cs_term: str) -> str:
+        """
+        Assign a thematic group to a Czech term by substring matching.
+        Falls back to 'Other' for unmatched terms.
+        """
+        cs_lower = cs_term.lower()
+        for theme, keywords in self.THEMATIC_PREFIXES.items():
+            if any(kw in cs_lower for kw in keywords):
+                return theme
+        return "Other"
+
     def sync_and_build_nested_taxonomy(self):
         """
         Executes the GET requests to gather raw term pairs and encapsulates them
-        into the nested dictionary structure required for the LLM system prompt.
+        into the nested dictionary structure grouped by theme required for the
+        LLM system prompt.
         """
         print("Syncing remote vocabularies...")
         amcr_terms = self.fetch_amcr_vocab()
 
-        # Because the AMCR endpoint returns a flat list of terms, we wrap them
-        # inside a broad category to maintain the nested schema expectation
-        # established in the LLM's Pydantic validation.
-        self.vocab_data = {
-            "Archaeological Terms (AMCR)": amcr_terms
-            # Future GraphQL/TEATER harvests can be appended as separate root keys here
-        }
+        # Partition flat term list into thematic groups
+        themed: Dict[str, Dict] = {}
+        for cs_key, pair in amcr_terms.items():
+            theme = self._assign_theme(cs_key)
+            themed.setdefault(theme, {})[cs_key] = pair
 
+        self.vocab_data = themed
         self.save()
 
     def load(self) -> Dict[str, Any]:
-        """Loads the localized dictionary from disk to avoid constant HTTP calls."""
+        """Loads the vocabulary from disk. Triggers re-sync if format is outdated."""
         if not self.vocab_path.exists():
             print(f"Warning: {self.vocab_path} not found. Triggering auto-sync.")
             self.sync_and_build_nested_taxonomy()
@@ -111,6 +161,18 @@ class VocabularyManager:
 
         with open(self.vocab_path, "r", encoding="utf-8") as f:
             self.vocab_data = json.load(f)
+
+        # Detect old flat format: single broad key wrapping all terms.
+        # The new format partitions into multiple thematic keys including "Other".
+        known_old_keys = {"Archaeological Terms (AMCR)"}
+        if set(self.vocab_data.keys()) <= known_old_keys:
+            print(
+                "[vocab] WARNING: Cached vocabulary is in the old flat format. "
+                "Re-syncing to build thematic grouping. "
+                "Delete the cache file and re-run vocab_manager.py if this repeats."
+            )
+            self.sync_and_build_nested_taxonomy()
+
         return self.vocab_data
 
     def save(self):
@@ -127,16 +189,9 @@ class VocabularyManager:
         return json.dumps(self.vocab_data, indent=2, ensure_ascii=False)
 
 
-# ---------------------------------------------------------------------------
-# Module Execution & Testing
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     manager = VocabularyManager(vocab_path="data_samples/teater_nested_vocab.json")
-
-    # Force a live sync from the AMCR API to test the GET requests and build the JSON
     manager.sync_and_build_nested_taxonomy()
-
-    # Verify serialization
     prompt_injection_string = manager.get_prompt_string()
     print("\n[Preview of serialized LLM Prompt String]")
     print(prompt_injection_string[:500] + "\n... [truncated]")
