@@ -3,14 +3,15 @@ import time
 import urllib.parse
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, Callable
 import requests
 
 
 class VocabularyManager:
     """
     Manages the TEATER/AMCR vocabulary structure for prompt injection.
-    Supports dynamic fetching via HTTP GET requests and local JSON caching.
+    Supports dynamic fetching via HTTP GET requests, external taxonomy configuration,
+    and LLM-assisted classification for unknown terms.
     """
 
     # API Constants mapped from the original harvest script
@@ -20,46 +21,51 @@ class VocabularyManager:
         "amcr": "https://api.aiscr.cz/schema/amcr/2.2/",
     }
 
-    THEMATIC_PREFIXES: Dict[str, List[str]] = {
-        "Site Types": [
-            "hradiště", "pohřebiště", "sídliště", "hrad", "tvrz", "kostel",
-            "mohyla", "studna", "depot", "jáma", "příkop", "val", "sklep",
-            "zaniklá", "opevnění", "areál", "objekt", "zásobní",
-        ],
-        "Find Types": [
-            "keramika", "kost", "hrob", "záušnice", "nůž", "brousek",
-            "bronz", "kámen", "sklo", "mazanice", "nádoba", "střep",
-            "oštěp", "jehlice", "mlat", "zásobnice", "mazanice", "kachel",
-            "konstrukční prvek", "navážka", "malta", "cihla", "glazura",
-            "zlomek", "fragment", "dno", "okraj", "ucho", "výduť",
-        ],
-        "Methods": [
-            "povrchový sběr", "plošný odkryv", "sonda", "výkop", "průzkum",
-            "dokumentace", "geodetický", "stavebně-historický", "záchranný",
-            "badatelský", "dohled", "terénní", "revize",
-        ],
-        "Chronology": [
-            "středověk", "eneolit", "paleolit", "neolit", "bronzová",
-            "halštatská", "laténská", "novověk", "pravěk", "datum",
-            "přesné datum", "někdy v letech", "stol", "století",
-        ],
-        "Location & Admin": [
-            "katastrální", "parcela", "okres", "obec", "lokalita",
-            "poloha", "mapa", "mapový", "sekce",
-        ],
-        "Documentation": [
-            "fotografie", "plán", "kresba", "zpráva", "hlášení", "nálezová",
-            "příloha", "plánek", "negativy", "diapozitiv",
-        ],
-        "Finds Context": [
-            "ojedinělý nález", "náhodný nález", "nález v druhotné",
-            "záchranný nález", "pohřeb", "kostrový", "žárový",
-        ],
-    }
-
-    def __init__(self, vocab_path: str = "data_samples/teater_nested_vocab.json"):
+    def __init__(
+            self,
+            vocab_path: str = "data_samples/teater_nested_vocab.json",
+            config_path: str = "taxonomy_config.json",
+            llm_predictor: Optional[Callable[[str], str]] = None
+    ):
         self.vocab_path = Path(vocab_path)
+        self.config_path = Path(config_path)
+        self.taxonomy: Dict[str, Any] = self._load_config()
         self.vocab_data: Dict[str, Any] = {}
+
+        # A callable function (e.g., from llm_pipeline.py) that takes a prompt string and returns a string
+        self.llm_predictor = llm_predictor
+
+    def _load_config(self) -> Dict[str, Any]:
+        """Loads the external taxonomy configuration mapping themes to multi-lingual keywords."""
+        if self.config_path.exists():
+            with open(self.config_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+
+        # Fallback default taxonomy if config is missing to ensure graceful degradation
+        print(f"Warning: Config {self.config_path} not found. Using default internal taxonomy.")
+        return {
+            "Site Types": {"keywords": {
+                "cs": ["hradiště", "pohřebiště", "sídliště", "hrad", "tvrz", "kostel", "mohyla", "studna", "depot",
+                       "jáma", "příkop", "val", "sklep", "zaniklá", "opevnění", "areál", "objekt", "zásobní"]}},
+            "Find Types": {"keywords": {
+                "cs": ["keramika", "kost", "hrob", "záušnice", "nůž", "brousek", "bronz", "kámen", "sklo", "mazanice",
+                       "nádoba", "střep", "oštěp", "jehlice", "mlat", "zásobnice", "kachel", "konstrukční prvek",
+                       "navážka", "malta", "cihla", "glazura", "zlomek", "fragment", "dno", "okraj", "ucho", "výduť"]}},
+            "Methods": {"keywords": {
+                "cs": ["povrchový sběr", "plošný odkryv", "sonda", "výkop", "průzkum", "dokumentace", "geodetický",
+                       "stavebně-historický", "záchranný", "badatelský", "dohled", "terénní", "revize"]}},
+            "Chronology": {"keywords": {
+                "cs": ["středověk", "eneolit", "paleolit", "neolit", "bronzová", "halštatská", "laténská", "novověk",
+                       "pravěk", "datum", "přesné datum", "někdy v letech", "stol", "století"]}},
+            "Location & Admin": {"keywords": {
+                "cs": ["katastrální", "parcela", "okres", "obec", "lokalita", "poloha", "mapa", "mapový", "sekce"]}},
+            "Documentation": {"keywords": {
+                "cs": ["fotografie", "plán", "kresba", "zpráva", "hlášení", "nálezová", "příloha", "plánek", "negativy",
+                       "diapozitiv"]}},
+            "Finds Context": {"keywords": {
+                "cs": ["ojedinělý nález", "náhodný nález", "nález v druhotné", "záchranný nález", "pohřeb", "kostrový",
+                       "žárový"]}}
+        }
 
     def fetch_amcr_vocab(self, delay: float = 0.3) -> Dict[str, Dict[str, str]]:
         """
@@ -108,7 +114,6 @@ class VocabularyManager:
 
                     # Ensure both languages exist before adding to mapping
                     if cs_text and en_text:
-                        # We use the Czech term as the primary key for the LLM
                         term_mapping[cs_text] = {"cs": cs_text, "en": en_text}
 
             # Handle Resumption Token for Pagination
@@ -123,30 +128,66 @@ class VocabularyManager:
         print(f"[AMCR] Harvest complete. {len(term_mapping)} terms collected.")
         return term_mapping
 
-    def _assign_theme(self, cs_term: str) -> str:
+    def _assign_theme(self, term_pair: Dict[str, str]) -> str:
         """
-        Assign a thematic group to a Czech term by substring matching.
+        Assign a thematic group to a term pair by substring matching across configured languages.
         Falls back to 'Other' for unmatched terms.
         """
-        cs_lower = cs_term.lower()
-        for theme, keywords in self.THEMATIC_PREFIXES.items():
-            if any(kw in cs_lower for kw in keywords):
-                return theme
+        for theme, config in self.taxonomy.items():
+            for lang, keywords in config.get("keywords", {}).items():
+                term_value = term_pair.get(lang, "").lower()
+                if any(kw.lower() in term_value for kw in keywords):
+                    return theme
         return "Other"
 
-    def sync_and_build_nested_taxonomy(self):
+    def classify_with_llm(self, term_pair: Dict[str, str]) -> Optional[str]:
+        """
+        Uses the injected LLM predictor to categorize an unknown term into the existing taxonomy.
+        """
+        if not self.llm_predictor:
+            return None
+
+        categories = list(self.taxonomy.keys())
+        prompt = (
+            f"Categorize this archaeological term: '{term_pair.get('cs', '')}' "
+            f"(English: '{term_pair.get('en', '')}') into one of the following exact categories: {categories}. "
+            "Reply ONLY with the exact category name and nothing else."
+        )
+
+        try:
+            response_text = self.llm_predictor(prompt).strip()
+            # Validate response against known taxonomy keys to prevent hallucinated keys
+            for key in categories:
+                if key.lower() == response_text.lower():
+                    return key
+        except Exception as e:
+            print(f"  [LLM] Classification error during taxonomy sync: {e}")
+
+        return None
+
+    def sync_and_build_nested_taxonomy(self, use_llm_fallback: bool = False):
         """
         Executes the GET requests to gather raw term pairs and encapsulates them
         into the nested dictionary structure grouped by theme required for the
         LLM system prompt.
         """
         print("Syncing remote vocabularies...")
-        amcr_terms = self.fetch_amcr_vocab()
+        raw_terms = self.fetch_amcr_vocab()
 
-        # Partition flat term list into thematic groups
-        themed: Dict[str, Dict] = {}
-        for cs_key, pair in amcr_terms.items():
-            theme = self._assign_theme(cs_key)
+        # Initialize dictionary partitions based on current taxonomy configuration
+        themed: Dict[str, Dict] = {theme: {} for theme in self.taxonomy.keys()}
+        themed["Other"] = {}
+
+        for cs_key, pair in raw_terms.items():
+            theme = self._assign_theme(pair)
+
+            # Utilize the LLM fallback logic for unclassified ("Other") terms if enabled
+            if theme == "Other" and use_llm_fallback and self.llm_predictor:
+                llm_suggested_theme = self.classify_with_llm(pair)
+                if llm_suggested_theme and llm_suggested_theme in themed:
+                    theme = llm_suggested_theme
+                    print(f"  [LLM] Dynamically re-classified '{cs_key}' -> {theme}")
+
             themed.setdefault(theme, {})[cs_key] = pair
 
         self.vocab_data = themed
@@ -163,13 +204,11 @@ class VocabularyManager:
             self.vocab_data = json.load(f)
 
         # Detect old flat format: single broad key wrapping all terms.
-        # The new format partitions into multiple thematic keys including "Other".
         known_old_keys = {"Archaeological Terms (AMCR)"}
         if set(self.vocab_data.keys()) <= known_old_keys:
             print(
                 "[vocab] WARNING: Cached vocabulary is in the old flat format. "
-                "Re-syncing to build thematic grouping. "
-                "Delete the cache file and re-run vocab_manager.py if this repeats."
+                "Re-syncing to build thematic grouping based on external config."
             )
             self.sync_and_build_nested_taxonomy()
 
@@ -190,8 +229,18 @@ class VocabularyManager:
 
 
 if __name__ == "__main__":
-    manager = VocabularyManager(vocab_path="data_samples/teater_nested_vocab.json")
-    manager.sync_and_build_nested_taxonomy()
+    # Example usage:
+    # def dummy_llm_call(prompt: str) -> str:
+    #     return "Site Types"
+
+    manager = VocabularyManager(
+        vocab_path="data_samples/teater_nested_vocab.json",
+        config_path="taxonomy_config.json",
+        llm_predictor=None  # Pass your LLM prediction method here
+    )
+
+    manager.sync_and_build_nested_taxonomy(use_llm_fallback=False)
+
     prompt_injection_string = manager.get_prompt_string()
     print("\n[Preview of serialized LLM Prompt String]")
     print(prompt_injection_string[:500] + "\n... [truncated]")
