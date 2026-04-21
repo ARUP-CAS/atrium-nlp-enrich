@@ -1,0 +1,92 @@
+[
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 1,
+        "original_text": "1,4442,70/",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "fotografie diapozitivy"
+            ],
+            "extracted_keywords_en": [
+                "photoslides"
+            ],
+            "teater_category": "fotografie diapozitivy",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 3,
+        "original_text": "504 ONDREJOV, okr. Praha-východ",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "papír s fotografiemi",
+                "fotografie terénu (digitální)"
+            ],
+            "extracted_keywords_en": [
+                "paper with photographs",
+                "digitally photographed fieldwork"
+            ],
+            "teater_category": "papír s fotografiemi",
+            "confidence_score": 0.9
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 4,
+        "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "kostr",
+                "hrob"
+            ],
+            "extracted_keywords_en": [
+                "bone",
+                "burial"
+            ],
+            "teater_category": "pohřeb kostrový",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 5,
+        "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "kopání",
+                "základ",
+                "hrnčíř",
+                "pece"
+            ],
+            "extracted_keywords_en": [
+                "excavation",
+                "foundation",
+                "pottery",
+                "kiln"
+            ],
+            "teater_category": "předmět",
+            "confidence_score": 0.85
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 6,
+        "original_text": "107b.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "fotografie diapozitivy"
+            ],
+            "extracted_keywords_en": [
+                "photographs of objects (digital)"
+            ],
+            "teater_category": "fotografie diapozitivy",
+            "confidence_score": 1.0
+        }
+    }
+]
