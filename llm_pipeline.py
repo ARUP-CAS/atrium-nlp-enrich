@@ -110,7 +110,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
 }
 
 # Increased to 512 to prevent truncated JSON on lines with long keyword lists.
-MAX_NEW_TOKENS = 512
+MAX_NEW_TOKENS = 1024
 CONTEXT_RESERVED = MAX_NEW_TOKENS + 256
 
 # Categories that are unconditionally skipped — no config override possible.
@@ -233,10 +233,8 @@ def build_schema(term_names: List[str]) -> type:
             description="The single most relevant TEATER term from the vocabulary.",
         )
         confidence_score: float = Field(
-            ...,
-            ge=0.0,
-            le=1.0,
-            description="Confidence in the categorization (0 = no signal, 1 = certain).",
+            ..., ge=0.0, le=1.0,
+            description="How confident you are in this categorization. MUST be a float between 0.0 and 1.0 (e.g., 0.85, NOT 85)."
         )
 
         def category_name(self) -> str:
