@@ -62,7 +62,8 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     },
 }
 
-MAX_NEW_TOKENS = 256
+# INCREASED to 512 to prevent EOF string parsing errors on long keyword lists
+MAX_NEW_TOKENS = 512
 CONTEXT_RESERVED = MAX_NEW_TOKENS + 256
 
 
@@ -139,11 +140,13 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
 
     term_lines = [f"{cs} ({en})" for cs, en in all_terms]
 
+    # FIXED: Added explicit instruction to output JSON to prevent whitespace loops
     header = (
         "You are an expert archaeological data extractor. "
-        "Analyze the input text and select the SINGLE most relevant category "
-        "from the permitted vocabulary list below. "
-        "You MUST use the exact Czech term as written.\n\n"
+        "Analyze the input text and extract key archaeological terms. "
+        "Select the SINGLE most relevant category from the permitted vocabulary list below. "
+        "You MUST use the exact Czech term as written.\n"
+        "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
         "PERMITTED VOCABULARY TERMS (Czech | English):\n"
     )
 
@@ -227,8 +230,7 @@ def process_document(
         prefix_function,
         system_prompt: str,
         EnrichmentModel: type,
-        max_input_tokens: int,
-        logger: ParadataLogger
+        max_input_tokens: int
 ) -> List[dict]:
     file_id = csv_path.stem
     enriched_document_lines = []
@@ -242,7 +244,7 @@ def process_document(
                 line_num = int(row.get("line_num", row.get("line", 0)))
                 text_chunk = row.get("text", "").strip()
             except ValueError:
-                logger.log_skip(f"{file_id}:line_unknown", "Invalid integer conversion for page/line.")
+                print(f"[{file_id}] Invalid integer conversion for page/line.")
                 continue
 
             if not text_chunk:
@@ -265,6 +267,7 @@ def process_document(
                     max_length=max_input_tokens,
                 ).to(model.device)
 
+                # FIXED: Added explicit pad_token_id and eos_token_id
                 output = model.generate(
                     **inputs,
                     max_new_tokens=MAX_NEW_TOKENS,
@@ -272,6 +275,8 @@ def process_document(
                     temperature=None,
                     top_p=None,
                     top_k=None,
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
                     prefix_allowed_tokens_fn=prefix_function,
                 )
 
@@ -293,11 +298,9 @@ def process_document(
                 })
 
             except Exception as e:
+                # FIXED: Removed logger.log_skip here. Only print warnings for individual lines
+                # to prevent inflating the document skip count in paradata.
                 print(f"[{file_id}] Inference error P{page_num} L{line_num}: {e}")
-                logger.log_skip(
-                    f"{file_id}:P{page_num}_L{line_num}",
-                    f"Inference/validation failed: {str(e)}"
-                )
 
     return enriched_document_lines
 
@@ -361,10 +364,12 @@ if __name__ == "__main__":
     for csv_file in csv_files:
         print(f"Processing: {csv_file.name}...")
         try:
+            # Note: logger passed into process_document removed
             enriched_results = process_document(
                 csv_file, model, tokenizer, prefix_function,
-                system_prompt, EnrichmentModel, max_input_tokens, logger
+                system_prompt, EnrichmentModel, max_input_tokens
             )
+
             if enriched_results:
                 out_file = OUTPUT_DIR / f"{csv_file.stem}_enriched.json"
                 with open(out_file, "w", encoding="utf-8") as out_f:
@@ -373,7 +378,8 @@ if __name__ == "__main__":
                 logger.log_success("json", count=1)
                 logger.log_document_success()
             else:
-                logger.log_skip(csv_file.name, "No meaningful lines after filtering.")
+                # Log skips at the document level
+                logger.log_skip(csv_file.name, "No meaningful lines after filtering/processing.")
         except Exception as e:
             print(f"Critical error on {csv_file.name}: {e}")
             logger.log_skip(csv_file.name, str(e))
