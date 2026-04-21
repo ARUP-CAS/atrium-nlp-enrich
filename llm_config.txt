@@ -9,3 +9,8 @@ INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
 OUTPUT_DIR=data_samples/KW_PER_DOC_LLM
 VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
+
+INCLUDE_NON_TEXT=true
+MIN_CHAR_COUNT=3
+MIN_CHAR_NON_TEXT=8
+MIN_ALPHA_RATIO_NON_TEXT=0.4
