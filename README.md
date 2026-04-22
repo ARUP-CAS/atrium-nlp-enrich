@@ -749,7 +749,7 @@ Pydantic schemas and `lmformatenforcer`). This mathematically guarantees that th
 valid JSON structures and exclusively uses permitted terms from the injected hierarchical dictionary,
 entirely eliminating hallucinated formatting.
 
-### ⚙️ Configuration (`llm_config.txt`)
+### ⚙️ Configuration ([llm_config.txt](llm_config.txt) 📎)
 
 The pipeline reads its runtime parameters from a plain text configuration file placed in the 
 repository root. This allows you to easily swap the underlying LLM (e.g., `qwen2.5-14b-awq` or
@@ -776,21 +776,23 @@ MIN_ALPHA_RATIO_NON_TEXT=0.4
 
 ### 🗂 Workflow 
 
-**1. Vocabulary Harvesting (`vocab_manager.py`)**
+**1. Vocabulary Harvesting ([vocab_manager.py](vocab_manager.py) 📎)**
 Before running the inference, the system must build the allowable vocabulary list. The vocabulary 
 manager actively queries upstream APIs (via HTTP GET requests with XML pagination) to fetch 
 Czech-English term pairs from the AMCR endpoint. It then structures them into a nested JSON 
-taxonomy guided by an external configuration (`taxonomy_config.json`) and caches it locally 
-to prevent exhausting the LLM's context window.
+taxonomy guided by an external configuration ([taxonomy_config.json](data_samples/taxonomy_config.json) 📎) 
+and caches it locally to prevent exhausting the LLM's context window.
+
 ```bash
 python3 vocab_manager.py
 ```
 
-**2. LLM Inference Pipeline (`llm_pipeline.py`)**
+**2. LLM Inference Pipeline ([llm_pipeline.py](llm_pipeline.py) 📎)**
 This script reads the page and line-ordered text chunks from the CSV files. It dynamically 
 filters out lines that are too short or classified as noise based on the config. For valid lines, 
 it injects the nested vocabulary and a sliding window of surrounding document context into the 
 system prompt, and executes the constrained LLM generation. 
+
 ```bash
 python3 llm_pipeline.py
 ```
@@ -820,10 +822,18 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 }
 ```
 
+Output examples per model:
+- [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
+- [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
+- [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
+- [KW_PER_DOC_LLM_aya_expanse_8b](data_samples/KW_PER_DOC_LLM_aya_expanse_8b) 📂 by Aya Expanse 8B [^15]
+- [KW_PER_DOC_LLM_bielik_11b](data_samples/KW_PER_DOC_LLM_bielik_11b) 📂 by Bielik 11B [^16]
+- [KW_PER_DOC_LLM_llama31_8b](data_samples/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
+
 ### 📊 Paradata Integration
 
 Just like the main shell script pipelines, the LLM enrichment natively hooks into `atrium_paradata.py`. It automatically logs:
-* Full snapshot of `llm_config.txt` and quality filter settings.
+* Full snapshot of [llm_config.txt](llm_config.txt) 📎 and quality filter settings.
 * Total processed lines (`json` success events).
 * Line-level tracking of errors and skips (e.g., lines skipped due to the quality 
 filter `skipped_filter`, inference faults `skipped_error`, or completely skipped files due to `already_exists`).
@@ -956,3 +966,9 @@ the paradata logger.
 [^9]: https://github.com/ufal/flexiconv
 [^10]: https://github.com/LIAAD/yake
 [^11]: https://github.com/MaartenGr/KeyBERT
+[^12]: https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-AWQ
+[^13]: https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
+[^14]: https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407
+[^15]: https://huggingface.co/CohereForAI/aya-expanse-8b
+[^16]: https://huggingface.co/speakleash/Bielik-11B-v2.3-Instruct
+[^17]: https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct
