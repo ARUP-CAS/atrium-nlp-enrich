@@ -8,13 +8,13 @@
         "original_text": "Kat- obec: C H 0 D O UNY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "osada"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "settlement"
             ],
-            "teater_category": "povrchový nález",
-            "confidence_score": 0.85
+            "teater_category": "sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -26,10 +26,10 @@
         "original_text": "Osada:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "osada"
+                "Osada"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "Settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -44,15 +44,14 @@
         "original_text": "Trať: Čmejlova pískovna",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovna",
-                "trať"
+                "Trať",
+                "Čmejlova pískovna"
             ],
             "extracted_keywords_en": [
-                "sandpit",
-                "railway"
+                "Settlement"
             ],
-            "teater_category": "plošina",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 0.85
         }
     },
     {
@@ -64,13 +63,17 @@
         "original_text": "tou;",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie diapozitivy"
+                "trať",
+                "čmejlova",
+                "pískovna"
             ],
             "extracted_keywords_en": [
-                "photoslides"
+                "line",
+                "čmejlova",
+                "sand quarry"
             ],
-            "teater_category": "fotografie diapozitivy",
-            "confidence_score": 0.9
+            "teater_category": "univerzita",
+            "confidence_score": 0.7
         }
     },
     {
@@ -81,10 +84,14 @@
         "quality_score": 0.0,
         "original_text": "Okres: Roudnice n. Labem",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "neznámý",
-            "confidence_score": 0.1
+            "extracted_keywords_cs": [
+                "Okres"
+            ],
+            "extracted_keywords_en": [
+                "District"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.85
         }
     },
     {
@@ -96,15 +103,13 @@
         "original_text": "pohřebiště - lužická",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště",
-                "lužická"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "burial site",
-                "Lusatian"
+                "burial site/cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -116,12 +121,12 @@
         "original_text": "ved. výzkurnu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "ved. výzkurnu"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "supervised excavation"
             ],
-            "teater_category": "povrchový nález",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
         }
     },
@@ -134,13 +139,15 @@
         "original_text": "Zdráva / za obdobi",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámý"
+                "Zdráva",
+                "obdobi"
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "Zdrava",
+                "period"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.5
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -152,13 +159,14 @@
         "original_text": "veý. oddélcni",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie terénu (digitální)"
+                "veý. oddélcni"
             ],
             "extracted_keywords_en": [
-                "photographs of fieldwork (digital)"
+                "veý. oddélcni",
+                "unspecified site"
             ],
-            "teater_category": "papír s fotografiemi",
-            "confidence_score": 0.95
+            "teater_category": "pseudolokalita (< 5 %)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -170,13 +178,23 @@
         "original_text": "Dne 26.1X.1957 jsem zajel do Chodoun, abych zjistil možnosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Chodoun"
+                "zjistit",
+                "možnosti",
+                "výzkumu",
+                "lužického",
+                "žárového",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "Chodony"
+                "investigate",
+                "options",
+                "excavation",
+                "Lusatian",
+                "cremation",
+                "cemetery"
             ],
-            "teater_category": "nízká kvalita",
-            "confidence_score": 0.7
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -188,17 +206,17 @@
         "original_text": "výzkumu lužického žárového pohřebiště, plánovaného na srpen 1958# Naleziště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště",
-                "lužický",
-                "žárový"
+                "lužické",
+                "žárové",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "burial",
-                "silesian",
-                "cremation"
+                "Lusatian",
+                "cremation",
+                "burial"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -210,15 +228,17 @@
         "original_text": "je asi 1 km vých. od obce v malé pískovně, kde místní občané",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovna",
-                "místo výroby"
+                "pohřebiště",
+                "lužické",
+                "žárové"
             ],
             "extracted_keywords_en": [
-                "sandpit",
-                "production site"
+                "burial site",
+                "Lusatian",
+                "cremation"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.75
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -230,19 +250,17 @@
         "original_text": "těží dle potřeby písek. Přilehlé pole je oseto vojtěškou. Majitel obou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "písek",
+                "pískovně",
                 "oseto",
-                "pole",
-                "vojtěška"
+                "vojtěškou"
             ],
             "extracted_keywords_en": [
-                "sand",
+                "sandpit",
                 "fenced",
-                "field",
-                "hedge"
+                "by the farmer"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.75
+            "teater_category": "plošný objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -254,19 +272,15 @@
         "original_text": "pozemků neměl námitek proti provedení výzkumu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pozemků",
-                "námitek",
-                "provedení",
-                "výzkumu"
+                "pohřeb",
+                "žárový"
             ],
             "extracted_keywords_en": [
-                "land",
-                "objections",
-                "conducting",
-                "research"
+                "cremation",
+                "burial"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.7
+            "teater_category": "pohřeb žárový",
+            "confidence_score": 0.95
         }
     },
     {
@@ -278,14 +292,19 @@
         "original_text": "V těchto místech byl koncem r.1954 rozrušen 1 žárový hrob, obložený",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřeb zvířete",
-                "žárový hrob"
+                "žárový hrob",
+                "opukovými deskami",
+                "keramikou",
+                "prsovitými vypnulinami"
             ],
             "extracted_keywords_en": [
-                "cremation burial"
+                "cremation burial",
+                "wattle boards",
+                "ceramic",
+                "pectinate impressions"
             ],
-            "teater_category": "pohřeb zvířete",
-            "confidence_score": 0.85
+            "teater_category": "pohřeb žárový",
+            "confidence_score": 0.95
         }
     },
     {
@@ -297,14 +316,12 @@
         "original_text": "opukovými deskami a s keramikou s hladce vymezenými prsovitý-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "papír sešit",
-                "keramika"
+                "žárový hrob"
             ],
             "extracted_keywords_en": [
-                "paper booklet",
-                "ceramic"
+                "cremation burial"
             ],
-            "teater_category": "papír sešit",
+            "teater_category": "pohřeb žárový",
             "confidence_score": 0.95
         }
     },
@@ -317,11 +334,21 @@
         "original_text": "mi vypnulinami (převzal tehdy referent v zastoupení KM Teplice).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mi vypnulinami"
+                "žárový",
+                "hrob",
+                "keramikou",
+                "prsovitými",
+                "vypnulinami"
             ],
-            "extracted_keywords_en": [],
-            "teater_category": "nízká kvalita",
-            "confidence_score": 0.7
+            "extracted_keywords_en": [
+                "cremation",
+                "burial",
+                "ceramic",
+                "rounded",
+                "depressions"
+            ],
+            "teater_category": "pohřeb žárový",
+            "confidence_score": 0.95
         }
     },
     {
@@ -333,13 +360,15 @@
         "original_text": "V r.1955 získalo odtud museum v Budyni n.Ohří další rozrušený hrob",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrob"
+                "rozrušený hrob",
+                "nádob"
             ],
             "extracted_keywords_en": [
-                "grave"
+                "disturbed grave",
+                "vessels"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.6
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -351,16 +380,16 @@
         "original_text": "(velký okřín a zlomky dalších asi 5 nádob; další nález, okolnosti neznámy).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nádob",
-                "nález",
-                "neznámy"
+                "hrob",
+                "okřín",
+                "nádob"
             ],
             "extracted_keywords_en": [
-                "pottery",
-                "find",
-                "unknown_context"
+                "grave",
+                "urn",
+                "vessels"
             ],
-            "teater_category": "pohřební areál",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.85
         }
     },
@@ -373,13 +402,23 @@
         "original_text": "Při své poslední návštěvě 26.IX. jsem zjistil, že těžební",
         "enrichment": {
             "extracted_keywords_cs": [
-                "těžební"
+                "těžební",
+                "plocha",
+                "zvětšila",
+                "odkryvem",
+                "rozrušen",
+                "hrob"
             ],
             "extracted_keywords_en": [
-                "mining"
+                "mining",
+                "area",
+                "increased",
+                "excavation",
+                "disturbed",
+                "grave"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.8
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -391,16 +430,16 @@
         "original_text": "plocha se proti roku 1955 zvětšila cca 5 krát. Odkryvem byl rozrušen",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plocha",
-                "odkryv",
-                "rozrušen"
+                "těžební plocha",
+                "zvětšila",
+                "odkryvem"
             ],
             "extracted_keywords_en": [
-                "area",
-                "excavation",
-                "disturbed"
+                "mining area",
+                "increased",
+                "excavation"
             ],
-            "teater_category": "plošný odkryv",
+            "teater_category": "areál těžby",
             "confidence_score": 0.85
         }
     },
@@ -413,15 +452,19 @@
         "original_text": "další, v pořadí již třetí hrob, z jehož obložení se zachovaly",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřeb",
-                "zachovaly"
+                "hrob",
+                "obložení",
+                "opukové desky",
+                "nádoby"
             ],
             "extracted_keywords_en": [
-                "burial",
-                "survived"
+                "grave",
+                "lining",
+                "reed boards",
+                "vessels"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -433,14 +476,16 @@
         "original_text": "opět opukové desky. Dále byly nalezeny v přehozeném materiálu zlomky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "opět opukové desky",
-                "zlomky"
+                "opukové desky",
+                "zlomky",
+                "nádob"
             ],
             "extracted_keywords_en": [
-                "opukové desky again",
-                "fragments"
+                "reed boards",
+                "fragments",
+                "vessels"
             ],
-            "teater_category": "předmět",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
         }
     },
@@ -453,16 +498,18 @@
         "original_text": "z několika nádob (osudí, miska a část spodku nádoby blíže neur-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nádoba",
-                "osudí",
-                "miska"
+                "nádoby",
+                "zlomky",
+                "opukové desky",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "vessel",
-                "osudy",
-                "dish"
+                "vessels",
+                "potsherds",
+                "wattle boards",
+                "burial site"
             ],
-            "teater_category": "nádoba",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.85
         }
     },
@@ -475,15 +522,17 @@
         "original_text": "citelného tvaru s mřížkovým rýhováním). Poloha všech tří hrobů ukazuje",
         "enrichment": {
             "extracted_keywords_cs": [
-                "papír s fotografiemi",
-                "fotografie hrobů"
+                "zlomky",
+                "nádob",
+                "hrobů"
             ],
             "extracted_keywords_en": [
-                "paper with photographs",
-                "tombs photographs"
+                "potsherds",
+                "vessels",
+                "graves"
             ],
-            "teater_category": "papír s fotografiemi",
-            "confidence_score": 0.85
+            "teater_category": "hrob",
+            "confidence_score": 0.95
         }
     },
     {
@@ -495,13 +544,13 @@
         "original_text": "zároveň směr, kam asi další hroby pokračují, totiž na mírnou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámý"
+                "hroby"
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "graves"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.75
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -513,13 +562,13 @@
         "original_text": "vyvýšeninu, zasahující z části již do pole. Při povrchovém sběru",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "vyvýšeninu"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "ridge"
             ],
-            "teater_category": "povrchový nález",
-            "confidence_score": 0.95
+            "teater_category": "vrcholný–pozdní středověk",
+            "confidence_score": 0.85
         }
     },
     {
@@ -531,17 +580,20 @@
         "original_text": "byl dále nalezen kamenný únětický mlat se žlábkovým sedlem (délka",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kámen",
-                "mlát",
+                "kamenný",
+                "mlat",
+                "úněťický",
                 "žlábkový",
-                "sedlo"
+                "sedlem"
             ],
             "extracted_keywords_en": [
                 "stone",
-                "axe",
+                "hammer",
+                "unetice",
+                "notched",
                 "socket"
             ],
-            "teater_category": "kámen drahý",
+            "teater_category": "objekt/stopa výroby",
             "confidence_score": 0.85
         }
     },
@@ -554,13 +606,13 @@
         "original_text": "Navrhuji, aby výzkum v příštím roce byl proveden několika",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nízká kvalita"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "poor quality"
+                "burial site"
             ],
-            "teater_category": "nízká kvalita",
-            "confidence_score": 0.8
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -572,17 +624,17 @@
         "original_text": "příčnými sondami, jimiž by byl praeoex zachycen rozsah pohřebiště,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příčnými sondami",
+                "příčné sondy",
                 "praeoex",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "horizontal sonds",
+                "vertical trenches",
                 "praeoex",
                 "burial site"
             ],
-            "teater_category": "skupina sond",
-            "confidence_score": 0.9
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -594,19 +646,19 @@
         "original_text": "zejména pak prozkoumat nej bližší okolí pískovny v těch místech, kde",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nej",
-                "bližší",
+                "pohřebiště",
+                "prozkoumat",
                 "okolí",
                 "pískovny"
             ],
             "extracted_keywords_en": [
-                "nearest",
+                "burial site",
+                "explore",
                 "surrounding",
-                "sandpit",
-                "area"
+                "sandpit"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.75
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -617,12 +669,14 @@
         "quality_score": 0.0,
         "original_text": "bude pravděpodobně těžení pokračovat. Vzhledem k malé mocnosti or-",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [
-                "unknown"
+            "extracted_keywords_cs": [
+                "těžení"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.7
+            "extracted_keywords_en": [
+                "mining"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.95
         }
     },
     {
@@ -634,13 +688,15 @@
         "original_text": "nice na nalezišti a poměrně malé ploše návršíčka (cca 300 m ), kde",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plošina"
+                "nalezišti",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "platform"
+                "site",
+                "cemetery"
             ],
-            "teater_category": "plošina",
-            "confidence_score": 0.9
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -652,19 +708,13 @@
         "original_text": "pohřebiště předpokládám, věřím, že by pohřebiště mohlo být z větší",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště",
-                "předpokládám",
-                "věřím",
-                "mohlo by být"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "burial site",
-                "assume",
-                "believe",
-                "could be"
+                "burial site"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -676,15 +726,13 @@
         "original_text": "Poznámka: Pikte pokud možno strojern. Nn konci uvedte datum odoslání a čitelný podpis. Zprávy koreferentú a komisi",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pikte",
-                "strojerný"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "pict",
-                "mechanical"
+                "burial site"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.85
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -696,13 +744,13 @@
         "original_text": "vyhotovto dvojmo.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie diapozitivy"
+                "vyhotovto"
             ],
             "extracted_keywords_en": [
-                "photographs of objects (digital)"
+                "prepared"
             ],
-            "teater_category": "fotografie diapozitivy",
-            "confidence_score": 0.95
+            "teater_category": "zprávy a hlášení",
+            "confidence_score": 0.85
         }
     },
     {
@@ -723,14 +771,14 @@
             ],
             "extracted_keywords_en": [
                 "parts",
-                "examined",
+                "investigated",
                 "planned",
                 "time",
                 "next",
                 "year"
             ],
-            "teater_category": "někdy v letech",
-            "confidence_score": 0.75
+            "teater_category": "plán regionu",
+            "confidence_score": 0.85
         }
     },
     {
@@ -742,48 +790,17 @@
         "original_text": "V Praze 1. října 1957.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příloha zprávy/hlášení",
-                "neurčený dokument",
-                "někdy v letech",
-                "použitelný",
-                "tisková kvalita",
-                "neznámý",
-                "neznámý počasí",
-                "neurčený areál",
-                "neurčený materiál",
-                "neurčený kontext",
-                "neznámá",
-                "neurčený podnět",
-                "neurčený záměr",
-                "neurčený dokument",
-                "neurčený zdroj",
-                "neurčený dokument",
-                "neurčený dokument",
-                "neurčený dokument",
-                "neurčený dokument",
-                "neurčený dokument"
+                "Praze",
+                "října",
+                "1957"
             ],
             "extracted_keywords_en": [
-                "attachment/report",
-                "unspecified document",
-                "approximate years",
-                "useable",
-                "unknown",
-                "unknown weather",
-                "unspecified site",
-                "unspecified material",
-                "unknown context",
-                "unknown",
-                "unknown motivation",
-                "unspecified document",
-                "unspecified document",
-                "unspecified document",
-                "unspecified document",
-                "unspecified document",
-                "unspecified document"
+                "Prague",
+                "October",
+                "1957"
             ],
-            "teater_category": "někdy v letech",
-            "confidence_score": 0.25
+            "teater_category": "příkop",
+            "confidence_score": 0.85
         }
     },
     {
@@ -794,10 +811,14 @@
         "quality_score": 0.0,
         "original_text": "J. Hrala",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "neznámý",
-            "confidence_score": 0.1
+            "extracted_keywords_cs": [
+                "J. Hrala"
+            ],
+            "extracted_keywords_en": [
+                "J. Hrala"
+            ],
+            "teater_category": "pohřební objekt",
+            "confidence_score": 0.8
         }
     }
 ]

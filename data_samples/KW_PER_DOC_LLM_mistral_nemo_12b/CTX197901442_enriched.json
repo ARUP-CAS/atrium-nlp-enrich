@@ -3,47 +3,53 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 1,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "OBEC",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bez ochrany"
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "unprotected"
+                "hillfort"
             ],
-            "teater_category": "bez ochrany",
-            "confidence_score": 0.95
-        }
-    },
-    {
-        "file_id": "CTX197901442",
-        "page": 1,
-        "line": 2,
-        "original_text": "OKRES",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "neznámá"
-            ],
-            "extracted_keywords_en": [
-                "unknown"
-            ],
-            "teater_category": "neznámá",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
-        "line": 3,
-        "original_text": "‘ *4242& -",
+        "line": 2,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "OKRES",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nerelevantní"
+                "OKRES"
             ],
             "extracted_keywords_en": [
-                "irrelevant"
+                "DISTRICT"
             ],
-            "teater_category": "nerelevantní",
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX197901442",
+        "page": 1,
+        "line": 4,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Vysoký jez .",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Vysoký jez"
+            ],
+            "extracted_keywords_en": [
+                "High Dam"
+            ],
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -51,38 +57,46 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 5,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Mad DrAMou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie diapozitivy"
+                "Mad DrAMou"
             ],
             "extracted_keywords_en": [
-                "aerial photographs (slides)"
+                "Mad DrAMou"
             ],
-            "teater_category": "fotografie diapozitivy",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 6,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "ČÍSLO PARCELY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámý"
+                "ČÍSLO PARCELY",
+                "Rychnov n.Kn."
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "PARCEL NUMBER",
+                "Rychnov n.Kn."
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 8,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Rychnov n.Kn.",
         "enrichment": {
             "extracted_keywords_cs": [
@@ -91,95 +105,111 @@
             "extracted_keywords_en": [
                 "Rychnov n.Kn."
             ],
-            "teater_category": "bez okolností",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 9,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Přílohy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "papír",
-                "s fotografiemi"
+                "Homole",
+                "kopec",
+                "SZ",
+                "od",
+                "Vysokí"
             ],
             "extracted_keywords_en": [
-                "paper with photographs"
+                "Homole",
+                "hill",
+                "SZ",
+                "from",
+                "Vysoký"
             ],
-            "teater_category": "papír s fotografiemi",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 10,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "NÁZEV TRATI",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jiný materiál"
+                "NÁZEV TRATI",
+                "Homole",
+                "kopec",
+                "SZ",
+                "od",
+                "Vysokí-Udol",
+                "pokryt",
+                "lesem"
             ],
             "extracted_keywords_en": [
-                "other material"
+                "NAME OF THE PATH",
+                "Homole",
+                "hill",
+                "SZ",
+                "from",
+                "Vysoký-Udol",
+                "covered",
+                "by forest"
             ],
-            "teater_category": "jiný materiál",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 11,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Homole - kopec SZ od Vysokí-",
         "enrichment": {
             "extracted_keywords_cs": [
                 "Homole",
                 "kopec",
                 "SZ",
-                "Vysoký"
+                "Vysokí-Ujezda",
+                "lesem"
             ],
             "extracted_keywords_en": [
                 "Homole",
                 "hill",
                 "SZ",
-                "Vysoký"
+                "Vysokí-Ujezda",
+                "wooded"
             ],
-            "teater_category": "přírodní útvar s lidskou aktivitou",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 12,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Újezda pokryt lesem.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "újezda",
-                "pokryt lesem"
+                "kopec",
+                "lesem"
             ],
             "extracted_keywords_en": [
-                "forested area"
+                "hill",
+                "wooded"
             ],
-            "teater_category": "přírodní útvar s lidskou aktivitou",
-            "confidence_score": 0.85
-        }
-    },
-    {
-        "file_id": "CTX197901442",
-        "page": 1,
-        "line": 14,
-        "original_text": "ho",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "fotografie diapozitivy"
-            ],
-            "extracted_keywords_en": [
-                "photoslides"
-            ],
-            "teater_category": "fotografie diapozitivy",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -187,33 +217,47 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 15,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Kultura Z.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "xerokopie černobílá",
-                "kultura Z"
+                "kultura",
+                "Z",
+                "moravská",
+                "malovaná",
+                "keramika"
             ],
             "extracted_keywords_en": [
-                "black-and-white xerographic copy",
-                "Kulturni period Z"
+                "culture",
+                "Z",
+                "Moravian",
+                "Painted",
+                "Ware"
             ],
-            "teater_category": "kultura s lineární keramikou",
-            "confidence_score": 0.85
+            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 16,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "číslo mapy"
+                "kultura",
+                "zvoncovitých",
+                "pohárů"
             ],
             "extracted_keywords_en": [
-                "map number"
+                "culture",
+                "bell",
+                "beakers"
             ],
-            "teater_category": "mapa",
+            "teater_category": "kultura zvoncovitých pohárů",
             "confidence_score": 1.0
         }
     },
@@ -221,15 +265,19 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 17,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Druh nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie diapozitivy"
+                "keramické",
+                "střepy"
             ],
             "extracted_keywords_en": [
-                "photoslides"
+                "ceramic",
+                "shards"
             ],
-            "teater_category": "fotografie diapozitivy",
+            "teater_category": "keramika",
             "confidence_score": 1.0
         }
     },
@@ -237,145 +285,137 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 18,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "keramcké střepy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zlomek keramiky"
+                "keramcké střepy"
             ],
             "extracted_keywords_en": [
-                "potsherd"
+                "ceramic sherds"
             ],
-            "teater_category": "zlomek keramiky",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 19,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "LITERATURA",
         "enrichment": {
             "extracted_keywords_cs": [
-                "literatura"
+                "LITERATURA"
             ],
             "extracted_keywords_en": [
-                "literature"
+                "LITERATURE"
             ],
-            "teater_category": "jiný text",
-            "confidence_score": 0.95
+            "teater_category": "kulturní vrstva/objekt",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 20,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Uložení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie",
                 "uložení"
             ],
             "extracted_keywords_en": [
-                "photographs",
                 "storage"
             ],
-            "teater_category": "papír s fotografiemi",
-            "confidence_score": 0.85
+            "teater_category": "hrazený areál",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 21,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Rukopisné poznámky str. 56 , autora .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rukopisné poznámky",
+                "rukopisné",
+                "poznámky",
                 "str. 56",
-                "autor"
+                "autora"
             ],
             "extracted_keywords_en": [
-                "handwritten notes",
+                "manuscript",
+                "notes",
                 "page 56",
                 "author"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.85
+            "teater_category": "hrazený areál",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 22,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Čis. inv.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámá"
+                "Čis. inv."
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "Inv. No."
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.85
-        }
-    },
-    {
-        "file_id": "CTX197901442",
-        "page": 1,
-        "line": 25,
-        "original_text": "Ľne 22. 11.1974 . 7",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "někdy v letech"
-            ],
-            "extracted_keywords_en": [
-                "approximate years"
-            ],
-            "teater_category": "někdy v letech",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 26,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "P.Jirušek starousedlík v obci Vysoký Újezd podal informaci , že před",
         "enrichment": {
             "extracted_keywords_cs": [
-                "P.Jirušek",
-                "starousedlík",
-                "obec",
-                "Vysoký Újezd",
-                "informace"
+                "keramických střepů",
+                "kopali krechty",
+                "uskladnení brambor a řepy"
             ],
             "extracted_keywords_en": [
-                "P.Jirušek",
-                "old-settler",
-                "village",
-                "Vysoký Újezd",
-                "information"
+                "pottery sherds",
+                "dug pits",
+                "storage of potatoes and beets"
             ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.85
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 27,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "mnoha lety si rolníci v místě Homole kopali krechty na uskladnení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kopali",
-                "krechty",
-                "uskladnení"
+                "keramický",
+                "střepu"
             ],
             "extracted_keywords_en": [
-                "digging",
-                "storehouses",
-                "storage"
+                "ceramic",
+                "shards"
             ],
-            "teater_category": "plošina",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -383,50 +423,54 @@
         "file_id": "CTX197901442",
         "page": 1,
         "line": 28,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramických",
-                "střepu"
+                "kopali",
+                "krechty",
+                "uskladneni",
+                "brambor",
+                "repy",
+                "keramicky",
+                "strep"
             ],
             "extracted_keywords_en": [
+                "dug",
+                "cellars",
+                "storage",
+                "potatoes",
+                "beets",
                 "ceramic",
-                "sherds"
+                "shards"
             ],
-            "teater_category": "zvonice",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
         "file_id": "CTX197901442",
         "page": 1,
         "line": 29,
+        "categ": "Clear",
+        "quality_score": 0.0,
         "original_text": "Keramický materiál nebyl zachován .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "x"
+                "keramický",
+                "materiál",
+                "nebyl",
+                "zachován"
             ],
             "extracted_keywords_en": [
-                ""
+                "ceramic",
+                "material",
+                "not",
+                "preserved"
             ],
-            "teater_category": "předmět",
-            "confidence_score": 0.85
-        }
-    },
-    {
-        "file_id": "CTX197901442",
-        "page": 1,
-        "line": 31,
-        "original_text": "Nčv* rodte map) 4:2Fee",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "mapa"
-            ],
-            "extracted_keywords_en": [
-                "map"
-            ],
-            "teater_category": "mapa",
-            "confidence_score": 1.0
+            "teater_category": "rané středohradištní období",
+            "confidence_score": 0.95
         }
     }
 ]

@@ -24,7 +24,7 @@ class VocabularyManager:
     def __init__(
             self,
             vocab_path: str = "data_samples/teater_nested_vocab.json",
-            config_path: str = "taxonomy_config.json",
+            config_path: str = "data_samples/taxonomy_config.json",
             llm_predictor: Optional[Callable[[str], str]] = None
     ):
         self.vocab_path = Path(vocab_path)

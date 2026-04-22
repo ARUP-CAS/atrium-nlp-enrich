@@ -8,13 +8,15 @@
         "original_text": "OBEC",
         "enrichment": {
             "extracted_keywords_cs": [
-                "OBEC"
+                "OBEC",
+                "OKRES"
             ],
             "extracted_keywords_en": [
-                "Municipality"
+                "town",
+                "district"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "teater_category": "neurčený areál",
+            "confidence_score": 0.9
         }
     },
     {
@@ -29,9 +31,9 @@
                 "OKRES"
             ],
             "extracted_keywords_en": [
-                "district"
+                "COUNTY"
             ],
-            "teater_category": "katastrální území",
+            "teater_category": "okenní výplň",
             "confidence_score": 1.0
         }
     },
@@ -44,10 +46,12 @@
         "original_text": "Vysoký jez .",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Vysoký",
                 "jez"
             ],
             "extracted_keywords_en": [
-                "dam"
+                "High",
+                "lake"
             ],
             "teater_category": "přehrada",
             "confidence_score": 1.0
@@ -61,10 +65,16 @@
         "quality_score": 0.0,
         "original_text": "Mad DrAMou",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "nerelevantní",
-            "confidence_score": 0.0
+            "extracted_keywords_cs": [
+                "Mad",
+                "DrAMou"
+            ],
+            "extracted_keywords_en": [
+                "Mad",
+                "DrAMou"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.8
         }
     },
     {
@@ -76,13 +86,15 @@
         "original_text": "ČÍSLO PARCELY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ČÍSLO PARCELY"
+                "ČÍSLO",
+                "PARCELY"
             ],
             "extracted_keywords_en": [
-                "PARCEL NUMBER"
+                "Parcel",
+                "Number"
             ],
-            "teater_category": "katastrální území",
-            "confidence_score": 1.0
+            "teater_category": "část knihy",
+            "confidence_score": 0.95
         }
     },
     {
@@ -94,10 +106,12 @@
         "original_text": "Rychnov n.Kn.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Rychnov n.Kn"
+                "Rychnov n.Kn."
             ],
-            "extracted_keywords_en": [],
-            "teater_category": "Rakousko",
+            "extracted_keywords_en": [
+                "Rychnov n.Kn."
+            ],
+            "teater_category": "lokalita",
             "confidence_score": 1.0
         }
     },
@@ -110,13 +124,19 @@
         "original_text": "Přílohy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příloha zprávy/hlášení (report annex) (1 time),"
+                "Homole",
+                "kopec",
+                "SZ",
+                "Vysokí"
             ],
             "extracted_keywords_en": [
-                "annex (1 time),"
+                "Homole",
+                "hill",
+                "SZ",
+                "Vysokí"
             ],
-            "teater_category": "příloha zprávy/hlášení",
-            "confidence_score": 1.0
+            "teater_category": "pseudolokalita (< 5 %)",
+            "confidence_score": 0.9
         }
     },
     {
@@ -127,10 +147,16 @@
         "quality_score": 0.0,
         "original_text": "NÁZEV TRATI",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "jiný text",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "NÁZEV",
+                "TRATI"
+            ],
+            "extracted_keywords_en": [
+                "NAME",
+                "LINE"
+            ],
+            "teater_category": "objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -142,13 +168,19 @@
         "original_text": "Homole - kopec SZ od Vysokí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kopec"
+                "Homole",
+                "kopec",
+                "SZ",
+                "Vysoký-Újezd"
             ],
             "extracted_keywords_en": [
-                "hill"
+                "Homole",
+                "hill",
+                "SZ",
+                "Vysoký-Újezd"
             ],
-            "teater_category": "přírodní útvar",
-            "confidence_score": 1.0
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -160,13 +192,15 @@
         "original_text": "Újezda pokryt lesem.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "krajina"
+                "Újezda",
+                "les"
             ],
             "extracted_keywords_en": [
-                "landscape"
+                "Újezda",
+                "forest"
             ],
-            "teater_category": "krajina",
-            "confidence_score": 1.0
+            "teater_category": "vyspělé středohradištní období",
+            "confidence_score": 0.9
         }
     },
     {
@@ -178,12 +212,16 @@
         "original_text": "Kultura Z.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kultura"
+                "kultura",
+                "kulovitých",
+                "amfor"
             ],
             "extracted_keywords_en": [
-                "culture"
+                "culture",
+                "globular",
+                "amphorae"
             ],
-            "teater_category": "neznámá",
+            "teater_category": "kultura kulovitých amfor",
             "confidence_score": 1.0
         }
     },
@@ -196,10 +234,11 @@
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mapa"
+                "ČÍSLO",
+                "MAPY"
             ],
             "extracted_keywords_en": [
-                "map"
+                "MAP NUMBER"
             ],
             "teater_category": "mapa",
             "confidence_score": 1.0
@@ -214,10 +253,34 @@
         "original_text": "Druh nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "druh nálezu"
+                "druh",
+                "nálezu"
             ],
-            "extracted_keywords_en": [],
-            "teater_category": "jiný materiál",
+            "extracted_keywords_en": [
+                "type",
+                "find"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX197901442",
+        "page": 1,
+        "line": 18,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "keramcké střepy",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "keramcké",
+                "střepy"
+            ],
+            "extracted_keywords_en": [
+                "pottery",
+                "fragments"
+            ],
+            "teater_category": "keramika",
             "confidence_score": 1.0
         }
     },
@@ -229,10 +292,14 @@
         "quality_score": 0.0,
         "original_text": "LITERATURA",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "neznámá",
-            "confidence_score": 0.0
+            "extracted_keywords_cs": [
+                "LITERATURA"
+            ],
+            "extracted_keywords_en": [
+                "LITERATURE"
+            ],
+            "teater_category": "papír",
+            "confidence_score": 1.0
         }
     },
     {
@@ -244,13 +311,13 @@
         "original_text": "Uložení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "uložení"
+                "Uložení"
             ],
             "extracted_keywords_en": [
-                "deposition"
+                "Storage"
             ],
-            "teater_category": "odpad",
-            "confidence_score": 1.0
+            "teater_category": "papír",
+            "confidence_score": 0.95
         }
     },
     {
@@ -262,15 +329,18 @@
         "original_text": "Rukopisné poznámky str. 56 , autora .",
         "enrichment": {
             "extracted_keywords_cs": [
+                "rukopisné",
                 "poznámky",
-                "strana"
+                "strana",
+                "autor"
             ],
             "extracted_keywords_en": [
-                "notes",
-                "page"
+                "manuscript notes",
+                "page",
+                "author"
             ],
             "teater_category": "papír",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -282,11 +352,15 @@
         "original_text": "Čis. inv.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "čis. inv"
+                "Čis",
+                "inv"
             ],
-            "extracted_keywords_en": [],
-            "teater_category": "jiný text",
-            "confidence_score": 1.0
+            "extracted_keywords_en": [
+                "Number",
+                "inventory"
+            ],
+            "teater_category": "papír",
+            "confidence_score": 0.95
         }
     },
     {
@@ -298,13 +372,23 @@
         "original_text": "P.Jirušek starousedlík v obci Vysoký Újezd podal informaci , že před",
         "enrichment": {
             "extracted_keywords_cs": [
-                "informace"
+                "krechty",
+                "uskladnení",
+                "brambor",
+                "řepy",
+                "keramických",
+                "střepu"
             ],
             "extracted_keywords_en": [
-                "information"
+                "trenches",
+                "storage",
+                "potatoes",
+                "beets",
+                "ceramic",
+                "fragments"
             ],
-            "teater_category": "jiný kontext",
-            "confidence_score": 0.0
+            "teater_category": "jáma zásobní",
+            "confidence_score": 0.95
         }
     },
     {
@@ -316,13 +400,23 @@
         "original_text": "mnoha lety si rolníci v místě Homole kopali krechty na uskladnení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "krechty"
+                "krechty",
+                "uskladnení",
+                "brambor",
+                "řepy",
+                "keramických",
+                "střepu"
             ],
             "extracted_keywords_en": [
-                "trenches"
+                "trenches",
+                "storage",
+                "potatoes",
+                "beets",
+                "ceramic",
+                "fragments"
             ],
             "teater_category": "jáma zásobní",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -334,19 +428,21 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
+                "krechty",
                 "brambor",
                 "řepy",
-                "při kopání",
-                "mnoho různých keramických střepu"
+                "keramických",
+                "střepu"
             ],
             "extracted_keywords_en": [
+                "trenches",
                 "potatoes",
-                "carrots",
-                "during digging",
-                "many different ceramic fragments"
+                "beets",
+                "ceramic",
+                "fragments"
             ],
-            "teater_category": "zlomek keramiky",
-            "confidence_score": 1.0
+            "teater_category": "jáma zásobní",
+            "confidence_score": 0.95
         }
     },
     {
@@ -358,13 +454,20 @@
         "original_text": "Keramický materiál nebyl zachován .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramický materiál"
+                "Keramický",
+                "materiál",
+                "nebyl",
+                "zachován"
             ],
             "extracted_keywords_en": [
-                "ceramic material"
+                "Pottery",
+                "material",
+                "was",
+                "not",
+                "preserved"
             ],
-            "teater_category": "ztraceno/skartováno",
-            "confidence_score": 1.0
+            "teater_category": "zásobnice",
+            "confidence_score": 0.95
         }
     }
 ]

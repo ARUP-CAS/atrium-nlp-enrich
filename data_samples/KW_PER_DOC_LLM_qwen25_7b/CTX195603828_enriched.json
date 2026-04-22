@@ -8,13 +8,13 @@
         "original_text": "Věc : Stará Kouřim / Kolín/",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "hillfort"
             ],
-            "teater_category": "povrchový nález",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -26,50 +26,17 @@
         "original_text": "v Praze dne 6.října 1956.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "předání",
-                "data",
-                "datum",
-                "data",
-                "datační",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data"
+                "Praze",
+                "dne",
+                "1956"
             ],
             "extracted_keywords_en": [
-                "transfer",
-                "data",
-                "date",
-                "data",
-                "dating",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data",
-                "data"
+                "Prague",
+                "on",
+                "1956"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.95
+            "teater_category": "zprávy a hlášení",
+            "confidence_score": 0.85
         }
     },
     {
@@ -81,13 +48,17 @@
         "original_text": "Výzkum slovanského hradiště",
         "enrichment": {
             "extracted_keywords_cs": [
+                "výzkum",
+                "slovanského",
                 "hradiště"
             ],
             "extracted_keywords_en": [
+                "excavation",
+                "Slavic",
                 "hillfort"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -99,17 +70,13 @@
         "original_text": "Zpráva za září 1956.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zpráva",
-                "září",
-                "1956"
+                "Zpráva"
             ],
             "extracted_keywords_en": [
-                "report",
-                "September",
-                "1956"
+                "Report"
             ],
-            "teater_category": "náhodný zásah/nález",
-            "confidence_score": 0.85
+            "teater_category": "zprávy a hlášení",
+            "confidence_score": 0.95
         }
     },
     {
@@ -120,10 +87,16 @@
         "quality_score": 0.0,
         "original_text": "Vedoucím výzkumu • Dr \"iloš Solle ,",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "neznámý",
-            "confidence_score": 0.1
+            "extracted_keywords_cs": [
+                "vedoucím",
+                "výzkumu"
+            ],
+            "extracted_keywords_en": [
+                "research",
+                "leader"
+            ],
+            "teater_category": "zprávy a hlášení",
+            "confidence_score": 0.95
         }
     },
     {
@@ -135,13 +108,15 @@
         "original_text": "Spolupracovali • r V. Vojáček, J.Hub.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámá"
+                "V. Vojáček",
+                "J.Hub"
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "V. Vojáček",
+                "J.Hub"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.75
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -152,10 +127,14 @@
         "quality_score": 0.0,
         "original_text": "Počet dělníků : 4 stálí , 4 výpomocní.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "nerelevantní",
-            "confidence_score": 0.0
+            "extracted_keywords_cs": [
+                "Počet dělníků"
+            ],
+            "extracted_keywords_en": [
+                "Number of workers"
+            ],
+            "teater_category": "zprávy a hlášení",
+            "confidence_score": 0.85
         }
     },
     {
@@ -167,12 +146,22 @@
         "original_text": "Práce :",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "Pracoviště",
+                "úsek",
+                "krížová",
+                "sonda",
+                "ukončení",
+                "hrady"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "site",
+                "section",
+                "cross",
+                "trench",
+                "termination",
+                "castles"
             ],
-            "teater_category": "povrchový nález",
+            "teater_category": "hrad",
             "confidence_score": 0.95
         }
     },
@@ -185,15 +174,34 @@
         "original_text": "Pracoviště 1/56 : Práce na tomto úseku uzavřena.Rozšířenou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pracoviště",
-                "práce"
+                "Pracoviště",
+                "úseku",
+                "uzavřena",
+                "rozšířenou",
+                "křížovou",
+                "sondu",
+                "ověřeno",
+                "ukončení",
+                "hrady",
+                "srázu",
+                "horizontální",
+                "vertikální"
             ],
             "extracted_keywords_en": [
-                "worksite",
-                "work"
+                "site",
+                "section",
+                "completed",
+                "extended",
+                "cross-trench",
+                "verified",
+                "termination",
+                "walls",
+                "slope",
+                "horizontal",
+                "vertical"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.7
+            "teater_category": "hrad",
+            "confidence_score": 0.85
         }
     },
     {
@@ -205,19 +213,31 @@
         "original_text": "křížovou sondou bylo ověřeno ukončení hradby středního vslu,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "křížová sondování",
-                "hradba",
-                "střední vslu",
-                "ukončení hradby"
+                "křížovou sondou",
+                "ukončení hradby",
+                "středního vslu",
+                "připnutého",
+                "jižnímu srázu",
+                "hradiska",
+                "horizontální a vertikální",
+                "výzkumnou metodou",
+                "charakter opevnění",
+                "přemyslovského"
             ],
             "extracted_keywords_en": [
-                "cross-section drilling",
-                "wall",
-                "middle vslu",
-                "wall termination"
+                "cross-trench",
+                "termination of the rampart",
+                "middle slope",
+                "attached to",
+                "southern slope",
+                "hillfort",
+                "horizontal and vertical",
+                "research method",
+                "character of the fortification",
+                "Prague-style"
             ],
-            "teater_category": "příkop",
-            "confidence_score": 0.85
+            "teater_category": "hrad",
+            "confidence_score": 0.95
         }
     },
     {
@@ -229,23 +249,19 @@
         "original_text": "připnutého k jižnímu srázu hradiska a horizontální a vertikální",
         "enrichment": {
             "extracted_keywords_cs": [
-                "horizontální",
-                "vertikální",
-                "připnuté",
-                "jižní",
-                "sráž",
-                "hradisko"
+                "křížová sondování",
+                "hradba",
+                "opevnění",
+                "přemyslovský typ"
             ],
             "extracted_keywords_en": [
-                "horizontal",
-                "vertical",
-                "attached",
-                "south",
-                "slope",
-                "hillfort"
+                "cross-trenching",
+                "wall",
+                "fortification",
+                "Przemyśl type"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.95
+            "teater_category": "hrad",
+            "confidence_score": 0.85
         }
     },
     {
@@ -257,15 +273,25 @@
         "original_text": "výzkumnou metodou zjištěn charakter opevnění přemyslovského",
         "enrichment": {
             "extracted_keywords_cs": [
+                "výzkumnou",
+                "metodou",
+                "zjištěn",
+                "charakter",
                 "opevnění",
-                "Přemyslovské"
+                "přemyslovského",
+                "typu"
             ],
             "extracted_keywords_en": [
+                "research",
+                "method",
+                "determined",
+                "character",
                 "fortification",
-                "Přemyslovské"
+                "przemyslowskiego",
+                "type"
             ],
-            "teater_category": "přechovávaná přírodnina",
-            "confidence_score": 0.8
+            "teater_category": "metalografie",
+            "confidence_score": 0.85
         }
     },
     {
@@ -277,13 +303,21 @@
         "original_text": "typu s kamennou a roštovou dřevěnou konsttukcí valového",
         "enrichment": {
             "extracted_keywords_cs": [
-                "konstrukce sypaná/vršená"
+                "kamennou",
+                "roštovou",
+                "dřevěnou",
+                "konsttukcí",
+                "valového"
             ],
             "extracted_keywords_en": [
-                "earth construction"
+                "stone",
+                "post-and",
+                "wooden",
+                "structure",
+                "rampart"
             ],
-            "teater_category": "konstrukce sypaná/vršená",
-            "confidence_score": 0.85
+            "teater_category": "valoun",
+            "confidence_score": 0.95
         }
     },
     {
@@ -296,13 +330,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pozůstatky",
-                "dřevěné konstrukce"
+                "dřevěné",
+                "konstrukce"
             ],
             "extracted_keywords_en": [
-                "wooden structures remnants"
+                "remains",
+                "wooden",
+                "structure"
             ],
-            "teater_category": "povrchový nález",
-            "confidence_score": 0.85
+            "teater_category": "hradba",
+            "confidence_score": 0.95
         }
     },
     {
@@ -314,13 +351,19 @@
         "original_text": "Pracoviště 2/56: Na tomto úseku pare 826 zachyceny stopy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stopy"
+                "pracoviště",
+                "stopy",
+                "jižní",
+                "hradby"
             ],
             "extracted_keywords_en": [
-                "traces"
+                "site",
+                "traces",
+                "south",
+                "walls"
             ],
-            "teater_category": "areál jiné aktivity",
-            "confidence_score": 0.8
+            "teater_category": "hrad",
+            "confidence_score": 0.85
         }
     },
     {
@@ -332,14 +375,18 @@
         "original_text": "jižní hradby na okr- ji hradiska s kamennou",
         "enrichment": {
             "extracted_keywords_cs": [
+                "jižní hradby",
                 "hradiska",
-                "kamenná"
+                "kamennou",
+                "podezdívku"
             ],
             "extracted_keywords_en": [
-                "fortress",
-                "stone"
+                "south wall",
+                "hillfort",
+                "stone",
+                "defensive wall"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "hrad",
             "confidence_score": 0.85
         }
     },
@@ -352,13 +399,17 @@
         "original_text": "patou ve formě zřetelné kamenné podezdívky.Za touto kamennnou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřeb zvířete"
+                "patou",
+                "kamennou",
+                "podezdívky"
             ],
             "extracted_keywords_en": [
-                "animal burial"
+                "wall",
+                "stone",
+                "defensive"
             ],
-            "teater_category": "pohřeb zvířete",
-            "confidence_score": 0.95
+            "teater_category": "hrad",
+            "confidence_score": 0.85
         }
     },
     {
@@ -370,21 +421,22 @@
         "original_text": "podezdívkou zjištěn sídlištní prostor s popelovitými vrstvami",
         "enrichment": {
             "extracted_keywords_cs": [
-                "podezdívkou",
-                "zjištěn",
-                "sídlištní",
-                "prostor",
-                "popelovitými",
-                "vrstvami"
+                "podezdívka",
+                "sídlištní prostor",
+                "popelovitými vrstvami",
+                "nálezy",
+                "zídkou",
+                "kůlů"
             ],
             "extracted_keywords_en": [
-                "surface",
-                "find",
-                "settlement",
-                "ash",
-                "layers"
+                "pseudowall",
+                "settlement space",
+                "ash layers",
+                "finds",
+                "wall",
+                "posts"
             ],
-            "teater_category": "povrchový nález",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -397,12 +449,28 @@
         "original_text": "a nálezy , příčně členěný zídkou a řadou kůlů.e nutno zde rozlišit",
         "enrichment": {
             "extracted_keywords_cs": [
-                "povrchový nález"
+                "podezdívka",
+                "sídlištní prostor",
+                "popelovitými vrstvami",
+                "nálezy",
+                "členěný zídkou",
+                "řadou kůlů",
+                "rozlišit",
+                "slovanské sídlištní fáse",
+                "stavební úpravy"
             ],
             "extracted_keywords_en": [
-                "surface find"
+                "lintel",
+                "settlement space",
+                "ash layers",
+                "finds",
+                "divided by wall",
+                "series of stakes",
+                "distinguish",
+                "Slavic settlement phases",
+                "architectural modifications"
             ],
-            "teater_category": "povrchový nález",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -415,13 +483,19 @@
         "original_text": "2 základní slovanské sídlištní fáse a třetí ve formě stavební",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště"
+                "základní",
+                "slovanské",
+                "sídlištní",
+                "fáse"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "basic",
+                "slavic",
+                "settlement",
+                "phases"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -433,15 +507,23 @@
         "original_text": "úpravy. Z nejstarší fáse pocházejí 3 hluboké zásobní LÁzE",
         "enrichment": {
             "extracted_keywords_cs": [
+                "základní",
+                "slovanské",
+                "sídlištní",
+                "úpravy",
                 "zásobní",
-                "pocházejí"
+                "láza"
             ],
             "extracted_keywords_en": [
+                "basic",
+                "slavic",
+                "settlement",
+                "modifications",
                 "storage",
-                "date"
+                "pits"
             ],
-            "teater_category": "neznámý",
-            "confidence_score": 0.7
+            "teater_category": "depot",
+            "confidence_score": 0.85
         }
     },
     {
@@ -453,13 +535,15 @@
         "original_text": "j ámy .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jáma kůlová/sloupová"
+                "základní slovanské sídlištní fáse",
+                "hluboké zásobní jamy"
             ],
             "extracted_keywords_en": [
-                "stakehole/posthole"
+                "Early Slavic settlement phase",
+                "deep storage pits"
             ],
-            "teater_category": "jáma kůlová/sloupová",
-            "confidence_score": 0.95
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -471,13 +555,31 @@
         "original_text": "Pracoviště 5/56: Sondou bylo zachyceno prostorově omezené řadové",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sonda"
+                "sonda",
+                "pohřebiště",
+                "hrobový",
+                "jamy",
+                "pohřby",
+                "obloženy",
+                "kameny",
+                "kostry",
+                "natažené",
+                "poloze"
             ],
             "extracted_keywords_en": [
-                "trench"
+                "trench",
+                "cemetery",
+                "grave",
+                "pits",
+                "burials",
+                "lined",
+                "stones",
+                "skeletons",
+                "extended",
+                "position"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 1.0
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -490,11 +592,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "hrobový jamy"
+                "hrobový",
+                "jamy",
+                "pohřby"
             ],
             "extracted_keywords_en": [
-                "burial site",
-                "grave pits"
+                "burial",
+                "grave",
+                "pits",
+                "burials"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -509,14 +615,22 @@
         "original_text": "pohřby.Hroby byly obloženy kameny,kostry v natažené poloze",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kost",
-                "kámen",
-                "hrob"
+                "pohřebiště",
+                "hroby",
+                "kostry",
+                "kameny",
+                "natažené poloze",
+                "etažovitě",
+                "pohřby"
             ],
             "extracted_keywords_en": [
-                "bone",
-                "stone",
-                "grave"
+                "burial site",
+                "graves",
+                "skeletons",
+                "stones",
+                "extended position",
+                "stacked",
+                "burials"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -532,14 +646,27 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "hřbitov"
+                "hrobový",
+                "jamami",
+                "orientace",
+                "etažovitě",
+                "uložené",
+                "pohřbů",
+                "milodarů",
+                "ozdob"
             ],
             "extracted_keywords_en": [
                 "burial site",
-                "cemetery"
+                "tomb",
+                "pits",
+                "orientation",
+                "stacked",
+                "burials",
+                "offerings",
+                "ornaments"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -551,13 +678,19 @@
         "original_text": "byla bez milodarů a bez ozdob. ' jedné čtvrtiny byly přiloženy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jiný materiál"
+                "pohřby",
+                "hroby",
+                "bez milodarů",
+                "bez ozdob"
             ],
             "extracted_keywords_en": [
-                "other material"
+                "burials",
+                "graves",
+                "without grave goods",
+                "without ornaments"
             ],
-            "teater_category": "jiný materiál",
-            "confidence_score": 0.8
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -569,12 +702,22 @@
         "original_text": "věci osobní potřeby.\"atím byl nejpříznačněxjší pohřeb muže",
         "enrichment": {
             "extracted_keywords_cs": [
+                "pohřbů",
                 "pohřeb",
-                "muže"
+                "nožíky",
+                "brouskem",
+                "záušničkou",
+                "náhrdelníkem",
+                "textilie"
             ],
             "extracted_keywords_en": [
+                "burials",
                 "burial",
-                "man"
+                "knives",
+                "whetstone",
+                "pendant",
+                "bead necklace",
+                "textile part"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.85
@@ -590,16 +733,34 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřeb",
+                "železný",
+                "nožíky",
+                "brousek",
                 "dítěte",
-                "esovitou"
+                "esovitou",
+                "bronzovou",
+                "záušničkou",
+                "perlovým",
+                "náhrdelníkem",
+                "částí",
+                "textilie"
             ],
             "extracted_keywords_en": [
-                "child's",
                 "burial",
-                "awl"
+                "iron",
+                "knives",
+                "whetstone",
+                "child",
+                "egg-shaped",
+                "bronze",
+                "pendant",
+                "pearl",
+                "necklace",
+                "part",
+                "textile"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -612,16 +773,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "záušnice",
-                "náhrdelník",
-                "textil"
+                "perlový náhrdelník",
+                "část textilie"
             ],
             "extracted_keywords_en": [
-                "necklace",
-                "pearl",
-                "textile"
+                "zamok",
+                "pearl necklace",
+                "textile fragment"
             ],
-            "teater_category": "textil",
-            "confidence_score": 0.85
+            "teater_category": "pohřební objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -634,18 +795,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "pohřebiště",
-                "pohřebiště",
-                "mladší",
-                "hradištní",
-                "periody"
+                "mladší hradištní periody",
+                "křeštanské"
             ],
             "extracted_keywords_en": [
                 "burial site",
-                "burial site",
-                "burial site",
-                "younger",
-                "hillfort period"
+                "younger hillfort period",
+                "Christian"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -660,15 +816,13 @@
         "original_text": "lze je určit jako křeštanské. Významná je sama existence pohřebiště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště",
-                "hřbitov"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "cemetery",
-                "graveyard"
+                "burial site"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -680,16 +834,18 @@
         "original_text": "na hradišti, jeho umístění v těsné souvislosti s jezírkem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
+                "pohřebiště",
+                "hradišti",
                 "umístění",
-                "jezírko"
+                "jezírkem"
             ],
             "extracted_keywords_en": [
+                "burial site",
                 "hillfort",
                 "location",
                 "lake"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
         }
     },
@@ -703,25 +859,34 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "není",
-                "celé",
                 "prokopáno",
                 "příštím",
                 "roce",
-                "nutno"
+                "prozkoumat",
+                "plošným",
+                "odkryvem",
+                "objeviti",
+                "kostel",
+                "centrum",
+                "hrobové",
+                "akumulace"
             ],
             "extracted_keywords_en": [
                 "cemetery",
-                "not",
-                "fully",
                 "excavated",
                 "next",
                 "year",
-                "will",
-                "be"
+                "investigate",
+                "total",
+                "excavation",
+                "discover",
+                "church",
+                "center",
+                "burial",
+                "accumulation"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.95
+            "teater_category": "kostel",
+            "confidence_score": 0.85
         }
     },
     {
@@ -733,18 +898,19 @@
         "original_text": "celé prozkoumat plošným odkryvem při čemž byde naděje objeviti i",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plošný odkryv",
-                "prozkoumat",
+                "plošným odkryvem",
+                "pohřebiště",
+                "centrum hrobové akumulace",
                 "objeviti"
             ],
             "extracted_keywords_en": [
-                "plošný odkryv",
                 "excavation",
-                "expect",
+                "cemetery",
+                "burial accumulation center",
                 "discover"
             ],
-            "teater_category": "plošný odkryv",
-            "confidence_score": 0.85
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -757,14 +923,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kostel",
-                "hrobové akumulace"
+                "centrum",
+                "hrobové",
+                "akumulace"
             ],
             "extracted_keywords_en": [
                 "church",
-                "burial accumulation"
+                "center",
+                "burial",
+                "accumulation"
             ],
             "teater_category": "kostel",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -777,10 +947,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "pohřebiště/hřbitov"
+                "centrum hrobové akumulace"
             ],
             "extracted_keywords_en": [
-                "cemetery/graveyard"
+                "burial site",
+                "center of burial accumulation"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -798,10 +969,10 @@
                 "fosfátové metody"
             ],
             "extracted_keywords_en": [
-                "phosphorus methods"
+                "phosphate methods"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.75
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.9
         }
     },
     {
@@ -813,19 +984,29 @@
         "original_text": "Výzkum bude uzavřen po stránce výzkumné 10.10 t.r. do konce",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
+                "Výzkum",
                 "uzavřen",
                 "stránce",
-                "výzkumné"
+                "výzkumné",
+                "měsíce",
+                "sondy",
+                "zaházeny",
+                "účasti",
+                "vedoucího"
             ],
             "extracted_keywords_en": [
-                "research",
-                "closed",
                 "excavation",
-                "research"
+                "closed",
+                "page",
+                "research",
+                "months",
+                "trenches",
+                "started",
+                "without",
+                "supervision"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.55
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.75
         }
     },
     {
@@ -837,13 +1018,15 @@
         "original_text": "měsíce budou sondy zaházeny bez účasti vedoucího výzkumu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "neznámá"
+                "sondy",
+                "zaházeny"
             ],
             "extracted_keywords_en": [
-                "unknown"
+                "trenches",
+                "started"
             ],
-            "teater_category": "neznámá",
-            "confidence_score": 0.75
+            "teater_category": "sonda",
+            "confidence_score": 0.95
         }
     }
 ]

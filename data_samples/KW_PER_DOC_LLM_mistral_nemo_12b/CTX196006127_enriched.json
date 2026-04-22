@@ -8,51 +8,15 @@
         "original_text": "OBEC",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír milimetrový",
-                "papír sešit",
-                "papír vázaný",
-                "pauzák",
-                "astralon",
-                "karton",
-                "bromkopie",
-                "fotoplán",
-                "papír kladívkový",
-                "tisk",
-                "tisková fólie",
-                "xerokopie barevná",
-                "xerokopie černobílá",
-                "digitální soubor",
-                "diapozitiv barevný",
-                "diapozitiv černobílý (film) (black-and-white photoslide (film))",
-                "diapozitiv černobílý (sklo) (black-and-white photoslide (glass))"
+                "OBEC",
+                "Žinkovy"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "millimeter paper",
-                "booklet",
-                "bounded paper",
-                "pauzák",
-                "astralon (transparent foil))",
-                "cardboard",
-                "bromkopie (hectograph copy))",
-                "photogrammetric plan",
-                "paper drawing",
-                "print",
-                "printing foil",
-                "colour xerographic copy",
-                "black-and-white xerographic copy",
-                "digital file",
-                "colour photoslide",
-                "black-and-white photoslide (film) (black-and-white photoslide (film))",
-                "black-and-white photoslide (glass) (black-and-white photoslide (glass))"
+                "TOWN",
+                "Žinkovy"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -64,51 +28,13 @@
         "original_text": "Žinkovy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy"
+                "Žinkovy"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds",
-                "archaeological surveys",
-                "archaeological finds"
+                "Žinkovy"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.999999
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -120,19 +46,23 @@
         "original_text": "OKRES",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír"
+                "OKRES",
+                "I",
+                "lzeň",
+                "jih",
+                "vir",
+                "Blovice"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper"
+                "DISTRICT",
+                "I",
+                "lzeň",
+                "south",
+                "vir",
+                "Blovice"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -144,51 +74,19 @@
         "original_text": "I lzeň- jih",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy"
+                "I",
+                "jih",
+                "vir",
+                "Blovice"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds"
+                "I",
+                "south",
+                "vir",
+                "Blovice"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -200,50 +98,15 @@
         "original_text": "vir -Blovice)",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "fotografie",
-                "fotografie letecká",
-                "fotografie letecká digitální",
-                "fotografie letecká diapozitivy",
-                "fotografie letecká negativy",
-                "fotografie letecká fotografie",
-                "fotografie předmětů",
-                "fotografie terénu",
-                "fotografie předmětů digitální",
-                "fotografie terénu digitální",
-                "fotografie letecká fotografie",
-                "fotografie letecká diapozitivy",
-                "fotografie letecká negativy",
-                "fotografie letecká digitální",
-                "fotografie letecká fotografie",
-                "fotografie předmětů",
-                "fotografie terénu",
-                "fotografie předmětů digitální",
-                "fotografie terénu digitální"
+                "hradiště",
+                "Blovice"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "photography",
-                "aerial photography",
-                "aerial photography digital",
-                "aerial photoslides",
-                "aerial negatives",
-                "aerial photographs",
-                "photographs of objects",
-                "photographs of fieldwork",
-                "photographs of objects digital",
-                "photographs of fieldwork digital",
-                "aerial photographs",
-                "aerial photoslides",
-                "aerial negatives",
-                "aerial photography",
-                "photographs of objects",
-                "photographs of fieldwork",
-                "photographs of objects digital",
-                "photographs of fieldwork digital"
+                "hillfort",
+                "Blovice"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -255,51 +118,13 @@
         "original_text": "Č. poř.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír",
-                "papír milimetrový",
-                "papír sešit",
-                "papír vázaný",
-                "pauzák",
-                "astralon",
-                "karton",
-                "bromkopie",
-                "fotoplán",
-                "papír kladívkový",
-                "tisk",
-                "tisková fólie",
-                "xerokopie barevná",
-                "xerokopie černobílá",
-                "digitální soubor",
-                "diapozitiv barevný",
-                "diapozitiv černobílý (film) (black-and-white photoslide (film))"
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper",
-                "millimeter paper",
-                "booklet",
-                "bounded paper",
-                "pauzák",
-                "astralon (transparent foil))",
-                "cardboard",
-                "bromkopie (hectograph copy))",
-                "photoplán (photogrammetric plan))",
-                "drawing paper",
-                "print",
-                "printing foil",
-                "colour xerographic copy",
-                "black-and-white xerographic copy",
-                "digital file",
-                "colour photoslide",
-                "black-and-white photoslide (film))"
+                "hillfort"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -311,19 +136,13 @@
         "original_text": "ČÍSLO PARCELY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír"
+                "ČÍSLO PARCELY"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper"
+                "PARCEL NUMBER"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -335,19 +154,13 @@
         "original_text": "NÁZEV TRATI",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír"
+                "název trati"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper"
+                "name of the path"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -359,51 +172,15 @@
         "original_text": "PřUohy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír",
-                "papír milimetrový",
-                "papír sešit",
-                "papír vázaný",
-                "pauzák",
-                "astralon",
-                "karton",
-                "bromkopie",
-                "fotoplán",
-                "papír kladívkový",
-                "tisk",
-                "tisková fólie",
-                "xerokopie barevná",
-                "xerokopie černobílá",
-                "digitální soubor",
-                "diapozitiv barevný",
-                "diapozitiv černobílý (film) (black-and-white photoslide (film))"
+                "PřUohy",
+                "Potentštejn"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper",
-                "millimeter paper",
-                "booklet",
-                "bounded paper",
-                "pauzák",
-                "astralon (transparent foil))",
-                "cardboard",
-                "bromkopie (hectograph copy))",
-                "photoplán (photogrammetric plan))",
-                "drawing paper",
-                "print",
-                "printing foil",
-                "colour xerographic copy",
-                "black-and-white xerographic copy",
-                "digital file",
-                "colour photoslide",
-                "black-and-white photoslide (film))"
+                "PřUohy",
+                "Potentštejn"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -415,51 +192,17 @@
         "original_text": "Potenštejn",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "fotografie",
-                "fotografie letecká",
-                "fotografie letecká digitální",
-                "fotografie letecká diapozitivy",
-                "fotografie letecká negativy",
-                "fotografie letecká fotografie",
-                "fotografie předmětů",
-                "fotografie terénu",
-                "fotografie předmětů digitální",
-                "fotografie terénu digitální",
-                "fotografie letecká fotografie",
-                "fotografie letecká diapozitivy",
-                "fotografie letecká negativy",
-                "fotografie letecká digitální",
-                "fotografie předmětů",
-                "fotografie terénu",
-                "fotografie předmětů digitální",
-                "fotografie terénu digitální",
-                "fotografie letecká fotografie"
+                "Potěštnějn",
+                "Kultura",
+                "středověk"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "photography",
-                "aerial photography",
-                "aerial photography digital",
-                "aerial photoslides",
-                "aerial negatives",
-                "aerial photographs",
-                "photographs of objects",
-                "photographs of fieldwork",
-                "photographs of objects digital",
-                "photographs of fieldwork digital",
-                "aerial photographs",
-                "aerial photoslides",
-                "aerial negatives",
-                "aerial photography digital",
-                "photographs of objects",
-                "photographs of fieldwork",
-                "photographs of objects digital",
-                "photographs of fieldwork digital",
-                "aerial photographs"
+                "Potěštnějn",
+                "Culture",
+                "Middle Ages"
             ],
-            "teater_category": "fotografie letecké (digitální)",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -472,49 +215,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kultura",
-                "archeologie",
-                "památky",
-                "záznam",
-                "kulturní",
-                "památkový",
-                "kulturní",
-                "kultura",
-                "kulturní",
-                "památky",
-                "kultura",
-                "kulturní",
-                "památky",
-                "kultura",
-                "kulturní",
-                "památky",
-                "kultura",
-                "kulturní",
-                "památky",
-                "kultura"
+                "moravská",
+                "malovaná",
+                "keramika"
             ],
             "extracted_keywords_en": [
                 "culture",
-                "archaeology",
-                "monuments",
-                "heritage",
-                "cultural",
-                "heritage",
-                "cultural",
-                "culture",
-                "cultural",
-                "monuments",
-                "culture",
-                "cultural",
-                "monuments",
-                "culture",
-                "cultural",
-                "monuments",
-                "culture",
-                "cultural",
-                "monuments"
+                "Moravian",
+                "painted",
+                "pottery"
             ],
-            "teater_category": "kultura kulovitých amfor",
-            "confidence_score": 0.9999999
+            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "confidence_score": 1.0
         }
     },
     {
@@ -526,51 +238,13 @@
         "original_text": "středověk",
         "enrichment": {
             "extracted_keywords_cs": [
-                "středověk",
-                "archeologie",
-                "pohřeb",
-                "sídliště",
-                "kultura",
-                "historické",
-                "záznam",
-                "památka",
-                "kultura",
-                "středověk",
-                "pohřebiště",
-                "kultura",
-                "středověk",
-                "pohřebiště",
-                "kultura",
-                "středověk",
-                "pohřebiště",
-                "kultura",
-                "středověk",
-                "pohřebiště"
+                "středověk"
             ],
             "extracted_keywords_en": [
-                "medieval",
-                "archaeology",
-                "burial",
-                "settlement",
-                "culture",
-                "historical",
-                "monument",
-                "heritage",
-                "culture",
-                "medieval",
-                "cemetery",
-                "culture",
-                "medieval",
-                "cemetery",
-                "culture",
-                "medieval",
-                "cemetery",
-                "culture",
-                "medieval",
-                "cemetery"
+                "Middle Ages"
             ],
             "teater_category": "středověk",
-            "confidence_score": 0.99
+            "confidence_score": 1.0
         }
     },
     {
@@ -582,51 +256,13 @@
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír",
-                "papír milimetrový",
-                "papír sešit",
-                "papír vázaný",
-                "pauzák",
-                "astralon",
-                "karton",
-                "bromkopie",
-                "fotoplán",
-                "papír kladívkový",
-                "tisk",
-                "tisková fólie",
-                "xerokopie barevná",
-                "xerokopie černobílá",
-                "digitální soubor",
-                "diapozitiv barevný",
-                "diapozitiv černobílý (film) (black-and-white photoslide (film))"
+                "číslo mapy"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper",
-                "millimeter paper",
-                "booklet",
-                "bounded paper",
-                "pauzák",
-                "astralon (transparent foil))",
-                "cardboard",
-                "bromkopie (hectograph copy))",
-                "photogrammetric plan",
-                "paper drawing",
-                "print",
-                "printing foil",
-                "colour xerographic copy",
-                "black-and-white xerographic copy",
-                "digital file",
-                "colour photoslide",
-                "black-and-white photoslide (film) (black-and-white photoslide (film))"
+                "map number"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.99
+            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "confidence_score": 1.0
         }
     },
     {
@@ -638,30 +274,15 @@
         "original_text": "Druh nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologické nálezy",
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické výzkumy",
-                "archeologický výzkum",
-                "archeologické nálezy"
+                "keramika",
+                "kosti"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological research",
-                "archaeological finds"
+                "ceramic",
+                "bones"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.99
+            "teater_category": "hrazené sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -678,8 +299,8 @@
             "extracted_keywords_en": [
                 "ceramic"
             ],
-            "teater_category": "architektonický článek",
-            "confidence_score": 0.99
+            "teater_category": "keramika",
+            "confidence_score": 1.0
         }
     },
     {
@@ -691,50 +312,13 @@
         "original_text": "a kosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
-                "kost",
-                "zvířecí",
-                "kultura",
-                "pohřeb",
-                "přísaha",
-                "stavební",
-                "přístavba",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní",
-                "přístavní"
+                "kosti"
             ],
             "extracted_keywords_en": [
-                "archaeology",
-                "bone",
-                "animal",
-                "culture",
-                "burial",
-                "coastal",
-                "construction",
-                "fortification",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified",
-                "fortified"
+                "bones"
             ],
-            "teater_category": "archiv ARÚB",
-            "confidence_score": 0.99
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 1.0
         }
     },
     {
@@ -746,51 +330,17 @@
         "original_text": "Literatura A. Sedláček, lístopisný slovnik historický,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
-                "památka",
-                "historický",
-                "kulturní",
-                "záznam",
-                "zápis",
-                "zjištění",
-                "pracovní",
-                "půda",
-                "povrchový",
-                "odkryv",
-                "pohřeb",
-                "kultura",
-                "stavební",
-                "záznamkova",
-                "záznamk",
-                "záznamkový",
-                "záznamkování",
-                "záznamkování archeologické",
-                "záznamkování archeologické pracovní"
+                "Literatura",
+                "A. Sedláček",
+                "lístopisný slovník historický"
             ],
             "extracted_keywords_en": [
-                "archaeology",
-                "heritage",
-                "historical",
-                "cultural",
-                "record",
-                "documentation",
-                "document",
-                "fieldwork",
-                "soil",
-                "surface",
-                "excavation",
-                "burial",
-                "culture",
-                "construction",
-                "archival",
-                "archival record",
-                "archival records",
-                "archival record keeping",
-                "archaeological record keeping",
-                "archaeological record keeping work"
+                "Literature",
+                "A. Sedláček",
+                "historical dictionary"
             ],
-            "teater_category": "A0 (84 x 119 cm)",
-            "confidence_score": 0.99
+            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "confidence_score": 0.95
         }
     },
     {
@@ -802,19 +352,15 @@
         "original_text": "Uložení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír"
+                "uložení",
+                "os blovi ca"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper"
+                "storage",
+                "os blovi ca"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.99
+            "teater_category": "environmentální vzorek",
+            "confidence_score": 0.95
         }
     },
     {
@@ -826,51 +372,15 @@
         "original_text": "OS Blovi ca",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum"
+                "OS Blovi ca",
+                "čís. inv."
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research",
-                "archaeological research"
+                "OS Blovi ca",
+                "inv. no."
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -882,19 +392,13 @@
         "original_text": "čís. inv.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie události",
-                "fotografie osobní",
-                "papír s fotografiemi",
-                "papír"
+                "číslo inventarizační"
             ],
             "extracted_keywords_en": [
-                "photograph of event",
-                "photograph of person",
-                "paper with photographs",
-                "paper"
+                "inventory number"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -906,17 +410,15 @@
         "original_text": "Dno 20. dubna l%0 jsem na výsva správee 6kresního muzea v Blovi-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "muzeum",
-                "Blov",
-                "6kresní"
+                "zřícenina",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "museum",
-                "Blov",
-                "6kres"
+                "ruin",
+                "hillfort"
             ],
-            "teater_category": "20–30 km",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -928,51 +430,15 @@
         "original_text": "eích o ním prohlódla zříceninu hrd \"ku Poten3te jna, k.o. Žinkovy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologické zkoumání",
-                "archeologické výzkumné zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání",
-                "archeologické zkoumání"
+                "zřícenina",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "archaeological survey",
-                "archaeological research",
-                "archaeological investigation",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork",
-                "archaeological fieldwork"
+                "ruin",
+                "hillfort"
             ],
-            "teater_category": "archivář",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -984,34 +450,15 @@
         "original_text": "Ze zřiceníny \"je odkryto adivo v Síří asi 2 m tvořící téměž tverec",
         "enrichment": {
             "extracted_keywords_cs": [
-                "je",
-                "odkryto",
-                "adivo",
-                "Síří",
-                "asi",
-                "2",
-                "m",
-                "tvořící",
-                "téměž",
-                "tverec"
+                "zřícenina",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "it",
-                "has",
-                "been",
-                "found",
-                "in",
-                "Syria",
-                "about",
-                "2",
-                "meters",
-                "of",
-                "a",
-                "tempering",
-                "furnace"
+                "ruin",
+                "hillfort"
             ],
-            "teater_category": "archeozoologie",
-            "confidence_score": 0.9999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1023,51 +470,17 @@
         "original_text": "o straně 40 - 50 m s vehodem ve výchoní stně. V zemině ol hozené při",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické lokality",
-                "archeologické terénní práce",
-                "archeologické výzkumné pracoviště",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění",
-                "archeologické výzkumné zkoumání",
-                "archeologické výzkumné zjištění"
+                "hradištní",
+                "keramiky",
+                "zvířecí kostí"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological sites",
-                "archaeological fieldwork",
-                "archaeological research unit",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey",
-                "archaeological research analysis",
-                "archaeological research survey"
+                "hillfort",
+                "pottery",
+                "animal bones"
             ],
-            "teater_category": "archeozoologie",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1079,19 +492,17 @@
         "original_text": "o krývání alive jsme nalez2í ein slomkry keramiky posdn hradištní",
         "enrichment": {
             "extracted_keywords_cs": [
+                "slomková keramika",
                 "hradištní",
-                "poschod",
-                "keramika",
-                "slomky"
+                "středověký"
             ],
             "extracted_keywords_en": [
+                "daub",
                 "hillfort",
-                "path",
-                "ceramic",
-                "rubbish"
+                "medieval"
             ],
-            "teater_category": "architektonický článek",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1103,15 +514,17 @@
         "original_text": "ho a atředověkého charaktera a četné zvířeeí kost1. rádei je",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologické výzkum",
+                "hradištní",
+                "středověkého",
                 "zvířecí kost"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
+                "hillfort",
+                "medieval",
                 "animal bone"
             ],
-            "teater_category": "Znojmo",
-            "confidence_score": 0.99
+            "teater_category": "vyspělé středohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1123,50 +536,19 @@
         "original_text": "umístn na ostrožnu. Která vybíhá smžrem k západu o epadá ostře dolů",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
-                "pohřebiště",
-                "kultura",
-                "doba",
-                "středověk",
-                "přísah",
-                "pohřeb",
-                "kostrovní",
-                "kultura s moravskou malovanou keramikou 2",
-                "kultura s moravskou malovanou keramikou 1",
-                "kultura s moravskou malovanou keramikou",
-                "kultura s vypíchanou keramikou",
-                "kultura s lineární keramikou",
-                "kultura s šňůrovou keramikou",
-                "kultura s šňůrovou keramikou",
-                "kultura s vypíchanou keramikou",
-                "kultura s vypíchanou keramikou",
-                "kultura s vypíchanou keramikou",
-                "kultura s vypíchanou keramikou",
-                "kultura s vypíchanou keramikou"
+                "ostrožna",
+                "západ",
+                "val",
+                "příkop"
             ],
             "extracted_keywords_en": [
-                "archaeology",
-                "cemetery",
-                "culture",
-                "period",
-                "Middle Ages",
-                "coastal",
-                "burial",
-                "culture with Moravian painted pottery 2",
-                "culture with Moravian painted pottery 1",
-                "culture with Moravian painted pottery",
-                "culture with impressed pottery",
-                "culture with linear pottery",
-                "culture with corded ware pottery",
-                "culture with impressed pottery",
-                "culture with impressed pottery",
-                "culture with impressed pottery",
-                "culture with impressed pottery",
-                "culture with impressed pottery",
-                "culture with impressed pottery"
+                "hillfort",
+                "west",
+                "rampart",
+                "moat"
             ],
-            "teater_category": "archiv ARÚB",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1178,48 +560,22 @@
         "original_text": "k dnešnímu zámkcu. Od východu je chránn mohutnýn příčným valen se",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
-                "přírodní památka",
-                "kulturní památka",
-                "historická památka",
-                "archeologické výzkum",
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologický nález",
-                "archeologické stopy",
-                "archeologické stavení",
-                "archeologické lokality",
-                "archeologická lokalita",
-                "archeologické místo",
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologický nález",
-                "archeologické stopy",
-                "archeologické stavení",
-                "archeologické lokality"
+                "ostrožna",
+                "západ",
+                "zámku",
+                "příkop",
+                "val",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "archaeology",
-                "cultural heritage",
-                "historical heritage",
-                "archaeological research",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological discovery",
-                "archaeological traces",
-                "archaeological context",
-                "archaeological sites",
-                "archaeological site",
-                "archaeological place",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological traces",
-                "archaeological context",
-                "archaeological sites"
+                "hillfort",
+                "west",
+                "castle",
+                "moat",
+                "rampart"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1231,51 +587,21 @@
         "original_text": "širokým příkopem; popsaná stavba není na nejvyšším bode ostrožny.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum"
+                "ostrožna",
+                "západ",
+                "val",
+                "příkop",
+                "zámky"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey"
+                "hillfort",
+                "west",
+                "rampart",
+                "moat",
+                "castles"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hrad",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1287,17 +613,23 @@
         "original_text": "Tato se smren k západu zvedá, jsou na ní zbytky Siltová vže umí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
+                "val",
+                "příkop",
+                "ostrožna",
                 "západ",
-                "siltová vže"
+                "zbytky",
+                "staveni"
             ],
             "extracted_keywords_en": [
-                "archaeology",
+                "rampart",
+                "moat",
+                "hill",
                 "west",
-                "silt"
+                "remains",
+                "structure"
             ],
-            "teater_category": "Západní Sahara",
-            "confidence_score": 0.9999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1309,17 +641,19 @@
         "original_text": "stné vně ji ho západní ho rohu stavby; terén zle je velmi nerový a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stavební rohu",
-                "terén",
-                "nerovnost"
+                "val",
+                "obepíná",
+                "celý vrch",
+                "trojnásobný"
             ],
             "extracted_keywords_en": [
-                "building corner",
-                "terrain",
-                "irregularity"
+                "rampart",
+                "surrounds",
+                "entire hill",
+                "triple"
             ],
-            "teater_category": "stavební/spojovací prvek",
-            "confidence_score": 0.999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1331,51 +665,17 @@
         "original_text": "pravpodobně kryje zíeeniny njakých dalších stavb. Val, který",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické lokality",
-                "archeologické akce",
-                "archeologické výzkumné pracoviště",
-                "archeologické výzkumné organizace",
-                "archeologické výzkumné instituce",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné projekty",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry",
-                "archeologické výzkumné záměry"
+                "val",
+                "zříceniny",
+                "stavby"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological sites",
-                "archaeological actions",
-                "archaeological research units",
-                "archaeological research organizations",
-                "archaeological research institutions",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects",
-                "archaeological research projects"
+                "rampart",
+                "ruins",
+                "buildings"
             ],
-            "teater_category": "archeozoologie",
-            "confidence_score": 0.9999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1387,51 +687,21 @@
         "original_text": "obepíná celý vrebol kopoc, je zde trojnásobný, přičemš nejméně snatel",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum"
+                "val",
+                "obepíná",
+                "celý",
+                "vrebol",
+                "kopec"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey"
+                "rampart",
+                "surrounds",
+                "whole",
+                "hill",
+                "hillfort"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1443,51 +713,15 @@
         "original_text": "ný je val vnější.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum"
+                "val",
+                "vnější"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey"
+                "rampart",
+                "outer"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1499,50 +733,15 @@
         "original_text": "fálezy ze sběru byly předány Ol v Blovicích.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "fotografie",
-                "fotografie letecká",
-                "fotografie letecká digitální",
-                "fotografie letecká diapozitivy",
-                "fotografie letecká negativy",
-                "fotografie letecká fotografie",
-                "fotografie předmětů",
-                "fotografie terénu",
-                "fotografie předmětů digitální",
-                "fotografie terénu digitální",
-                "fotografie osobní",
-                "fotografie osobní fotografie",
-                "fotografie osobní diapozitivy",
-                "fotografie osobní negativy",
-                "fotografie osobní fotografie",
-                "fotografie jiná",
-                "fotografie jiná fotografie",
-                "fotografie jiná diapozitivy",
-                "fotografie jiná negativy"
+                "fálezy ze sběru",
+                "Ol v Blovicích"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "photography",
-                "aerial photography",
-                "aerial photography digital",
-                "aerial photoslides",
-                "aerial negatives",
-                "aerial photographs",
-                "photographs of objects",
-                "photographs of fieldwork",
-                "photographs of objects digital",
-                "photographs of fieldwork digital",
-                "personal photographs",
-                "personal photoslides",
-                "personal negatives",
-                "personal photographs",
-                "other photographs",
-                "other photographs",
-                "other photoslides",
-                "other negatives"
+                "flakes from collection",
+                "Ol in Blovice"
             ],
-            "teater_category": "fotografie události",
-            "confidence_score": 0.99
+            "teater_category": "vyspělé středohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1554,51 +753,17 @@
         "original_text": "Hrúdek byl posteven v !• 12521259 Ptou z Křimic, trval v eúbělm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum"
+                "hradiště",
+                "postaven",
+                "Křimice"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey"
+                "hillfort",
+                "built",
+                "Křimice"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1610,19 +775,13 @@
         "original_text": "13. a 1. stol* , počátkem 16. stole byl již zpustlý a vrch zarost-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stůl",
-                "zpustlý",
-                "vrch",
-                "zarost"
+                "hradištní keramiky"
             ],
             "extracted_keywords_en": [
-                "table",
-                "decayed",
-                "top",
-                "overgrown"
+                "hillfort pottery"
             ],
-            "teater_category": "stavební/spojovací prvek",
-            "confidence_score": 0.99
+            "teater_category": "vyspělé středohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1634,51 +793,13 @@
         "original_text": "1$ 4 . Sedláčelt, Místopisný slovník historický, str.721).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologie",
-                "archeologický výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické výzkum"
+                "hradištní keramiky"
             ],
             "extracted_keywords_en": [
-                "archaeology",
-                "archaeological research",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey",
-                "archaeological finds",
-                "archaeological survey"
+                "hillfort pottery"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1697,8 +818,8 @@
                 "hillfort pottery",
                 "hillfort"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.99
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1710,51 +831,17 @@
         "original_text": "patrily otarším ocí^Q-nl slovonskému, nebylo při zbžné pronlídce",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologický průzkum"
+                "hradištní keramiky",
+                "hradištní",
+                "hradek"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey",
-                "archaeological survey"
+                "hillfort pottery",
+                "hillfort",
+                "fortress"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1766,51 +853,15 @@
         "original_text": "možno zjistit. $) /. (ren. - Ald, ,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "archeologické výzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum",
-                "archeologický průzkum",
-                "archeologický průzkum",
-                "archeologické výzkum"
+                "hradištní keramiky",
+                "hradištní"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological survey",
-                "archaeological investigation",
-                "archaeological excavation",
-                "archaeological fieldwork",
-                "archaeological research",
-                "archaeological survey",
-                "archaeological investigation",
-                "archaeological excavation",
-                "archaeological fieldwork",
-                "archaeological research",
-                "archaeological survey",
-                "archaeological investigation",
-                "archaeological excavation",
-                "archaeological fieldwork",
-                "archaeological research",
-                "archaeological survey",
-                "archaeological investigation",
-                "archaeological excavation",
-                "archaeological fieldwork"
+                "hillfort pottery",
+                "hillfort"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.9999999999999999
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1822,51 +873,13 @@
         "original_text": "8.12.1960. Ar. V. Stefgnovi-Seldov /",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologické výzkum",
-                "archeologické nálezy",
-                "archeologické lokality",
-                "archeologické terénní výzkum",
-                "archeologické terénní průzkum",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání",
-                "archeologické terénní zkoumání"
+                "Ar. V. Stefgnovi-Seldov"
             ],
             "extracted_keywords_en": [
-                "archaeological research",
-                "archaeological finds",
-                "archaeological sites",
-                "archaeological field research",
-                "archaeological field survey",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination",
-                "archaeological field examination"
+                "Ar. V. Stefgnovi-Seldov"
             ],
-            "teater_category": "archeolog",
-            "confidence_score": 0.99
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     }
 ]

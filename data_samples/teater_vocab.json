@@ -1,5 +1,891 @@
 {
-    "Archaeological Terms (AMCR)": {
+    "Site Types": {
+        "rané středohradištní období": {
+            "cs": "rané středohradištní období",
+            "en": "Early Middle Hillfort Period"
+        },
+        "vyspělé středohradištní období": {
+            "cs": "vyspělé středohradištní období",
+            "en": "Advanced Middle Hillfort Period"
+        },
+        "pozdní středohradištní období": {
+            "cs": "pozdní středohradištní období",
+            "en": "Final Middle Hillfort Period"
+        },
+        "pozdněhradištní období": {
+            "cs": "pozdněhradištní období",
+            "en": "Final Hillfort Period"
+        },
+        "vyspělé mladohradištní období": {
+            "cs": "vyspělé mladohradištní období",
+            "en": "Advanced Late Hillfort Period"
+        },
+        "rané mladohradištní období": {
+            "cs": "rané mladohradištní období",
+            "en": "Early Late Hillfort Period"
+        },
+        "sídliště": {
+            "cs": "sídliště",
+            "en": "settlement"
+        },
+        "jáma kůlová/sloupová": {
+            "cs": "jáma kůlová/sloupová",
+            "en": "stakehole/posthole"
+        },
+        "areál jiné aktivity": {
+            "cs": "areál jiné aktivity",
+            "en": "other site"
+        },
+        "výšinné sídliště": {
+            "cs": "výšinné sídliště",
+            "en": "hill settlement"
+        },
+        "nadkomunitní areál": {
+            "cs": "nadkomunitní areál",
+            "en": "supracommunity site"
+        },
+        "hrazené sídliště": {
+            "cs": "hrazené sídliště",
+            "en": "enclosed settlement"
+        },
+        "hrazený areál": {
+            "cs": "hrazený areál",
+            "en": "enclosure"
+        },
+        "objekt": {
+            "cs": "objekt",
+            "en": "feature"
+        },
+        "pohřební areál": {
+            "cs": "pohřební areál",
+            "en": "burial site"
+        },
+        "pohřeb v sídlištním objektu": {
+            "cs": "pohřeb v sídlištním objektu",
+            "en": "burial in settlement context"
+        },
+        "pohřebiště v sakrální stavbě": {
+            "cs": "pohřebiště v sakrální stavbě",
+            "en": "burials in sacral building"
+        },
+        "sídliště specializované komunity": {
+            "cs": "sídliště specializované komunity",
+            "en": "special-community settlement"
+        },
+        "neurčený areál": {
+            "cs": "neurčený areál",
+            "en": "unspecified site"
+        },
+        "pohřebiště/hřbitov": {
+            "cs": "pohřebiště/hřbitov",
+            "en": "cemetery/graveyard"
+        },
+        "kultovní areál": {
+            "cs": "kultovní areál",
+            "en": "ritual site"
+        },
+        "kultovní/sakrální objekt": {
+            "cs": "kultovní/sakrální objekt",
+            "en": "ritual/sacral feature"
+        },
+        "vápenická jáma": {
+            "cs": "vápenická jáma",
+            "en": "lime pit"
+        },
+        "depot": {
+            "cs": "depot",
+            "en": "hoard"
+        },
+        "kulturní vrstva/objekt": {
+            "cs": "kulturní vrstva/objekt",
+            "en": "cultural layer/feature"
+        },
+        "objekt/stopa výroby": {
+            "cs": "objekt/stopa výroby",
+            "en": "production feature/trace"
+        },
+        "výrobní objekt": {
+            "cs": "výrobní objekt",
+            "en": "production feature"
+        },
+        "areál vojenských aktivit": {
+            "cs": "areál vojenských aktivit",
+            "en": "military site"
+        },
+        "studna": {
+            "cs": "studna",
+            "en": "water well"
+        },
+        "pohřební objekt": {
+            "cs": "pohřební objekt",
+            "en": "funerary structure"
+        },
+        "železářský areál": {
+            "cs": "železářský areál",
+            "en": "iron production site"
+        },
+        "jáma stavební": {
+            "cs": "jáma stavební",
+            "en": "construction pit"
+        },
+        "jáma odpadní/jímka": {
+            "cs": "jáma odpadní/jímka",
+            "en": "waste pit/cesspit"
+        },
+        "valoun": {
+            "cs": "valoun",
+            "en": "pebble"
+        },
+        "pozůstatek sídliště": {
+            "cs": "pozůstatek sídliště",
+            "en": "remains of settlement"
+        },
+        "zahrada": {
+            "cs": "zahrada",
+            "en": "garden"
+        },
+        "zahrada/sad": {
+            "cs": "zahrada/sad",
+            "en": "garden"
+        },
+        "jáma": {
+            "cs": "jáma",
+            "en": "pit"
+        },
+        "zahloubený objekt": {
+            "cs": "zahloubený objekt",
+            "en": "sunken feature"
+        },
+        "kostel": {
+            "cs": "kostel",
+            "en": "church"
+        },
+        "polní opevnění": {
+            "cs": "polní opevnění",
+            "en": "field fortification"
+        },
+        "hradiště": {
+            "cs": "hradiště",
+            "en": "hillfort"
+        },
+        "hrad": {
+            "cs": "hrad",
+            "en": "castle"
+        },
+        "přehrada": {
+            "cs": "přehrada",
+            "en": "dam"
+        },
+        "mohyla": {
+            "cs": "mohyla",
+            "en": "burial mound"
+        },
+        "tvrz/hrádek": {
+            "cs": "tvrz/hrádek",
+            "en": "fortified manor"
+        },
+        "ohradní zeď/plot": {
+            "cs": "ohradní zeď/plot",
+            "en": "wall/fence"
+        },
+        "jáma zásobní": {
+            "cs": "jáma zásobní",
+            "en": "storage pit"
+        },
+        "zemědělský objekt": {
+            "cs": "zemědělský objekt",
+            "en": "agricultural structure"
+        },
+        "areál zemědělské výroby": {
+            "cs": "areál zemědělské výroby",
+            "en": "agricultural production site"
+        },
+        "sklep": {
+            "cs": "sklep",
+            "en": "cellar"
+        },
+        "areál nezemědělské výroby": {
+            "cs": "areál nezemědělské výroby",
+            "en": "production site"
+        },
+        "příkop": {
+            "cs": "příkop",
+            "en": "moat"
+        },
+        "parkánová hradba": {
+            "cs": "parkánová hradba",
+            "en": "zwinger wall"
+        },
+        "val": {
+            "cs": "val",
+            "en": "rampart"
+        },
+        "hradba": {
+            "cs": "hradba",
+            "en": "defensive wall"
+        },
+        "zaniklý/historický areál": {
+            "cs": "zaniklý/historický areál",
+            "en": "deserted/historical site"
+        },
+        "obval": {
+            "cs": "obval",
+            "en": "spoil bank"
+        },
+        "těžební jáma": {
+            "cs": "těžební jáma",
+            "en": "mining pit"
+        },
+        "těžební objekt": {
+            "cs": "těžební objekt",
+            "en": "mining feature"
+        },
+        "areál těžby": {
+            "cs": "areál těžby",
+            "en": "extracting site"
+        },
+        "plán objektu": {
+            "cs": "plán objektu",
+            "en": "plan of feature"
+        },
+        "fotografie objektu": {
+            "cs": "fotografie objektu",
+            "en": "photograph of feature"
+        },
+        "zaniklá lokalita": {
+            "cs": "zaniklá lokalita",
+            "en": "buried site"
+        },
+        "Tuvalu": {
+            "cs": "Tuvalu",
+            "en": "Tuvalu"
+        },
+        "bodové objekty uspořádané": {
+            "cs": "bodové objekty uspořádané",
+            "en": "organized point features"
+        },
+        "shluk bodových objektů": {
+            "cs": "shluk bodových objektů",
+            "en": "group of point features"
+        },
+        "plošný objekt": {
+            "cs": "plošný objekt",
+            "en": "polygonal feature"
+        },
+        "bodový objekt": {
+            "cs": "bodový objekt",
+            "en": "point feature"
+        },
+        "nízká kvalita": {
+            "cs": "nízká kvalita",
+            "en": "poor quality"
+        },
+        "tisková kvalita": {
+            "cs": "tisková kvalita",
+            "en": "print quality"
+        },
+        "Mnichovo Hradiště": {
+            "cs": "Mnichovo Hradiště",
+            "en": "Mnichovo Hradiště"
+        }
+    },
+    "Find Types": {
+        "diapozitiv černobílý (sklo)": {
+            "cs": "diapozitiv černobílý (sklo)",
+            "en": "black-and-white photoslide (glass)"
+        },
+        "negativ černobílý (sklo)": {
+            "cs": "negativ černobílý (sklo)",
+            "en": "black-and-white negative (glass)"
+        },
+        "doba bronzová–halštatská": {
+            "cs": "doba bronzová–halštatská",
+            "en": "Bronze Age–Hallstatt Period"
+        },
+        "střední doba bronzová": {
+            "cs": "střední doba bronzová",
+            "en": "Middle Bronze Age"
+        },
+        "mladší doba bronzová": {
+            "cs": "mladší doba bronzová",
+            "en": "Late Bronze Age"
+        },
+        "doba bronzová": {
+            "cs": "doba bronzová",
+            "en": "Bronze Age"
+        },
+        "pozdní doba bronzová": {
+            "cs": "pozdní doba bronzová",
+            "en": "Final Bronze Age"
+        },
+        "starší doba bronzová": {
+            "cs": "starší doba bronzová",
+            "en": "Early Bronze Age"
+        },
+        "kost lidská": {
+            "cs": "kost lidská",
+            "en": "human bone"
+        },
+        "kachel": {
+            "cs": "kachel",
+            "en": "stove tile"
+        },
+        "jehlice": {
+            "cs": "jehlice",
+            "en": "clothing pin"
+        },
+        "keramika terra sigillata": {
+            "cs": "keramika terra sigillata",
+            "en": "terra sigillata ware"
+        },
+        "pohřeb kostrový": {
+            "cs": "pohřeb kostrový",
+            "en": "inhumation burial"
+        },
+        "kámen štípaný": {
+            "cs": "kámen štípaný",
+            "en": "lithics"
+        },
+        "amorfní zlomek/předmět": {
+            "cs": "amorfní zlomek/předmět",
+            "en": "amorphous fragment/object"
+        },
+        "kámen drtidlo/žernov": {
+            "cs": "kámen drtidlo/žernov",
+            "en": "grinding stone"
+        },
+        "zlomek keramiky": {
+            "cs": "zlomek keramiky",
+            "en": "potsherd"
+        },
+        "keramika": {
+            "cs": "keramika",
+            "en": "ceramic"
+        },
+        "hrací kámen": {
+            "cs": "hrací kámen",
+            "en": "game piece"
+        },
+        "hrací kostka": {
+            "cs": "hrací kostka",
+            "en": "dice"
+        },
+        "záušnice": {
+            "cs": "záušnice",
+            "en": "temple ring"
+        },
+        "kámen drahý": {
+            "cs": "kámen drahý",
+            "en": "gemstone"
+        },
+        "sekeromlat/mlat": {
+            "cs": "sekeromlat/mlat",
+            "en": "hammer axe"
+        },
+        "žernov/mlýnský kámen": {
+            "cs": "žernov/mlýnský kámen",
+            "en": "quern"
+        },
+        "zásobnice": {
+            "cs": "zásobnice",
+            "en": "storage vessel"
+        },
+        "nádoba": {
+            "cs": "nádoba",
+            "en": "vessel"
+        },
+        "kost": {
+            "cs": "kost",
+            "en": "bone"
+        },
+        "zlomek kosti": {
+            "cs": "zlomek kosti",
+            "en": "bone fragment"
+        },
+        "kostra": {
+            "cs": "kostra",
+            "en": "skeleton"
+        },
+        "mazanice": {
+            "cs": "mazanice",
+            "en": "daub"
+        },
+        "zlomek mazanice": {
+            "cs": "zlomek mazanice",
+            "en": "daub fragment"
+        },
+        "technická keramika": {
+            "cs": "technická keramika",
+            "en": "technical ceramics"
+        },
+        "stavební keramika": {
+            "cs": "stavební keramika",
+            "en": "construction ceramics"
+        },
+        "součást hrobu": {
+            "cs": "součást hrobu",
+            "en": "grave component"
+        },
+        "oštěp/hrot oštěpu": {
+            "cs": "oštěp/hrot oštěpu",
+            "en": "javelin/javelin head"
+        },
+        "nůž": {
+            "cs": "nůž",
+            "en": "knife"
+        },
+        "nůžky": {
+            "cs": "nůžky",
+            "en": "scissors"
+        },
+        "brousek": {
+            "cs": "brousek",
+            "en": "whetstone"
+        },
+        "malta": {
+            "cs": "malta",
+            "en": "mortar"
+        },
+        "kost zvířecí": {
+            "cs": "kost zvířecí",
+            "en": "animal bone"
+        },
+        "kámen stavební": {
+            "cs": "kámen stavební",
+            "en": "building stone"
+        },
+        "kámen": {
+            "cs": "kámen",
+            "en": "stone"
+        },
+        "kámen broušený": {
+            "cs": "kámen broušený",
+            "en": "polished stone"
+        },
+        "bronz": {
+            "cs": "bronz",
+            "en": "bronze"
+        },
+        "sklo": {
+            "cs": "sklo",
+            "en": "glass"
+        },
+        "keramika kamenina": {
+            "cs": "keramika kamenina",
+            "en": "stoneware"
+        },
+        "keramika fajáns/majolika": {
+            "cs": "keramika fajáns/majolika",
+            "en": "faience/maiolica"
+        },
+        "keramika porcelán": {
+            "cs": "keramika porcelán",
+            "en": "porcelain"
+        },
+        "cihla": {
+            "cs": "cihla",
+            "en": "brick"
+        },
+        "navážka": {
+            "cs": "navážka",
+            "en": "backfill"
+        },
+        "hrob skříňkový": {
+            "cs": "hrob skříňkový",
+            "en": "cist grave"
+        },
+        "hrob komorový": {
+            "cs": "hrob komorový",
+            "en": "chamber grave"
+        },
+        "hrobka": {
+            "cs": "hrobka",
+            "en": "tomb"
+        },
+        "náhrobek/náhrobní kámen": {
+            "cs": "náhrobek/náhrobní kámen",
+            "en": "gravestone"
+        },
+        "hrob": {
+            "cs": "hrob",
+            "en": "grave"
+        },
+        "kostnice": {
+            "cs": "kostnice",
+            "en": "ossuary"
+        },
+        "konstrukční prvek": {
+            "cs": "konstrukční prvek",
+            "en": "architectural element"
+        },
+        "Malta": {
+            "cs": "Malta",
+            "en": "Malta"
+        },
+        "Kostarika": {
+            "cs": "Kostarika",
+            "en": "Costa Rica"
+        },
+        "nízká výpovědní hodnota": {
+            "cs": "nízká výpovědní hodnota",
+            "en": "low relevancy"
+        },
+        "dno sondy": {
+            "cs": "dno sondy",
+            "en": "trench bottom"
+        },
+        "odchylka jednotky metrů": {
+            "cs": "odchylka jednotky metrů",
+            "en": "deviation in meters"
+        },
+        "Kladno": {
+            "cs": "Kladno",
+            "en": "Kladno"
+        }
+    },
+    "Methods": {
+        "geofyzikální průzkum": {
+            "cs": "geofyzikální průzkum",
+            "en": "geophysical survey"
+        },
+        "stavebně-historický průzkum": {
+            "cs": "stavebně-historický průzkum",
+            "en": "building-historical survey"
+        },
+        "geochemický průzkum": {
+            "cs": "geochemický průzkum",
+            "en": "geochemical survey"
+        },
+        "letecký průzkum": {
+            "cs": "letecký průzkum",
+            "en": "aerial survey"
+        },
+        "polygon leteckého průzkumu": {
+            "cs": "polygon leteckého průzkumu",
+            "en": "aerial survey polygon"
+        },
+        "geodetický průzkum": {
+            "cs": "geodetický průzkum",
+            "en": "geodetic survey"
+        },
+        "vizuální/geodetický průzkum": {
+            "cs": "vizuální/geodetický průzkum",
+            "en": "visual/geodetic survey"
+        },
+        "terénní odkryv": {
+            "cs": "terénní odkryv",
+            "en": "field excavation"
+        },
+        "terénní zásah": {
+            "cs": "terénní zásah",
+            "en": "field intervention"
+        },
+        "nedestruktivní průzkum": {
+            "cs": "nedestruktivní průzkum",
+            "en": "non-destructive survey"
+        },
+        "povrchový sběr": {
+            "cs": "povrchový sběr",
+            "en": "surface collection survey"
+        },
+        "polygon průzkumu": {
+            "cs": "polygon průzkumu",
+            "en": "survey polygon"
+        },
+        "polygon archeologického průzkumu": {
+            "cs": "polygon archeologického průzkumu",
+            "en": "archaeological survey polygon"
+        },
+        "průzkum detektorem kovu": {
+            "cs": "průzkum detektorem kovu",
+            "en": "metal detector survey"
+        },
+        "sonda": {
+            "cs": "sonda",
+            "en": "trench"
+        },
+        "geologická sonda": {
+            "cs": "geologická sonda",
+            "en": "geological trench"
+        },
+        "plošný odkryv": {
+            "cs": "plošný odkryv",
+            "en": "total excavation"
+        },
+        "výkop": {
+            "cs": "výkop",
+            "en": "cut"
+        },
+        "terénní hrana": {
+            "cs": "terénní hrana",
+            "en": "terrain edge"
+        },
+        "3D dokumentace": {
+            "cs": "3D dokumentace",
+            "en": "3D documentation"
+        },
+        "data terénního výzkumu": {
+            "cs": "data terénního výzkumu",
+            "en": "fieldwork data"
+        },
+        "průzkum": {
+            "cs": "průzkum",
+            "en": "survey"
+        },
+        "záchranný": {
+            "cs": "záchranný",
+            "en": "rescue"
+        },
+        "badatelský": {
+            "cs": "badatelský",
+            "en": "research"
+        },
+        "terénní pracoviště": {
+            "cs": "terénní pracoviště",
+            "en": "fieldwork unit"
+        },
+        "inženýrsko-geologický průzkum": {
+            "cs": "inženýrsko-geologický průzkum",
+            "en": "engineering-geological survey"
+        },
+        "badatelský záměr": {
+            "cs": "badatelský záměr",
+            "en": "research project"
+        }
+    },
+    "Chronology": {
+        "raný středověk 2": {
+            "cs": "raný středověk 2",
+            "en": "Early Middle Ages 2"
+        },
+        "časný eneolit": {
+            "cs": "časný eneolit",
+            "en": "Proto-Eneolithic"
+        },
+        "pozdní středověk": {
+            "cs": "pozdní středověk",
+            "en": "Late Middle Ages"
+        },
+        "vrcholný středověk": {
+            "cs": "vrcholný středověk",
+            "en": "High Middle Ages"
+        },
+        "raný středověk 3": {
+            "cs": "raný středověk 3",
+            "en": "Early Middle Ages 3"
+        },
+        "středověk": {
+            "cs": "středověk",
+            "en": "Medieval"
+        },
+        "novověk": {
+            "cs": "novověk",
+            "en": "Modern"
+        },
+        "vrcholný středověk–novověk": {
+            "cs": "vrcholný středověk–novověk",
+            "en": "High Middle Ages–Modern Period"
+        },
+        "raný středověk 4": {
+            "cs": "raný středověk 4",
+            "en": "Early Middle Ages 4"
+        },
+        "novověk 2": {
+            "cs": "novověk 2",
+            "en": "Modern Period 2"
+        },
+        "raný středověk 2–4": {
+            "cs": "raný středověk 2–4",
+            "en": "Early Middle Ages 2–4"
+        },
+        "paleolit–mezolit": {
+            "cs": "paleolit–mezolit",
+            "en": "Palaeolithic–Mesolithic"
+        },
+        "starší neolit": {
+            "cs": "starší neolit",
+            "en": "Early Neolithic"
+        },
+        "halštatská mohylová kultura": {
+            "cs": "halštatská mohylová kultura",
+            "en": "Hallstatt Tumulus Culture"
+        },
+        "pozdní doba laténská (LtD)": {
+            "cs": "pozdní doba laténská (LtD)",
+            "en": "Final La Tène Period (LtD)"
+        },
+        "paleolit": {
+            "cs": "paleolit",
+            "en": "Palaeolithic"
+        },
+        "přechod pozdní středověk/novověk": {
+            "cs": "přechod pozdní středověk/novověk",
+            "en": "Late Middle Ages/Modern Transition"
+        },
+        "pravěk": {
+            "cs": "pravěk",
+            "en": "Prehistory"
+        },
+        "doba halštatská": {
+            "cs": "doba halštatská",
+            "en": "Hallstatt Period"
+        },
+        "eneolit": {
+            "cs": "eneolit",
+            "en": "Eneolithic"
+        },
+        "mladší doba halštatská (HaD2–3)": {
+            "cs": "mladší doba halštatská (HaD2–3)",
+            "en": "Late Hallstatt Period (HaD2–3)"
+        },
+        "novověk–industriální období": {
+            "cs": "novověk–industriální období",
+            "en": "Modern–Industrial Period"
+        },
+        "mladší eneolit": {
+            "cs": "mladší eneolit",
+            "en": "Late Eneolithic"
+        },
+        "doba laténská–římská": {
+            "cs": "doba laténská–římská",
+            "en": "La Tène–Roman Period"
+        },
+        "starší eneolit": {
+            "cs": "starší eneolit",
+            "en": "Early Eneolithic"
+        },
+        "pozdní paleolit": {
+            "cs": "pozdní paleolit",
+            "en": "Epipalaeolithic"
+        },
+        "raný středověk": {
+            "cs": "raný středověk",
+            "en": "Early Medieval"
+        },
+        "středověk–novověk": {
+            "cs": "středověk–novověk",
+            "en": "Middle Ages–Modern Period"
+        },
+        "zemědělský pravěk": {
+            "cs": "zemědělský pravěk",
+            "en": "farming prehistory"
+        },
+        "starší paleolit": {
+            "cs": "starší paleolit",
+            "en": "Lower Palaeolithic"
+        },
+        "neolit": {
+            "cs": "neolit",
+            "en": "Neolithic"
+        },
+        "doba halštatská–laténská": {
+            "cs": "doba halštatská–laténská",
+            "en": "Hallstatt–La Tène Period"
+        },
+        "novověk 1": {
+            "cs": "novověk 1",
+            "en": "Modern Period 1"
+        },
+        "přechod raný/vrcholný středověk": {
+            "cs": "přechod raný/vrcholný středověk",
+            "en": "Early/High Middle Ages Transition"
+        },
+        "vrcholný–pozdní středověk": {
+            "cs": "vrcholný–pozdní středověk",
+            "en": "High–Late Middle Ages"
+        },
+        "střední doba laténská (LtB–C1)": {
+            "cs": "střední doba laténská (LtB–C1)",
+            "en": "Middle La Tène Period (LtB–C1)"
+        },
+        "neolit–eneolit": {
+            "cs": "neolit–eneolit",
+            "en": "Neolithic–Eneolithic"
+        },
+        "raný středověk 1": {
+            "cs": "raný středověk 1",
+            "en": "Early Middle Ages 1"
+        },
+        "střední eneolit": {
+            "cs": "střední eneolit",
+            "en": "Middle Eneolithic"
+        },
+        "mladší–pozdní doba laténská (LtC2–D)": {
+            "cs": "mladší–pozdní doba laténská (LtC2–D)",
+            "en": "Late–Final La Tène Period (LtC2–D)"
+        },
+        "doba laténská": {
+            "cs": "doba laténská",
+            "en": "La Tène Period"
+        },
+        "starší doba halštatská (HaC–D1)": {
+            "cs": "starší doba halštatská (HaC–D1)",
+            "en": "Early Hallstatt Period (HaC–D1)"
+        },
+        "časná doba laténská (LtA)": {
+            "cs": "časná doba laténská (LtA)",
+            "en": "Early La Tène Period (LtA)"
+        },
+        "střední–mladší neolit": {
+            "cs": "střední–mladší neolit",
+            "en": "Middle–Late Neolithic"
+        },
+        "střední paleolit": {
+            "cs": "střední paleolit",
+            "en": "Middle Palaeolithic"
+        },
+        "mladší/pozdní eneolit": {
+            "cs": "mladší/pozdní eneolit",
+            "en": "Late/Final Eneolithic"
+        },
+        "mladší paleolit": {
+            "cs": "mladší paleolit",
+            "en": "Upper Palaeolithic"
+        },
+        "střední/mladší doba laténská (LtC1–2)": {
+            "cs": "střední/mladší doba laténská (LtC1–2)",
+            "en": "Middle/Late La Tène Period (LtC1–2)"
+        },
+        "mladší–pozdní eneolit": {
+            "cs": "mladší–pozdní eneolit",
+            "en": "Late–Final Eneolithic"
+        },
+        "někdy v letech": {
+            "cs": "někdy v letech",
+            "en": "approximate years"
+        },
+        "přesné datum": {
+            "cs": "přesné datum",
+            "en": "exact date"
+        }
+    },
+    "Location & Admin": {
+        "mapa": {
+            "cs": "mapa",
+            "en": "map"
+        },
+        "lokalita pod zástavbou": {
+            "cs": "lokalita pod zástavbou",
+            "en": "site in built environment"
+        },
+        "pseudolokalita (< 5 %)": {
+            "cs": "pseudolokalita (< 5 %)",
+            "en": "pseudo-site (< 5%)"
+        },
+        "lokalita": {
+            "cs": "lokalita",
+            "en": "site"
+        },
+        "katastrální území": {
+            "cs": "katastrální území",
+            "en": "cadastral area"
+        },
+        "poloha podle katastru": {
+            "cs": "poloha podle katastru",
+            "en": "location by cadastral area"
+        }
+    },
+    "Documentation": {
         "fotografie události": {
             "cs": "fotografie události",
             "en": "photograph of event"
@@ -12,6 +898,198 @@
             "cs": "papír s fotografiemi",
             "en": "paper with photographs"
         },
+        "fotoplán": {
+            "cs": "fotoplán",
+            "en": "photogrammetric plan"
+        },
+        "diapozitiv barevný": {
+            "cs": "diapozitiv barevný",
+            "en": "colour photoslide"
+        },
+        "diapozitiv černobílý (film)": {
+            "cs": "diapozitiv černobílý (film)",
+            "en": "black-and-white photoslide (film)"
+        },
+        "fotografie černobílá": {
+            "cs": "fotografie černobílá",
+            "en": "black-and-white photograph"
+        },
+        "fotografie barevná": {
+            "cs": "fotografie barevná",
+            "en": "colour photograph"
+        },
+        "fotografie jiné/osobní": {
+            "cs": "fotografie jiné/osobní",
+            "en": "other/personal photographs"
+        },
+        "mikrofotografie": {
+            "cs": "mikrofotografie",
+            "en": "microphotograph"
+        },
+        "fotografie předmětů (digitální)": {
+            "cs": "fotografie předmětů (digitální)",
+            "en": "photographs of objects (digital)"
+        },
+        "fotografie terénu (digitální)": {
+            "cs": "fotografie terénu (digitální)",
+            "en": "photographs of fieldwork (digital)"
+        },
+        "fotografie předmětů": {
+            "cs": "fotografie předmětů",
+            "en": "photographs of objects"
+        },
+        "fotografie terénu": {
+            "cs": "fotografie terénu",
+            "en": "photographs of fieldwork"
+        },
+        "plány": {
+            "cs": "plány",
+            "en": "plans"
+        },
+        "fotografie diapozitivy": {
+            "cs": "fotografie diapozitivy",
+            "en": "photoslides"
+        },
+        "fotografie letecké (negativy)": {
+            "cs": "fotografie letecké (negativy)",
+            "en": "aerial photographs (negatives)"
+        },
+        "fotografie letecké (diapozitivy)": {
+            "cs": "fotografie letecké (diapozitivy)",
+            "en": "aerial photoslides"
+        },
+        "fotografie letecké (digitální)": {
+            "cs": "fotografie letecké (digitální)",
+            "en": "aerial photographs (digital)"
+        },
+        "plány (digitální)": {
+            "cs": "plány (digitální)",
+            "en": "plans (digital)"
+        },
+        "zprávy a hlášení": {
+            "cs": "zprávy a hlášení",
+            "en": "reports"
+        },
+        "hlášení": {
+            "cs": "hlášení",
+            "en": "brief report"
+        },
+        "investorská zpráva": {
+            "cs": "investorská zpráva",
+            "en": "client report"
+        },
+        "příloha zprávy/hlášení": {
+            "cs": "příloha zprávy/hlášení",
+            "en": "report annex"
+        },
+        "nálezová zpráva": {
+            "cs": "nálezová zpráva",
+            "en": "fieldwork report"
+        },
+        "kresba předmětu": {
+            "cs": "kresba předmětu",
+            "en": "object drawing"
+        },
+        "plán sondy": {
+            "cs": "plán sondy",
+            "en": "plan of trench"
+        },
+        "plán výzkumu": {
+            "cs": "plán výzkumu",
+            "en": "plan of fieldwork"
+        },
+        "plán lokality": {
+            "cs": "plán lokality",
+            "en": "plan of site"
+        },
+        "plán regionu": {
+            "cs": "plán regionu",
+            "en": "plan of region"
+        },
+        "letecká fotografie vegetačních příznaků": {
+            "cs": "letecká fotografie vegetačních příznaků",
+            "en": "aerial photograph of vegetation marks"
+        },
+        "letecká fotografie stínových příznaků": {
+            "cs": "letecká fotografie stínových příznaků",
+            "en": "aerial photograph of shadow marks"
+        },
+        "letecká fotografie sněžných příznaků": {
+            "cs": "letecká fotografie sněžných příznaků",
+            "en": "aerial photograph of snow marks"
+        },
+        "letecká fotografie půdních příznaků": {
+            "cs": "letecká fotografie půdních příznaků",
+            "en": "aerial photograph of soil marks"
+        },
+        "letecká fotografie výzkumu": {
+            "cs": "letecká fotografie výzkumu",
+            "en": "aerial photograph of fieldwork"
+        },
+        "letecká fotografie metody": {
+            "cs": "letecká fotografie metody",
+            "en": "aerial photograph of method"
+        },
+        "letecká fotografie lokality": {
+            "cs": "letecká fotografie lokality",
+            "en": "aerial photograph of site"
+        },
+        "letecká fotografie krajiny": {
+            "cs": "letecká fotografie krajiny",
+            "en": "aerial photograph of landscape"
+        },
+        "fotografie výzkumu/sondy": {
+            "cs": "fotografie výzkumu/sondy",
+            "en": "photograph of excavation/trench"
+        },
+        "fotografie předmětu": {
+            "cs": "fotografie předmětu",
+            "en": "photograph of object"
+        },
+        "fotografie pracovní": {
+            "cs": "fotografie pracovní",
+            "en": "photograph of fieldwork"
+        },
+        "fotografie lokality": {
+            "cs": "fotografie lokality",
+            "en": "photograph of site"
+        },
+        "fotografie krajiny": {
+            "cs": "fotografie krajiny",
+            "en": "photograph of landscape"
+        },
+        "fotografie konzervace": {
+            "cs": "fotografie konzervace",
+            "en": "photograph of conservation"
+        },
+        "data vektorového plánu": {
+            "cs": "data vektorového plánu",
+            "en": "vector plan data"
+        }
+    },
+    "Finds Context": {
+        "pohřeb žárový": {
+            "cs": "pohřeb žárový",
+            "en": "cremation burial"
+        },
+        "ojedinělý nález": {
+            "cs": "ojedinělý nález",
+            "en": "single find"
+        },
+        "nález v druhotné poloze": {
+            "cs": "nález v druhotné poloze",
+            "en": "find in secondary context"
+        },
+        "pohřeb zvířete": {
+            "cs": "pohřeb zvířete",
+            "en": "animal burial"
+        },
+        "izolovaný pohřeb": {
+            "cs": "izolovaný pohřeb",
+            "en": "isolated grave"
+        }
+    },
+    "Other": {
         "papír": {
             "cs": "papír",
             "en": "paper"
@@ -44,10 +1122,6 @@
             "cs": "bromkopie",
             "en": "hectograph copy"
         },
-        "fotoplán": {
-            "cs": "fotoplán",
-            "en": "photogrammetric plan"
-        },
         "papír kladívkový": {
             "cs": "papír kladívkový",
             "en": "drawing paper"
@@ -72,26 +1146,6 @@
             "cs": "digitální soubor",
             "en": "digital file"
         },
-        "diapozitiv barevný": {
-            "cs": "diapozitiv barevný",
-            "en": "colour photoslide"
-        },
-        "diapozitiv černobílý (film)": {
-            "cs": "diapozitiv černobílý (film)",
-            "en": "black-and-white photoslide (film)"
-        },
-        "diapozitiv černobílý (sklo)": {
-            "cs": "diapozitiv černobílý (sklo)",
-            "en": "black-and-white photoslide (glass)"
-        },
-        "fotografie černobílá": {
-            "cs": "fotografie černobílá",
-            "en": "black-and-white photograph"
-        },
-        "fotografie barevná": {
-            "cs": "fotografie barevná",
-            "en": "colour photograph"
-        },
         "negativ barevný": {
             "cs": "negativ barevný",
             "en": "colour negative"
@@ -100,37 +1154,9 @@
             "cs": "negativ černobílý (film)",
             "en": "black-and-white negative (film)"
         },
-        "negativ černobílý (sklo)": {
-            "cs": "negativ černobílý (sklo)",
-            "en": "black-and-white negative (glass)"
-        },
         "neurčený materiál": {
             "cs": "neurčený materiál",
             "en": "unspecified material"
-        },
-        "fotografie jiné/osobní": {
-            "cs": "fotografie jiné/osobní",
-            "en": "other/personal photographs"
-        },
-        "mikrofotografie": {
-            "cs": "mikrofotografie",
-            "en": "microphotograph"
-        },
-        "fotografie předmětů (digitální)": {
-            "cs": "fotografie předmětů (digitální)",
-            "en": "photographs of objects (digital)"
-        },
-        "fotografie terénu (digitální)": {
-            "cs": "fotografie terénu (digitální)",
-            "en": "photographs of fieldwork (digital)"
-        },
-        "fotografie předmětů": {
-            "cs": "fotografie předmětů",
-            "en": "photographs of objects"
-        },
-        "fotografie terénu": {
-            "cs": "fotografie terénu",
-            "en": "photographs of fieldwork"
         },
         "ruština": {
             "cs": "ruština",
@@ -188,14 +1214,6 @@
             "cs": "neznámá",
             "en": "unknown"
         },
-        "rané středohradištní období": {
-            "cs": "rané středohradištní období",
-            "en": "Early Middle Hillfort Period"
-        },
-        "raný středověk 2": {
-            "cs": "raný středověk 2",
-            "en": "Early Middle Ages 2"
-        },
         "magdalénien": {
             "cs": "magdalénien",
             "en": "Magdalenian"
@@ -216,41 +1234,13 @@
             "cs": "HaD–LtA",
             "en": "HaD–LtA"
         },
-        "časný eneolit": {
-            "cs": "časný eneolit",
-            "en": "Proto-Eneolithic"
-        },
         "doba římská–stěhování národů": {
             "cs": "doba římská–stěhování národů",
             "en": "Roman–Migration Period"
         },
-        "pozdní středověk": {
-            "cs": "pozdní středověk",
-            "en": "Late Middle Ages"
-        },
-        "vrcholný středověk": {
-            "cs": "vrcholný středověk",
-            "en": "High Middle Ages"
-        },
-        "doba bronzová–halštatská": {
-            "cs": "doba bronzová–halštatská",
-            "en": "Bronze Age–Hallstatt Period"
-        },
-        "raný středověk 3": {
-            "cs": "raný středověk 3",
-            "en": "Early Middle Ages 3"
-        },
         "protoúnětická kultura": {
             "cs": "protoúnětická kultura",
             "en": "Proto-Únětice Culture"
-        },
-        "středověk": {
-            "cs": "středověk",
-            "en": "Medieval"
-        },
-        "novověk": {
-            "cs": "novověk",
-            "en": "Modern"
         },
         "chamská kultura": {
             "cs": "chamská kultura",
@@ -260,25 +1250,9 @@
             "cs": "saská lužická kultura",
             "en": "Saxonian-Lusatian Culture"
         },
-        "vyspělé středohradištní období": {
-            "cs": "vyspělé středohradištní období",
-            "en": "Advanced Middle Hillfort Period"
-        },
         "jevišovická kultura": {
             "cs": "jevišovická kultura",
             "en": "Jevišovice Culture"
-        },
-        "vrcholný středověk–novověk": {
-            "cs": "vrcholný středověk–novověk",
-            "en": "High Middle Ages–Modern Period"
-        },
-        "raný středověk 4": {
-            "cs": "raný středověk 4",
-            "en": "Early Middle Ages 4"
-        },
-        "novověk 2": {
-            "cs": "novověk 2",
-            "en": "Modern Period 2"
         },
         "dobrodzieńská skupina": {
             "cs": "dobrodzieńská skupina",
@@ -312,29 +1286,9 @@
             "cs": "kultura zvoncovitých pohárů",
             "en": "Bell Beaker Culture"
         },
-        "raný středověk 2–4": {
-            "cs": "raný středověk 2–4",
-            "en": "Early Middle Ages 2–4"
-        },
-        "paleolit–mezolit": {
-            "cs": "paleolit–mezolit",
-            "en": "Palaeolithic–Mesolithic"
-        },
         "badenská kultura": {
             "cs": "badenská kultura",
             "en": "Baden Culture"
-        },
-        "starší neolit": {
-            "cs": "starší neolit",
-            "en": "Early Neolithic"
-        },
-        "halštatská mohylová kultura": {
-            "cs": "halštatská mohylová kultura",
-            "en": "Hallstatt Tumulus Culture"
-        },
-        "střední doba bronzová": {
-            "cs": "střední doba bronzová",
-            "en": "Middle Bronze Age"
         },
         "milavečská kultura": {
             "cs": "milavečská kultura",
@@ -368,14 +1322,6 @@
             "cs": "kultura s vypíchanou keramikou",
             "en": "Stroke Pottery Culture"
         },
-        "pozdní doba laténská (LtD)": {
-            "cs": "pozdní doba laténská (LtD)",
-            "en": "Final La Tène Period (LtD)"
-        },
-        "paleolit": {
-            "cs": "paleolit",
-            "en": "Palaeolithic"
-        },
         "miškovický typ": {
             "cs": "miškovický typ",
             "en": "Míškovice Type"
@@ -404,14 +1350,6 @@
             "cs": "starší doba římská",
             "en": "Early Roman Period"
         },
-        "přechod pozdní středověk/novověk": {
-            "cs": "přechod pozdní středověk/novověk",
-            "en": "Late Middle Ages/Modern Transition"
-        },
-        "pravěk": {
-            "cs": "pravěk",
-            "en": "Prehistory"
-        },
         "podolská kultura": {
             "cs": "podolská kultura",
             "en": "Podolí Culture"
@@ -424,25 +1362,9 @@
             "cs": "aurignacien",
             "en": "Aurignacian"
         },
-        "doba halštatská": {
-            "cs": "doba halštatská",
-            "en": "Hallstatt Period"
-        },
         "moustérien": {
             "cs": "moustérien",
             "en": "Mousterian"
-        },
-        "mladší doba bronzová": {
-            "cs": "mladší doba bronzová",
-            "en": "Late Bronze Age"
-        },
-        "pozdní středohradištní období": {
-            "cs": "pozdní středohradištní období",
-            "en": "Final Middle Hillfort Period"
-        },
-        "eneolit": {
-            "cs": "eneolit",
-            "en": "Eneolithic"
         },
         "kultura kulovitých amfor": {
             "cs": "kultura kulovitých amfor",
@@ -456,21 +1378,9 @@
             "cs": "industriální období",
             "en": "Industrial Period"
         },
-        "mladší doba halštatská (HaD2–3)": {
-            "cs": "mladší doba halštatská (HaD2–3)",
-            "en": "Late Hallstatt Period (HaD2–3)"
-        },
         "kultura Retz-Bajč-Křepice": {
             "cs": "kultura Retz-Bajč-Křepice",
             "en": "Retz-Bajč-Křepice (Furchenstich) Culture"
-        },
-        "pozdněhradištní období": {
-            "cs": "pozdněhradištní období",
-            "en": "Final Hillfort Period"
-        },
-        "novověk–industriální období": {
-            "cs": "novověk–industriální období",
-            "en": "Modern–Industrial Period"
         },
         "epigravettien": {
             "cs": "epigravettien",
@@ -484,25 +1394,9 @@
             "cs": "středodunajská mohylová kultura",
             "en": "Middle-Danubian Tumulus Culture"
         },
-        "mladší eneolit": {
-            "cs": "mladší eneolit",
-            "en": "Late Eneolithic"
-        },
-        "doba laténská–římská": {
-            "cs": "doba laténská–římská",
-            "en": "La Tène–Roman Period"
-        },
-        "starší eneolit": {
-            "cs": "starší eneolit",
-            "en": "Early Eneolithic"
-        },
         "velatická kultura": {
             "cs": "velatická kultura",
             "en": "Velatice Culture"
-        },
-        "pozdní paleolit": {
-            "cs": "pozdní paleolit",
-            "en": "Epipalaeolithic"
         },
         "slezská kultura": {
             "cs": "slezská kultura",
@@ -511,10 +1405,6 @@
         "kultura púchovská": {
             "cs": "kultura púchovská",
             "en": "Púchov Culture"
-        },
-        "raný středověk": {
-            "cs": "raný středověk",
-            "en": "Early Medieval"
         },
         "schusseriedská kultura": {
             "cs": "schusseriedská kultura",
@@ -528,45 +1418,21 @@
             "cs": "kultura se šňůrovou keramikou",
             "en": "Corded Ware Culture"
         },
-        "vyspělé mladohradištní období": {
-            "cs": "vyspělé mladohradištní období",
-            "en": "Advanced Late Hillfort Period"
-        },
         "mladší doba stěhování národů": {
             "cs": "mladší doba stěhování národů",
             "en": "Late Migration Period"
-        },
-        "doba bronzová": {
-            "cs": "doba bronzová",
-            "en": "Bronze Age"
-        },
-        "středověk–novověk": {
-            "cs": "středověk–novověk",
-            "en": "Middle Ages–Modern Period"
         },
         "kultura przeworská": {
             "cs": "kultura przeworská",
             "en": "Przeworsk Culture"
         },
-        "zemědělský pravěk": {
-            "cs": "zemědělský pravěk",
-            "en": "farming prehistory"
-        },
         "krumlovien": {
             "cs": "krumlovien",
             "en": "Krumlovian"
         },
-        "starší paleolit": {
-            "cs": "starší paleolit",
-            "en": "Lower Palaeolithic"
-        },
         "období popelnicových polí": {
             "cs": "období popelnicových polí",
             "en": "Urnfield Period"
-        },
-        "neolit": {
-            "cs": "neolit",
-            "en": "Neolithic"
         },
         "slezskoplatěnická kultura (HaC–D)": {
             "cs": "slezskoplatěnická kultura (HaC–D)",
@@ -596,10 +1462,6 @@
             "cs": "turnovský typ",
             "en": "Turnov type"
         },
-        "doba halštatská–laténská": {
-            "cs": "doba halštatská–laténská",
-            "en": "Hallstatt–La Tène Period"
-        },
         "epimagdalénien": {
             "cs": "epimagdalénien",
             "en": "Epimagdalenian"
@@ -612,14 +1474,6 @@
             "cs": "bylanská kultura",
             "en": "Bylany Culture"
         },
-        "novověk 1": {
-            "cs": "novověk 1",
-            "en": "Modern Period 1"
-        },
-        "přechod raný/vrcholný středověk": {
-            "cs": "přechod raný/vrcholný středověk",
-            "en": "Early/High Middle Ages Transition"
-        },
         "ostroměřská skupina": {
             "cs": "ostroměřská skupina",
             "en": "Ostroměř Group"
@@ -627,18 +1481,6 @@
         "kultura Chlopice-Veselé": {
             "cs": "kultura Chlopice-Veselé",
             "en": "Chlopice-Veselé Culture"
-        },
-        "pozdní doba bronzová": {
-            "cs": "pozdní doba bronzová",
-            "en": "Final Bronze Age"
-        },
-        "vrcholný–pozdní středověk": {
-            "cs": "vrcholný–pozdní středověk",
-            "en": "High–Late Middle Ages"
-        },
-        "střední doba laténská (LtB–C1)": {
-            "cs": "střední doba laténská (LtB–C1)",
-            "en": "Middle La Tène Period (LtB–C1)"
         },
         "kultura s moravskou malovanou keramikou 1": {
             "cs": "kultura s moravskou malovanou keramikou 1",
@@ -660,10 +1502,6 @@
             "cs": "micoquien",
             "en": "Micoquien"
         },
-        "neolit–eneolit": {
-            "cs": "neolit–eneolit",
-            "en": "Neolithic–Eneolithic"
-        },
         "michelsberská kultura": {
             "cs": "michelsberská kultura",
             "en": "Michelsberg Culture"
@@ -672,29 +1510,9 @@
             "cs": "želiezovská skupina",
             "en": "Želizovce Group"
         },
-        "raný středověk 1": {
-            "cs": "raný středověk 1",
-            "en": "Early Middle Ages 1"
-        },
-        "střední eneolit": {
-            "cs": "střední eneolit",
-            "en": "Middle Eneolithic"
-        },
         "mezolit": {
             "cs": "mezolit",
             "en": "Mesolithic"
-        },
-        "mladší–pozdní doba laténská (LtC2–D)": {
-            "cs": "mladší–pozdní doba laténská (LtC2–D)",
-            "en": "Late–Final La Tène Period (LtC2–D)"
-        },
-        "starší doba bronzová": {
-            "cs": "starší doba bronzová",
-            "en": "Early Bronze Age"
-        },
-        "doba laténská": {
-            "cs": "doba laténská",
-            "en": "La Tène Period"
         },
         "bohunicien": {
             "cs": "bohunicien",
@@ -716,37 +1534,9 @@
             "cs": "slezskoplatěnická kultura (HaB)",
             "en": "Silesian-Platěnice Culture (HaB)"
         },
-        "starší doba halštatská (HaC–D1)": {
-            "cs": "starší doba halštatská (HaC–D1)",
-            "en": "Early Hallstatt Period (HaC–D1)"
-        },
-        "časná doba laténská (LtA)": {
-            "cs": "časná doba laténská (LtA)",
-            "en": "Early La Tène Period (LtA)"
-        },
-        "rané mladohradištní období": {
-            "cs": "rané mladohradištní období",
-            "en": "Early Late Hillfort Period"
-        },
-        "střední–mladší neolit": {
-            "cs": "střední–mladší neolit",
-            "en": "Middle–Late Neolithic"
-        },
         "doba římská": {
             "cs": "doba římská",
             "en": "Roman Period"
-        },
-        "střední paleolit": {
-            "cs": "střední paleolit",
-            "en": "Middle Palaeolithic"
-        },
-        "mladší/pozdní eneolit": {
-            "cs": "mladší/pozdní eneolit",
-            "en": "Late/Final Eneolithic"
-        },
-        "mladší paleolit": {
-            "cs": "mladší paleolit",
-            "en": "Upper Palaeolithic"
         },
         "doba stěhování národů": {
             "cs": "doba stěhování národů",
@@ -755,14 +1545,6 @@
         "billendorfská kultura": {
             "cs": "billendorfská kultura",
             "en": "Billendorf Culture"
-        },
-        "střední/mladší doba laténská (LtC1–2)": {
-            "cs": "střední/mladší doba laténská (LtC1–2)",
-            "en": "Middle/Late La Tène Period (LtC1–2)"
-        },
-        "kost lidská": {
-            "cs": "kost lidská",
-            "en": "human bone"
         },
         "náhodný/povrchový nález": {
             "cs": "náhodný/povrchový nález",
@@ -779,10 +1561,6 @@
         "osídlený skalní prostor": {
             "cs": "osídlený skalní prostor",
             "en": "cave settlement"
-        },
-        "sídliště": {
-            "cs": "sídliště",
-            "en": "settlement"
         },
         "pinka": {
             "cs": "pinka",
@@ -844,10 +1622,6 @@
             "cs": "pec hutnická",
             "en": "iron-smelting furnace"
         },
-        "kachel": {
-            "cs": "kachel",
-            "en": "stove tile"
-        },
         "hamr": {
             "cs": "hamr",
             "en": "hammer mill"
@@ -863,10 +1637,6 @@
         "ekofakt": {
             "cs": "ekofakt",
             "en": "ecofact"
-        },
-        "jehlice": {
-            "cs": "jehlice",
-            "en": "clothing pin"
         },
         "průvlečka": {
             "cs": "průvlečka",
@@ -936,10 +1706,6 @@
             "cs": "most/brod",
             "en": "bridge/ford"
         },
-        "jáma kůlová/sloupová": {
-            "cs": "jáma kůlová/sloupová",
-            "en": "stakehole/posthole"
-        },
         "jiný materiál": {
             "cs": "jiný materiál",
             "en": "other material"
@@ -951,10 +1717,6 @@
         "plošina": {
             "cs": "plošina",
             "en": "platform"
-        },
-        "areál jiné aktivity": {
-            "cs": "areál jiné aktivity",
-            "en": "other site"
         },
         "sklárna": {
             "cs": "sklárna",
@@ -972,21 +1734,9 @@
             "cs": "dvorec/dvůr",
             "en": "curia/manorial farm"
         },
-        "keramika terra sigillata": {
-            "cs": "keramika terra sigillata",
-            "en": "terra sigillata ware"
-        },
         "platidlo": {
             "cs": "platidlo",
             "en": "currency"
-        },
-        "výšinné sídliště": {
-            "cs": "výšinné sídliště",
-            "en": "hill settlement"
-        },
-        "nadkomunitní areál": {
-            "cs": "nadkomunitní areál",
-            "en": "supracommunity site"
         },
         "zničený prostor": {
             "cs": "zničený prostor",
@@ -1000,33 +1750,9 @@
             "cs": "pozůstatek ohrazení",
             "en": "remains of enclosure"
         },
-        "hrazené sídliště": {
-            "cs": "hrazené sídliště",
-            "en": "enclosed settlement"
-        },
-        "hrazený areál": {
-            "cs": "hrazený areál",
-            "en": "enclosure"
-        },
-        "objekt": {
-            "cs": "objekt",
-            "en": "feature"
-        },
         "geologická/přirozená vrstva": {
             "cs": "geologická/přirozená vrstva",
             "en": "natural/geological layer"
-        },
-        "pohřební areál": {
-            "cs": "pohřební areál",
-            "en": "burial site"
-        },
-        "pohřeb v sídlištním objektu": {
-            "cs": "pohřeb v sídlištním objektu",
-            "en": "burial in settlement context"
-        },
-        "pohřebiště v sakrální stavbě": {
-            "cs": "pohřebiště v sakrální stavbě",
-            "en": "burials in sacral building"
         },
         "kultovní místo": {
             "cs": "kultovní místo",
@@ -1048,18 +1774,6 @@
             "cs": "boj",
             "en": "fighting activity"
         },
-        "geofyzikální průzkum": {
-            "cs": "geofyzikální průzkum",
-            "en": "geophysical survey"
-        },
-        "pohřeb kostrový": {
-            "cs": "pohřeb kostrový",
-            "en": "inhumation burial"
-        },
-        "sídliště specializované komunity": {
-            "cs": "sídliště specializované komunity",
-            "en": "special-community settlement"
-        },
         "těžený/zpracovávaný materiál": {
             "cs": "těžený/zpracovávaný materiál",
             "en": "extracted/processed material"
@@ -1068,17 +1782,9 @@
             "cs": "tafonomie",
             "en": "taphonomy"
         },
-        "kámen štípaný": {
-            "cs": "kámen štípaný",
-            "en": "lithics"
-        },
         "kamenná industrie": {
             "cs": "kamenná industrie",
             "en": "lithics"
-        },
-        "stavebně-historický průzkum": {
-            "cs": "stavebně-historický průzkum",
-            "en": "building-historical survey"
         },
         "konzervace a restaurování": {
             "cs": "konzervace a restaurování",
@@ -1111,10 +1817,6 @@
         "výzkum povrchové vrstvy": {
             "cs": "výzkum povrchové vrstvy",
             "en": "topsoil sampling"
-        },
-        "geochemický průzkum": {
-            "cs": "geochemický průzkum",
-            "en": "geochemical survey"
         },
         "petrografie/mineralogie": {
             "cs": "petrografie/mineralogie",
@@ -1160,10 +1862,6 @@
             "cs": "jiný kontext",
             "en": "other context"
         },
-        "neurčený areál": {
-            "cs": "neurčený areál",
-            "en": "unspecified site"
-        },
         "rostlinné makrozbytky": {
             "cs": "rostlinné makrozbytky",
             "en": "plant macro-remains"
@@ -1184,10 +1882,6 @@
             "cs": "předmět",
             "en": "object"
         },
-        "amorfní zlomek/předmět": {
-            "cs": "amorfní zlomek/předmět",
-            "en": "amorphous fragment/object"
-        },
         "atypický předmět": {
             "cs": "atypický předmět",
             "en": "exceptional object"
@@ -1200,10 +1894,6 @@
             "cs": "šibenice",
             "en": "gallows"
         },
-        "pohřebiště/hřbitov": {
-            "cs": "pohřebiště/hřbitov",
-            "en": "cemetery/graveyard"
-        },
         "křesadlo/ocílka": {
             "cs": "křesadlo/ocílka",
             "en": "firesteel"
@@ -1211,10 +1901,6 @@
         "malakofauna": {
             "cs": "malakofauna",
             "en": "mollusca"
-        },
-        "pohřeb žárový": {
-            "cs": "pohřeb žárový",
-            "en": "cremation burial"
         },
         "přírodní útvar": {
             "cs": "přírodní útvar",
@@ -1312,14 +1998,6 @@
             "cs": "A5 (15 x 21 cm)",
             "en": "A5 (15 x 21 cm)"
         },
-        "ojedinělý nález": {
-            "cs": "ojedinělý nález",
-            "en": "single find"
-        },
-        "nález v druhotné poloze": {
-            "cs": "nález v druhotné poloze",
-            "en": "find in secondary context"
-        },
         "kamenné jádro": {
             "cs": "kamenné jádro",
             "en": "stone core"
@@ -1336,21 +2014,9 @@
             "cs": "pilíř",
             "en": "pillar"
         },
-        "kámen drtidlo/žernov": {
-            "cs": "kámen drtidlo/žernov",
-            "en": "grinding stone"
-        },
         "drtidlo/zrnotěrka": {
             "cs": "drtidlo/zrnotěrka",
             "en": "handstone/saddle quern"
-        },
-        "plány": {
-            "cs": "plány",
-            "en": "plans"
-        },
-        "kultovní areál": {
-            "cs": "kultovní areál",
-            "en": "ritual site"
         },
         "pozůstatek kultu": {
             "cs": "pozůstatek kultu",
@@ -1359,10 +2025,6 @@
         "kroužek/kruh": {
             "cs": "kroužek/kruh",
             "en": "circle/ring"
-        },
-        "kultovní/sakrální objekt": {
-            "cs": "kultovní/sakrální objekt",
-            "en": "ritual/sacral feature"
         },
         "pohřbívání": {
             "cs": "pohřbívání",
@@ -1400,10 +2062,6 @@
             "cs": "stanice/tábořiště",
             "en": "camp"
         },
-        "vápenická jáma": {
-            "cs": "vápenická jáma",
-            "en": "lime pit"
-        },
         "třmen": {
             "cs": "třmen",
             "en": "stirrup"
@@ -1440,10 +2098,6 @@
             "cs": "archeoentomologie",
             "en": "archeoentomology"
         },
-        "pohřeb zvířete": {
-            "cs": "pohřeb zvířete",
-            "en": "animal burial"
-        },
         "makrozbytková analýza": {
             "cs": "makrozbytková analýza",
             "en": "macroremains analysis"
@@ -1475,10 +2129,6 @@
         "dyzna": {
             "cs": "dyzna",
             "en": "nozzle"
-        },
-        "zlomek keramiky": {
-            "cs": "zlomek keramiky",
-            "en": "potsherd"
         },
         "udidlo": {
             "cs": "udidlo",
@@ -1528,10 +2178,6 @@
             "cs": "hřeben",
             "en": "comb"
         },
-        "keramika": {
-            "cs": "keramika",
-            "en": "ceramic"
-        },
         "pražnice": {
             "cs": "pražnice",
             "en": "frying pan"
@@ -1572,14 +2218,6 @@
             "cs": "vrstva/souvrství",
             "en": "layer/layer sequence"
         },
-        "letecký průzkum": {
-            "cs": "letecký průzkum",
-            "en": "aerial survey"
-        },
-        "polygon leteckého průzkumu": {
-            "cs": "polygon leteckého průzkumu",
-            "en": "aerial survey polygon"
-        },
         "metalografie": {
             "cs": "metalografie",
             "en": "metallography"
@@ -1608,14 +2246,6 @@
             "cs": "součást postroje",
             "en": "harness component"
         },
-        "hrací kámen": {
-            "cs": "hrací kámen",
-            "en": "game piece"
-        },
-        "hrací kostka": {
-            "cs": "hrací kostka",
-            "en": "dice"
-        },
         "opasek": {
             "cs": "opasek",
             "en": "belt"
@@ -1627,10 +2257,6 @@
         "spona": {
             "cs": "spona",
             "en": "fibula"
-        },
-        "záušnice": {
-            "cs": "záušnice",
-            "en": "temple ring"
         },
         "nánožník": {
             "cs": "nánožník",
@@ -1644,25 +2270,9 @@
             "cs": "mísa",
             "en": "bowl"
         },
-        "kámen drahý": {
-            "cs": "kámen drahý",
-            "en": "gemstone"
-        },
-        "sekeromlat/mlat": {
-            "cs": "sekeromlat/mlat",
-            "en": "hammer axe"
-        },
         "cedník": {
             "cs": "cedník",
             "en": "colander"
-        },
-        "žernov/mlýnský kámen": {
-            "cs": "žernov/mlýnský kámen",
-            "en": "quern"
-        },
-        "zásobnice": {
-            "cs": "zásobnice",
-            "en": "storage vessel"
         },
         "pochva/pouzdro": {
             "cs": "pochva/pouzdro",
@@ -1684,10 +2294,6 @@
             "cs": "pec chlebová",
             "en": "bake oven"
         },
-        "depot": {
-            "cs": "depot",
-            "en": "hoard"
-        },
         "kotel/kotlík": {
             "cs": "kotel/kotlík",
             "en": "kettle"
@@ -1700,10 +2306,6 @@
             "cs": "nehotový výrobek/polotovar",
             "en": "semiproduct/blank"
         },
-        "nádoba": {
-            "cs": "nádoba",
-            "en": "vessel"
-        },
         "mikrostratigrafie": {
             "cs": "mikrostratigrafie",
             "en": "microstratigraphy"
@@ -1711,18 +2313,6 @@
         "vejce": {
             "cs": "vejce",
             "en": "egg"
-        },
-        "kost": {
-            "cs": "kost",
-            "en": "bone"
-        },
-        "zlomek kosti": {
-            "cs": "zlomek kosti",
-            "en": "bone fragment"
-        },
-        "kostra": {
-            "cs": "kostra",
-            "en": "skeleton"
         },
         "bankovka": {
             "cs": "bankovka",
@@ -1756,25 +2346,9 @@
             "cs": "kování",
             "en": "mount"
         },
-        "kulturní vrstva/objekt": {
-            "cs": "kulturní vrstva/objekt",
-            "en": "cultural layer/feature"
-        },
-        "objekt/stopa výroby": {
-            "cs": "objekt/stopa výroby",
-            "en": "production feature/trace"
-        },
-        "výrobní objekt": {
-            "cs": "výrobní objekt",
-            "en": "production feature"
-        },
         "pozůstatek vojenství": {
             "cs": "pozůstatek vojenství",
             "en": "remains of military site"
-        },
-        "areál vojenských aktivit": {
-            "cs": "areál vojenských aktivit",
-            "en": "military site"
         },
         "trativod": {
             "cs": "trativod",
@@ -1783,14 +2357,6 @@
         "konstrukce roubená": {
             "cs": "konstrukce roubená",
             "en": "log construction"
-        },
-        "mazanice": {
-            "cs": "mazanice",
-            "en": "daub"
-        },
-        "zlomek mazanice": {
-            "cs": "zlomek mazanice",
-            "en": "daub fragment"
         },
         "otopné zařízení": {
             "cs": "otopné zařízení",
@@ -1811,18 +2377,6 @@
         "ruda": {
             "cs": "ruda",
             "en": "ore"
-        },
-        "studna": {
-            "cs": "studna",
-            "en": "water well"
-        },
-        "technická keramika": {
-            "cs": "technická keramika",
-            "en": "technical ceramics"
-        },
-        "stavební keramika": {
-            "cs": "stavební keramika",
-            "en": "construction ceramics"
         },
         "amfora": {
             "cs": "amfora",
@@ -1896,22 +2450,6 @@
             "cs": "váza",
             "en": "vase"
         },
-        "fotografie diapozitivy": {
-            "cs": "fotografie diapozitivy",
-            "en": "photoslides"
-        },
-        "fotografie letecké (negativy)": {
-            "cs": "fotografie letecké (negativy)",
-            "en": "aerial photographs (negatives)"
-        },
-        "fotografie letecké (diapozitivy)": {
-            "cs": "fotografie letecké (diapozitivy)",
-            "en": "aerial photoslides"
-        },
-        "fotografie letecké (digitální)": {
-            "cs": "fotografie letecké (digitální)",
-            "en": "aerial photographs (digital)"
-        },
         "konstrukce hrázděná": {
             "cs": "konstrukce hrázděná",
             "en": "half-timber construction"
@@ -1919,18 +2457,6 @@
         "popelnice": {
             "cs": "popelnice",
             "en": "urn"
-        },
-        "pohřební objekt": {
-            "cs": "pohřební objekt",
-            "en": "funerary structure"
-        },
-        "součást hrobu": {
-            "cs": "součást hrobu",
-            "en": "grave component"
-        },
-        "železářský areál": {
-            "cs": "železářský areál",
-            "en": "iron production site"
         },
         "komunikace": {
             "cs": "komunikace",
@@ -1951,14 +2477,6 @@
         "běžný nález": {
             "cs": "běžný nález",
             "en": "common find"
-        },
-        "jáma stavební": {
-            "cs": "jáma stavební",
-            "en": "construction pit"
-        },
-        "mladší–pozdní eneolit": {
-            "cs": "mladší–pozdní eneolit",
-            "en": "Late–Final Eneolithic"
         },
         "pec kovolitecká": {
             "cs": "pec kovolitecká",
@@ -1984,37 +2502,13 @@
             "cs": "skalní rytina",
             "en": "rock carving"
         },
-        "geodetický průzkum": {
-            "cs": "geodetický průzkum",
-            "en": "geodetic survey"
-        },
-        "vizuální/geodetický průzkum": {
-            "cs": "vizuální/geodetický průzkum",
-            "en": "visual/geodetic survey"
-        },
         "stavební/spojovací prvek": {
             "cs": "stavební/spojovací prvek",
             "en": "structural element component"
         },
-        "terénní odkryv": {
-            "cs": "terénní odkryv",
-            "en": "field excavation"
-        },
-        "terénní zásah": {
-            "cs": "terénní zásah",
-            "en": "field intervention"
-        },
         "nedokumentovaná akce": {
             "cs": "nedokumentovaná akce",
             "en": "undocumented fieldwork"
-        },
-        "nedestruktivní průzkum": {
-            "cs": "nedestruktivní průzkum",
-            "en": "non-destructive survey"
-        },
-        "povrchový sběr": {
-            "cs": "povrchový sběr",
-            "en": "surface collection survey"
         },
         "portál": {
             "cs": "portál",
@@ -2072,14 +2566,6 @@
             "cs": "těžba",
             "en": "mining activity"
         },
-        "polygon průzkumu": {
-            "cs": "polygon průzkumu",
-            "en": "survey polygon"
-        },
-        "polygon archeologického průzkumu": {
-            "cs": "polygon archeologického průzkumu",
-            "en": "archaeological survey polygon"
-        },
         "způsob provedení": {
             "cs": "způsob provedení",
             "en": "construction type"
@@ -2135,10 +2621,6 @@
         "cisterna": {
             "cs": "cisterna",
             "en": "cistern"
-        },
-        "jáma odpadní/jímka": {
-            "cs": "jáma odpadní/jímka",
-            "en": "waste pit/cesspit"
         },
         "ohniště": {
             "cs": "ohniště",
@@ -2292,10 +2774,6 @@
             "cs": "kopí/hrot kopí",
             "en": "spear/spearhead"
         },
-        "oštěp/hrot oštěpu": {
-            "cs": "oštěp/hrot oštěpu",
-            "en": "javelin/javelin head"
-        },
         "kuše": {
             "cs": "kuše",
             "en": "crossbow"
@@ -2332,10 +2810,6 @@
             "cs": "zámek",
             "en": "lock"
         },
-        "plány (digitální)": {
-            "cs": "plány (digitální)",
-            "en": "plans (digital)"
-        },
         "kniha": {
             "cs": "kniha",
             "en": "book"
@@ -2343,10 +2817,6 @@
         "kinofilm (24 x 36 mm)": {
             "cs": "kinofilm (24 x 36 mm)",
             "en": "cine film (24 x 36 mm)"
-        },
-        "zprávy a hlášení": {
-            "cs": "zprávy a hlášení",
-            "en": "reports"
         },
         "orientační zjištění": {
             "cs": "orientační zjištění",
@@ -2404,10 +2874,6 @@
             "cs": "pila",
             "en": "saw"
         },
-        "nůž": {
-            "cs": "nůž",
-            "en": "knife"
-        },
         "dláto": {
             "cs": "dláto",
             "en": "chisel"
@@ -2423,10 +2889,6 @@
         "šídlo": {
             "cs": "šídlo",
             "en": "awl"
-        },
-        "průzkum detektorem kovu": {
-            "cs": "průzkum detektorem kovu",
-            "en": "metal detector survey"
         },
         "motyka/krumpáč": {
             "cs": "motyka/krumpáč",
@@ -2447,14 +2909,6 @@
         "klín": {
             "cs": "klín",
             "en": "wedge"
-        },
-        "nůžky": {
-            "cs": "nůžky",
-            "en": "scissors"
-        },
-        "brousek": {
-            "cs": "brousek",
-            "en": "whetstone"
         },
         "kovářská výheň": {
             "cs": "kovářská výheň",
@@ -2515,10 +2969,6 @@
         "omítka": {
             "cs": "omítka",
             "en": "plaster"
-        },
-        "malta": {
-            "cs": "malta",
-            "en": "mortar"
         },
         "pojivo": {
             "cs": "pojivo",
@@ -2632,10 +3082,6 @@
             "cs": "korál",
             "en": "coral"
         },
-        "kost zvířecí": {
-            "cs": "kost zvířecí",
-            "en": "animal bone"
-        },
         "paroh": {
             "cs": "paroh",
             "en": "antler"
@@ -2647,22 +3093,6 @@
         "vápno": {
             "cs": "vápno",
             "en": "quicklime"
-        },
-        "kámen stavební": {
-            "cs": "kámen stavební",
-            "en": "building stone"
-        },
-        "valoun": {
-            "cs": "valoun",
-            "en": "pebble"
-        },
-        "kámen": {
-            "cs": "kámen",
-            "en": "stone"
-        },
-        "kámen broušený": {
-            "cs": "kámen broušený",
-            "en": "polished stone"
         },
         "gemma": {
             "cs": "gemma",
@@ -2700,10 +3130,6 @@
             "cs": "železo",
             "en": "iron"
         },
-        "bronz": {
-            "cs": "bronz",
-            "en": "bronze"
-        },
         "mosaz": {
             "cs": "mosaz",
             "en": "brass"
@@ -2711,10 +3137,6 @@
         "kov": {
             "cs": "kov",
             "en": "metal"
-        },
-        "sklo": {
-            "cs": "sklo",
-            "en": "glass"
         },
         "prejz": {
             "cs": "prejz",
@@ -2724,25 +3146,9 @@
             "cs": "střešní krytina",
             "en": "roofing tile"
         },
-        "keramika kamenina": {
-            "cs": "keramika kamenina",
-            "en": "stoneware"
-        },
-        "keramika fajáns/majolika": {
-            "cs": "keramika fajáns/majolika",
-            "en": "faience/maiolica"
-        },
-        "keramika porcelán": {
-            "cs": "keramika porcelán",
-            "en": "porcelain"
-        },
         "konstrukce cihlová": {
             "cs": "konstrukce cihlová",
             "en": "brick structure"
-        },
-        "cihla": {
-            "cs": "cihla",
-            "en": "brick"
         },
         "hlína": {
             "cs": "hlína",
@@ -2800,10 +3206,6 @@
             "cs": "železnice",
             "en": "railway"
         },
-        "pozůstatek sídliště": {
-            "cs": "pozůstatek sídliště",
-            "en": "remains of settlement"
-        },
         "protourbánní aglomerace": {
             "cs": "protourbánní aglomerace",
             "en": "proto-urban agglomeration"
@@ -2828,25 +3230,9 @@
             "cs": "cesta",
             "en": "roads"
         },
-        "zahrada": {
-            "cs": "zahrada",
-            "en": "garden"
-        },
-        "zahrada/sad": {
-            "cs": "zahrada/sad",
-            "en": "garden"
-        },
-        "jáma": {
-            "cs": "jáma",
-            "en": "pit"
-        },
         "převýšená plocha": {
             "cs": "převýšená plocha",
             "en": "mound"
-        },
-        "navážka": {
-            "cs": "navážka",
-            "en": "backfill"
         },
         "násep": {
             "cs": "násep",
@@ -2860,10 +3246,6 @@
             "cs": "skupina sond",
             "en": "group of pit trenches"
         },
-        "sonda": {
-            "cs": "sonda",
-            "en": "trench"
-        },
         "skupina řezů": {
             "cs": "skupina řezů",
             "en": "group of linear trenches"
@@ -2871,10 +3253,6 @@
         "řez": {
             "cs": "řez",
             "en": "linear trench"
-        },
-        "geologická sonda": {
-            "cs": "geologická sonda",
-            "en": "geological trench"
         },
         "skupina/síť sond": {
             "cs": "skupina/síť sond",
@@ -2884,17 +3262,9 @@
             "cs": "vertikální řez",
             "en": "linear trench"
         },
-        "plošný odkryv": {
-            "cs": "plošný odkryv",
-            "en": "total excavation"
-        },
         "zahloubená plocha": {
             "cs": "zahloubená plocha",
             "en": "depression"
-        },
-        "výkop": {
-            "cs": "výkop",
-            "en": "cut"
         },
         "lineární zahloubený útvar": {
             "cs": "lineární zahloubený útvar",
@@ -2903,10 +3273,6 @@
         "konstrukce zahloubená": {
             "cs": "konstrukce zahloubená",
             "en": "sunken structure"
-        },
-        "zahloubený objekt": {
-            "cs": "zahloubený objekt",
-            "en": "sunken feature"
         },
         "neodborné narušení": {
             "cs": "neodborné narušení",
@@ -2927,10 +3293,6 @@
         "synagoga": {
             "cs": "synagoga",
             "en": "synagogue"
-        },
-        "kostel": {
-            "cs": "kostel",
-            "en": "church"
         },
         "nemovitá památka": {
             "cs": "nemovitá památka",
@@ -2956,10 +3318,6 @@
             "cs": "pomník/památník",
             "en": "memorial"
         },
-        "polní opevnění": {
-            "cs": "polní opevnění",
-            "en": "field fortification"
-        },
         "zákop": {
             "cs": "zákop",
             "en": "trench"
@@ -2968,17 +3326,9 @@
             "cs": "bastion/reduta",
             "en": "bastion/redoubt"
         },
-        "hradiště": {
-            "cs": "hradiště",
-            "en": "hillfort"
-        },
         "pevnost": {
             "cs": "pevnost",
             "en": "fortress"
-        },
-        "hrad": {
-            "cs": "hrad",
-            "en": "castle"
         },
         "šachta": {
             "cs": "šachta",
@@ -3012,10 +3362,6 @@
             "cs": "jez",
             "en": "weir"
         },
-        "přehrada": {
-            "cs": "přehrada",
-            "en": "dam"
-        },
         "náhon": {
             "cs": "náhon",
             "en": "millrace"
@@ -3024,41 +3370,9 @@
             "cs": "vodní dílo",
             "en": "hydraulic structure"
         },
-        "hrob skříňkový": {
-            "cs": "hrob skříňkový",
-            "en": "cist grave"
-        },
-        "hrob komorový": {
-            "cs": "hrob komorový",
-            "en": "chamber grave"
-        },
-        "hrobka": {
-            "cs": "hrobka",
-            "en": "tomb"
-        },
-        "náhrobek/náhrobní kámen": {
-            "cs": "náhrobek/náhrobní kámen",
-            "en": "gravestone"
-        },
-        "hrob": {
-            "cs": "hrob",
-            "en": "grave"
-        },
-        "izolovaný pohřeb": {
-            "cs": "izolovaný pohřeb",
-            "en": "isolated grave"
-        },
-        "mohyla": {
-            "cs": "mohyla",
-            "en": "burial mound"
-        },
         "pozůstatek mohylníku": {
             "cs": "pozůstatek mohylníku",
             "en": "remains of burial mounds"
-        },
-        "kostnice": {
-            "cs": "kostnice",
-            "en": "ossuary"
         },
         "muzeum/skanzen": {
             "cs": "muzeum/skanzen",
@@ -3072,18 +3386,6 @@
             "cs": "městský palác",
             "en": "town palace"
         },
-        "tvrz/hrádek": {
-            "cs": "tvrz/hrádek",
-            "en": "fortified manor"
-        },
-        "ohradní zeď/plot": {
-            "cs": "ohradní zeď/plot",
-            "en": "wall/fence"
-        },
-        "jáma zásobní": {
-            "cs": "jáma zásobní",
-            "en": "storage pit"
-        },
         "stáj/chlév": {
             "cs": "stáj/chlév",
             "en": "stable/cowshed"
@@ -3095,14 +3397,6 @@
         "stodola": {
             "cs": "stodola",
             "en": "barn"
-        },
-        "zemědělský objekt": {
-            "cs": "zemědělský objekt",
-            "en": "agricultural structure"
-        },
-        "areál zemědělské výroby": {
-            "cs": "areál zemědělské výroby",
-            "en": "agricultural production site"
         },
         "věž": {
             "cs": "věž",
@@ -3120,10 +3414,6 @@
             "cs": "budova/stavba",
             "en": "building/structure"
         },
-        "sklep": {
-            "cs": "sklep",
-            "en": "cellar"
-        },
         "kaple": {
             "cs": "kaple",
             "en": "chapel"
@@ -3131,10 +3421,6 @@
         "místo výroby": {
             "cs": "místo výroby",
             "en": "production place"
-        },
-        "areál nezemědělské výroby": {
-            "cs": "areál nezemědělské výroby",
-            "en": "production site"
         },
         "pozůstatek výroby": {
             "cs": "pozůstatek výroby",
@@ -3152,10 +3438,6 @@
             "cs": "chodba",
             "en": "corridor"
         },
-        "terénní hrana": {
-            "cs": "terénní hrana",
-            "en": "terrain edge"
-        },
         "mezní pás": {
             "cs": "mezní pás",
             "en": "field boundary"
@@ -3167,10 +3449,6 @@
         "palisáda": {
             "cs": "palisáda",
             "en": "palisade"
-        },
-        "příkop": {
-            "cs": "příkop",
-            "en": "moat"
         },
         "otopná pec": {
             "cs": "otopná pec",
@@ -3192,14 +3470,6 @@
             "cs": "nika",
             "en": "niche"
         },
-        "parkánová hradba": {
-            "cs": "parkánová hradba",
-            "en": "zwinger wall"
-        },
-        "val": {
-            "cs": "val",
-            "en": "rampart"
-        },
         "palebné postavení": {
             "cs": "palebné postavení",
             "en": "gun emplacement"
@@ -3207,10 +3477,6 @@
         "bašta": {
             "cs": "bašta",
             "en": "wall tower"
-        },
-        "hradba": {
-            "cs": "hradba",
-            "en": "defensive wall"
         },
         "dláždění": {
             "cs": "dláždění",
@@ -3256,10 +3522,6 @@
             "cs": "architektonický článek",
             "en": "architectural element"
         },
-        "konstrukční prvek": {
-            "cs": "konstrukční prvek",
-            "en": "architectural element"
-        },
         "předměstí": {
             "cs": "předměstí",
             "en": "suburb"
@@ -3267,14 +3529,6 @@
         "bojiště": {
             "cs": "bojiště",
             "en": "battlefield"
-        },
-        "zaniklý/historický areál": {
-            "cs": "zaniklý/historický areál",
-            "en": "deserted/historical site"
-        },
-        "obval": {
-            "cs": "obval",
-            "en": "spoil bank"
         },
         "sejp/halda": {
             "cs": "sejp/halda",
@@ -3296,10 +3550,6 @@
             "cs": "důl",
             "en": "mine"
         },
-        "těžební jáma": {
-            "cs": "těžební jáma",
-            "en": "mining pit"
-        },
         "hliník": {
             "cs": "hliník",
             "en": "clay pit"
@@ -3307,14 +3557,6 @@
         "rýžoviště": {
             "cs": "rýžoviště",
             "en": "panning site"
-        },
-        "těžební objekt": {
-            "cs": "těžební objekt",
-            "en": "mining feature"
-        },
-        "areál těžby": {
-            "cs": "areál těžby",
-            "en": "extracting site"
         },
         "pozůstatek těžby": {
             "cs": "pozůstatek těžby",
@@ -3344,25 +3586,9 @@
             "cs": "jiný text",
             "en": "other text"
         },
-        "hlášení": {
-            "cs": "hlášení",
-            "en": "brief report"
-        },
-        "investorská zpráva": {
-            "cs": "investorská zpráva",
-            "en": "client report"
-        },
         "expertní posudek": {
             "cs": "expertní posudek",
             "en": "expert report"
-        },
-        "příloha zprávy/hlášení": {
-            "cs": "příloha zprávy/hlášení",
-            "en": "report annex"
-        },
-        "nálezová zpráva": {
-            "cs": "nálezová zpráva",
-            "en": "fieldwork report"
         },
         "neurčený dokument": {
             "cs": "neurčený dokument",
@@ -3371,10 +3597,6 @@
         "3D textura": {
             "cs": "3D textura",
             "en": "3D texture"
-        },
-        "3D dokumentace": {
-            "cs": "3D dokumentace",
-            "en": "3D documentation"
         },
         "3D rekonstrukce": {
             "cs": "3D rekonstrukce",
@@ -3387,102 +3609,6 @@
         "článek v časopise": {
             "cs": "článek v časopise",
             "en": "journal paper"
-        },
-        "mapa": {
-            "cs": "mapa",
-            "en": "map"
-        },
-        "kresba předmětu": {
-            "cs": "kresba předmětu",
-            "en": "object drawing"
-        },
-        "plán objektu": {
-            "cs": "plán objektu",
-            "en": "plan of feature"
-        },
-        "plán sondy": {
-            "cs": "plán sondy",
-            "en": "plan of trench"
-        },
-        "plán výzkumu": {
-            "cs": "plán výzkumu",
-            "en": "plan of fieldwork"
-        },
-        "plán lokality": {
-            "cs": "plán lokality",
-            "en": "plan of site"
-        },
-        "plán regionu": {
-            "cs": "plán regionu",
-            "en": "plan of region"
-        },
-        "letecká fotografie vegetačních příznaků": {
-            "cs": "letecká fotografie vegetačních příznaků",
-            "en": "aerial photograph of vegetation marks"
-        },
-        "letecká fotografie stínových příznaků": {
-            "cs": "letecká fotografie stínových příznaků",
-            "en": "aerial photograph of shadow marks"
-        },
-        "letecká fotografie sněžných příznaků": {
-            "cs": "letecká fotografie sněžných příznaků",
-            "en": "aerial photograph of snow marks"
-        },
-        "letecká fotografie půdních příznaků": {
-            "cs": "letecká fotografie půdních příznaků",
-            "en": "aerial photograph of soil marks"
-        },
-        "letecká fotografie výzkumu": {
-            "cs": "letecká fotografie výzkumu",
-            "en": "aerial photograph of fieldwork"
-        },
-        "letecká fotografie metody": {
-            "cs": "letecká fotografie metody",
-            "en": "aerial photograph of method"
-        },
-        "letecká fotografie lokality": {
-            "cs": "letecká fotografie lokality",
-            "en": "aerial photograph of site"
-        },
-        "letecká fotografie krajiny": {
-            "cs": "letecká fotografie krajiny",
-            "en": "aerial photograph of landscape"
-        },
-        "fotografie výzkumu/sondy": {
-            "cs": "fotografie výzkumu/sondy",
-            "en": "photograph of excavation/trench"
-        },
-        "fotografie předmětu": {
-            "cs": "fotografie předmětu",
-            "en": "photograph of object"
-        },
-        "fotografie pracovní": {
-            "cs": "fotografie pracovní",
-            "en": "photograph of fieldwork"
-        },
-        "fotografie objektu": {
-            "cs": "fotografie objektu",
-            "en": "photograph of feature"
-        },
-        "fotografie lokality": {
-            "cs": "fotografie lokality",
-            "en": "photograph of site"
-        },
-        "fotografie krajiny": {
-            "cs": "fotografie krajiny",
-            "en": "photograph of landscape"
-        },
-        "fotografie konzervace": {
-            "cs": "fotografie konzervace",
-            "en": "photograph of conservation"
-        },
-        "data vektorového plánu": {
-            "cs": "data vektorového plánu",
-            "en": "vector plan data"
-        },
-        "data terénního výzkumu": {
-            "cs": "data terénního výzkumu",
-            "en": "fieldwork data"
         },
         "data GNSS": {
             "cs": "data GNSS",
@@ -3519,18 +3645,6 @@
         "nadzemní relikty": {
             "cs": "nadzemní relikty",
             "en": "aboveground remains"
-        },
-        "lokalita pod zástavbou": {
-            "cs": "lokalita pod zástavbou",
-            "en": "site in built environment"
-        },
-        "zaniklá lokalita": {
-            "cs": "zaniklá lokalita",
-            "en": "buried site"
-        },
-        "pseudolokalita (< 5 %)": {
-            "cs": "pseudolokalita (< 5 %)",
-            "en": "pseudo-site (< 5%)"
         },
         "domnělé (5–50 %)": {
             "cs": "domnělé (5–50 %)",
@@ -3603,10 +3717,6 @@
         "Uganda": {
             "cs": "Uganda",
             "en": "Uganda"
-        },
-        "Tuvalu": {
-            "cs": "Tuvalu",
-            "en": "Tuvalu"
         },
         "Turks a Caicos": {
             "cs": "Turks a Caicos",
@@ -3992,10 +4102,6 @@
             "cs": "Man",
             "en": "Isle of Man"
         },
-        "Malta": {
-            "cs": "Malta",
-            "en": "Malta"
-        },
         "Mali": {
             "cs": "Mali",
             "en": "Mali"
@@ -4079,10 +4185,6 @@
         "Kuba": {
             "cs": "Kuba",
             "en": "Cuba"
-        },
-        "Kostarika": {
-            "cs": "Kostarika",
-            "en": "Costa Rica"
         },
         "Kosovo": {
             "cs": "Kosovo",
@@ -4544,10 +4646,6 @@
             "cs": "Česko",
             "en": "Czechia"
         },
-        "nízká výpovědní hodnota": {
-            "cs": "nízká výpovědní hodnota",
-            "en": "low relevancy"
-        },
         "duplicita": {
             "cs": "duplicita",
             "en": "duplicate"
@@ -4608,10 +4706,6 @@
             "cs": "podloží",
             "en": "subsoil"
         },
-        "dno sondy": {
-            "cs": "dno sondy",
-            "en": "trench bottom"
-        },
         "jiná událost": {
             "cs": "jiná událost",
             "en": "other event"
@@ -4631,18 +4725,6 @@
         "konference": {
             "cs": "konference",
             "en": "conference"
-        },
-        "průzkum": {
-            "cs": "průzkum",
-            "en": "survey"
-        },
-        "záchranný": {
-            "cs": "záchranný",
-            "en": "rescue"
-        },
-        "badatelský": {
-            "cs": "badatelský",
-            "en": "research"
         },
         "polygon": {
             "cs": "polygon",
@@ -4664,10 +4746,6 @@
             "cs": "ústav památkové péče",
             "en": "heritage organisation"
         },
-        "terénní pracoviště": {
-            "cs": "terénní pracoviště",
-            "en": "fieldwork unit"
-        },
         "jiná organizace": {
             "cs": "jiná organizace",
             "en": "other organisation"
@@ -4679,14 +4757,6 @@
         "muzeum": {
             "cs": "muzeum",
             "en": "museum"
-        },
-        "lokalita": {
-            "cs": "lokalita",
-            "en": "site"
-        },
-        "katastrální území": {
-            "cs": "katastrální území",
-            "en": "cadastral area"
         },
         "část akce": {
             "cs": "část akce",
@@ -4740,30 +4810,6 @@
             "cs": "linie ohrazující",
             "en": "delimiting line"
         },
-        "bodové objekty uspořádané": {
-            "cs": "bodové objekty uspořádané",
-            "en": "organized point features"
-        },
-        "shluk bodových objektů": {
-            "cs": "shluk bodových objektů",
-            "en": "group of point features"
-        },
-        "plošný objekt": {
-            "cs": "plošný objekt",
-            "en": "polygonal feature"
-        },
-        "bodový objekt": {
-            "cs": "bodový objekt",
-            "en": "point feature"
-        },
-        "někdy v letech": {
-            "cs": "někdy v letech",
-            "en": "approximate years"
-        },
-        "přesné datum": {
-            "cs": "přesné datum",
-            "en": "exact date"
-        },
         "přesně v letech": {
             "cs": "přesně v letech",
             "en": "exact years"
@@ -4784,10 +4830,6 @@
             "cs": "anonym",
             "en": "anonymous"
         },
-        "poloha podle katastru": {
-            "cs": "poloha podle katastru",
-            "en": "location by cadastral area"
-        },
         "odchylka stovky metrů": {
             "cs": "odchylka stovky metrů",
             "en": "deviation in hundreds of meters"
@@ -4795,10 +4837,6 @@
         "odchylka desítky metrů": {
             "cs": "odchylka desítky metrů",
             "en": "deviation in tens of meters"
-        },
-        "odchylka jednotky metrů": {
-            "cs": "odchylka jednotky metrů",
-            "en": "deviation in meters"
         },
         "stavba": {
             "cs": "stavba",
@@ -4815,14 +4853,6 @@
         "liniová stavba": {
             "cs": "liniová stavba",
             "en": "line construction"
-        },
-        "inženýrsko-geologický průzkum": {
-            "cs": "inženýrsko-geologický průzkum",
-            "en": "engineering-geological survey"
-        },
-        "badatelský záměr": {
-            "cs": "badatelský záměr",
-            "en": "research project"
         },
         "jiný podnět": {
             "cs": "jiný podnět",
@@ -4876,17 +4906,9 @@
             "cs": "není, nezjištěno",
             "en": "unavailable/unknown"
         },
-        "nízká kvalita": {
-            "cs": "nízká kvalita",
-            "en": "poor quality"
-        },
         "použitelný": {
             "cs": "použitelný",
             "en": "useable"
-        },
-        "tisková kvalita": {
-            "cs": "tisková kvalita",
-            "en": "print quality"
         },
         "Znojmo": {
             "cs": "Znojmo",
@@ -4928,10 +4950,6 @@
             "cs": "Plasy",
             "en": "Plasy"
         },
-        "Mnichovo Hradiště": {
-            "cs": "Mnichovo Hradiště",
-            "en": "Mnichovo Hradiště"
-        },
         "Mělník-Hořín": {
             "cs": "Mělník-Hořín",
             "en": "Mělník-Hořín"
@@ -4951,10 +4969,6 @@
         "Kolín": {
             "cs": "Kolín",
             "en": "Kolín"
-        },
-        "Kladno": {
-            "cs": "Kladno",
-            "en": "Kladno"
         },
         "Karlovy Vary": {
             "cs": "Karlovy Vary",

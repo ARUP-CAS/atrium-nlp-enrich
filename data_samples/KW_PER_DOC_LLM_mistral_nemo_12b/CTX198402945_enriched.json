@@ -8,12 +8,14 @@
         "original_text": "Kat. obec Beroun",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Kat. obec Beroun",
                 "Osada"
             ],
             "extracted_keywords_en": [
+                "Cat. town Beroun",
                 "Settlement"
             ],
-            "teater_category": "objekt",
+            "teater_category": "sídliště",
             "confidence_score": 1.0
         }
     },
@@ -26,10 +28,11 @@
         "original_text": "Osada",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Osada"
+                "Osada",
+                "sídliště"
             ],
             "extracted_keywords_en": [
-                "Settlement"
+                "settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 1.0
@@ -48,11 +51,11 @@
                 "čp."
             ],
             "extracted_keywords_en": [
-                "line",
-                "number"
+                "Track",
+                "house number"
             ],
-            "teater_category": "trativod",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -64,14 +67,12 @@
         "original_text": "Okres Beroun",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Okres",
-                "Beroun"
+                "Okres Beroun"
             ],
             "extracted_keywords_en": [
-                "District",
-                "Beroun"
+                "District of Beroun"
             ],
-            "teater_category": "okenní výplň",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -85,15 +86,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "CSAV",
-                "'-cheologický",
+                "cheologický",
                 "ústav"
             ],
             "extracted_keywords_en": [
                 "CSAV",
-                "'-archaeological",
+                "archaeological",
                 "institute"
             ],
-            "teater_category": "objekt",
+            "teater_category": "archeolog",
             "confidence_score": 1.0
         }
     },
@@ -106,18 +107,14 @@
         "original_text": "Druh a kultura",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kultura",
-                "moravskou",
-                "malovanou",
-                "keramikou"
+                "druh",
+                "kultura"
             ],
             "extracted_keywords_en": [
-                "culture",
-                "moravian",
-                "painted",
-                "pottery"
+                "type",
+                "culture"
             ],
-            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "teater_category": "rané středohradištní období",
             "confidence_score": 1.0
         }
     },
@@ -135,9 +132,9 @@
             ],
             "extracted_keywords_en": [
                 "medieval",
-                "town"
+                "settlement"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -150,12 +147,12 @@
         "original_text": "-ved. výzkumu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ved. výzkumu"
+                "vedoucí výzkumu"
             ],
             "extracted_keywords_en": [
-                "research report"
+                "head of research"
             ],
-            "teater_category": "zprávy a hlášení",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -173,7 +170,7 @@
             "extracted_keywords_en": [
                 "Report"
             ],
-            "teater_category": "zprávy a hlášení",
+            "teater_category": "hrazené sídliště",
             "confidence_score": 1.0
         }
     },
@@ -186,12 +183,16 @@
         "original_text": "koreferenta",
         "enrichment": {
             "extracted_keywords_cs": [
-                "koreferenta"
+                "koreferenta",
+                "komise",
+                "ved. oddelení"
             ],
             "extracted_keywords_en": [
-                "co-referee"
+                "correspondent",
+                "committee",
+                "head of department"
             ],
-            "teater_category": "zprávy a hlášení",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
         }
     },
@@ -204,12 +205,14 @@
         "original_text": "komise",
         "enrichment": {
             "extracted_keywords_cs": [
-                "komise"
+                "komise",
+                "ved. oddelení"
             ],
             "extracted_keywords_en": [
-                "commission"
+                "commission",
+                "head of department"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "hrazený areál",
             "confidence_score": 1.0
         }
     },
@@ -225,9 +228,9 @@
                 "ved. oddelení"
             ],
             "extracted_keywords_en": [
-                "head department"
+                "head of department"
             ],
-            "teater_category": "objekt",
+            "teater_category": "rané středohradištní období",
             "confidence_score": 1.0
         }
     },
@@ -241,16 +244,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Období",
-                "10.9.-",
-                "26.9.1984"
+                "10.9.- 26.9.1984"
             ],
             "extracted_keywords_en": [
                 "Period",
-                "10.9.-",
-                "26.9.1984"
+                "10.9.- 26.9.1984"
             ],
-            "teater_category": "přesné datum",
-            "confidence_score": 1.0
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -262,30 +263,16 @@
         "original_text": "V tomto období jsme v zadním traktu domu čp. 36 na Gottwaldově",
         "enrichment": {
             "extracted_keywords_cs": [
-                "odkryli",
-                "provozní",
-                "jímku",
-                "hlubokou",
-                "180",
-                "cm",
-                "zdivá",
-                "nasucho",
-                "maltu",
-                "spodní"
+                "provozní jímka",
+                "lomové zdivo",
+                "malta"
             ],
             "extracted_keywords_en": [
-                "excavated",
-                "operational",
-                "sewer",
-                "depth",
-                "180",
-                "cm",
-                "dry-stone",
-                "without",
-                "mortar",
-                "lower"
+                "operational pit",
+                "quarry masonry",
+                "mortar"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -298,33 +285,31 @@
         "original_text": "nám. v Berouně odkryli patrně provozní jímku hlubokou 180 cm,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jímka",
+                "provozní jímka",
                 "hluboká",
-                "180",
-                "cm",
-                "lomového",
-                "zdivá",
+                "180 cm",
+                "lomové zdivo",
                 "nasucho",
                 "maltu",
-                "omítnutou",
-                "vakovitým",
-                "dnem"
+                "uvnitř",
+                "sporadicky",
+                "omítnutá",
+                "vakovitý dnem"
             ],
             "extracted_keywords_en": [
-                "sewer",
+                "operational pit",
                 "deep",
-                "180",
-                "cm",
-                "quarry",
-                "stones",
+                "180 cm",
+                "quarry masonry",
                 "dry",
                 "mortar",
+                "inside",
+                "sporadically",
                 "plastered",
-                "cup-shaped",
-                "floor"
+                "bell-shaped bottom"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -337,23 +322,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "jímka",
-                "nasucho",
-                "maltu",
-                "omítnutou",
-                "vakovitým",
-                "dnem",
+                "lomové zdivo",
+                "malta",
                 "pískem"
             ],
             "extracted_keywords_en": [
-                "cesspit",
-                "dry",
+                "pit",
+                "rubble masonry",
                 "mortar",
-                "plastered",
-                "basin-like",
-                "bottom",
                 "sand"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -367,15 +346,35 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "jímka",
-                "spodní část",
-                "vakovitý dnem"
+                "provozní",
+                "uvnitř",
+                "omítnutá",
+                "vakovitý",
+                "dnem",
+                "spodní",
+                "zavezena",
+                "říční",
+                "pískem",
+                "štěrkem",
+                "střípek",
+                "cihlově"
             ],
             "extracted_keywords_en": [
-                "cesspit",
-                "lower part",
-                "vaulted floor"
+                "pit",
+                "operational",
+                "inside",
+                "plastered",
+                "waisted",
+                "bottom",
+                "lower",
+                "filled",
+                "river",
+                "sand",
+                "gravel",
+                "shard",
+                "brick-colored"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -389,23 +388,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "jímka",
-                "písek",
-                "štěrk",
-                "střípek",
-                "cihla",
-                "keramika",
-                "16. století"
+                "pískem",
+                "štěrkem",
+                "keramiky"
             ],
             "extracted_keywords_en": [
-                "cesspit",
+                "pit",
                 "sand",
-                "pebble",
-                "fragment",
-                "brick",
-                "ceramic",
-                "16th century"
+                "gravel",
+                "pottery"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -418,20 +411,20 @@
         "original_text": "hrubým štěrkem, v němž se vyskytl jediný střípek cihlově zbarvené",
         "enrichment": {
             "extracted_keywords_cs": [
+                "jímka",
                 "hrubý štěrk",
-                "střípek",
-                "cihlově zbarvené",
-                "režné keramiky",
-                "16. století"
+                "režná keramika",
+                "zvýšený dno",
+                "ploché kameny"
             ],
             "extracted_keywords_en": [
+                "pit",
                 "coarse gravel",
-                "fragment",
-                "brick-colored",
-                "utilitarian pottery",
-                "16th century"
+                "brick-like pottery",
+                "raised bottom",
+                "flat stones"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -444,15 +437,14 @@
         "original_text": "režné keramiky c. 16. století. V této výši byla jímka opatřena",
         "enrichment": {
             "extracted_keywords_cs": [
-                "režné keramiky",
+                "režná keramika",
                 "16. století"
             ],
             "extracted_keywords_en": [
-                "refuse pit",
-                "ceramics",
+                "coarse pottery",
                 "16th century"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -465,22 +457,18 @@
         "original_text": "zvýšeným dnem z plochých kamenů. Na tomto dně spočívala",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zvýšeným dnem",
-                "plochých kamenů",
-                "vrstva",
-                "černé popelovité hlíny",
-                "zlomky",
-                "berounského zboží"
+                "zvýšený dno",
+                "ploché kameny",
+                "černá popelovitá hlína",
+                "zlomky berounského zboží"
             ],
             "extracted_keywords_en": [
-                "raised floor",
+                "raised bottom",
                 "flat stones",
-                "layer",
-                "black ash soil",
-                "fragments",
-                "Beroun goods"
+                "black ash-like clay",
+                "fragments of Beroun ware"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -493,20 +481,16 @@
         "original_text": "c. 10 cm silná vrstva černé popelovité hlíny s četnými zlomky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vrstva",
-                "černá",
-                "popelovité",
-                "hlíny",
-                "zlomky"
+                "jímka",
+                "popelovité hlíny",
+                "zlomky berounského zboží"
             ],
             "extracted_keywords_en": [
-                "layer",
-                "black",
-                "ash",
-                "soil",
-                "fragments"
+                "pit",
+                "ashy clay",
+                "fragments of Beroun ware"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -519,21 +503,13 @@
         "original_text": "berounského zboží. Nad touto vrstvou byla horní část jímky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "berounského zboží",
-                "vrstvou",
-                "horní",
-                "část",
-                "jímky"
+                "berounské zboží"
             ],
             "extracted_keywords_en": [
-                "Beroun goods",
-                "layer",
-                "upper",
-                "part",
-                "cesspit"
+                "Beroun ware"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 1.0
         }
     },
     {
@@ -545,31 +521,19 @@
         "original_text": "vyplněna odspodu hlinitou hnědou vrstvou, pískovým zásypem a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vyplněna",
-                "hlinitou",
-                "hnědou",
-                "vrstvou",
-                "pískovým",
-                "zásypem",
-                "svrchní",
-                "šedohnědou",
-                "hlinitou",
-                "vrstvou"
+                "jímka",
+                "hlinitá",
+                "pískový",
+                "zásyp"
             ],
             "extracted_keywords_en": [
-                "filled",
-                "clayey",
-                "brown",
-                "layer",
-                "sand",
-                "fill",
-                "upper",
-                "greyish-brown",
-                "clayey",
-                "layer"
+                "pit",
+                "clay",
+                "sandy",
+                "fill"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 1.0
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -581,20 +545,22 @@
         "original_text": "svrchní šedohnědou hlinitou vrstvou, která sahala až k povrchu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "svrchní",
-                "hlinitou",
-                "vrstvou",
-                "sahala",
-                "povrchu"
+                "jímka",
+                "hlinitá vrstva",
+                "pískový zásyp",
+                "svrchní vrstva",
+                "zdivo",
+                "dům"
             ],
             "extracted_keywords_en": [
-                "top",
-                "clayey",
-                "layer",
-                "reached",
-                "surface"
+                "pit",
+                "clay layer",
+                "sandy fill",
+                "top layer",
+                "wall",
+                "house"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -607,37 +573,16 @@
         "original_text": "Rozšířením sondy k V bylo zjištěno, že na oblouk jímky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rozšířením",
-                "sondy",
-                "oblouk",
-                "jímky",
-                "navazuje",
-                "zdivo",
-                "snad",
-                "zadní",
-                "trakt",
-                "domu",
-                "nejsevernějšího",
-                "bodu",
-                "směrem"
+                "sonda",
+                "jímka",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "expansion",
                 "trench",
-                "arc",
-                "cesspit",
-                "connects",
-                "masonry",
-                "possibly",
-                "rear",
-                "part",
-                "house",
-                "most",
-                "northern",
-                "point",
-                "direction"
+                "pit",
+                "hillfort"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -650,30 +595,16 @@
         "original_text": "navazuje zdivo, náležející snad zadnímu traktu domu čp. 36,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "navazuje",
                 "zdivo",
-                "zadní",
-                "trakt",
-                "domu",
-                "vybíhající",
-                "nejsevernější",
-                "bod",
-                "jímky",
-                "směrem"
+                "dům",
+                "čp"
             ],
             "extracted_keywords_en": [
-                "connects",
                 "wall",
-                "rear",
-                "part",
                 "house",
-                "extends",
-                "northernmost",
-                "point",
-                "cesspit",
-                "direction"
+                "house number"
             ],
-            "teater_category": "ohradní zeď/plot",
+            "teater_category": "hrazený areál",
             "confidence_score": 0.95
         }
     },
@@ -686,47 +617,20 @@
         "original_text": "vybíhající z nejsevernějšího bodu jímky směrem k V. Nelze",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vybíhající",
-                "nejsevernější",
-                "bod",
-                "jímky",
-                "směrem",
-                "V",
-                "navazuje",
+                "hradiště",
                 "zdivo",
-                "zadní",
-                "trakt",
-                "domu",
-                "cp",
-                "36",
-                "nesucho",
-                "kladená",
-                "zídka",
-                "J",
-                "jímky",
-                "směrem"
+                "dům",
+                "jímka",
+                "zídka"
             ],
             "extracted_keywords_en": [
-                "extending",
-                "most northern",
-                "point",
-                "cesspit",
-                "direction",
-                "V",
-                "connects",
+                "hillfort",
                 "wall",
-                "rear",
-                "part",
                 "house",
-                "number",
-                "36",
-                "dry",
-                "wall",
-                "J",
-                "cesspit",
-                "direction"
+                "pit",
+                "fence"
             ],
-            "teater_category": "hradba",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -740,14 +644,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "jímka",
-                "nasucho",
-                "kladená zídka"
+                "zídka",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "cesspit",
-                "dry-laid wall"
+                "pit",
+                "wall",
+                "hillfort"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -761,23 +666,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zídka",
-                "jímky",
-                "zed",
-                "traktu",
-                "domu",
-                "kryta",
-                "vrstvou",
-                "popelovité"
+                "jímka",
+                "S-J"
             ],
             "extracted_keywords_en": [
                 "wall",
-                "cesspit",
-                "house",
-                "covered",
-                "layer",
-                "ash-like"
+                "pit",
+                "S-N"
             ],
-            "teater_category": "ohradní zeď/plot",
+            "teater_category": "hrazený areál",
             "confidence_score": 0.95
         }
     },
@@ -790,29 +687,31 @@
         "original_text": "domu čp. 36 s jímkou je kryta šedohnědou hlinitou vrstvou",
         "enrichment": {
             "extracted_keywords_cs": [
+                "jímka",
+                "zídka",
                 "domu",
                 "čp. 36",
-                "jímkou",
-                "kryta",
-                "hlinitou",
-                "vrstvou",
-                "popelovité",
-                "konsistence",
-                "ústí"
+                "hlinitá vrstva",
+                "popelovité konsistence",
+                "ústí jímky",
+                "pozdní berounské zboží",
+                "režná keramika",
+                "předžahem"
             ],
             "extracted_keywords_en": [
+                "pit",
+                "wall",
                 "house",
-                "number 36",
-                "septic tank",
-                "covered",
-                "clayey",
-                "layer",
-                "ash-like",
-                "consistency",
-                "mouth"
+                "house number 36",
+                "clay layer",
+                "ash-like consistency",
+                "mouth of the pit",
+                "late Beroun ware",
+                "coarse pottery",
+                "beak"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "teater_category": "hrazený areál",
+            "confidence_score": 1.0
         }
     },
     {
@@ -824,27 +723,22 @@
         "original_text": "místy popelovité konsistence, která též vyplňuje ústí jímky",
         "enrichment": {
             "extracted_keywords_cs": [
+                "jímka",
                 "popelovité",
                 "konsistence",
-                "ústí",
-                "jímky",
-                "zboží",
-                "režná",
-                "keramika",
-                "předžah",
-                "glazura"
+                "berounské zboží",
+                "režná keramika",
+                "glazury"
             ],
             "extracted_keywords_en": [
+                "pit",
                 "ash-like",
                 "consistency",
-                "mouth",
-                "sewer",
-                "goods",
-                "earthenware",
-                "rim",
-                "glaze"
+                "Beroun ware",
+                "coarse pottery",
+                "glazes"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hrazený areál",
             "confidence_score": 0.95
         }
     },
@@ -857,20 +751,22 @@
         "original_text": "a obsahuje pozdní berounské zboží /režná keramika s předžahem,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jímka",
-                "zboží",
+                "berounské zboží",
                 "režná keramika",
-                "předžah",
-                "glazura"
+                "předžahem",
+                "zelené",
+                "žluté",
+                "rezavě hnědé glazury"
             ],
             "extracted_keywords_en": [
-                "cesspit",
-                "goods",
-                "redware pottery",
-                "rim handle",
-                "glaze"
+                "Beroun ware",
+                "coarse pottery",
+                "beaded rim",
+                "green",
+                "yellow",
+                "brown glaze"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -885,18 +781,16 @@
             "extracted_keywords_cs": [
                 "zelené",
                 "žluté",
-                "rezavě",
-                "hnědé",
+                "rezavě hnědé",
                 "glazury"
             ],
             "extracted_keywords_en": [
                 "green",
                 "yellow",
-                "reddish",
-                "brown",
-                "glaze"
+                "rusty brown",
+                "glazes"
             ],
-            "teater_category": "kost",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -910,32 +804,30 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískový pokryv",
-                "zasypáno",
-                "zdivo",
-                "jímky",
+                "jímka",
                 "domovního traktu",
                 "pískem",
                 "spodní část",
                 "jímky",
-                "vyplňuje",
-                "hlinito-jílovitá vrstva",
-                "četnými uhlíky"
+                "zdivo",
+                "ke zdivu přiléhá",
+                "šedá hlinito-jílovitá vrstva",
+                "uhlíky"
             ],
             "extracted_keywords_en": [
-                "sand cover",
-                "filled",
-                "walls",
-                "septic tank",
-                "household",
-                "sand",
+                "sandy cover",
+                "pit",
+                "residential section",
+                "under sand",
                 "lower part",
-                "septic tank",
-                "fills",
-                "clayey-silt layer",
-                "numerous charcoal"
+                "pits",
+                "wall",
+                "adjacent to the wall",
+                "gray clayey-silty layer",
+                "charcoal"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -947,36 +839,22 @@
         "original_text": "domovního traktu. Pod pískem pak spodní část jímky vyplňuje",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískem",
-                "spodní",
-                "část",
-                "jímky",
-                "vyplňuje",
-                "šedá",
-                "hlinito-jílovitá",
-                "vrstva",
-                "četnými",
-                "uhlíky",
-                "spálené",
-                "konstrukce",
-                "střepy"
+                "jímka",
+                "domovního traktu",
+                "pískový pokryv",
+                "zdivo",
+                "spálené konstrukce",
+                "střepy staršího berounského"
             ],
             "extracted_keywords_en": [
-                "sand",
-                "lower",
-                "part",
-                "cesspit",
-                "fills",
-                "grey",
-                "clayey-silty",
-                "layer",
-                "numerous",
-                "charcoal",
-                "burnt",
-                "structure",
-                "fragments"
+                "pit",
+                "residential section",
+                "sandy cover",
+                "wall",
+                "burnt construction",
+                "pottery sherds of older Beroun type"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -989,7 +867,10 @@
         "original_text": "a ke zdivu přiléhá šedá hlinito-jílovitá vrstva s četnými uhlíky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hlinito-jílovitá vrstva",
+                "jímka",
+                "zdivo",
+                "pískový pokryv",
+                "šedá hlinito-jílovitá vrstva",
                 "uhlíky",
                 "spálené konstrukce",
                 "střepy",
@@ -998,16 +879,19 @@
                 "cihlově zbarvená keramika"
             ],
             "extracted_keywords_en": [
-                "clayey-silty layer",
-                "charcoal pieces",
+                "pit",
+                "wall",
+                "sandy cover",
+                "gray clayey-silty layer",
+                "charcoal",
                 "burnt construction",
-                "fragments",
-                "older Beroun pottery",
-                "red",
-                "brick-colored ceramics"
+                "pottery sherds",
+                "earlier Beroun ware",
+                "coarse",
+                "brick-colored pottery"
             ],
-            "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1020,23 +904,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "spálené konstrukce",
-                "střepy",
-                "staršího berounského zboží",
-                "režná",
-                "cihlově zbarvená keramika",
-                "glazované střepy",
-                "živě zelené"
+                "střepy staršího berounského zboží",
+                "režná keramika",
+                "glazované střepy"
             ],
             "extracted_keywords_en": [
                 "burnt construction",
-                "fragments",
-                "Old Bohemian goods",
-                "red",
-                "brick-coloured pottery",
-                "glazed fragments",
-                "bright green"
+                "shards of older Beroun ware",
+                "coarse pottery",
+                "glazed shards"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -1055,12 +933,12 @@
                 "živě zelené"
             ],
             "extracted_keywords_en": [
-                "reddish",
+                "coarse",
                 "brick-colored pottery",
-                "glazed shards",
-                "bright green"
+                "glazed sherds",
+                "vivid green"
             ],
-            "teater_category": "keramika",
+            "teater_category": "vyspělé středohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1073,18 +951,14 @@
         "original_text": "nečetné glazované střepy jsou především živě zelené a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "glazované",
-                "střepy",
-                "živě",
-                "zelené"
+                "glazované střepy",
+                "živě zelené"
             ],
             "extracted_keywords_en": [
-                "glazed",
-                "sherds",
-                "vividly",
-                "green"
+                "glazed sherds",
+                "vivid green"
             ],
-            "teater_category": "keramika",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1097,33 +971,13 @@
         "original_text": "Poznámka: Pište pokud možno strojem. Na konci uveďte datum odeslání a čitelný podpis. Zprávy koreferentů a komisí vyhotovte dvojmo.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pište",
-                "strojem",
-                "datum",
-                "odeslání",
-                "čitelný",
-                "podpis",
-                "zprávy",
-                "koreferentů",
-                "komisí",
-                "vyhotovte",
-                "dvojmo"
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "Write",
-                "machine",
-                "date",
-                "dispatch",
-                "legible",
-                "signature",
-                "reports",
-                "co-referees",
-                "committees",
-                "prepare",
-                "double"
+                "hillfort"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1135,13 +989,17 @@
         "original_text": "vyskytují se pozdně renesanční kachle. Bylo by velmi lákavé",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kachle"
+                "pozdně renesanční kachle",
+                "katastrofální požár",
+                "1599"
             ],
             "extracted_keywords_en": [
-                "tiles"
+                "late Renaissance tiles",
+                "catastrophic fire",
+                "1599"
             ],
-            "teater_category": "kachel",
-            "confidence_score": 1.0
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1153,35 +1011,17 @@
         "original_text": "spojovat tuto spodní vrstvu s katastrofálním požárem města",
         "enrichment": {
             "extracted_keywords_cs": [
-                "spodní vrstvu",
-                "katastrofální požárem",
-                "města",
-                "pískový pokryv",
-                "úpravou",
-                "prostor",
-                "obnově",
-                "zničených",
-                "příbytků",
-                "svrchní",
-                "hlinitou",
-                "popel"
+                "spodní vrstva",
+                "požár",
+                "obnova"
             ],
             "extracted_keywords_en": [
-                "lower stratum",
-                "catastrophic fire",
-                "city",
-                "sand cover",
-                "rearrangement",
-                "space",
-                "restoration",
-                "destroyed",
-                "buildings",
-                "upper",
-                "clayey",
-                "ash"
+                "lower layer",
+                "fire",
+                "renovation"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1193,26 +1033,17 @@
         "original_text": "r. 1599, následující pískový pokryv s úpravou celého prostoru",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískový pokryv",
-                "úprava",
-                "prostor",
+                "požár",
                 "obnova",
-                "příbytek",
-                "hlinitá",
-                "popelovitá",
-                "vrstva",
-                "pohroma",
-                "třicetiletá válka"
+                "pohromy třicetileté války"
             ],
             "extracted_keywords_en": [
-                "clayey",
-                "ashy",
-                "layer",
-                "disaster",
-                "thirty-year war"
+                "fire",
+                "renovation",
+                "thirty years' war disasters"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.85
+            "teater_category": "pozdní středohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1224,30 +1055,23 @@
         "original_text": "při obnově zničených příbytků a svrchní hlinitou až popelo-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "obnově",
-                "zničených",
+                "obnova",
                 "příbytků",
-                "svrchní",
-                "hlinitou",
-                "popelovou",
-                "vrstvu",
-                "pohromám",
-                "třicetileté",
-                "války"
+                "hlinitá",
+                "popelová",
+                "pohromy",
+                "třicetileté války"
             ],
             "extracted_keywords_en": [
-                "restoration",
-                "destroyed",
-                "lodgings",
-                "topsoil",
+                "renovation",
+                "huts",
+                "clay",
                 "ash",
-                "soil",
-                "layer",
-                "disasters",
+                "calamities",
                 "Thirty Years' War"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1259,14 +1083,14 @@
         "original_text": "vitou vrstvu přičíst pohromám třicetileté války.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohromám",
+                "pohromy",
                 "třicetileté války"
             ],
             "extracted_keywords_en": [
-                "disasters",
+                "calamities",
                 "Thirty Years' War"
             ],
-            "teater_category": "vrstva/souvrství",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1279,22 +1103,16 @@
         "original_text": "Vzhledem k nedostatku času a velmi neutěšené situaci v",
         "enrichment": {
             "extracted_keywords_cs": [
-                "prozkoumat",
-                "terén",
-                "domovních",
-                "parcel",
-                "bagrovanou",
-                "sondou"
+                "domovních parcel",
+                "bagrovanou sondou",
+                "dokumentovali"
             ],
             "extracted_keywords_en": [
-                "explore",
-                "terrain",
-                "household",
-                "parcel",
-                "plowed",
-                "trench"
+                "domestic parcels",
+                "trench",
+                "documented"
             ],
-            "teater_category": "sonda",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1307,22 +1125,18 @@
         "original_text": "oblasti pracovních sil rozhodli jsme se prozkoumat terén domovních",
         "enrichment": {
             "extracted_keywords_cs": [
-                "prozkoumat",
-                "terén",
-                "domovních",
-                "parcel",
-                "bagrovanou",
-                "sondou"
+                "domovních parcel",
+                "bagrovanou sondou",
+                "stratigrafickou situaci",
+                "nejstarší dosažitelné"
             ],
             "extracted_keywords_en": [
-                "explore",
-                "terrain",
-                "household",
-                "parcel",
-                "plowed",
-                "trench"
+                "domestic parcels",
+                "auger trench",
+                "stratigraphic situation",
+                "earliest reachable"
             ],
-            "teater_category": "terénní odkryv",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1335,23 +1149,17 @@
         "original_text": "parcel bagrovanou sondou, kterou bychom dokumentovali",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bagrovanou",
-                "sondou",
-                "dokumentovali",
-                "stratigrafickou",
-                "situaci",
-                "odkryli"
+                "sonda",
+                "bagrista",
+                "CSP Peroun"
             ],
             "extracted_keywords_en": [
-                "bagrovanou",
-                "sondou",
-                "documented",
-                "stratigraphic",
-                "situation",
-                "excavated"
+                "trench",
+                "excavator",
+                "CSP Peroun"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 1.0
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1363,18 +1171,16 @@
         "original_text": "stratigrafickou situaci a případně odkryli nejstarší dosažitelné",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stratigrafickou situaci",
-                "odkryli",
-                "nejstarší dosažitelné",
-                "pozůstatky"
+                "stratigrafická situace",
+                "nejstarší dosažitelné pozůstatky",
+                "sonda"
             ],
             "extracted_keywords_en": [
                 "stratigraphic situation",
-                "excavated",
-                "oldest available",
-                "remains"
+                "earliest reachable remains",
+                "trench"
             ],
-            "teater_category": "sonda",
+            "teater_category": "rané středohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -1389,19 +1195,21 @@
             "extracted_keywords_cs": [
                 "sonda",
                 "bagrista",
-                "hloubku",
-                "spodní",
-                "vodu"
+                "CSP Peroun",
+                "hloubka",
+                "spodní voda",
+                "terén"
             ],
             "extracted_keywords_en": [
                 "trench",
-                "bagrist",
+                "excavator",
+                "CSP Peroun",
                 "depth",
-                "bottom",
-                "water"
+                "groundwater",
+                "terrain"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1413,19 +1221,20 @@
         "original_text": "dosáhla u náměstí hloubky pouze c. 180 cm, kde jsme narazili",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hloubku",
-                "180",
-                "cm",
-                "spodní",
-                "vodu"
+                "hradiště",
+                "sonda",
+                "hloubka",
+                "spodní voda",
+                "terén"
             ],
             "extracted_keywords_en": [
+                "hillfort",
+                "trench",
                 "depth",
-                "180",
-                "cm",
-                "groundwater"
+                "groundwater",
+                "terrain"
             ],
-            "teater_category": "sonda",
+            "teater_category": "hradiště",
             "confidence_score": 1.0
         }
     },
@@ -1439,15 +1248,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "spodní voda",
-                "terén zvyšuje",
-                "hloubku"
+                "terén",
+                "sonda"
             ],
             "extracted_keywords_en": [
-                "groundwater",
-                "terrain increases",
-                "depth"
+                "bottom water",
+                "terrain",
+                "trench"
             ],
-            "teater_category": "sonda",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -1460,17 +1269,17 @@
         "original_text": "hloubky téměř 4 m.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hloubku",
-                "téměř",
-                "4 m"
+                "hloubka",
+                "sonda",
+                "hradiště"
             ],
             "extracted_keywords_en": [
                 "depth",
-                "almost",
-                "4 m"
+                "trench",
+                "hillfort"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 1.0
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1482,15 +1291,19 @@
         "original_text": "Protože nelze očekávat, že v letošním roce zdokumentujeme",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bagrovanou",
-                "sondu"
+                "hradiště",
+                "sonda",
+                "bagrovat",
+                "výzkum"
             ],
             "extracted_keywords_en": [
-                "trenched",
-                "trench"
+                "hillfort",
+                "trench",
+                "excavate",
+                "research"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1502,15 +1315,15 @@
         "original_text": "bagrovanou sondu a ještě dokončíme výzkum zadního traktu domu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bagrovanou",
-                "sondu"
+                "bagrovaná sonda",
+                "výzkum zadního traktu domu"
             ],
             "extracted_keywords_en": [
-                "bagrovanou",
-                "sonda"
+                "backfilled trench",
+                "investigation of the rear part of the house"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 1.0
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1523,15 +1336,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "čp. 36",
-                "MěstNV Beroun",
-                "stavební oráče"
+                "vykaz",
+                "zadní traktu domu"
             ],
             "extracted_keywords_en": [
                 "house number 36",
-                "City of Beroun",
-                "excavator"
+                "survey",
+                "rear part of the house"
             ],
-            "teater_category": "terénní odkryv",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -1544,17 +1357,13 @@
         "original_text": "odpovědnými pracovníky ( S , který bude na místě provádět stavební",
         "enrichment": {
             "extracted_keywords_cs": [
-                "odkryv",
-                "místě",
-                "provádět"
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "excavation",
-                "site",
-                "conduct"
+                "hillfort"
             ],
-            "teater_category": "terénní odkryv",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1566,25 +1375,18 @@
         "original_text": "oráče, zda by bylo možno tento výzkum dokončit v letních",
         "enrichment": {
             "extracted_keywords_cs": [
-                "oráče",
                 "výzkum",
-                "letních",
-                "měsících",
-                "podat",
-                "návrh",
-                "hospodářskou",
-                "smlouvu"
+                "oráče",
+                "letech",
+                "smouva"
             ],
             "extracted_keywords_en": [
-                "excavator",
                 "research",
-                "summer",
-                "months",
-                "submit",
-                "proposal",
+                "plow",
+                "years",
                 "contract"
             ],
-            "teater_category": "terénní odkryv",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -1597,30 +1399,19 @@
         "original_text": "měsících příštího roku. ude-li to možné, bylo by třeba",
         "enrichment": {
             "extracted_keywords_cs": [
+                "výzkum",
+                "letech",
                 "měsících",
-                "příštího",
-                "roku",
-                "směrnici",
-                "hospodářskou",
-                "smlouvu",
-                "výši",
-                "Kčs",
-                "dělnické",
-                "mzd"
+                "příštího roku"
             ],
             "extracted_keywords_en": [
+                "research",
+                "years",
                 "months",
-                "next",
-                "year",
-                "proposal",
-                "contract",
-                "amount",
-                "Kčs",
-                "labour",
-                "wages"
+                "next year"
             ],
-            "teater_category": "terénní odkryv",
-            "confidence_score": 0.9
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 0.95
         }
     },
     {
@@ -1632,19 +1423,27 @@
         "original_text": "na tento výzkum podat návrh na hospodářskou smlouvu, a to přibližně",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hospodářskou",
-                "smlouvu",
-                "výši",
-                "Kčs"
+                "výzkum",
+                "dokončit",
+                "letní měsíce",
+                "příštího roku",
+                "návrh",
+                "hospodářská smlouva",
+                "dělnické mzdy",
+                "ve výši c. 20 000,- Kčs"
             ],
             "extracted_keywords_en": [
-                "economic",
-                "contract",
-                "amount",
-                "CZK"
+                "research",
+                "complete",
+                "summer months",
+                "next year",
+                "proposal",
+                "economic contract",
+                "wages",
+                "in the amount of CZK 20,000"
             ],
-            "teater_category": "hudební nástroj",
-            "confidence_score": 0.75
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1656,17 +1455,17 @@
         "original_text": "ve výši c. 20 000,- Kčs na dělnické mzdy. Podrobné informace",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výši",
+                "vyspělé mladohradištní období",
                 "c. 20 000,- Kčs",
                 "dělnické mzdy"
             ],
             "extracted_keywords_en": [
-                "amount",
-                "approximately 20,000,- Kčs",
-                "labour wages"
+                "advanced late hillfort period",
+                "approx. 20,000 CZK",
+                "wages for laborers"
             ],
-            "teater_category": "náhrdelník",
-            "confidence_score": 0.85
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1678,15 +1477,13 @@
         "original_text": "podám ve svých dalších hlášeních.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "podám",
-                "hlášeních"
+                "vyspělé mladohradištní období"
             ],
             "extracted_keywords_en": [
-                "submit",
-                "reports"
+                "advanced late hillfort period"
             ],
-            "teater_category": "hlášení",
-            "confidence_score": 0.95
+            "teater_category": "vyspělé mladohradištní období",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1698,15 +1495,15 @@
         "original_text": "V Praze 1.10. 1984",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Praha",
-                "1.10. 1984"
+                "Praž",
+                "hradiště"
             ],
             "extracted_keywords_en": [
                 "Prague",
-                "October 1, 1984"
+                "hillfort"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.95
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1718,13 +1515,15 @@
         "original_text": "harvát",
         "enrichment": {
             "extracted_keywords_cs": [
-                "harvát"
+                "harvát",
+                "hradiště"
             ],
             "extracted_keywords_en": [
-                "ridge"
+                "harvard",
+                "hillfort"
             ],
-            "teater_category": "hřeben",
-            "confidence_score": 0.9
+            "teater_category": "hradiště",
+            "confidence_score": 1.0
         }
     }
 ]

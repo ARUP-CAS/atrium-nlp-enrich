@@ -8,12 +8,12 @@
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Benešov-Nesvačily"
+                "kostr. hrob"
             ],
             "extracted_keywords_en": [
-                "Benešov-Nesvačily"
+                "burial"
             ],
-            "teater_category": "Jihlava-Henčov",
+            "teater_category": "pohřební objekt",
             "confidence_score": 1.0
         }
     },
@@ -26,26 +26,12 @@
         "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kostra (bone fragment),",
-                "hrob (grave),",
-                "Bubníkova usedlost (Bubníkova homestead),",
-                "nález (find),",
-                "pohřeb kostrový (inhumation burial),",
-                "datování (dating),",
-                "kultura (culture),",
-                "lokalita (site),"
+                "kostr. hrob"
             ],
             "extracted_keywords_en": [
-                "bone fragment,",
-                "grave,",
-                "Bubníkova homestead,",
-                "find,",
-                "inhumation burial,",
-                "dating,",
-                "culture,",
-                "site"
+                "burial"
             ],
-            "teater_category": "pohřeb kostrový",
+            "teater_category": "pohřební objekt",
             "confidence_score": 1.0
         }
     },
@@ -58,15 +44,19 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kopání",
+                "základu",
                 "hrnčíř",
                 "pece"
             ],
             "extracted_keywords_en": [
-                "pottery workshop",
+                "excavation",
+                "foundation",
+                "potter",
                 "kiln"
             ],
-            "teater_category": "pec hrnčířská",
-            "confidence_score": 1.0
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.95
         }
     }
 ]
