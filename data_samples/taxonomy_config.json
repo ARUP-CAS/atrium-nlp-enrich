@@ -1,15 +1,30 @@
 {
   "Site Types"      : {
+    "priority": 8,
     "keywords": {
       "cs": [
-        "hradiště",   "pohřebiště", "sídliště",   "hrad",       "tvrz",
-        "kostel",     "mohyla",     "studna",     "depot",      "jáma",
-        "příkop",     "val",        "sklep",      "zaniklá",    "opevnění",
-        "areál",      "objekt",     "zásobní"
+        "hradiště",      "pohřebiště",    "sídliště",      "hrad",
+        "tvrz",          "kostel",        "mohyla",        "studna",
+        "depot",         "jáma",          "příkop",        "val",
+        "sklep",         "zaniklá",       "opevnění",      "areál",
+        "objekt",        "zásobní",       "oppidum",       "mohylník",
+        "pohřební",      "kůl",           "pec",           "ohniště",
+        "zásobní jáma",  "sídlištní",     "hradní",        "hrobový",
+        "příkopové",     "zaniklé sídlo"
+      ],
+      "en": [
+        "hillfort",      "settlement",    "cemetery",      "fortress",
+        "castle",        "church",        "burial mound",  "well",
+        "depot",         "pit",           "ditch",         "rampart",
+        "cellar",        "deserted",      "fortification", "enclosure",
+        "feature",       "oppidum",       "barrow",        "post hole",
+        "kiln",          "hearth",        "storage",       "residential",
+        "funerary"
       ]
     }
   },
   "Find Types"      : {
+    "priority": 5,
     "keywords": {
       "cs": [
         "keramika",          "kost",              "hrob",
@@ -21,54 +36,137 @@
         "navážka",           "malta",             "cihla",
         "glazura",           "zlomek",            "fragment",
         "dno",               "okraj",             "ucho",
-        "výduť"
+        "výduť",             "přezka",            "spona",
+        "korálek",           "mince",             "hřebík",
+        "džbán",             "mísa",              "pánev",
+        "hrnec",             "amfora",            "sekera",
+        "dýka",              "meč",               "štít",
+        "kopí",              "bronzový",          "železný",
+        "kamenný",           "keramický"
+      ],
+      "en": [
+        "pottery",            "bone",               "grave",
+        "earring",            "knife",              "whetstone",
+        "bronze",             "stone",              "glass",
+        "daub",               "vessel",             "sherd",
+        "spearhead",          "pin",                "grindstone",
+        "storage jar",        "tile",               "structural element",
+        "levelling layer",    "mortar",             "brick",
+        "glaze",              "fragment",           "base",
+        "rim",                "handle",             "belly",
+        "buckle",             "brooch",             "bead",
+        "coin",               "nail",               "jug",
+        "bowl",               "pan",                "pot",
+        "amphora",            "axe",                "dagger",
+        "sword",              "artefact",           "find object"
       ]
     }
   },
   "Methods"         : {
+    "priority": 7,
     "keywords": {
       "cs": [
         "povrchový sběr",      "plošný odkryv",       "sonda",
         "výkop",               "průzkum",             "dokumentace",
         "geodetický",          "stavebně-historický", "záchranný",
         "badatelský",          "dohled",              "terénní",
-        "revize"
+        "revize",              "geofyzikální",        "geochemický",
+        "letecký",             "dendrologický",       "magnetometrický"
+      ],
+      "en": [
+        "surface collection",  "area excavation",     "test trench",
+        "excavation",          "survey",              "documentation",
+        "geodetic",            "building-historical", "rescue",
+        "research",            "monitoring",          "field",
+        "revision",            "geophysical",         "geochemical",
+        "aerial",              "dendrochronological", "magnetometric"
       ]
     }
   },
   "Chronology"      : {
+    "priority": 9,
     "keywords": {
       "cs": [
         "středověk",      "eneolit",        "paleolit",       "neolit",
         "bronzová",       "halštatská",     "laténská",       "novověk",
         "pravěk",         "datum",          "přesné datum",   "někdy v letech",
-        "stol",           "století"
+        "stol",           "století",        "kultura",        "horizont",
+        "fáze",           "stupeň",         "eneolitická",    "neolitická",
+        "pravěká",        "středověká",     "novověká",       "halštatské",
+        "laténské",       "mezolit",        "mezolitická",    "starší doba",
+        "mladší doba",    "pozdní doba",    "střední doba",   "raná doba"
+      ],
+      "en": [
+        "medieval",         "eneolithic",       "paleolithic",
+        "neolithic",        "bronze age",       "hallstatt",
+        "la tène",          "post-medieval",    "prehistoric",
+        "century",          "period",           "age",
+        "culture",          "horizon",          "phase",
+        "stage",            "mesolithic",       "early",
+        "middle",           "late",             "iron age",
+        "roman",            "migration period", "hillfort period"
       ]
     }
   },
   "Location & Admin": {
+    "priority": 5,
     "keywords": {
       "cs": [
-        "katastrální", "parcela",     "okres",       "obec",
-        "lokalita",    "poloha",      "mapa",        "mapový",
-        "sekce"
+        "katastrální",     "parcela",         "okres",
+        "obec",            "lokalita",        "poloha",
+        "mapa",            "mapový",          "sekce",
+        "kraj",            "koordinát",       "GPS",
+        "katastr",         "číslo parcely",   "evidenční číslo",
+        "adresa",          "ulice"
+      ],
+      "en": [
+        "cadastral",        "plot",             "district",
+        "municipality",     "locality",         "location",
+        "map",              "section",          "region",
+        "county",           "coordinate",       "GPS",
+        "cadastre",         "parcel number",    "reference number",
+        "address"
       ]
     }
   },
   "Documentation"   : {
+    "priority": 10,
     "keywords": {
       "cs": [
         "fotografie", "plán",       "kresba",     "zpráva",     "hlášení",
-        "nálezová",   "příloha",    "plánek",     "negativy",   "diapozitiv"
+        "nálezová",   "příloha",    "plánek",     "negativy",   "diapozitiv",
+        "papír",      "negativ",    "astralon",   "karton",     "pauzák",
+        "bromkopie",  "matrice",    "tisk",       "kopie",      "film",
+        "snímek",     "digitální",  "inventář",   "seznam",     "protokol",
+        "zápisník",   "mikrofilm",  "manuskript", "záznam",     "dokument",
+        "archiv",     "xerox",      "reprodukce"
+      ],
+      "en": [
+        "photograph",   "plan",         "drawing",      "report",
+        "notification", "find report",  "appendix",     "site plan",
+        "negative",     "photoslide",   "paper",        "tracing",
+        "cardboard",    "print",        "copy",         "film",
+        "snapshot",     "digital",      "inventory",    "list",
+        "protocol",     "notebook",     "microfilm",    "manuscript",
+        "record",       "document",     "archive",      "reproduction",
+        "booklet",      "photographic"
       ]
     }
   },
   "Finds Context"   : {
+    "priority": 7,
     "keywords": {
       "cs": [
         "ojedinělý nález",  "náhodný nález",    "nález v druhotné",
         "záchranný nález",  "pohřeb",           "kostrový",
-        "žárový"
+        "žárový",           "depotový",         "votivní",
+        "rituální",         "druhotná poloha",  "primární kontext"
+      ],
+      "en": [
+        "isolated find",      "accidental find",    "secondary context",
+        "rescue find",        "burial",             "inhumation",
+        "cremation",          "hoard",              "votive",
+        "ritual",             "secondary position", "primary context"
       ]
     }
   }

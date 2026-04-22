@@ -131,14 +131,31 @@ class VocabularyManager:
     def _assign_theme(self, term_pair: Dict[str, str]) -> str:
         """
         Assign a thematic group to a term pair by substring matching across configured languages.
-        Falls back to 'Other' for unmatched terms.
+
+        Uses priority-based best-match: all themes are evaluated and the one with the highest
+        ``priority`` value (from taxonomy_config) wins on conflict. This prevents low-priority
+        categories with short, ambiguous keywords (e.g. Find Types: "sklo", "bronz") from
+        pre-empting higher-priority ones (e.g. Documentation, Chronology) when both fire on
+        the same term string.
+
+        Falls back to 'Other' if no theme matches.
         """
+        best_theme = "Other"
+        best_priority = -1
+
         for theme, config in self.taxonomy.items():
+            priority = config.get("priority", 0)
+            # Skip this theme if it can never beat the current best
+            if priority <= best_priority:
+                continue
             for lang, keywords in config.get("keywords", {}).items():
                 term_value = term_pair.get(lang, "").lower()
                 if any(kw.lower() in term_value for kw in keywords):
-                    return theme
-        return "Other"
+                    best_priority = priority
+                    best_theme = theme
+                    break  # No need to check other languages for this theme
+
+        return best_theme
 
     def classify_with_llm(self, term_pair: Dict[str, str]) -> Optional[str]:
         """
@@ -221,6 +238,15 @@ class VocabularyManager:
             json.dump(self.vocab_data, f, indent=4, ensure_ascii=False)
         print(f"Vocabulary successfully cached to {self.vocab_path}")
 
+    def vocab_statistics(self) -> Dict[str, int]:
+        """Returns per-theme term counts for diagnostics and sanity checks."""
+        if not self.vocab_data:
+            self.load()
+        return {
+            theme: len(terms) if isinstance(terms, dict) else 0
+            for theme, terms in self.vocab_data.items()
+        }
+
     def get_prompt_string(self) -> str:
         """Serializes the nested taxonomy dictionary for direct LLM system prompt injection."""
         if not self.vocab_data:
@@ -235,7 +261,7 @@ if __name__ == "__main__":
 
     manager = VocabularyManager(
         vocab_path="data_samples/teater_nested_vocab.json",
-        config_path="taxonomy_config.json",
+        config_path="data_samples/taxonomy_config.json",
         llm_predictor=None  # Pass your LLM prediction method here
     )
 

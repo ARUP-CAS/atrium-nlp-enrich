@@ -136,10 +136,32 @@ def build_schema(term_names: List[str]) -> type:
     TermEnum = enum.Enum("TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)})
 
     class ConstrainedEnrichment(BaseModel):
-        extracted_keywords_cs: List[str] = Field(..., description="Key Czech terms found in the text.")
-        extracted_keywords_en: List[str] = Field(..., description="English translations of the Czech keywords.")
-        teater_category: TermEnum = Field(..., description="The single most relevant TEATER term from the vocabulary.")
-        confidence_score: float = Field(..., ge=0.0, le=1.0, description="How confident you are in this categorization (0.0 to 1.0).")
+        extracted_keywords_cs: List[str] = Field(
+            ...,
+            description=(
+                "Key Czech archaeological terms found ONLY in the marked line (>>>). "
+                "Do not copy from surrounding context lines."
+            ),
+        )
+        extracted_keywords_en: List[str] = Field(
+            ...,
+            description=(
+                "Accurate English translations of extracted_keywords_cs. "
+                "Do not copy the Czech words unchanged."
+            ),
+        )
+        teater_category: TermEnum = Field(
+            ...,
+            description=(
+                "The single most relevant category from the thematic vocabulary. "
+                "Use 'Nerelevantní (meta-text)' for headers, footers, table of contents, "
+                "or any line lacking direct archaeological significance."
+            ),
+        )
+        confidence_score: float = Field(
+            ..., ge=0.0, le=1.0,
+            description="Confidence in this categorization (0.0 to 1.0).",
+        )
 
         def category_name(self) -> str:
             return self.teater_category.value
@@ -184,29 +206,46 @@ def _term_priority(cs: str, en: str) -> int:
 def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[str, List[str]]:
     """
     Builds a system prompt structured by themes to improve LLM contextual mapping.
+    Includes an explicit meta-text escape hatch at position 0 (so it always survives
+    token-budget truncation) and caps the noisy 'Other' section at 15 terms to prevent
+    country-name / generic-term hallucination.
     """
     header = (
         "You are an expert archaeological data extractor. "
         "Analyze the MARKED LINE (>>>) within its surrounding document context. "
         "Extract keywords specifically from the marked line. "
         "Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
+        "CRITICAL: If the marked line is a title, table of contents, administrative "
+        "meta-text, running header, page number, or lacks direct archaeological "
+        "significance, you MUST select 'Nerelevantní (meta-text)'.\n"
         "You MUST use the exact Czech term as written.\n"
         "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
         "THEMATIC VOCABULARY:\n"
     )
 
-    raw_terms = []
+    raw_terms: List[dict] = []
+
+    # Position 0: explicit meta-text fallback — always survives token-budget truncation
+    raw_terms.append({
+        "theme": "Administrative / Meta",
+        "cs": "Nerelevantní (meta-text)",
+        "en": "Irrelevant / Meta-text",
+    })
+
     for theme, terms in vocab_data.items():
         if isinstance(terms, dict):
             for cs_key, pair in terms.items():
                 en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
                 raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
-    prioritised = sorted(raw_terms, key=lambda t: _term_priority(t["cs"], t["en"]))
+    # Sort by priority: lower _term_priority value = higher relevance = listed first.
+    # The meta-text term at index 0 is deliberately kept at position 0 (priority=0 → listed first).
+    prioritised = [raw_terms[0]] + sorted(raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"]))
 
-    def build_candidate_prompt(term_list, other_cap: int = 80):
-        themes = {}
-        other_terms = []
+    def build_candidate_prompt(term_list, other_cap: int = 15):
+        themes: Dict[str, List[str]] = {}
+        other_terms: List[dict] = []
+
         for t in term_list:
             if t["theme"] == "Other":
                 other_terms.append(t)
@@ -218,9 +257,10 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
             prompt += f"\n--- {theme_name} ---\n"
             prompt += "\n".join(f"- {line}" for line in lines) + "\n"
 
-        # Cap Other section to avoid overwhelming the named themes
+        # Heavily cap the 'Other' section (15 terms) to prevent country/generic hallucinations.
+        # The sorted order (_term_priority) already promotes higher-quality terms to the front.
         if other_terms:
-            prompt += f"\n--- Other ---\n"
+            prompt += "\n--- Other (Misc) ---\n"
             prompt += "\n".join(
                 f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
             ) + "\n"
@@ -304,11 +344,13 @@ def _clamp_confidence(json_str: str) -> str:
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
     """
     Returns a sliding context window of up to `window` lines before and after
-    center_idx, marked with '>>>'.
+    center_idx, marked with '>>>'. Page boundaries are respected: context lines
+    from a different page than the center line are excluded.
 
-    Page boundaries are respected: context lines from a different page than
-    the center line are excluded to prevent fabricated cross-page continuity.
-    Also skips Empty/Trash lines from context (they add noise, not signal).
+    For lines that are far from the document start (beyond window + 2 positions),
+    prepends a GLOBAL DOCUMENT HEADER containing the first 2 non-noise lines of
+    the document. This anchors the LLM when processing mid-document lines that
+    would otherwise have no indication of the document's domain or purpose.
     """
     _NOISE_CATEG = {"Empty", "Trash", "Non-text"}
 
@@ -319,12 +361,30 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
     end   = min(len(rows), center_idx + window + 1)
 
     parts = []
+
+    # --- Global Document Header ---
+    # Only injected when the target line is far enough from the start that the
+    # ±window context window can no longer reach the document opening.
+    if center_idx > window + 2:
+        parts.append("--- GLOBAL DOCUMENT HEADER ---")
+        header_lines_added = 0
+        for row in rows:
+            if row.get("categ", "").strip() not in _NOISE_CATEG:
+                pg = row.get("page_num", row.get("page", 0))
+                ln = row.get("line_num",  row.get("line", 0))
+                parts.append(f"    [P{pg} L{ln}] {row.get('text', '').strip()}")
+                header_lines_added += 1
+                if header_lines_added >= 2:
+                    break
+        parts.append("--- LOCAL CONTEXT WINDOW ---")
+    # --------------------------------
+
     for i in range(start, end):
         row      = rows[i]
         row_page = row.get("page_num", row.get("page", None))
         categ    = row.get("categ", "").strip()
 
-        # Exclude context lines from a different page
+        # Exclude context lines from a different page (but always include the target)
         if row_page != center_page and i != center_idx:
             continue
 
