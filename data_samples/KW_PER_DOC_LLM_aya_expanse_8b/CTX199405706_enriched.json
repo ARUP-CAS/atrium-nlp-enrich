@@ -1,0 +1,94 @@
+[
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 3,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "504 ONDREJOV, okr. Praha-východ",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Ondřejov",
+                "okres Praha-východ",
+                "výkop základů",
+                "hrnčířský provoz",
+                "pece",
+                "kostní hrob",
+                "sedmý"
+            ],
+            "extracted_keywords_en": [
+                "Ondřejov",
+                "Praha-východ",
+                "kopání základu",
+                "hrnčíř",
+                "pece",
+                "kostr. hrob",
+                "7. (sedmý)"
+            ],
+            "teater_category": "hřeben",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 4,
+        "categ": "Noisy",
+        "quality_score": 0.0,
+        "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Ondřejov",
+                "okres Praha-východ",
+                "rok 1820",
+                "kostní hrob",
+                "usedlost Bubníkova",
+                "kopání základů",
+                "hrnčířský dílna",
+                "pece",
+                "Kalina, bez datace"
+            ],
+            "extracted_keywords_en": [
+                "Ondřejov",
+                "Praha-východ",
+                "1820",
+                "kostr. hrob",
+                "Bubníkova usedlost",
+                "kopání základu",
+                "hrnčíř",
+                "pece",
+                "Kalina b. d."
+            ],
+            "teater_category": "hrobka",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX199405706",
+        "page": 1,
+        "line": 5,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Ondřejov",
+                "okres Praha-východ",
+                "kostní hrob",
+                "hrnčířský dílna",
+                "pece",
+                "Bubníkův statek"
+            ],
+            "extracted_keywords_en": [
+                "Ondřejov",
+                "Praha-východ",
+                "kostr. hrob",
+                "hrnčíř",
+                "pece",
+                "Bubníkova usedlost"
+            ],
+            "teater_category": "hřeben",
+            "confidence_score": 0.95
+        }
+    }
+]
