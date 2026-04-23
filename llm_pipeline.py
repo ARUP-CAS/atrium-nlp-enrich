@@ -27,7 +27,24 @@ from vocab_manager import VocabularyManager
 # ---------------------------------------------------------------------------
 # 1. Model Registry
 # ---------------------------------------------------------------------------
+
 MODEL_REGISTRY: Dict[str, Dict] = {
+    # --- New Qwen 3 Models ---
+    "qwen3-14b": {
+        "hf_id": "Qwen/Qwen3-14B-Instruct",
+        "context_window": 32768,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "qwen3-8b": {
+        "hf_id": "Qwen/Qwen3-8B-Instruct",
+        "context_window": 32768,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    # --- Existing Registry ---
     "qwen2.5-14b-awq": {
         "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
         "context_window": 32768,

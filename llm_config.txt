@@ -1,8 +1,7 @@
-# Switch between: qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b |
-#                 aya-expanse-8b   | bielik-11b  | llama3.1-8b
-MODEL_KEY=qwen2.5-14b-awq
+# Switch between: qwen3-14b | qwen3-8b | qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b | llama3.1-8b
+MODEL_KEY=qwen3-14b
 
-# Only needed for llama3.1-8b
+# Only needed for gated models like llama3.1-8b
 # HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
 
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
