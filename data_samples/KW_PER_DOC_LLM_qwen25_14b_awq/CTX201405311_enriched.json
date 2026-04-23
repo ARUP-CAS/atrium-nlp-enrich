@@ -8,14 +8,14 @@
         "original_text": "Č. akce 45938",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pseudolokalita",
-                "< 5 %"
+                "Č. akce",
+                "45938"
             ],
             "extracted_keywords_en": [
-                "pseudo-site",
-                "< 5%"
+                "Action number",
+                "45938"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -28,21 +28,19 @@
         "original_text": "ARCHEOLOGICKÝ ÚSTAV AKADEMIE VĚD ČR, Praha, v.v.i.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ARCHEOLOGICKÝ",
-                "ÚSTAV",
-                "AKADEMIE",
-                "VĚD",
-                "ČR"
+                "ARCHEOLOGICKÝ ÚSTAV",
+                "AKADEMIE VĚD ČR",
+                "Praha",
+                "v.v.i"
             ],
             "extracted_keywords_en": [
-                "ARCHAEOLOGICAL",
-                "INSTITUTE",
-                "ACADEMY",
-                "SCIENCES",
-                "CZECH"
+                "Archaeological Institute",
+                "Academy of Sciences",
+                "Prague",
+                "etc."
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -59,11 +57,11 @@
                 "Letenská"
             ],
             "extracted_keywords_en": [
-                "Prague",
-                "Lesser Town",
+                "Praha",
+                "Malá Strana",
                 "Letenská"
             ],
-            "teater_category": "lokalita",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -80,17 +78,21 @@
                 "Kutná",
                 "Hora",
                 "Hloušecká",
-                "609"
+                "609",
+                "284",
+                "01"
             ],
             "extracted_keywords_en": [
                 "Site",
                 "Kutna",
                 "Hora",
-                "Hlousecká",
-                "609"
+                "Hlousecka",
+                "609",
+                "284",
+                "01"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -102,14 +104,16 @@
         "original_text": "tel.: 327 511 730, e-mail: archeologiekh@seznam.cz",
         "enrichment": {
             "extracted_keywords_cs": [
-                "tel.: 327 511 730",
-                "e-mail: archeologiekh@seznam.cz"
+                "tel",
+                ".",
+                "e-mail"
             ],
             "extracted_keywords_en": [
-                "phone: 327 511 730",
-                "email: archeologiekh@seznam.cz"
+                "tel",
+                ".",
+                "email"
             ],
-            "teater_category": "někdy v letech",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -127,9 +131,9 @@
             ],
             "extracted_keywords_en": [
                 "Kutná Hora",
-                "July 1, 2014"
+                "1.7.2014"
             ],
-            "teater_category": "přesné datum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -142,17 +146,23 @@
         "original_text": "Ing. Jan Přibyl",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Ing. Jan Přibyl",
-                "Mgr. Jana Přibylová",
-                "Spodní 682"
+                "Ing",
+                "Jan",
+                "Přibyl",
+                "Mgr",
+                "Jana",
+                "Přibylová"
             ],
             "extracted_keywords_en": [
-                "Jan Pribyl",
-                "Jana Pribylova",
-                "Spodni 682"
+                "Ing",
+                "Jan",
+                "Pribyl",
+                "Mgr",
+                "Jana",
+                "Pribylova"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -173,8 +183,8 @@
                 "Jana",
                 "Pribylova"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -193,8 +203,8 @@
                 "Lower",
                 "682"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -210,11 +220,11 @@
                 "682"
             ],
             "extracted_keywords_en": [
-                "Lower",
+                "Spodní",
                 "682"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -226,21 +236,13 @@
         "original_text": "625 00 Brno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zpráva",
-                "provedení",
-                "záchranného",
-                "archeologického",
-                "výzkumu"
+                "Brno"
             ],
             "extracted_keywords_en": [
-                "report",
-                "conducted",
-                "rescue",
-                "archaeological",
-                "investigation"
+                "Brno"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -257,7 +259,7 @@
             "extracted_keywords_en": [
                 "Brno"
             ],
-            "teater_category": "katastrální území",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -270,14 +272,26 @@
         "original_text": "VĚC: zpráva o provedení záchranného archeologického výzkumu při akci - Čáslav - novostavba",
         "enrichment": {
             "extracted_keywords_cs": [
+                "zpráva",
+                "provedení",
                 "záchranného",
                 "archeologického",
-                "výzkumu"
+                "výzkumu",
+                "novostavba",
+                "rodinného",
+                "domu",
+                "k.ú."
             ],
             "extracted_keywords_en": [
+                "report",
+                "execution",
                 "rescue",
                 "archaeological",
-                "excavation"
+                "excavation",
+                "new construction",
+                "family",
+                "house",
+                "municipality"
             ],
             "teater_category": "záchranný",
             "confidence_score": 1.0
@@ -292,17 +306,23 @@
         "original_text": "rodinného domu na ppč. 1642/17,18 v k.ú. Čáslav.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného",
-                "archeologického",
-                "výzkumu"
+                "rodinného",
+                "domu",
+                "ppč",
+                ".",
+                "k.ú",
+                "."
             ],
             "extracted_keywords_en": [
-                "rescue",
-                "archaeological",
-                "investigation"
+                "family",
+                "house",
+                "plot",
+                "number",
+                "cadastral",
+                "area"
             ],
-            "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "teater_category": "objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -314,17 +334,25 @@
         "original_text": "V souladu se zněním zákona č.20/87 Sb. v platném znění byl na základě ohlášení zahájení výkopových prací",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného",
-                "archeologického",
-                "výzkumu"
+                "zákona",
+                "Sb",
+                "zahájení",
+                "výkopových",
+                "prací",
+                "proveden",
+                "dohled"
             ],
             "extracted_keywords_en": [
-                "rescue",
-                "archaeological",
-                "excavation"
+                "law",
+                "Sb",
+                "commencement",
+                "excavation",
+                "works",
+                "conducted",
+                "oversight"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -339,31 +367,18 @@
                 "proveden",
                 "archeologický",
                 "dohlédnutí",
-                "akce",
-                "Čáslav",
-                "novostavba",
-                "rodinného",
-                "domu",
-                "ppč",
-                "1642/17",
-                "18",
-                "k.ú"
+                "při",
+                "akci"
             ],
             "extracted_keywords_en": [
                 "conducted",
                 "archaeological",
                 "oversight",
-                "action",
-                "Caslav",
-                "new construction",
-                "family home",
-                "ppcz",
-                "1642/17",
-                "18",
-                "k.ú"
+                "during",
+                "action"
             ],
-            "teater_category": "záchranný",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -380,7 +395,7 @@
             "extracted_keywords_en": [
                 "Caslav"
             ],
-            "teater_category": "lokalita",
+            "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 1.0
         }
     },
@@ -393,23 +408,15 @@
         "original_text": "Akce probíhala na západním okraji města v poloze „Vodranty“. V těsném sousedství stavby došlo v minulosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Akce",
-                "zachycení",
-                "polykulturní",
-                "pravěkého",
-                "středověkého",
-                "osídlení"
+                "osídlení",
+                "středověké"
             ],
             "extracted_keywords_en": [
-                "Action",
-                "capture",
-                "multi-cultural",
-                "prehistoric",
-                "medieval",
-                "settlement"
+                "settlement",
+                "medieval"
             ],
-            "teater_category": "plošný objekt",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -421,7 +428,7 @@
         "original_text": "k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "polykulturního",
+                "polykulturní",
                 "pravěkého",
                 "středověkého",
                 "osídlení"
@@ -432,8 +439,8 @@
                 "medieval",
                 "settlement"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.95
+            "teater_category": "středověk",
+            "confidence_score": 1.0
         }
     },
     {
@@ -447,8 +454,8 @@
             "extracted_keywords_cs": [
                 "poškození",
                 "důležité",
-                "archeologické",
-                "situace"
+                "archeologických",
+                "situací"
             ],
             "extracted_keywords_en": [
                 "damage",
@@ -456,8 +463,8 @@
                 "archaeological",
                 "sites"
             ],
-            "teater_category": "areál vojenských aktivit",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -471,46 +478,15 @@
             "extracted_keywords_cs": [
                 "Archeologický dohled",
                 "stavbě",
-                "formou",
                 "revize",
-                "skrývky",
-                "ornice",
-                "výkopů",
-                "základových",
-                "pasů",
-                "pro",
-                "rodinný",
-                "dům",
-                "profilech",
-                "výkopů",
-                "patrné",
-                "souvrství",
-                "hnědé",
-                "ornice",
-                "podorničím",
-                "intaktním"
+                "skrývky ornice",
+                "výkopů základových"
             ],
             "extracted_keywords_en": [
-                "Archaeological oversight",
+                "Archaeological supervision",
                 "construction",
-                "as",
                 "review",
-                "excavations",
-                "ornice",
-                "foundations",
-                "sections",
-                "for",
-                "family",
-                "house",
-                "profiles",
-                "excavations",
-                "visible",
-                "formation",
-                "brown",
-                "ornice",
-                "subornice",
-                "intact",
-                "substrate"
+                "excavation"
             ],
             "teater_category": "terénní zásah",
             "confidence_score": 0.95
@@ -526,10 +502,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pasů",
-                "rodinný",
-                "dům",
+                "rodinný dům",
                 "profilech",
                 "výkopů",
+                "souvrství",
+                "hnědé ornice",
                 "podorničím",
                 "intaktním",
                 "podloží",
@@ -537,17 +514,18 @@
             ],
             "extracted_keywords_en": [
                 "sections",
-                "family",
-                "house",
+                "family home",
                 "profiles",
                 "excavations",
-                "clay",
+                "stratum",
+                "brown earth",
+                "subsoil",
                 "intact",
-                "foundation",
-                "soil"
+                "substrate",
+                "humus"
             ],
-            "teater_category": "terénní zásah",
-            "confidence_score": 0.95
+            "teater_category": "terénní odkryv",
+            "confidence_score": 1.0
         }
     },
     {
@@ -564,12 +542,12 @@
                 "spraš"
             ],
             "extracted_keywords_en": [
-                "foundation",
+                "substrate",
                 "intact",
-                "ash"
+                "spray"
             ],
             "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -585,16 +563,22 @@
                 "archeologických",
                 "situací",
                 "materiálu",
-                "akce"
+                "akci",
+                "negativním",
+                "arkeologickým",
+                "zjištěním"
             ],
             "extracted_keywords_en": [
                 "capture",
                 "archaeological",
                 "situations",
                 "material",
-                "action"
+                "action",
+                "negative",
+                "archaeological",
+                "findings"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -610,16 +594,20 @@
                 "zjištěním",
                 "prostor",
                 "stavby",
+                "ukončení",
+                "dohledu",
                 "uvolněn"
             ],
             "extracted_keywords_en": [
-                "finding",
+                "findings",
                 "space",
                 "construction",
+                "completion",
+                "inspection",
                 "released"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -631,16 +619,24 @@
         "original_text": "Archeologický dohled při stavbě provedl Mgr. Filip Velímský, Ph.D. (ARÚ AV ČR, Praha, v.v.i., pracoviště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Archeologický dohled",
-                "Mgr. Filip Velímský",
-                "Ph.D."
+                "Mgr",
+                "Filip Velímský",
+                "Ph.D",
+                "ARÚ AV ČR",
+                "Praha",
+                "pracoviště",
+                "Kutná Hora"
             ],
             "extracted_keywords_en": [
-                "Archaeological supervision",
-                "Mgr. Filip Velímský",
-                "Ph.D."
+                "Mgr",
+                "Filip Velímský",
+                "Ph.D",
+                "ARÚ AV ČR",
+                "Praha",
+                "workplace",
+                "Kutná Hora"
             ],
-            "teater_category": "terénní pracoviště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -653,25 +649,15 @@
         "original_text": "Kutná Hora). Terénní dokumentace je uložena v Archeologickém ústavu AV ČR, Praha, v.v.i., pracoviště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Terénní dokumentace",
-                "uložena",
-                "Archeologický ústav",
-                "AV ČR",
-                "Praha",
-                "pracoviště",
-                "Kutná Hora"
+                "Kutná Hora",
+                "Archeologický ústav AV ČR"
             ],
             "extracted_keywords_en": [
-                "Field documentation",
-                "stored",
-                "Archaeological Institute",
-                "AV CR",
-                "Prague",
-                "department",
-                "Kutna Hora"
+                "Kutná Hora",
+                "Archeological Institute AS CR"
             ],
-            "teater_category": "plošný objekt",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -688,7 +674,7 @@
             "extracted_keywords_en": [
                 "Kutná Hora"
             ],
-            "teater_category": "katastrální území",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -701,17 +687,26 @@
         "original_text": "Závěrem je možno konstatovat, že byla dodržena všechna zákonná ustanovení o ochraně",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zákonná ustanovení",
-                "ochrana",
-                "archeologické památky"
+                "Závěrem",
+                "dodržena",
+                "všechna",
+                "zákonná",
+                "ustanovení",
+                "ochraně",
+                "archeologických",
+                "památek"
             ],
             "extracted_keywords_en": [
-                "legal provisions",
+                "Conclusion",
+                "compliance",
+                "legal",
+                "provisions",
                 "protection",
-                "archaeological monuments"
+                "archaeological",
+                "monuments"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -730,8 +725,8 @@
                 "archaeological",
                 "monuments"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.85
+            "teater_category": "kulturní památka",
+            "confidence_score": 1.0
         }
     },
     {
@@ -743,15 +738,17 @@
         "original_text": "PhDr. Radka Šumberová, Ph.D.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "PhDr. Radka Šumberová",
-                "Ph.D."
+                "PhDr",
+                "Radka Šumberová",
+                "Ph.D"
             ],
             "extracted_keywords_en": [
-                "PhDr. Radka Šumberová",
-                "Ph.D."
+                "PhDr",
+                "Radka Šumberová",
+                "Ph.D"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -767,10 +764,10 @@
                 "Kutná Hora"
             ],
             "extracted_keywords_en": [
-                "Head of Department",
+                "Head of department",
                 "Kutná Hora"
             ],
-            "teater_category": "objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -784,13 +781,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Zpracoval",
-                "Mgr."
+                "Mgr",
+                "Filip",
+                "Velímský",
+                "Ph.D"
             ],
             "extracted_keywords_en": [
                 "Processed by",
-                "Mgr."
+                "Mgr",
+                "Filip",
+                "Velímský",
+                "Ph.D"
             ],
-            "teater_category": "zprávy a hlášení",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     }

@@ -13,20 +13,18 @@
                 "Bubníkova usedlost",
                 "kostr. hrob",
                 "kopání základu hrnčíř",
-                "pece",
-                "Kalina"
+                "pece"
             ],
             "extracted_keywords_en": [
                 "ONDREJOV",
-                "Praha-east",
+                "Praha-východ",
                 "Bubníkova usedlost",
-                "skeletal grave",
-                "excavation of potter's foundation",
-                "kiln",
-                "Kalina"
+                "kostr. hrob",
+                "kopání základu hrnčíř",
+                "pece"
             ],
-            "teater_category": "pohřební objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -38,6 +36,7 @@
         "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
         "enrichment": {
             "extracted_keywords_cs": [
+                "504",
                 "ONDREJOV",
                 "Praha-východ",
                 "Bubníkova usedlost",
@@ -47,16 +46,17 @@
                 "Kalina"
             ],
             "extracted_keywords_en": [
+                "504",
                 "ONDREJOV",
-                "Praha-east",
+                "Praha-východ",
                 "Bubníkova usedlost",
-                "skeletal grave",
-                "excavation of potter's foundation",
-                "kiln",
+                "kostr. hrob",
+                "kopání základu hrnčíř",
+                "pece",
                 "Kalina"
             ],
-            "teater_category": "pohřební objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -68,20 +68,20 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrob",
-                "kostrový",
-                "vykopávky",
+                "kopání",
                 "pece",
-                "hrnčíř"
+                "hrnčíř",
+                "hrob",
+                "kostra"
             ],
             "extracted_keywords_en": [
-                "burial",
-                "grave",
                 "excavation",
                 "kiln",
-                "pottery"
+                "pottery",
+                "grave",
+                "bone"
             ],
-            "teater_category": "pohřební objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     }

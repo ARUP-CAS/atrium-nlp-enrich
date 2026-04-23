@@ -8,27 +8,19 @@
         "original_text": "479. TUROVEC, o. Nová Ves u Chýnova, okr. Tábor",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Turovec",
-                "Nová Ves u Chýnova",
-                "Středověk",
-                "ZSV Kravín",
-                "silnice",
-                "les",
-                "Stará ves",
-                "Pustá ves"
+                "TUROVEC",
+                "Nová Ves",
+                "Chýnov",
+                "Tábor"
             ],
             "extracted_keywords_en": [
-                "Turovec",
-                "Nová Ves u Chýnova",
-                "Middle Ages",
-                "ZSV Kravín",
-                "road",
-                "forest",
-                "Old Village",
-                "Abandoned Village"
+                "TUROVEC",
+                "Nová Ves",
+                "Chýnov",
+                "Tábor"
             ],
-            "teater_category": "zahrada",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -40,27 +32,19 @@
         "original_text": "1980-81 - KULT: Středověk. LOK: ZSV Kravín, ca 6,5km JV od Tábora; Ikm sev. od silnice",
         "enrichment": {
             "extracted_keywords_cs": [
+                "KULT",
                 "Středověk",
                 "LOK",
-                "ZSV",
-                "Kravín",
-                "Turovec",
-                "Chýnov",
-                "Stará ves",
-                "Pustá ves"
+                "ZSV Kravín"
             ],
             "extracted_keywords_en": [
-                "Medieval",
-                "Site",
-                "Nová Ves",
-                "Kravín",
-                "Turovec",
-                "Chýnov",
-                "Old Village",
-                "Abandoned Village"
+                "RITUAL SITE",
+                "MEDIEVAL",
+                "SITE",
+                "ABANDONED VILLAGE KRAVÍN"
             ],
-            "teater_category": "zahrada",
-            "confidence_score": 0.95
+            "teater_category": "kultovní areál",
+            "confidence_score": 1.0
         }
     },
     {
@@ -75,47 +59,27 @@
                 "Planá",
                 "n.Luž",
                 "Turovec-Chýnov",
-                "v lese",
-                "pomístním",
+                "les",
+                "pomístní",
                 "názvem",
                 "Stará",
                 "ves",
                 "Pustá",
-                "ves",
-                "ZM",
-                "23-133",
-                "Tábor",
-                "217",
-                "od",
-                "Z",
-                "65",
-                "mm",
-                "od",
-                "J"
+                "ves"
             ],
             "extracted_keywords_en": [
-                "Flat",
+                "Planá",
                 "n.Luž",
                 "Turovec-Chýnov",
-                "in forest",
+                "forest",
                 "local",
                 "name",
                 "Old",
-                "Village",
+                "village",
                 "Abandoned",
-                "Village",
-                "ZM",
-                "23-133",
-                "Tábor",
-                "217",
-                "from",
-                "Z",
-                "65",
-                "mm",
-                "from",
-                "J"
+                "village"
             ],
-            "teater_category": "zaniklá lokalita",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -136,12 +100,12 @@
             ],
             "extracted_keywords_en": [
                 "Systematic",
-                "excavation",
-                "abandoned",
+                "research",
+                "vanished",
                 "medieval",
                 "village"
             ],
-            "teater_category": "zaniklá lokalita",
+            "teater_category": "objekt",
             "confidence_score": 0.95
         }
     },
@@ -154,45 +118,19 @@
         "original_text": "Po předchozích výzkumech v letech 1965-1967 a 1973-1974 odkryt jeden z dalších objektů ZSV, tentokrát",
         "enrichment": {
             "extracted_keywords_cs": [
-                "předchozích",
-                "výzkumech",
-                "letech",
-                "1965-1967",
-                "1973-1974",
+                "výzkum",
                 "odkryt",
-                "objektů",
-                "ZSV",
-                "Experiment",
-                "středověkém",
-                "objektu",
-                "spolupráce",
-                "AÚ",
-                "ČSAV",
-                "Praha",
-                "MHRH",
-                "Tábor"
+                "objekt",
+                "experiment"
             ],
             "extracted_keywords_en": [
-                "previous",
-                "excavations",
-                "years",
-                "1965-1967",
-                "1973-1974",
-                "discovered",
-                "objects",
-                "ZSV",
-                "Experiment",
-                "medieval",
+                "excavation",
+                "discovery",
                 "object",
-                "cooperation",
-                "Institute",
-                "Academy",
-                "Prague",
-                "Museum",
-                "Tabor"
+                "experiment"
             ],
             "teater_category": "terénní odkryv",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -204,12 +142,30 @@
         "original_text": "jako součást \"Experimentu na středověkém objektu\", prováděném ve spolupráci AÚ ČSAV Praha a MHRH",
         "enrichment": {
             "extracted_keywords_cs": [
-                "geodeticko-topografického průzkumu"
+                "Experiment",
+                "středověkém",
+                "objektu",
+                "prováděném",
+                "spolupráci",
+                "AÚ",
+                "ČSAV",
+                "Praha",
+                "MHRH",
+                "Tábor"
             ],
             "extracted_keywords_en": [
-                "geodetic-topographic survey"
+                "Experiment",
+                "medieval",
+                "object",
+                "conducted",
+                "cooperation",
+                "Academy",
+                "Sciences",
+                "Prague",
+                "Regional",
+                "Museum"
             ],
-            "teater_category": "geodetický průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -251,12 +207,11 @@
                 "research",
                 "included",
                 "research",
-                "task",
                 "systematic",
                 "study"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "badatelský",
+            "confidence_score": 1.0
         }
     },
     {
@@ -270,64 +225,9 @@
             "extracted_keywords_cs": [
                 "ZSV",
                 "husitského",
-                "období",
-                "Táborskú",
                 "obytný",
                 "objekt",
-                "zemnicového",
-                "typu",
-                "otevřený",
-                "ohniště",
-                "zásobní",
-                "jáma",
-                "svahovitá",
-                "vstupní",
-                "šíjí",
-                "kamenná",
-                "plenta",
-                "podél",
-                "podpovrchových",
-                "částí"
-            ],
-            "extracted_keywords_en": [
-                "ZSV",
-                "Hussite",
-                "period",
-                "Tabor",
-                "dwelling",
-                "structure",
-                "subsurface",
-                "type",
-                "open",
-                "hearth",
-                "storage",
-                "pit",
-                "inclined",
-                "entrance",
-                "throat",
-                "stone",
-                "lining",
-                "along",
-                "subsurface",
-                "parts"
-            ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
-        }
-    },
-    {
-        "file_id": "CTX198603218",
-        "page": 1,
-        "line": 10,
-        "categ": "Clear",
-        "quality_score": 0.0,
-        "original_text": "ho typu s prostým otevřeným ohništěm, zásobní jámou, svahovitou vstupní šíjí a kamennou plentou podél",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "obytný",
-                "objekt",
-                "zemnicového",
-                "typu",
+                "zemnice",
                 "otevřený",
                 "ohniště",
                 "zásobní",
@@ -343,16 +243,67 @@
                 "stěn"
             ],
             "extracted_keywords_en": [
+                "settlement",
+                "Hussite",
                 "dwelling",
-                "object",
-                "type",
+                "structure",
+                "pit-house",
+                "open",
+                "hearth",
+                "storage",
+                "pit",
+                "sloping",
+                "entrance",
+                "ledge",
+                "stone",
+                "lining",
+                "along",
+                "subsurface",
+                "parts",
+                "walls"
+            ],
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX198603218",
+        "page": 1,
+        "line": 10,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "ho typu s prostým otevřeným ohništěm, zásobní jámou, svahovitou vstupní šíjí a kamennou plentou podél",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "obytný",
+                "objekt",
+                "zemnice",
+                "prosté",
+                "otevřené",
+                "ohniště",
+                "zásobní",
+                "jáma",
+                "svahovitou",
+                "vstupní",
+                "šíjí",
+                "kamennou",
+                "plentou",
+                "podél",
+                "podpovrchových",
+                "částí",
+                "stěn"
+            ],
+            "extracted_keywords_en": [
+                "dwelling",
+                "structure",
+                "pit house",
                 "open",
                 "hearth",
                 "storage",
                 "pit",
                 "steep",
                 "entrance",
-                "throat",
+                "slope",
                 "stone",
                 "lining",
                 "along",
@@ -373,12 +324,22 @@
         "original_text": "podpovrchových částí stěn. Objekt dosahoval rozměrů 500-540 x 220-270 cm s delší osou V - Z. Jihovýchodně",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekt",
-                "stěn"
+                "podpovrchových",
+                "částí",
+                "stěn",
+                "Objekt",
+                "rozměrů",
+                "cm",
+                "osou"
             ],
             "extracted_keywords_en": [
-                "object",
-                "walls"
+                "subsurface",
+                "parts",
+                "walls",
+                "Object",
+                "dimensions",
+                "cm",
+                "axis"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -393,26 +354,18 @@
         "original_text": "od tohoto objektu, 350 cm od stěn a 250 cm od počátku vchodu do něj, byly odkryty zbytky povrchové stavby.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekt",
                 "povrchová stavba",
+                "plocha",
                 "stěny",
-                "orientovány",
-                "obytný objekt",
-                "sídelní jednotka",
-                "dům",
-                "oddělená hospodářská stavba"
+                "orientovány"
             ],
             "extracted_keywords_en": [
-                "object",
                 "surface structure",
+                "area",
                 "walls",
-                "oriented",
-                "dwelling object",
-                "settlement unit",
-                "house",
-                "separate economic structure"
+                "oriented"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "objekt",
             "confidence_score": 0.95
         }
     },
@@ -431,38 +384,15 @@
                 "stěny",
                 "orientovány",
                 "obytným",
-                "objektem",
-                "materiál",
-                "sídelní",
-                "jednotku",
-                "dům",
-                "oddělená",
-                "hospodářská",
-                "stavba",
-                "datován",
-                "první",
-                "polovinu",
-                "století"
+                "objektem"
             ],
             "extracted_keywords_en": [
                 "Spread",
                 "area",
-                "cm",
+                "meters",
                 "walls",
                 "oriented",
-                "dwelling",
-                "object",
-                "material",
-                "settlement",
-                "unit",
-                "house",
-                "separate",
-                "farm",
-                "building",
-                "dated",
-                "first",
-                "half",
-                "century"
+                "dwelling"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -478,12 +408,12 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "materiál",
-                "sídelní jednotky",
+                "sídelní jednotka",
                 "dům",
                 "oddělená hospodářská stavba",
                 "datován",
                 "první polovina",
-                "století"
+                "15. století"
             ],
             "extracted_keywords_en": [
                 "material",
@@ -492,9 +422,9 @@
                 "separate economic building",
                 "dated",
                 "first half",
-                "century"
+                "15th century"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "sídlo elity",
             "confidence_score": 0.95
         }
     },
@@ -510,10 +440,10 @@
                 "oválná studna",
                 "prostě vyhloubená",
                 "průměru 140-175cm",
-                "hloubku 410 cm",
-                "pravidelné kruhovité zahloubení",
-                "průměru 60cm",
-                "hloubku 20 cm",
+                "hloubky 410 cm",
+                "pravidelné kruhovité",
+                "zahloubení o průměru 60cm",
+                "hloubce 20 cm",
                 "odkalovač"
             ],
             "extracted_keywords_en": [
@@ -521,8 +451,8 @@
                 "simply dug",
                 "diameter 140-175cm",
                 "depth 410 cm",
-                "regular circular sunken feature",
-                "diameter 60cm",
+                "regular circular",
+                "excavation diameter 60cm",
                 "depth 20 cm",
                 "drainage"
             ],
@@ -546,34 +476,38 @@
                 "podloží",
                 "průměru",
                 "140-175cm",
-                "hloubku",
+                "hloubky",
                 "410cm",
                 "pravidelné",
                 "kruhovité",
                 "zahloubení",
                 "průměru",
                 "60cm",
-                "hloubku",
+                "hloubce",
                 "20cm",
                 "odkalovač"
             ],
             "extracted_keywords_en": [
-                "oval well",
-                "excavated into subsoil",
+                "oval",
+                "well",
+                "simply",
+                "excavated",
+                "bedrock",
                 "diameter",
                 "140-175cm",
                 "depth",
                 "410cm",
-                "regular circular",
-                "sunken feature",
+                "regular",
+                "circular",
+                "sunken",
                 "diameter",
                 "60cm",
                 "depth",
                 "20cm",
-                "drainage"
+                "drain"
             ],
             "teater_category": "studna",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -586,15 +520,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zahloubení",
-                "průměr",
-                "hloubka",
+                "průměru",
+                "60cm",
+                "hloubce",
+                "20cm",
                 "odkalovač"
             ],
             "extracted_keywords_en": [
                 "excavation",
                 "diameter",
+                "60cm",
                 "depth",
-                "drainage"
+                "20cm",
+                "drain"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -609,20 +547,18 @@
         "original_text": "či na přelom 13.-14. stol. V roce 1981 byla dále provedena preparace částí objektů z let 1973-1974a u jednoho",
         "enrichment": {
             "extracted_keywords_cs": [
-                "studna",
-                "roubená",
-                "loženým",
-                "kamením",
-                "průměru"
+                "či",
+                "na",
+                "přelom",
+                "13.-14."
             ],
             "extracted_keywords_en": [
-                "well",
-                "timber-framed",
-                "dry-laid",
-                "stone",
-                "diameter"
+                "or",
+                "to",
+                "transition",
+                "14th"
             ],
-            "teater_category": "studna",
+            "teater_category": "zahloubený objekt",
             "confidence_score": 0.95
         }
     },
@@ -639,17 +575,19 @@
                 "roubená",
                 "loženým",
                 "kamením",
+                "vnitřního",
                 "průměru"
             ],
             "extracted_keywords_en": [
                 "well",
-                "timber-framed",
-                "dry-laid",
+                "log cabin",
+                "dry laid",
                 "stone",
+                "internal",
                 "diameter"
             ],
             "teater_category": "studna",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -667,9 +605,11 @@
                 "kamením",
                 "průměru",
                 "80-90cm",
+                "Materiál",
                 "datuje",
+                "objekt",
                 "první",
-                "polovinu",
+                "polovina",
                 "15."
             ],
             "extracted_keywords_en": [
@@ -679,7 +619,9 @@
                 "stone",
                 "diameter",
                 "80-90cm",
+                "Material",
                 "dates",
+                "structure",
                 "first",
                 "half",
                 "15th"
@@ -697,35 +639,34 @@
         "original_text": "in: Krajíc R. , Přehled archeologických výzkumů středověku na Táborskú/se zaměřením na ZSO/, Archeologické",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Krajíc",
                 "Přehled",
                 "archeologických",
                 "výzkumů",
                 "středověku",
                 "Táborskú",
+                "se",
+                "zaměřením",
                 "ZSO",
                 "Archeologické",
                 "výzkumy",
                 "jižních",
-                "Čechách",
-                "1983"
+                "Čechách"
             ],
             "extracted_keywords_en": [
-                "Krajic",
                 "Overview",
                 "archaeological",
                 "investigations",
                 "medieval",
                 "Tabor",
-                "ZSO",
+                "focused",
+                "settlements",
                 "Archaeological",
                 "investigations",
                 "south",
-                "Bohemia",
-                "1983"
+                "Bohemia"
             ],
-            "teater_category": "studna",
-            "confidence_score": 0.95
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -746,8 +687,8 @@
                 "south",
                 "Bohemia"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -762,9 +703,9 @@
                 "R. Krajíc"
             ],
             "extracted_keywords_en": [
-                "R. Krajic"
+                "R. Krajíc"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     }

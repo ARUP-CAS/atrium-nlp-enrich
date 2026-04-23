@@ -8,12 +8,16 @@
         "original_text": "o P ATOVICEn.Le",
         "enrichment": {
             "extracted_keywords_cs": [
+                "P ATOVICEn.Le",
+                "Kat. obec",
                 "Osada"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "P ATOVICEn.Le",
+                "Cat. municipality",
+                "Village"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -26,12 +30,12 @@
         "original_text": "Kat. obec:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště"
+                "P ATOVICEn.Le"
             ],
             "extracted_keywords_en": [
-                "hillfort"
+                "P ATOVICEn.Le"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -49,7 +53,7 @@
             "extracted_keywords_en": [
                 "settlement"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -62,14 +66,14 @@
         "original_text": "Trať: Pardubice",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pardubice",
-                "Trať"
+                "trať",
+                "Pardubice"
             ],
             "extracted_keywords_en": [
-                "Pardubice",
-                "Track"
+                "railway line",
+                "Pardubice"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -87,7 +91,7 @@
             "extracted_keywords_en": [
                 "District"
             ],
-            "teater_category": "okenní výplň",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 1.0
         }
     },
@@ -100,12 +104,14 @@
         "original_text": "Druh a kultura:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Lužické sídliště"
+                "Lužické sídliště",
+                "Zpráva"
             ],
             "extracted_keywords_en": [
-                "Lusatian settlement"
+                "Lužické sídliště",
+                "Zpráva"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 1.0
         }
     },
@@ -138,10 +144,10 @@
         "original_text": "Zpráva",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Zpráva"
+                "Lužické sídliště"
             ],
             "extracted_keywords_en": [
-                "Report"
+                "Lusatian settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 1.0
@@ -156,12 +162,18 @@
         "original_text": "XXWžkumu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště"
+                "zpráva",
+                "výzkum",
+                "terén",
+                "lokalita"
             ],
             "extracted_keywords_en": [
-                "hillfort"
+                "report",
+                "fieldwork",
+                "terrain",
+                "site"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -174,13 +186,23 @@
         "original_text": "XAterenta",
         "enrichment": {
             "extracted_keywords_cs": [
-                "XAterenta"
+                "průzkum",
+                "terénní výzkum",
+                "badatelský záměr",
+                "instituce",
+                "oddělení",
+                "vedoucí"
             ],
             "extracted_keywords_en": [
-                "enclosure"
+                "survey",
+                "fieldwork",
+                "research",
+                "institution",
+                "department",
+                "leader"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -192,12 +214,18 @@
         "original_text": "kmixxxx",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kmixxxx"
+                "výzkum",
+                "terén",
+                "oddělení",
+                "vedoucí"
             ],
             "extracted_keywords_en": [
-                "kmixxxx"
+                "fieldwork",
+                "terrain",
+                "department",
+                "leader"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -210,15 +238,13 @@
         "original_text": "ved. oddělení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vedoucí",
-                "oddělení"
+                "vedoucí oddělení"
             ],
             "extracted_keywords_en": [
-                "head",
-                "department"
+                "head of department"
             ],
-            "teater_category": "vyspělé středohradištní období",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -230,13 +256,39 @@
         "original_text": "za období:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rané středohradištní období"
+                "období",
+                "vedoucí",
+                "oddělení"
             ],
             "extracted_keywords_en": [
-                "Early Middle Hillfort Period"
+                "period",
+                "department",
+                "leader"
             ],
-            "teater_category": "rané středohradištní období",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX197402444",
+        "page": 1,
+        "line": 20,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pískovna",
+                "JZD",
+                "Opatovice n.L."
+            ],
+            "extracted_keywords_en": [
+                "quarry",
+                "JZD",
+                "Opatovice n.L."
+            ],
+            "teater_category": "areál jiné aktivity",
+            "confidence_score": 0.95
         }
     },
     {
@@ -248,15 +300,39 @@
         "original_text": "v Opatovicích n.L., známou z velkého záchraného výzkumu AŮ ČSAV",
         "enrichment": {
             "extracted_keywords_cs": [
+                "záchranný výzkum",
                 "pískovna",
                 "Opatovice n.L."
             ],
             "extracted_keywords_en": [
+                "rescue excavation",
                 "quarry",
                 "Opatovice n.L."
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX197402444",
+        "page": 1,
+        "line": 22,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "v Praze v letech 1956-1959. Tehdy práce v pískovně byla zastavena",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "záchranný výzkum",
+                "pískovna",
+                "Opatovice n.L."
+            ],
+            "extracted_keywords_en": [
+                "rescue research",
+                "quarry",
+                "Opatovice n.L."
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -268,14 +344,20 @@
         "original_text": "a proto výzkum byl přerušen.",
         "enrichment": {
             "extracted_keywords_cs": [
+                "záchranný výzkum",
                 "pískovna",
-                "záchranný výzkum"
+                "práce v pískovně",
+                "obnoveny",
+                "rozsah pískovny"
             ],
             "extracted_keywords_en": [
+                "rescue research",
                 "quarry",
-                "rescue survey"
+                "work in quarry",
+                "renewed",
+                "extent of quarry"
             ],
-            "teater_category": "zaniklý/historický areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -290,14 +372,18 @@
             "extracted_keywords_cs": [
                 "pískovna",
                 "záchranný výzkum",
-                "objekty"
+                "objekty",
+                "plocha",
+                "skrývka"
             ],
             "extracted_keywords_en": [
                 "quarry",
                 "rescue research",
-                "objects"
+                "objects",
+                "area",
+                "hiding place"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "areál jiné aktivity",
             "confidence_score": 0.95
         }
     },
@@ -311,26 +397,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovna",
-                "rozsah",
-                "hranice",
                 "záchranný výzkum",
-                "bagre",
-                "plocha",
-                "objekty",
-                "skrývka"
+                "objekty"
             ],
             "extracted_keywords_en": [
                 "quarry",
-                "range",
-                "boundary",
                 "rescue research",
-                "mound",
-                "area",
-                "objects",
-                "hiding"
+                "features"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "areál jiné aktivity",
+            "confidence_score": 0.95
         }
     },
     {
@@ -342,19 +418,19 @@
         "original_text": "bagrem skryté ploše jsou znatelné 3—4 hlubší objekty, skrývka",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bagrem",
-                "ploše",
+                "pískovna",
+                "záchranný výzkum",
                 "objekty",
                 "skrývka"
             ],
             "extracted_keywords_en": [
-                "sandpit",
-                "area",
-                "objects",
-                "hiding place"
+                "quarry",
+                "rescue research",
+                "features",
+                "burial"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "areál jiné aktivity",
+            "confidence_score": 0.95
         }
     },
     {
@@ -369,10 +445,12 @@
                 "skryvka"
             ],
             "extracted_keywords_en": [
-                "burial"
+                "enclosure",
+                "fortification",
+                "burrow"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 0.95
         }
     },
     {
@@ -384,19 +462,21 @@
         "original_text": "zničeny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
+                "terénní pozorování",
+                "hlubší objekty",
+                "zničeny",
                 "skryté ploše",
-                "objekty",
-                "zničeny"
+                "madlý"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "hidden area",
-                "objects",
-                "destroyed"
+                "terrain observation",
+                "shallow objects",
+                "deep objects",
+                "buried surface",
+                "destruction"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -408,13 +488,15 @@
         "original_text": "Podle teréního pozorování",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště"
+                "sídliště",
+                "terénní pozorování"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "settlement",
+                "field observation"
             ],
-            "teater_category": "vyspělé mladohradištní období",
-            "confidence_score": 1.0
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.95
         }
     },
     {
@@ -426,13 +508,17 @@
         "original_text": "je ještě část sídliště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště"
+                "sídliště",
+                "zachována",
+                "sběrem"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "settlement",
+                "preserved",
+                "collection"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.95
         }
     },
     {
@@ -445,14 +531,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sídliště",
-                "parc.č."
+                "zachována",
+                "parc.č. 1503",
+                "sběrem",
+                "lžická keramika"
             ],
             "extracted_keywords_en": [
                 "settlement",
-                "parcel number"
+                "preserved",
+                "parcel no. 1503",
+                "collection",
+                "pottery"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.95
         }
     },
     {
@@ -466,14 +558,14 @@
             "extracted_keywords_cs": [
                 "lžička",
                 "kera",
-                "parc.č."
+                "žárový hrob"
             ],
             "extracted_keywords_en": [
                 "spoon",
                 "ceramic",
-                "parcel no."
+                "cremation grave"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "sídliště specializované komunity",
             "confidence_score": 0.95
         }
     },
@@ -488,16 +580,16 @@
             "extracted_keywords_cs": [
                 "lžička",
                 "kera",
-                "parc.č. 1510",
-                "pískovna"
+                "střepy",
+                "žárové hroby"
             ],
             "extracted_keywords_en": [
                 "spoon",
                 "ceramic",
-                "parcel no. 1510",
-                "sandpit"
+                "shards",
+                "cremation graves"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "kultovní areál",
             "confidence_score": 0.95
         }
     },
@@ -511,17 +603,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "žárové hroby",
-                "AÚ ČSAV v Praze",
-                "výzkum",
                 "lužické sídliště"
             ],
             "extracted_keywords_en": [
-                "cremation graves",
-                "Academy of Sciences of the Czech Republic in Prague",
-                "research",
+                "cremation burials",
                 "Lusatian settlement"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -535,20 +623,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "AÚ ČSAV v Praze",
-                "výzkum",
                 "důležitého lužického sídliště",
-                "celý půdorys pravěké vesnice",
+                "půdorys pravěké vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
                 "Institute of Archaeology of the Czech Academy of Sciences in Prague",
-                "research",
                 "important Lusatian settlement",
-                "complete outline of a prehistoric village",
+                "layout of prehistoric village",
                 "burial ground"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -582,18 +668,16 @@
         "original_text": "poprvé celý půdorys pravěké vesnice i s pohřebištěm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
                 "půdorys",
                 "pravěká vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "plan",
+                "layout",
                 "prehistoric village",
                 "burial ground"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "sídliště",
             "confidence_score": 1.0
         }
     },
@@ -606,12 +690,22 @@
         "original_text": "V Hradci Králové, 27.111.1974",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Hradec Králové"
+                "archeologické naleziště",
+                "osídlení",
+                "vykopávky",
+                "výzkum",
+                "prozkoumání",
+                "archeolog"
             ],
             "extracted_keywords_en": [
-                "Hradec Králové"
+                "archaeological site",
+                "settlement",
+                "excavation",
+                "research",
+                "investigation",
+                "archaeologist"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "sídliště",
             "confidence_score": 1.0
         }
     },
@@ -624,16 +718,20 @@
         "original_text": ".předejte prosím Dr.J.Ratajo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Opatovice",
-                "sídliště",
-                "hradiště"
+                "prosím",
+                "Dr.J.Ratajo",
+                "ver,výzkumu",
+                "Opatovicích",
+                "sídlišti"
             ],
             "extracted_keywords_en": [
-                "Opatovice",
-                "settlement",
-                "hillfort"
+                "please",
+                "Dr.J.Ratajo",
+                "research",
+                "Opatovics",
+                "settlement"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -646,14 +744,16 @@
         "original_text": "| ver,výzkumu v Opatovicích.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Opatovice",
+                "výzkumu",
+                "Opatovicích",
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "Opatovice",
+                "research",
+                "Opatovics",
                 "settlement"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -666,14 +766,16 @@
         "original_text": "Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Opatovice",
+                "výzkumu",
+                "Opatovicích",
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "Opatovice",
+                "research",
+                "Opatovics",
                 "settlement"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -686,12 +788,14 @@
         "original_text": "V.Vokolek by mohl-vzhledem k blízkosti svého pracoviště zahájit jednání",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště",
-                "výzkum"
+                "výzkum",
+                "Opatovice",
+                "sídliště"
             ],
             "extracted_keywords_en": [
-                "settlement",
-                "research"
+                "research",
+                "Opatovice",
+                "settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 1.0
@@ -706,12 +810,14 @@
         "original_text": "s ústavem o další výzkum na sídlišti . Doporučuji, aby tento výzkum",
         "enrichment": {
             "extracted_keywords_cs": [
+                "sídliště",
                 "výzkum",
-                "sídliště"
+                "ústav"
             ],
             "extracted_keywords_en": [
+                "settlement",
                 "research",
-                "settlement"
+                "institute"
             ],
             "teater_category": "sídliště",
             "confidence_score": 1.0
@@ -727,13 +833,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "sídliště"
+                "sídliště",
+                "ústav",
+                "jednání",
+                "svěřen"
             ],
             "extracted_keywords_en": [
                 "research",
-                "settlement"
+                "settlement",
+                "institute",
+                "negotiation",
+                "entrusted"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -746,16 +858,20 @@
         "original_text": "ov Praze dne 7.5.1974. R_",
         "enrichment": {
             "extracted_keywords_cs": [
+                "zpráva",
+                "výzkum",
+                "sídliště",
                 "Praha",
-                "dne",
-                "7.5.1974"
+                "dokumentace"
             ],
             "extracted_keywords_en": [
+                "report",
+                "research",
+                "settlement",
                 "Prague",
-                "on",
-                "May 7, 1974"
+                "documentation"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -769,18 +885,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zpráva",
-                "dvojmo",
                 "koreferent",
-                "komise"
+                "komise",
+                "vyhotovte",
+                "dvojmo"
             ],
             "extracted_keywords_en": [
                 "report",
-                "duplicate",
                 "co-referent",
-                "commission"
+                "committee",
+                "prepare",
+                "duplicate"
             ],
-            "teater_category": "hrazený areál",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -799,8 +917,8 @@
                 "duplicate",
                 "prepare"
             ],
-            "teater_category": "vyspělé mladohradištní období",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -812,12 +930,18 @@
         "original_text": "v^UlíLa uq (AAuu Aud. AnMlut",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště"
+                "zpráva",
+                "dvojmo",
+                "koreferent",
+                "komise"
             ],
             "extracted_keywords_en": [
-                "hillfort"
+                "report",
+                "duplicate",
+                "coordinator",
+                "commission"
             ],
-            "teater_category": "hrazený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -830,16 +954,14 @@
         "original_text": "V r Wrr (ia 7 TcedLir). 2 {",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vyspělé",
-                "středohradištní",
-                "období"
+                "dvojmo",
+                "vyhotovte"
             ],
             "extracted_keywords_en": [
-                "advanced",
-                "middle hillfort",
-                "period"
+                "dual",
+                "prepare"
             ],
-            "teater_category": "vyspělé středohradištní období",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     }

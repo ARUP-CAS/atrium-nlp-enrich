@@ -8,12 +8,16 @@
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kostr. hrob"
+                "ONDREJOV",
+                "okr",
+                "Praha-východ"
             ],
             "extracted_keywords_en": [
-                "burial"
+                "ONDREJOV",
+                "district",
+                "Prague-East"
             ],
-            "teater_category": "pohřební objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -26,12 +30,24 @@
         "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kostr. hrob"
+                "DAT",
+                "KULT",
+                "LOK",
+                "NALEZ",
+                "OKOL",
+                "ULOŽ",
+                "LIT"
             ],
             "extracted_keywords_en": [
-                "burial"
+                "DATE",
+                "CULTURE",
+                "LOCATION",
+                "FIND",
+                "CONTEXT",
+                "STORAGE",
+                "REFERENCE"
             ],
-            "teater_category": "pohřební objekt",
+            "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 1.0
         }
     },
@@ -55,8 +71,8 @@
                 "potter",
                 "kiln"
             ],
-            "teater_category": "pohřeb v sídlištním objektu",
-            "confidence_score": 0.95
+            "teater_category": "pec hrnčířská",
+            "confidence_score": 1.0
         }
     }
 ]

@@ -8,12 +8,14 @@
         "original_text": "OBEC",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště"
+                "OBEC",
+                "OKRES"
             ],
             "extracted_keywords_en": [
-                "hillfort"
+                "TOWN",
+                "DISTRICT"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -29,9 +31,9 @@
                 "OKRES"
             ],
             "extracted_keywords_en": [
-                "DISTRICT"
+                "COUNTY"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -44,12 +46,18 @@
         "original_text": "Vysoký jez .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vysoký jez"
+                "OKRES",
+                "Vysoký jez",
+                "Mad DrAMou",
+                "ČÍSLO PARCELY"
             ],
             "extracted_keywords_en": [
-                "High Dam"
+                "REGION",
+                "High Lake",
+                "Mad DrAMou",
+                "PARCEL NUMBER"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -62,12 +70,14 @@
         "original_text": "Mad DrAMou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Mad DrAMou"
+                "Mad DrAMou",
+                "ČÍSLO PARCELY"
             ],
             "extracted_keywords_en": [
-                "Mad DrAMou"
+                "Mad DrAMou",
+                "PARCEL NUMBER"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -80,15 +90,15 @@
         "original_text": "ČÍSLO PARCELY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ČÍSLO PARCELY",
-                "Rychnov n.Kn."
+                "parcel",
+                "číslo"
             ],
             "extracted_keywords_en": [
-                "PARCEL NUMBER",
-                "Rychnov n.Kn."
+                "parcel",
+                "number"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -105,7 +115,7 @@
             "extracted_keywords_en": [
                 "Rychnov n.Kn."
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -118,20 +128,14 @@
         "original_text": "Přílohy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Homole",
-                "kopec",
-                "SZ",
-                "od",
-                "Vysokí"
+                "Přílohy",
+                "NÁZEV TRATI"
             ],
             "extracted_keywords_en": [
-                "Homole",
-                "hill",
-                "SZ",
-                "from",
-                "Vysoký"
+                "Appendices",
+                "NAME OF THE ROUTE"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -149,7 +153,8 @@
                 "kopec",
                 "SZ",
                 "od",
-                "Vysokí-Udol",
+                "Vysokí",
+                "Újezda",
                 "pokryt",
                 "lesem"
             ],
@@ -159,11 +164,12 @@
                 "hill",
                 "SZ",
                 "from",
-                "Vysoký-Udol",
+                "Vysoký",
+                "Újezda",
                 "covered",
                 "by forest"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -179,18 +185,20 @@
                 "Homole",
                 "kopec",
                 "SZ",
-                "Vysokí-Ujezda",
-                "lesem"
+                "Vysokí",
+                "Újezd",
+                "les"
             ],
             "extracted_keywords_en": [
                 "Homole",
                 "hill",
                 "SZ",
-                "Vysokí-Ujezda",
-                "wooded"
+                "Vysokí",
+                "Újezd",
+                "forest"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "areál jiné aktivity",
+            "confidence_score": 0.95
         }
     },
     {
@@ -202,15 +210,13 @@
         "original_text": "Újezda pokryt lesem.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kopec",
                 "lesem"
             ],
             "extracted_keywords_en": [
-                "hill",
                 "wooded"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -223,19 +229,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kultura",
-                "Z",
-                "moravská",
-                "malovaná",
-                "keramika"
+                "číslo",
+                "druh",
+                "nálezu"
             ],
             "extracted_keywords_en": [
                 "culture",
-                "Z",
-                "Moravian",
-                "Painted",
-                "Ware"
+                "number",
+                "type",
+                "find"
             ],
-            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -248,17 +252,13 @@
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kultura",
-                "zvoncovitých",
-                "pohárů"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "culture",
-                "bell",
-                "beakers"
+                "pottery sherds"
             ],
-            "teater_category": "kultura zvoncovitých pohárů",
-            "confidence_score": 1.0
+            "teater_category": "kulturní vrstva/objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -270,12 +270,11 @@
         "original_text": "Druh nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramické",
-                "střepy"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
                 "ceramic",
-                "shards"
+                "pottery sherds"
             ],
             "teater_category": "keramika",
             "confidence_score": 1.0
@@ -290,12 +289,13 @@
         "original_text": "keramcké střepy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramcké střepy"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "ceramic sherds"
+                "ceramic",
+                "pottery sherds"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "keramika",
             "confidence_score": 1.0
         }
     },
@@ -308,13 +308,17 @@
         "original_text": "LITERATURA",
         "enrichment": {
             "extracted_keywords_cs": [
-                "LITERATURA"
+                "keramické střepy",
+                "lokalita",
+                "nález"
             ],
             "extracted_keywords_en": [
-                "LITERATURE"
+                "ceramic sherds",
+                "site",
+                "find"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 1.0
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.95
         }
     },
     {
@@ -326,12 +330,16 @@
         "original_text": "Uložení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "uložení"
+                "uložení",
+                "rukopisné poznámky",
+                "číslo inventarizace"
             ],
             "extracted_keywords_en": [
-                "storage"
+                "storage",
+                "notes",
+                "inventory number"
             ],
-            "teater_category": "hrazený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -350,12 +358,12 @@
                 "autora"
             ],
             "extracted_keywords_en": [
-                "manuscript",
+                "handwritten",
                 "notes",
-                "page 56",
+                "p. 56",
                 "author"
             ],
-            "teater_category": "hrazený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -368,12 +376,12 @@
         "original_text": "Čis. inv.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Čis. inv."
+                "inv."
             ],
             "extracted_keywords_en": [
-                "Inv. No."
+                "inv."
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -386,16 +394,22 @@
         "original_text": "P.Jirušek starousedlík v obci Vysoký Újezd podal informaci , že před",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramických střepů",
-                "kopali krechty",
-                "uskladnení brambor a řepy"
+                "Homole",
+                "krechty",
+                "uskladnení",
+                "brambor",
+                "řepy",
+                "keramických střepů"
             ],
             "extracted_keywords_en": [
-                "pottery sherds",
-                "dug pits",
-                "storage of potatoes and beets"
+                "Homole",
+                "shelters",
+                "storage",
+                "potatoes",
+                "beets",
+                "pottery sherds"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "areál zemědělské výroby",
             "confidence_score": 0.95
         }
     },
@@ -408,14 +422,26 @@
         "original_text": "mnoha lety si rolníci v místě Homole kopali krechty na uskladnení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramický",
+                "Homole",
+                "kopali",
+                "krechty",
+                "uskladnení",
+                "brambor",
+                "řepy",
+                "keramických",
                 "střepu"
             ],
             "extracted_keywords_en": [
+                "Homole",
+                "dug",
+                "cellars",
+                "store",
+                "potatoes",
+                "beets",
                 "ceramic",
                 "shards"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "areál zemědělské výroby",
             "confidence_score": 0.95
         }
     },
@@ -428,24 +454,25 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Homole",
                 "kopali",
                 "krechty",
-                "uskladneni",
+                "uskladnení",
                 "brambor",
-                "repy",
-                "keramicky",
-                "strep"
+                "řepy",
+                "keramických",
+                "střepu"
             ],
             "extracted_keywords_en": [
+                "Homole",
                 "dug",
-                "cellars",
-                "storage",
+                "storage pits",
                 "potatoes",
-                "beets",
-                "ceramic",
+                "turnips",
+                "pottery",
                 "shards"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "areál zemědělské výroby",
             "confidence_score": 0.95
         }
     },
@@ -460,17 +487,15 @@
             "extracted_keywords_cs": [
                 "keramický",
                 "materiál",
-                "nebyl",
                 "zachován"
             ],
             "extracted_keywords_en": [
                 "ceramic",
                 "material",
-                "not",
                 "preserved"
             ],
-            "teater_category": "rané středohradištní období",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     }
 ]

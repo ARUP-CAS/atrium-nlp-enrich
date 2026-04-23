@@ -17,8 +17,8 @@
                 "collections",
                 "1998"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -32,23 +32,15 @@
             "extracted_keywords_cs": [
                 "Hrad",
                 "sběry",
-                "1998",
-                "Muzeum",
-                "galerie",
-                "Rychnov",
-                "Kn"
+                "1998"
             ],
             "extracted_keywords_en": [
-                "Castle",
-                "collections",
-                "1998",
-                "Museum",
-                "Gallery",
-                "Rychnov",
-                "Kn"
+                "Hrad",
+                "sběry",
+                "1998"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -65,21 +57,24 @@
                 "Rychnov",
                 "nad",
                 "Kn",
-                "PhDr",
+                "Martina",
                 "Beková",
+                "Bohumír",
                 "Dragoun"
             ],
             "extracted_keywords_en": [
-                "Museum",
-                "Gallery",
+                "Muzeum",
+                "galerie",
                 "Rychnov",
+                "n",
                 "Kn",
-                "PhDr",
+                "Martina",
                 "Bekova",
+                "Bohumir",
                 "Dragoun"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -91,19 +86,15 @@
         "original_text": "PhDr. Martina Beková",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Muzeum",
-                "galerie",
-                "Rychnov",
-                "Kn"
+                "PhDr. Martina Beková",
+                "Bohumír Dragoun"
             ],
             "extracted_keywords_en": [
-                "Museum",
-                "gallery",
-                "Rychnov",
-                "Kn"
+                "PhDr. Martina Beková",
+                "Bohumír Dragoun"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -120,8 +111,8 @@
             "extracted_keywords_en": [
                 "Bohumír Dragoun"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -133,21 +124,27 @@
         "original_text": "SKUHROV NAD BĚLOU hrad, sběry 1998",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
-                "Geomorfologický popis"
+                "Geomorfologický",
+                "popis"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "castle",
                 "collections",
                 "1998",
-                "geomorphological description"
+                "Geomorphological",
+                "description"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -159,25 +156,35 @@
         "original_text": "Geomorfologický popis",
         "enrichment": {
             "extracted_keywords_cs": [
-                "geomorfologický popis",
-                "hrad",
+                "Geomorfologický popis",
+                "Hrad",
                 "ostrožně",
+                "nad",
+                "řekou",
+                "Bělou",
                 "úpatí",
                 "svahů",
-                "Bělou",
-                "Podorlická pahorkatina"
+                "skuhrovská",
+                "část",
+                "Podorlická",
+                "pahorkatina"
             ],
             "extracted_keywords_en": [
                 "Geomorfologický popis",
                 "Hrad",
                 "ostrožně",
+                "nad",
+                "řekou",
+                "Bělou",
                 "úpatí",
                 "svahů",
-                "Bělou",
-                "Podorlická pahorkatina"
+                "skuhrovská",
+                "část",
+                "Podorlická",
+                "pahorkatina"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -192,22 +199,48 @@
                 "hrad",
                 "ostrožna",
                 "řeka",
-                "svah",
-                "region",
-                "geografie",
-                "popis"
+                "Bělou",
+                "úpatí",
+                "svahů",
+                "Bělé",
+                "Podorlická",
+                "pahorkatina",
+                "Skuhrov",
+                "SLÁDEK",
+                "J",
+                "1977",
+                "Zeměpisné",
+                "vymezení",
+                "regionální",
+                "členění",
+                "Příroda",
+                "Orlických",
+                "horách"
             ],
             "extracted_keywords_en": [
-                "fortress",
-                "hill",
-                "river",
-                "slope",
-                "region",
-                "geography",
-                "description"
+                "Hrad",
+                "ostrožna",
+                "řeka",
+                "Bělou",
+                "úpatí",
+                "svahů",
+                "Bělé",
+                "Podorlická",
+                "pahorkatina",
+                "Skuhrov",
+                "SLÁDEK",
+                "J",
+                "1977",
+                "Zeměpisné",
+                "vymezení",
+                "regionální",
+                "členění",
+                "Příroda",
+                "Orlických",
+                "horách"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -219,51 +252,43 @@
         "original_text": "skuhrovské části Podorlické pahorkatiny (SLÁDEK, J. 1977: Zeměpisné vymezení a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "skuhrovská",
-                "část",
-                "Podorlická",
-                "pahorkatina",
+                "geomorfologický popis",
+                "hrad",
+                "ostrožně",
+                "řeka Bělá",
+                "úpatí",
+                "svahy",
+                "Podorlická pahorkatina",
+                "Skuhrovská část",
                 "SLÁDEK",
-                "J",
-                "1977",
-                "Zeměpisné",
-                "vymezení",
-                "a",
-                "regionální",
-                "členění",
-                "in",
-                "Příroda",
-                "Orlických",
-                "hor",
-                "a",
-                "Podorlicka",
+                "J. 1977",
+                "zeměpisné vymezení",
+                "regionální členění",
+                "Příroda Orlických hor a Podorlicka",
                 "Praha",
-                "1977"
+                "1977",
+                "13-87"
             ],
             "extracted_keywords_en": [
-                "skuhrovian",
-                "part",
-                "Podorlicka",
-                "hilly",
-                "region",
+                "Geomorfologický popis",
+                "Hrad",
+                "ostrožně",
+                "řeka Bělá",
+                "úpatí",
+                "svahů",
+                "Podorlická pahorkatina",
+                "Skuhrovská část",
                 "SLÁDEK",
-                "J",
+                "J. 1977",
+                "Zeměpisné vymezení",
+                "regionální členění",
+                "Příroda Orlických hor a Podorlicka",
+                "Praha",
                 "1977",
-                "Geographical",
-                "delimitation",
-                "and",
-                "regional",
-                "division",
-                "in",
-                "Nature",
-                "Orlicky",
-                "Mountains",
-                "and",
-                "Podorlicka",
-                "Praha"
+                "13-87"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -275,23 +300,51 @@
         "original_text": "regionální členění in: Příroda Orlických hor a Podorlicka, Praha 1977, 13-87).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Podorlická pahorkatina",
+                "hrad",
+                "ostrožně",
+                "řeka",
+                "Bělou",
+                "úpatí",
+                "svahů",
+                "Bělé",
+                "Podorlická",
+                "pahorkatina",
                 "SLÁDEK",
-                "Praha",
+                "J",
                 "1977",
-                "regionální členění",
-                "Zeměpisné vymezení"
+                "Zeměpisné",
+                "vymezení",
+                "regionální",
+                "členění",
+                "Příroda",
+                "Orlických",
+                "hor",
+                "Podorlicka"
             ],
             "extracted_keywords_en": [
-                "Podorlická pahorkatina",
+                "Hrad",
+                "ostrožně",
+                "řeka",
+                "Bělou",
+                "úpatí",
+                "svahů",
+                "Bělé",
+                "Podorlická",
+                "pahorkatina",
                 "SLÁDEK",
-                "Praha",
+                "J",
                 "1977",
-                "regionální členění",
-                "Zeměpisné vymezení"
+                "Zeměpisné",
+                "vymezení",
+                "regionální",
+                "členění",
+                "Příroda",
+                "Orlických",
+                "hor",
+                "Podorlicka"
             ],
-            "teater_category": "lokalita pod zástavbou",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -304,18 +357,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Podloží",
-                "půdní pokryv",
-                "oglejené půdy",
-                "fylit"
+                "půdní pokryv"
             ],
             "extracted_keywords_en": [
                 "Podloží",
-                "půdní pokryv",
-                "oglejené půdy",
-                "fylit"
+                "půdní pokryv"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -327,25 +376,23 @@
         "original_text": "Oglejené půdy na fylitech ( NÁLEVKA, B. 1977: Půdní poměry, in: Příroda Orlických hor a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "glej",
-                "fylit",
-                "nálevka",
-                "půdní",
-                "půdy",
-                "půdní pokryv",
-                "podloží"
+                "Oglejené půdy",
+                "fylitech",
+                "NÁLEVKA",
+                "Půdní poměry",
+                "Příroda Orlických hor",
+                "Podorlicka"
             ],
             "extracted_keywords_en": [
-                "glej",
-                "fylit",
-                "nálezka",
-                "půdní",
-                "půdy",
-                "půdní pokryv",
-                "podloží"
+                "Oglejené půdy",
+                "fylitech",
+                "NÁLEVKA",
+                "Půdní poměry",
+                "Příroda Orlických hor",
+                "Podorlicka"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -357,27 +404,31 @@
         "original_text": "Podorlicka, Praha 1977, 287-308.).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "podloží",
-                "půdní pokryv",
-                "oglejené půdy",
-                "fylit",
+                "Podorlicka",
+                "půdní",
+                "poměry",
+                "Příroda",
+                "Orlických",
+                "hor",
                 "NÁLEVKA",
-                "půdní poměry",
-                "Příroda Orlických hor",
-                "Podorlicka"
+                "B",
+                "1977",
+                "Praha"
             ],
             "extracted_keywords_en": [
-                "Podloží",
-                "půdní pokryv",
-                "oglejené půdy",
-                "fylit",
+                "Podorlicka",
+                "Půdní",
+                "poměry",
+                "Příroda",
+                "Orlických",
+                "hor",
                 "NÁLEVKA",
-                "Půdní poměry",
-                "Příroda Orlických hor",
-                "Podorlicka"
+                "B",
+                "1977",
+                "Praha"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -394,22 +445,28 @@
                 "hrad",
                 "pevnost",
                 "základy",
+                "Tas",
+                "Skuhrov",
                 "1320",
-                "Jiří z Poděbrad",
+                "Jiří",
+                "Poděbrady",
                 "1558"
             ],
             "extracted_keywords_en": [
                 "history",
                 "site",
                 "castle",
-                "fortress",
+                "fortification",
                 "foundations",
+                "Tas",
+                "Skuhrov",
                 "1320",
-                "Jiří z Poděbrad",
+                "Jiří",
+                "Poděbrady",
                 "1558"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -422,18 +479,42 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrad",
-                "zámek",
-                "pevnost",
-                "středověk"
+                "ostrožna",
+                "předhradí",
+                "vlastní",
+                "hradní",
+                "areál",
+                "plášťový",
+                "Tas",
+                "Skuhrov",
+                "Jiří",
+                "Poděbrady",
+                "pustý",
+                "Musil",
+                "Svoboda",
+                "Rychnov",
+                "Kněžnou"
             ],
             "extracted_keywords_en": [
-                "fortress",
                 "castle",
-                "fortified",
-                "medieval"
+                "headland",
+                "courtyard",
+                "own",
+                "castle",
+                "area",
+                "plaster",
+                "Tas",
+                "Skuhrov",
+                "Jiří",
+                "Poděbrady",
+                "abandoned",
+                "Musil",
+                "Svoboda",
+                "Rychnov",
+                "Kněžnou"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -447,35 +528,39 @@
             "extracted_keywords_cs": [
                 "Tasem",
                 "Skuhrova",
+                "1320",
                 "Jiří",
                 "Poděbrad",
                 "pustne",
-                "pustý",
+                "1558",
                 "Musil",
                 "Svoboda",
                 "Hrady",
                 "zámky",
                 "tvrze",
                 "Rychnov",
+                "nad",
                 "Kněžnou"
             ],
             "extracted_keywords_en": [
                 "Tasem",
                 "Skuhrova",
+                "1320",
                 "Jiří",
                 "Poděbrad",
                 "pustne",
-                "pustý",
+                "1558",
                 "Musil",
                 "Svoboda",
                 "Hrady",
-                "castles",
-                "fortresses",
+                "zámky",
+                "tvrze",
                 "Rychnov",
+                "nad",
                 "Kněžnou"
             ],
-            "teater_category": "historická budova/komplex",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -488,38 +573,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrad",
-                "ostrožně",
-                "předhradí",
-                "vlastní",
-                "hradní",
-                "areál",
-                "plášťový",
-                "Tasem",
-                "Skuhrova",
-                "Jiří",
-                "Poděbrad",
-                "pustný",
-                "Musil",
-                "Svoboda"
+                "zámek",
+                "pustý"
             ],
             "extracted_keywords_en": [
-                "castle",
-                "headland",
-                "courtyard",
-                "own",
                 "fortress",
-                "area",
-                "shell",
-                "Tasem",
-                "Skuhrova",
-                "Jiří",
-                "Poděbrad",
-                "deserted",
-                "Musil",
-                "Svoboda"
+                "castle",
+                "abandoned"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -532,19 +595,28 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "okolnosti",
+                "cíl",
                 "výzkum",
                 "sběr",
-                "J. Slavík",
-                "Památkový ústav Pardubice"
+                "J",
+                "Slavík",
+                "Památkový",
+                "ústav",
+                "Pardubice"
             ],
             "extracted_keywords_en": [
                 "circumstances",
                 "research",
+                "goal",
                 "collection",
-                "J. Slavík",
-                "Památkový ústav Pardubice"
+                "J",
+                "Slavík",
+                "National",
+                "Monument",
+                "Authority",
+                "Pardubice"
             ],
-            "teater_category": "průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -558,26 +630,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sběr",
-                "archeologický",
-                "kruh",
-                "villa",
-                "nova",
-                "ředitel",
-                "d",
-                "vicha"
+                "J. Slavík",
+                "Památkový ústav Pardubice",
+                "D. Vícha",
+                "Villa Nova"
             ],
             "extracted_keywords_en": [
                 "collection",
-                "archaeological",
-                "circle",
-                "villa",
-                "nova",
-                "director",
-                "d",
-                "vicha"
+                "J. Slavík",
+                "Památkový ústav Pardubice",
+                "D. Vícha",
+                "Villa Nova"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -600,7 +666,7 @@
                 "Villa Nova",
                 "D. Vícha"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -614,7 +680,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "archeologický",
-                "kruh",
+                "kroužek",
                 "Villa",
                 "Nova",
                 "pod",
@@ -632,8 +698,8 @@
                 "D",
                 "Vicha"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -649,17 +715,17 @@
                 "Památkový ústav Pardubice",
                 "Villa Nova",
                 "D. Vícha",
-                "P2 L21"
+                "Povrchový sběr"
             ],
             "extracted_keywords_en": [
                 "Slavík",
                 "Památkový ústav Pardubice",
                 "Villa Nova",
                 "D. Vícha",
-                "P2 L21"
+                "Povrchový sběr"
             ],
-            "teater_category": "průzkum detektorem kovu",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -671,21 +737,23 @@
         "original_text": "Metoda výzkumu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický kroužek",
-                "Villa Nova",
-                "D. Vícha",
-                "Slavík",
-                "Památkový ústav Pardubice"
+                "metoda",
+                "výzkum",
+                "studie",
+                "šetření",
+                "sběr",
+                "terénní práce"
             ],
             "extracted_keywords_en": [
-                "archaeological circle",
-                "Villa Nova",
-                "D. Vícha",
-                "Slavík",
-                "Památkový ústav Pardubice"
+                "method",
+                "research",
+                "study",
+                "survey",
+                "collection",
+                "fieldwork"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -698,13 +766,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "povrchový sběr",
-                "průzkum"
+                "zaměření"
             ],
             "extracted_keywords_en": [
                 "surface collection",
                 "survey"
             ],
-            "teater_category": "průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -718,16 +786,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "povrchový sběr",
-                "průzkum",
-                "plánování"
+                "zaměření"
             ],
             "extracted_keywords_en": [
                 "surface collection",
                 "survey",
                 "planning"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.9
+            "teater_category": "povrchový sběr",
+            "confidence_score": 1.0
         }
     },
     {
@@ -742,10 +809,11 @@
                 "zaměření",
                 "provedla",
                 "autorka",
-                "zprávy",
+                "zpráva",
+                "popis",
+                "sběračů",
                 "plány",
                 "hradu",
-                "popis",
                 "terénní",
                 "situace"
             ],
@@ -754,14 +822,15 @@
                 "performed",
                 "author",
                 "report",
+                "description",
+                "collectors",
                 "plans",
                 "castle",
-                "description",
-                "field",
+                "site",
                 "situation"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -773,13 +842,17 @@
         "original_text": "Popis terénní situace",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Popis terénní situace"
+                "terénní situace",
+                "popis",
+                "situace"
             ],
             "extracted_keywords_en": [
-                "Site description"
+                "terénní situace",
+                "popis",
+                "situace"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -791,25 +864,21 @@
         "original_text": "1. Sběr J. Slavík nad vnitřním příkopem jak ze strany předhradí tak vlastního hradu (viz",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sběr",
-                "J. Slavík",
-                "vnitřní příkop",
-                "předhradí",
-                "hrad",
-                "plánek polohy",
-                "fragmenty keramiky"
+                "sběr",
+                "archeologický",
+                "nález",
+                "keramika",
+                "fragmenty"
             ],
             "extracted_keywords_en": [
-                "Collection",
-                "J. Slavík",
-                "inner moat",
-                "bailey",
-                "castle",
-                "site plan",
-                "ceramic fragments"
+                "collection",
+                "archaeological",
+                "site",
+                "ceramics",
+                "fragments"
             ],
-            "teater_category": "průzkum detektorem kovu",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -821,25 +890,50 @@
         "original_text": "plánek polohy 1). Nalezeny 4 fragmenty keramiky. 5. 3. 1998",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sběr",
-                "J. Slavík",
-                "keramiky",
-                "Villa Nova",
-                "hrad",
+                "plánek",
+                "poloha",
+                "1",
+                "Villa",
+                "Nova",
+                "11",
+                "8",
+                "1998",
+                "úbočí",
+                "hradního",
                 "kopce",
-                "vesnici"
+                "směrem",
+                "k",
+                "vesnici",
+                "nalezeno",
+                "14",
+                "drobnějších",
+                "fragmentů",
+                "okraje",
+                "zl"
             ],
             "extracted_keywords_en": [
-                "Collection",
-                "J. Slavík",
-                "ceramics",
-                "Villa Nova",
+                "plan",
+                "location",
+                "1",
+                "Villa",
+                "Nova",
+                "11",
+                "8",
+                "1998",
+                "slope",
                 "castle",
                 "hill",
-                "village"
+                "towards",
+                "village",
+                "found",
+                "14",
+                "smaller",
+                "fragments",
+                "edges",
+                "zl"
             ],
-            "teater_category": "průzkum detektorem kovu",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.9
         }
     },
     {
@@ -851,23 +945,50 @@
         "original_text": "2. Sběr archeologický kroužek Villa Nova 11. 8. 1998, úbočí hradního kopce směrem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický",
-                "kruh",
+                "Sběr",
                 "Villa",
                 "Nova",
-                "hradní",
-                "vesnice"
+                "úbočí",
+                "hradního",
+                "kopce",
+                "směrem",
+                "vesnici",
+                "plánek",
+                "poloha",
+                "fragmenty",
+                "keramiky",
+                "drobnějších",
+                "fragmentů",
+                "okraje",
+                "zl",
+                "zásobnice",
+                "14",
+                "15",
+                "stol"
             ],
             "extracted_keywords_en": [
-                "archaeological",
-                "circle",
+                "Collection",
                 "Villa",
                 "Nova",
-                "hill",
-                "village"
+                "slope",
+                "hillfort",
+                "towards",
+                "village",
+                "map",
+                "location",
+                "fragments",
+                "ceramics",
+                "smaller",
+                "fragments",
+                "edges",
+                "zl",
+                "container",
+                "14",
+                "15",
+                "century"
             ],
-            "teater_category": "průzkum detektorem kovu",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -879,32 +1000,23 @@
         "original_text": "k vesnici (viz. plánek poloha 2). Nalezeno 14 drobnějších fragmentů, okraje a zl.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sběr",
-                "arkeologický",
-                "kroužek",
-                "Villa",
-                "Nova",
-                "úbočí",
-                "hradního",
-                "kopce",
-                "směrem",
-                "k",
-                "vesnici"
+                "fragmény",
+                "keramika",
+                "archeologický",
+                "nález",
+                "sbírka",
+                "vykopávky"
             ],
             "extracted_keywords_en": [
-                "Collection",
+                "fragments",
+                "ceramics",
                 "archaeological",
-                "circle",
-                "Villa",
-                "Nova",
-                "slope",
-                "hillfort",
-                "towards",
-                "to",
-                "village"
+                "site",
+                "collection",
+                "excavation"
             ],
-            "teater_category": "geofyzikální průzkum",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -919,16 +1031,18 @@
                 "zásobnice",
                 "14",
                 "15",
-                "stol"
+                "stol",
+                "středověk"
             ],
             "extracted_keywords_en": [
                 "container",
-                "14th",
-                "15th",
-                "century"
+                "14",
+                "15",
+                "century",
+                "middle ages"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "kultovní areál",
+            "confidence_score": 0.5
         }
     },
     {
@@ -940,17 +1054,33 @@
         "original_text": "3. Sběr J. Slavík, jádro hradu (viz plánek polohy 3). Nalezeny 3 fragmenty keramiky. 5.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sběr J. Slavík",
-                "jádro hradu",
-                "fragmenty keramiky"
+                "3",
+                "Sběr",
+                "J",
+                "Slavík",
+                "jádro",
+                "hrad",
+                "viz",
+                "plánek",
+                "polohy",
+                "fragmenty",
+                "keramiky"
             ],
             "extracted_keywords_en": [
-                "Collection J. Slavík",
-                "core of the castle",
-                "fragments of ceramics"
+                "3",
+                "Sběr",
+                "J",
+                "Slavík",
+                "jádro",
+                "hrad",
+                "viz",
+                "plánek",
+                "polohy",
+                "fragmenty",
+                "keramiky"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -965,32 +1095,28 @@
                 "zhodnocení",
                 "interpretace",
                 "výzkum",
-                "nalezeny",
                 "zlomky",
                 "keramiky",
-                "kulturní",
-                "vrstvy",
+                "kulturní vrstvy",
                 "existence",
                 "hrad",
-                "převaha",
-                "15. stol."
+                "14. stol",
+                "15. stol"
             ],
             "extracted_keywords_en": [
                 "evaluation",
                 "interpretation",
                 "research",
-                "found",
                 "fragments",
                 "ceramics",
-                "cultural",
-                "layers",
+                "cultural layers",
                 "existence",
                 "castle",
-                "prevalence",
+                "14th century",
                 "15th century"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1002,13 +1128,11 @@
         "original_text": "Nalezeny zlomky keramiky z kulturních vrstev existence hradu, 14. -15. stol., naprostá",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Nalezeny",
                 "zlomky",
                 "keramiky",
-                "kulturních",
-                "vrstev",
+                "kulturní vrstvy",
                 "existence",
-                "hradu",
+                "hrad",
                 "14",
                 "15",
                 "stol",
@@ -1018,21 +1142,20 @@
                 "stol"
             ],
             "extracted_keywords_en": [
-                "Found",
                 "fragments",
                 "ceramics",
-                "cultural",
-                "layers",
+                "cultural layers",
                 "existence",
                 "castle",
                 "14",
                 "15",
                 "century",
-                "prevail",
+                "prevalence",
+                "fragments",
                 "15",
                 "century"
             ],
-            "teater_category": "kultovní areál",
+            "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.8
         }
     },
@@ -1046,15 +1169,24 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "převaha",
-                "zl",
-                "15. stol."
+                "zlomek",
+                "keramiky",
+                "kultury",
+                "existence",
+                "hrad",
+                "15. stol"
             ],
             "extracted_keywords_en": [
                 "prevalence",
+                "fragment",
+                "ceramics",
+                "culture",
+                "existence",
+                "castle",
                 "15th century"
             ],
-            "teater_category": "kultovní areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1066,17 +1198,17 @@
         "original_text": "Seznam nálezů",
         "enrichment": {
             "extracted_keywords_cs": [
-                "15. století",
-                "nálezů",
-                "seznam"
+                "seznam",
+                "nálezy",
+                "příloha"
             ],
             "extracted_keywords_en": [
-                "15th century",
+                "list",
                 "finds",
-                "list"
+                "appendix"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1088,15 +1220,17 @@
         "original_text": "Viz příloha",
         "enrichment": {
             "extracted_keywords_cs": [
-                "seznam nálezů",
-                "příloha"
+                "hrad",
+                "sběry",
+                "1998"
             ],
             "extracted_keywords_en": [
-                "List of finds",
-                "Appendix"
+                "Hrad",
+                "sběry",
+                "1998"
             ],
-            "teater_category": "Fidži",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1113,12 +1247,12 @@
                 "Počet"
             ],
             "extracted_keywords_en": [
-                "Reference number",
+                "Reg. no",
                 "Name",
                 "Number"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1135,8 +1269,8 @@
             "extracted_keywords_en": [
                 "Name"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1148,12 +1282,14 @@
         "original_text": "Počet",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Počet"
+                "Počet",
+                "Výzkum"
             ],
             "extracted_keywords_en": [
-                "Number"
+                "Number",
+                "Research"
             ],
-            "teater_category": "Fidži",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1169,9 +1305,9 @@
                 "výzkum"
             ],
             "extracted_keywords_en": [
-                "research"
+                "Research"
             ],
-            "teater_category": "průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1184,14 +1320,14 @@
         "original_text": "Poloha",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
-                "poloha"
+                "Poloha",
+                "Inv. č."
             ],
             "extracted_keywords_en": [
-                "Research",
-                "Location"
+                "Poloha",
+                "Inv. č."
             ],
-            "teater_category": "Polsko",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1207,9 +1343,9 @@
                 "Inv. č."
             ],
             "extracted_keywords_en": [
-                "Inv. č."
+                "Inventory number"
             ],
-            "teater_category": "poloha podle katastru",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1227,8 +1363,8 @@
             "extracted_keywords_en": [
                 "Note"
             ],
-            "teater_category": "Dominika",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1243,10 +1379,10 @@
                 "keramika"
             ],
             "extracted_keywords_en": [
-                "ceramic"
+                "ceramics"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1258,12 +1394,14 @@
         "original_text": "Skuhrov",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Skuhrov",
                 "hrad"
             ],
             "extracted_keywords_en": [
+                "Skuhrov",
                 "castle"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1276,12 +1414,14 @@
         "original_text": "hrad",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrad"
+                "hrad",
+                "Slavík"
             ],
             "extracted_keywords_en": [
-                "castle"
+                "fortress",
+                "Slavík"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1294,15 +1434,19 @@
         "original_text": "sběr Slavík J.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Slavík J",
-                "Skuhrov 1998"
+                "Slavík",
+                "J",
+                "Skuhrov",
+                "1998"
             ],
             "extracted_keywords_en": [
-                "Slavík J",
-                "Skuhrov 1998"
+                "Slavík",
+                "J",
+                "Skuhrov",
+                "1998"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1329,8 +1473,8 @@
                 "poloha",
                 "1"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1344,15 +1488,17 @@
             "extracted_keywords_cs": [
                 "Skuhrov",
                 "1998",
-                "poloha"
+                "poloha",
+                "1"
             ],
             "extracted_keywords_en": [
                 "Skuhrov",
                 "1998",
-                "poloha"
+                "poloha",
+                "1"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1367,10 +1513,10 @@
                 "poloha"
             ],
             "extracted_keywords_en": [
-                "poloha"
+                "location"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1382,7 +1528,6 @@
         "original_text": "3 atypické zlomky z výdutí",
         "enrichment": {
             "extracted_keywords_cs": [
-                "atypické",
                 "zlomky",
                 "výdutí",
                 "nepolévaných",
@@ -1390,21 +1535,22 @@
                 "prakticky",
                 "bílé",
                 "zboží",
-                "pol. 15. stol."
+                "pol. 15. stol",
+                "zlomek"
             ],
             "extracted_keywords_en": [
-                "atypické",
-                "zlomky",
-                "výdutí",
-                "nepolévaných",
-                "nádob",
-                "prakticky",
-                "bílé",
-                "zboží",
-                "pol. 15. stol."
+                "fragments",
+                "indentations",
+                "unpainted",
+                "vessels",
+                "practically",
+                "white",
+                "goods",
+                "2nd half 15th century",
+                "fragment"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.9
         }
     },
     {
@@ -1416,23 +1562,33 @@
         "original_text": "nepolévaných nádob, prakticky bílé",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nepolévaných",
+                "nepolévané",
                 "nádob",
                 "prakticky",
                 "bílé",
                 "zboží",
-                "pol. 15. stol."
+                "pol. 15. stol",
+                "zlomek",
+                "okraje",
+                "velmi",
+                "nizké",
+                "vysazené"
             ],
             "extracted_keywords_en": [
-                "uncoated",
+                "unpainted",
                 "vessels",
                 "practically",
                 "white",
                 "goods",
-                "2nd half 15th century"
+                "2nd half 15th century",
+                "fragment",
+                "edges",
+                "very",
+                "low",
+                "set"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1445,26 +1601,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zboží",
-                "pol",
-                "stol",
-                "zlomek",
-                "okraje",
-                "okruží",
-                "červená",
-                "linka"
+                "15. stol",
+                "červená linka",
+                "okruží"
             ],
             "extracted_keywords_en": [
                 "goods",
-                "half",
-                "15th",
-                "century",
-                "piece",
-                "edges",
-                "ring",
-                "red",
-                "line"
+                "15th century",
+                "red line",
+                "ring"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -1478,15 +1625,27 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "okraje",
+                "velmi",
                 "nízké",
-                "vysazené"
+                "vysazené",
+                "okruží",
+                "červená",
+                "linka",
+                "podhrdlo",
+                "váha"
             ],
             "extracted_keywords_en": [
                 "edges",
+                "very",
                 "low",
-                "planted"
+                "set",
+                "red",
+                "line",
+                "ring",
+                "underarm",
+                "weight"
             ],
-            "teater_category": "kultovní areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -1502,6 +1661,8 @@
                 "okruží",
                 "červená",
                 "linka",
+                "okruží",
+                "podhrdlo",
                 "váha"
             ],
             "extracted_keywords_en": [
@@ -1509,10 +1670,11 @@
                 "red",
                 "line",
                 "ring",
+                "waist",
                 "weight"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.9
         }
     },
     {
@@ -1526,15 +1688,16 @@
             "extracted_keywords_cs": [
                 "váha",
                 "90,9g",
-                "podhrdlo"
+                "podhrdlo",
+                "pás"
             ],
             "extracted_keywords_en": [
                 "weight",
                 "90.9g",
-                "underarm",
-                "pit"
+                "waist",
+                "belt"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -1552,8 +1715,8 @@
             "extracted_keywords_en": [
                 "ceramic"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1565,12 +1728,14 @@
         "original_text": "Skuhrov",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Skuhrov",
                 "hrad"
             ],
             "extracted_keywords_en": [
+                "Skuhrov",
                 "castle"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1583,17 +1748,13 @@
         "original_text": "hrad",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrad",
-                "sběr",
-                "arch"
+                "hrad"
             ],
             "extracted_keywords_en": [
-                "castle",
-                "collection",
-                "arch"
+                "castle"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1607,14 +1768,16 @@
             "extracted_keywords_cs": [
                 "sběr",
                 "arch",
-                "kroužek"
+                "kroužek",
+                "Skuhrov"
             ],
             "extracted_keywords_en": [
                 "collection",
                 "arch",
-                "ring"
+                "ring",
+                "Skuhrov"
             ],
-            "teater_category": "areál jiné aktivity",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -1627,15 +1790,21 @@
         "original_text": "kroužek(viz.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sběr arch",
-                "kroužek"
+                "kroužek",
+                "Skuhrov",
+                "1998",
+                "poloha",
+                "2"
             ],
             "extracted_keywords_en": [
-                "archeological collection",
-                "ring"
+                "ring",
+                "Skuhrov",
+                "1998",
+                "location",
+                "2"
             ],
-            "teater_category": "kultovní areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1647,21 +1816,17 @@
         "original_text": "NZ Skuhrov",
         "enrichment": {
             "extracted_keywords_cs": [
-                "NZ",
                 "Skuhrov",
                 "1998",
-                "poloha",
-                "2"
+                "poloha 2"
             ],
             "extracted_keywords_en": [
-                "NZ",
                 "Skuhrov",
                 "1998",
-                "poloha",
-                "2"
+                "poloha 2"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1682,8 +1847,8 @@
                 "poloha",
                 "2"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1698,21 +1863,29 @@
                 "atypických",
                 "zlomků",
                 "keramiky",
-                "zlomek",
+                "14",
+                "15",
+                "st",
+                "zl",
                 "masivnější",
-                "zasobnice",
+                "zásobnice",
+                "zl",
                 "okrajů"
             ],
             "extracted_keywords_en": [
                 "atypical",
-                "shards",
+                "fragments",
                 "ceramics",
-                "shard",
+                "14",
+                "15",
+                "century",
+                "piece",
                 "thicker",
                 "container",
+                "piece",
                 "edges"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.8
         }
     },
@@ -1725,39 +1898,22 @@
         "original_text": "14./15. st. + 1 zl. masivnější",
         "enrichment": {
             "extracted_keywords_cs": [
-                "14",
-                "atypických",
-                "zlomků",
-                "keramiky",
-                "15",
-                "st",
-                "zl",
-                "masivnější",
+                "14 atypických zlomků keramiky",
+                "14./15. století",
+                "zlomkový materiál masivnější",
                 "zásobnice",
-                "zl",
-                "okrajů",
-                "okruží",
-                "mísa",
-                "se",
-                "zahnutý"
+                "zlomkový materiál okrajů",
+                "okruží+mísa se zahnutým"
             ],
             "extracted_keywords_en": [
-                "14",
-                "atypical",
-                "shards",
-                "ceramics",
-                "15",
-                "st",
-                "piece",
-                "zásobnice",
-                "shards",
-                "edge",
-                "ring",
-                "bowl",
-                "with",
-                "twisted"
+                "14 atypických zlomků keramiky",
+                "14./15. st",
+                "zl. masivnější",
+                "zasobnice",
+                "zl. okrajů",
+                "okruží+mísa se zahnutým"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.8
         }
     },
@@ -1771,29 +1927,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zásobnice",
-                "zl",
-                "okrajů",
+                "zl. okrajů",
                 "okruží",
-                "mísa",
-                "zahnutý",
-                "okrajem",
-                "zl",
-                "ucha",
-                "výdutě"
+                "míska",
+                "zl. ucha",
+                "výdutí"
             ],
             "extracted_keywords_en": [
-                "container",
-                "fragment",
-                "edges",
-                "ring",
-                "bowl",
-                "curved",
-                "edge",
-                "fragment",
-                "ear",
-                "indentation"
+                "zásobnice",
+                "zl. okrajů",
+                "okruží",
+                "mísa",
+                "zl. ucha",
+                "výdutě"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kultovní areál",
             "confidence_score": 0.8
         }
     },
@@ -1806,26 +1954,28 @@
         "original_text": "(okruží+mísa se zahnutým",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nádob",
-                "okrajů",
-                "mísou",
-                "zahnutým",
+                "okruží",
+                "mísa",
+                "zahnutý",
+                "okrajem",
                 "ucho",
                 "výdutě",
-                "nádob se stopami",
+                "nádob",
+                "stopami",
                 "vytáčení"
             ],
             "extracted_keywords_en": [
-                "container",
-                "rim",
-                "cup",
+                "ring",
+                "bowl",
+                "curved",
+                "edge",
                 "ear",
-                "handle",
                 "indentation",
-                "marks",
+                "vessel",
+                "traces",
                 "drawing"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kultovní areál",
             "confidence_score": 0.8
         }
     },
@@ -1840,26 +1990,28 @@
             "extracted_keywords_cs": [
                 "zásobnice",
                 "okraj",
-                "okruh",
                 "miska",
+                "zahnutý",
                 "ucho",
-                "výdutí",
+                "výdutě",
                 "nádob",
+                "stopa",
+                "vytáčení",
                 "mazanice",
                 "váha"
             ],
             "extracted_keywords_en": [
                 "container",
+                "rim",
+                "bowl",
                 "edge",
-                "ring",
-                "cup",
                 "ear",
-                "indentation",
-                "vessel",
-                "daub",
+                "handle",
+                "lip",
+                "spout",
                 "weight"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kultovní místo",
             "confidence_score": 0.8
         }
     },
@@ -1879,12 +2031,14 @@
                 "váha"
             ],
             "extracted_keywords_en": [
-                "pottery",
-                "depression",
-                "weight"
+                "nádob",
+                "stopami",
+                "vytáčení",
+                "mazanice",
+                "váha"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -1901,12 +2055,12 @@
                 "182,1g"
             ],
             "extracted_keywords_en": [
-                "daub",
-                "weight",
-                "182.1g"
+                "mazanice",
+                "váha",
+                "182,1g"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1923,8 +2077,8 @@
             "extracted_keywords_en": [
                 "ceramic"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1936,12 +2090,14 @@
         "original_text": "Skuhrov",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Skuhrov",
                 "hrad"
             ],
             "extracted_keywords_en": [
+                "Skuhrov",
                 "castle"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1959,7 +2115,7 @@
             "extracted_keywords_en": [
                 "castle"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -1972,19 +2128,19 @@
         "original_text": "sběr Slavík J.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrad",
                 "Slavík",
+                "J",
                 "Skuhrov",
                 "1998"
             ],
             "extracted_keywords_en": [
-                "castle",
-                "Slavik",
+                "Slavík",
+                "J",
                 "Skuhrov",
                 "1998"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2011,8 +2167,8 @@
                 "poloha",
                 "3"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2035,8 +2191,8 @@
                 "poloha",
                 "3"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2051,9 +2207,9 @@
                 "poloha"
             ],
             "extracted_keywords_en": [
-                "poloha"
+                "location"
             ],
-            "teater_category": "poloha podle katastru",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -2097,8 +2253,8 @@
                 "6",
                 "g"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.9
         }
     },
     {
@@ -2110,19 +2266,23 @@
         "original_text": "zlomek dna - bílé zboží, 2. pol. 15.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zlomek dna",
+                "zlomek",
+                "dna",
                 "bílé zboží",
                 "2. pol. 15. století",
-                "váha 14,6g"
+                "váha",
+                "14,6g"
             ],
             "extracted_keywords_en": [
-                "fragment of bottom",
+                "fragment",
+                "bottom",
                 "white goods",
-                "2nd half of 15th century",
-                "weight 14.6g"
+                "2nd half 15th century",
+                "weight",
+                "14.6g"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2136,15 +2296,15 @@
             "extracted_keywords_cs": [
                 "století",
                 "váha",
-                "dokument"
+                "dokumentace"
             ],
             "extracted_keywords_en": [
                 "century",
                 "weight",
-                "document"
+                "documentation"
             ],
-            "teater_category": "pohřební objekt",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2161,11 +2321,11 @@
                 "dokumentace"
             ],
             "extracted_keywords_en": [
-                "terénní",
+                "Terénní",
                 "obrazová",
                 "dokumentace"
             ],
-            "teater_category": "průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -2178,51 +2338,29 @@
         "original_text": "Obr. 1. SKUHROV NAD BĚLOU hrad, sběry 1998. Umístění lokality a plánek hradu se zákresem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "terénní",
-                "obrazová",
-                "dokumentace",
-                "obrázek",
-                "Skuhrov",
-                "nad",
-                "Bělou",
                 "hrad",
                 "sběry",
                 "1998",
                 "umístění",
-                "lokalita",
                 "plán",
                 "zákresem",
-                "sběrů",
                 "nálezy",
                 "poloha",
-                "číslo",
-                "A678",
-                "2015"
+                "číslo"
             ],
             "extracted_keywords_en": [
-                "Terénní",
-                "obrazová",
-                "dokumentace",
-                "Obr",
-                "SKUHROV",
-                "NAD",
-                "BĚLOU",
-                "hrad",
+                "Hrad",
                 "sběry",
                 "1998",
                 "Umístění",
-                "lokalita",
                 "plán",
                 "zákresem",
-                "sběrů",
-                "Nálezy",
+                "nálezy",
                 "poloha",
-                "číslo",
-                "A678",
-                "2015"
+                "číslo"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2235,28 +2373,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "terénní",
-                "obrazová",
                 "dokumentace",
-                "sběrů",
-                "nálezy",
-                "poloha",
-                "hrad",
-                "sběry",
-                "1998"
+                "lokality",
+                "plán",
+                "průzkum"
             ],
             "extracted_keywords_en": [
-                "Terénní",
-                "obrazová",
-                "dokumentace",
-                "sběrů",
-                "nálezy",
-                "poloha",
-                "hrad",
-                "sběry",
-                "1998"
+                "excavation",
+                "documentation",
+                "site",
+                "plan",
+                "survey"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2268,29 +2398,31 @@
         "original_text": "Obr. 2. SKUHROV NAD BĚLOU hrad, sběry 1998. Nálezy -poloha 1 (př. č. A678/2015).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "SKUHROV NAD BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
-                "nálezy",
+                "Obr",
+                "Nálezy",
                 "poloha",
                 "A678/2015",
                 "A679/201",
                 "A680/2015"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
+                "SKUHROV NAD BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
-                "nálezy",
+                "Obr",
+                "Nálezy",
                 "poloha",
                 "A678/2015",
                 "A679/201",
                 "A680/2015"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2302,29 +2434,35 @@
         "original_text": "Obr. 3. SKUHROV NAD BĚLOU hrad, sběry 1998. Nálezy -poloha 2 (př. č. A679/201).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "SKUHROV NAD BĚLOU",
+                "Obr",
+                "3",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
                 "Nálezy",
-                "poloha",
-                "A678/2015",
-                "A679/201",
-                "A680/2015"
+                "-poloha",
+                "2",
+                "př. č. A679/201"
             ],
             "extracted_keywords_en": [
-                "SKUHROV NAD BĚLOU",
-                "hrad",
-                "sběry",
+                "Fig",
+                "3",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
+                "castle",
+                "collections",
                 "1998",
-                "Nálezy",
-                "poloha",
-                "A678/2015",
-                "A679/201",
-                "A680/2015"
+                "Finds",
+                "-location",
+                "2",
+                "ref. no. A679/201"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2338,19 +2476,27 @@
             "extracted_keywords_cs": [
                 "SKUHROV NAD BĚLOU",
                 "hrad",
-                "sběry 1998",
+                "sběry",
+                "1998",
                 "Nálezy",
-                "poloha 3"
+                "poloha",
+                "A678/2015",
+                "A679/201",
+                "A680/2015"
             ],
             "extracted_keywords_en": [
                 "SKUHROV NAD BĚLOU",
                 "hrad",
-                "sběry 1998",
+                "sběry",
+                "1998",
                 "Nálezy",
-                "poloha 3"
+                "poloha",
+                "A678/2015",
+                "A679/201",
+                "A680/2015"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2373,8 +2519,8 @@
                 "PhDr. Martina Beková",
                 "Bohumír Dragoun"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2393,8 +2539,8 @@
                 "PhDr. Martina Beková",
                 "Bohumír Dragoun"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2411,8 +2557,8 @@
             "extracted_keywords_en": [
                 "Bohumír Dragoun"
             ],
-            "teater_category": "osídlený skalní prostor",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2424,25 +2570,27 @@
         "original_text": "Obr. 1. SKUHROV NAD BĚLOU hrad, sběry 1998. Umístění lokality a plánek hradu se",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "SKUHROV NAD BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
-                "umístění",
+                "Umístění lokality",
                 "plán",
-                "zákresem"
+                "zákresem",
+                "sběrů"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
+                "SKUHROV NAD BĚLOU",
                 "hrad",
                 "sběry",
                 "1998",
-                "umístění",
+                "Umístění lokality",
                 "plán",
-                "zákresem"
+                "zákresem",
+                "sběrů"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2454,25 +2602,27 @@
         "original_text": "zákresem sběrů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
                 "hrad",
                 "sběry",
                 "1998",
                 "umístění",
+                "lokalita",
                 "plán",
-                "zářez"
+                "zákresem",
+                "sběrů"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
-                "hrad",
+                "Hrad",
                 "sběry",
                 "1998",
-                "umístění",
+                "Umístění",
+                "lokalita",
                 "plán",
-                "zářez"
+                "zákresem",
+                "sběrů"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2484,23 +2634,38 @@
         "original_text": "Obr. 2. SKUHROV NAD BĚLOU hrad, sběry 1998. Nálezy - poloha 1 (př. č. A678/2015).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "Obr",
+                "2",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 1",
+                "sběry",
+                "1998",
+                "Nálezy",
+                "poloha",
+                "1",
+                "př",
+                "č",
                 "A678/2015"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
-                "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 1",
+                "Fig",
+                "2",
+                "SKUHROV",
+                "OVER",
+                "WHITE",
+                "castle",
+                "collections",
+                "1998",
+                "Finds",
+                "location",
+                "1",
+                "e.g",
                 "A678/2015"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2512,23 +2677,35 @@
         "original_text": "Obr. 3. SKUHROV NAD BĚLOU hrad, sběry 1998. Nálezy - poloha 2 (př. č. A679/2015).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "Obr",
+                "3",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 2",
-                "A679/2015"
+                "sběry",
+                "1998",
+                "Nálezy",
+                "poloha",
+                "2",
+                "př. č. A679/2015"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
-                "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 2",
-                "A679/2015"
+                "Fig",
+                "3",
+                "SKUHROV",
+                "OVER",
+                "WHITE",
+                "castle",
+                "collections",
+                "1998",
+                "Finds",
+                "location",
+                "2",
+                "ref. no. A679/2015"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2540,21 +2717,25 @@
         "original_text": "Skulrov nD-lou,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Skulrov",
+                "nD-lou",
                 "hrad",
-                "sbrč",
+                "sbrč.2",
                 "Sloufk",
                 "J",
                 "4998"
             ],
             "extracted_keywords_en": [
-                "fortress",
-                "sbrč",
+                "Skulrov",
+                "nD-lou",
+                "castle",
+                "sbrč.2",
                 "Sloufk",
                 "J",
                 "4998"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2566,6 +2747,7 @@
         "original_text": "hrad sbrč.2",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Skulrov",
                 "hrad",
                 "sbrč",
                 "Sloufk",
@@ -2573,14 +2755,15 @@
                 "4998"
             ],
             "extracted_keywords_en": [
-                "castle",
+                "Skulrov",
+                "hrad",
                 "sbrč",
                 "Sloufk",
                 "J",
                 "4998"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2592,19 +2775,17 @@
         "original_text": "<or Sloufk J. 4998",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrad",
                 "Sloufk",
                 "J",
                 "4998"
             ],
             "extracted_keywords_en": [
-                "fortress",
                 "Sloufk",
                 "J",
                 "4998"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -2616,23 +2797,38 @@
         "original_text": "Obr. 4. SKUHROV NAD BĚLOU hrad, sběry 1998. Nálezy - poloha 3 (př. č. A680/2015).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou",
+                "Obr",
+                "4",
+                "SKUHROV",
+                "NAD",
+                "BĚLOU",
                 "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 3",
+                "sběry",
+                "1998",
+                "Nálezy",
+                "poloha",
+                "3",
+                "př",
+                "č",
                 "A680/2015"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou",
-                "hrad",
-                "sběry 1998",
-                "nálezy",
-                "poloha 3",
+                "Fig",
+                "4",
+                "SKUHROV",
+                "OVER",
+                "WHITE",
+                "castle",
+                "collections",
+                "1998",
+                "Finds",
+                "location",
+                "3",
+                "ref",
                 "A680/2015"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     }
 ]

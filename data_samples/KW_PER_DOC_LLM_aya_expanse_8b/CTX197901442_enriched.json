@@ -12,11 +12,11 @@
                 "okres"
             ],
             "extracted_keywords_en": [
-                "obec",
-                "okres"
+                "OBEC",
+                "OKRES"
             ],
-            "teater_category": "geologická/přirozená vrstva",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -28,14 +28,14 @@
         "original_text": "OKRES",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vysoký jez",
+                "oblast",
                 "okres",
                 "vysoký jez"
             ],
             "extracted_keywords_en": [
-                "High valley",
-                "district",
-                "High valley"
+                "oblast",
+                "okres",
+                "vysoký jez"
             ],
             "teater_category": "geologická/přirozená vrstva",
             "confidence_score": 0.95
@@ -51,16 +51,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Vysoký jez",
-                "bláto",
-                "číslo parcely"
+                "Mad DrAMou",
+                "ČÍSLO PARCELY"
             ],
             "extracted_keywords_en": [
-                "High valley",
-                "mad",
-                "dramou",
+                "High bank",
+                "Mad DrAMou",
                 "parcel number"
             ],
-            "teater_category": "geologická sonda",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -74,15 +73,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Vysoký jez",
-                "Mad DrAMou",
-                "ČÍSLO PARCELY"
+                "Drama",
+                "Číslo parcely"
             ],
             "extracted_keywords_en": [
                 "High dam",
-                "Mad Drama",
-                "parcel number"
+                "Drama",
+                "Parcel number"
             ],
-            "teater_category": "geologická sonda",
+            "teater_category": "objekt",
             "confidence_score": 0.95
         }
     },
@@ -97,16 +96,16 @@
             "extracted_keywords_cs": [
                 "Vysoký jez",
                 "Mad DrAMou",
-                "ČÍSLO PARCELY",
+                "Číslo parcely",
                 "Rychnov n. Kn."
             ],
             "extracted_keywords_en": [
-                "High dam",
-                "Mad DraMou",
-                "parcel number",
-                "Rychnov n. Kn."
+                "Vysoký jez",
+                "Mad DrAMou",
+                "ČÍSLO PARCELY",
+                "Rychnov n.Kn."
             ],
-            "teater_category": "hřeben",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -119,14 +118,17 @@
         "original_text": "Rychnov n.Kn.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "číslo parcely"
+                "Rychnov nad Knou (city/location in Czech Republic",
+                "přílohy (attachments/appendices",
+                "název trasy (possibly 'route name' or 'report title'"
             ],
             "extracted_keywords_en": [
-                "parcel number",
-                "Rychnov n. Kn."
+                "Rychnov n.Kn. (city/location in Czech Republic",
+                "Přílohy (attachments/appendices",
+                "NÁZEV TRATI (likely 'title' or 'report name'"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.98
+            "teater_category": "nerelevantní",
+            "confidence_score": 0.95
         }
     },
     {
@@ -138,22 +140,16 @@
         "original_text": "Přílohy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Rychnov nad Knijem",
-                "přílohy",
-                "název trasy",
                 "Homole",
                 "kopec",
-                "severně od Vysokých"
+                "již od Vysokých"
             ],
             "extracted_keywords_en": [
-                "Rychnov n. Kn",
-                "Přílohy",
-                "NÁZEV TRATI",
                 "Homole",
                 "kopec",
                 "SZ od Vysokí"
             ],
-            "teater_category": "lokalita",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -168,20 +164,18 @@
             "extracted_keywords_cs": [
                 "Homole",
                 "kopec",
-                "severozápad",
-                "Vysoká",
-                "Újezda",
+                "jižní směr",
+                "Vysoký Újezd",
                 "les"
             ],
             "extracted_keywords_en": [
                 "Homole",
                 "kopec",
                 "SZ",
-                "Vysoká",
-                "Újezda",
+                "Vysokí-Újezda",
                 "lesem"
             ],
-            "teater_category": "hřeben",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -196,18 +190,16 @@
             "extracted_keywords_cs": [
                 "Homole",
                 "kopec",
-                "severozápad",
-                "Vysoký Újezd",
-                "les"
+                "na sever od Vysokého Újezda",
+                "pokryt lesem"
             ],
             "extracted_keywords_en": [
                 "Homole",
                 "kopec",
-                "SZ",
-                "Vysokí-Újezda",
+                "SZ od Vysokí-Újezda",
                 "lesem"
             ],
-            "teater_category": "hřeben",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -222,18 +214,18 @@
             "extracted_keywords_cs": [
                 "Homole",
                 "kopec",
-                "severozápad",
-                "Vysokí-Újezda",
-                "les"
+                "na sever od Vysokých",
+                "Újezda",
+                "pokrytý lesem"
             ],
             "extracted_keywords_en": [
                 "Homole",
                 "kopec",
-                "SZ",
-                "Vysokí-Újezda",
-                "lesem"
+                "SZ od Vysokí-",
+                "Újezda",
+                "pokryt lesem"
             ],
-            "teater_category": "hřeben",
+            "teater_category": "nerelevantní",
             "confidence_score": 0.95
         }
     },
@@ -268,19 +260,13 @@
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Kultura Z",
-                "mapa",
-                "druh nálezu",
                 "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "Kultura Z",
-                "mapa",
-                "druh nálezu",
                 "keramické střepy"
             ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.98
+            "teater_category": "keramika",
+            "confidence_score": 0.95
         }
     },
     {
@@ -293,15 +279,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "keramické střepy",
-                "nález",
-                "mapa",
-                "literatura"
+                "nález"
             ],
             "extracted_keywords_en": [
                 "keramické střepy",
-                "nález",
-                "mapa",
-                "literatura"
+                "nález"
             ],
             "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
@@ -316,19 +298,13 @@
         "original_text": "keramcké střepy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramické střepy",
-                "nález",
-                "literatura",
-                "uložení"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "keramické střepy",
-                "nález",
-                "literatura",
-                "uložení"
+                "keramické střepy"
             ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.95
+            "teater_category": "keramika",
+            "confidence_score": 1.0
         }
     },
     {
@@ -342,9 +318,7 @@
             "extracted_keywords_cs": [
                 "keramické střepy",
                 "nález",
-                "zpráva o nálezu",
                 "literatura",
-                "archivní materiály",
                 "uložení",
                 "rukopisné poznámky"
             ],
@@ -355,7 +329,7 @@
                 "uložení",
                 "rukopisné poznámky"
             ],
-            "teater_category": "nálezová zpráva",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -369,15 +343,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "keramické střepy",
+                "literatura",
                 "rukopisné poznámky",
-                "číslo inventarizace"
+                "číslo inventáře"
             ],
             "extracted_keywords_en": [
                 "keramické střepy",
+                "literatura",
                 "rukopisné poznámky",
-                "inv. č."
+                "číslo inventáře"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -392,16 +368,16 @@
             "extracted_keywords_cs": [
                 "rukopisné poznámky",
                 "stránka 56",
-                "autor",
+                "autora",
                 "číslo inventáře"
             ],
             "extracted_keywords_en": [
-                "rukopisné poznámky",
+                "Rukopisné poznámky",
                 "str. 56",
-                "autor",
-                "číslo inventáře"
+                "autoru",
+                "Čis. inv."
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -414,18 +390,12 @@
         "original_text": "Čis. inv.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rukopisné poznámky",
-                "stránka 56",
-                "autor",
-                "číslo inventáře"
+                "Číslo inventáře"
             ],
             "extracted_keywords_en": [
-                "rukopisné poznámky",
-                "str. 56",
-                "autor",
-                "číslo inventáře"
+                "Čis. inv."
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -438,26 +408,26 @@
         "original_text": "P.Jirušek starousedlík v obci Vysoký Újezd podal informaci , že před",
         "enrichment": {
             "extracted_keywords_cs": [
-                "starousedlík",
+                "homole",
+                "keramické střepy",
                 "rolníci",
+                "skladování brambor",
+                "skladování řepy",
                 "kopání",
-                "krechty",
-                "uskladnění",
-                "brambor",
-                "řepy",
-                "keramické střepy"
+                "starousedlík",
+                "vesnice Vysoký Újezd"
             ],
             "extracted_keywords_en": [
-                "starousedlík",
+                "homole",
+                "keramické střepy",
                 "rolníci",
+                "skladování brambor",
+                "skladování řepy",
                 "kopání",
-                "krechty",
-                "uskladnění",
-                "brambor",
-                "řepy",
-                "keramické střepy"
+                "starousedlík",
+                "vesnice Vysoký Újezd"
             ],
-            "teater_category": "nálezová zpráva",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -472,18 +442,18 @@
             "extracted_keywords_cs": [
                 "keramické střepy",
                 "kopání",
-                "krechty",
+                "rolníci",
                 "uskladňování brambor",
                 "uskladňování řepy",
-                "rolníci"
+                "homole"
             ],
             "extracted_keywords_en": [
                 "keramické střepy",
                 "kopání",
-                "krechty",
+                "rolníci",
                 "uskladnování brambor",
                 "uskladnování řepy",
-                "rolníci"
+                "homole"
             ],
             "teater_category": "archeolog",
             "confidence_score": 0.95
@@ -498,20 +468,20 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramické střepiny",
+                "keramický",
+                "střepy",
                 "kopání",
-                "krechty",
                 "brambory",
                 "řepa",
-                "skladiště"
+                "rolníci"
             ],
             "extracted_keywords_en": [
-                "keramické střepy",
+                "keramický",
+                "střepy",
                 "kopání",
-                "krechty",
                 "brambory",
                 "řepa",
-                "uskladnění"
+                "rolníci"
             ],
             "teater_category": "archeolog",
             "confidence_score": 0.95
@@ -527,15 +497,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "keramický materiál",
-                "nalezen",
-                "keramické střepy",
-                "nezachován"
+                "střepy",
+                "kopání",
+                "brambory",
+                "řepa"
             ],
             "extracted_keywords_en": [
                 "keramický materiál",
-                "nalezen",
-                "keramické střepy",
-                "nezachován"
+                "střepy",
+                "kopání",
+                "brambory",
+                "řepa"
             ],
             "teater_category": "nálezová zpráva",
             "confidence_score": 0.95

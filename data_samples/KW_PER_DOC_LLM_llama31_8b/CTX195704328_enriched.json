@@ -8,21 +8,27 @@
         "original_text": "Kat- obec: C H 0 D O UNY",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Kat",
                 "obec",
-                "C H 0 D O UNY",
-                "osada",
-                "Trať",
-                "Čmejlova pískovna"
+                "C",
+                "H",
+                "0",
+                "D",
+                "O",
+                "UNY"
             ],
             "extracted_keywords_en": [
-                "municipality",
-                "C H 0 D O UNY",
-                "settlement",
-                "track",
-                "Čmejlova sandpit"
+                "Kat",
+                "obec",
+                "C",
+                "H",
+                "0",
+                "D",
+                "O",
+                "UNY"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -34,17 +40,15 @@
         "original_text": "Osada:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště",
-                "trať",
-                "pískovna"
+                "osada",
+                "obec"
             ],
             "extracted_keywords_en": [
                 "settlement",
-                "track",
-                "quarry"
+                "village"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.8
+            "confidence_score": 1.0
         }
     },
     {
@@ -61,7 +65,7 @@
             "extracted_keywords_en": [
                 "Čmejlova pískovna"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -74,15 +78,15 @@
         "original_text": "tou;",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Roudnice nad Labem",
-                "Čmejlova pískovna"
+                "Čmejlova pískovna",
+                "Roudnice nad Labem"
             ],
             "extracted_keywords_en": [
-                "Roudnice n. Labem",
-                "Čmejlova pískovna"
+                "Čmejlova pískovna",
+                "Roudnice n. Labem"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -94,13 +98,15 @@
         "original_text": "Okres: Roudnice n. Labem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Roudnice n. Labem"
+                "Roudnice",
+                "nad Labem"
             ],
             "extracted_keywords_en": [
-                "Roudnice nad Labem"
+                "Roudnice",
+                "Labem"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -114,21 +120,19 @@
             "extracted_keywords_cs": [
                 "pohřebiště",
                 "lužická",
-                "ved",
-                "výzkum",
+                "ved. výzkurnu",
                 "Zdráva",
-                "obdobi"
+                "za obdobi"
             ],
             "extracted_keywords_en": [
                 "cemetery",
-                "lusatian",
-                "led",
-                "research",
-                "Zdrava",
+                "Lusatian",
+                "led by research",
+                "Zdráva",
                 "period"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "kultovní areál",
+            "confidence_score": 0.8
         }
     },
     {
@@ -142,19 +146,16 @@
             "extracted_keywords_cs": [
                 "pohřebiště",
                 "lužická",
-                "ved. výzkurnu",
-                "Zdráva",
-                "za obdobi",
-                "veý. oddélcni"
+                "výzkum",
+                "období"
             ],
             "extracted_keywords_en": [
-                "cemetery",
-                "lusatian",
-                "led",
-                "during",
+                "graveyard",
+                "Lusatian",
+                "excavation",
                 "period"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -178,8 +179,8 @@
                 "veý",
                 "oddélcni"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -191,17 +192,15 @@
         "original_text": "veý. oddélcni",
         "enrichment": {
             "extracted_keywords_cs": [
-                "oddělení",
-                "výzkum",
-                "období"
+                "veý",
+                "oddélcni"
             ],
             "extracted_keywords_en": [
-                "division",
-                "research",
-                "period"
+                "veý",
+                "oddélcni"
             ],
-            "teater_category": "vyspělé středohradištní období",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -213,25 +212,35 @@
         "original_text": "Dne 26.1X.1957 jsem zajel do Chodoun, abych zjistil možnosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Dne 26.1X.1957",
-                "Chodoun",
-                "lužický žárový pohřebiště",
-                "srpen 1958",
-                "obec",
-                "pískovna",
-                "místní občané"
+                "výzkum",
+                "vyzkum",
+                "nález",
+                "plán",
+                "srpen",
+                "1958",
+                "hrob",
+                "pohřebiště",
+                "nález",
+                "umístění",
+                "srpen",
+                "1958"
             ],
             "extracted_keywords_en": [
-                "On 26.1X.1957",
-                "Chodoun",
-                "Lusatian cremation burial site",
-                "August 1958",
-                "village",
-                "sand pit",
-                "local residents"
+                "research",
+                "excavation",
+                "site",
+                "planned",
+                "August",
+                "1958",
+                "grave",
+                "burial",
+                "site",
+                "location",
+                "August",
+                "1958"
             ],
-            "teater_category": "pohřebiště v sakrální stavbě",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -243,35 +252,31 @@
         "original_text": "výzkumu lužického žárového pohřebiště, plánovaného na srpen 1958# Naleziště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkumu",
-                "lužického",
-                "žárového",
-                "pohřebiště",
+                "výzkum",
+                "vykopávky",
+                "plánovaný",
                 "srpen",
                 "1958",
-                "naleziště",
+                "hrob",
+                "nálezisko",
                 "pískovna",
-                "obce",
-                "písek",
                 "pole",
-                "vojtěška"
+                "obec"
             ],
             "extracted_keywords_en": [
                 "research",
-                "Lusatian",
-                "cremation",
-                "burial",
+                "excavation",
+                "planned",
                 "August",
                 "1958",
+                "grave",
                 "site",
-                "quarry",
-                "village",
-                "sand",
+                "sandpit",
                 "field",
-                "vetch"
+                "village"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -283,25 +288,36 @@
         "original_text": "je asi 1 km vých. od obce v malé pískovně, kde místní občané",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovna",
-                "obec",
+                "hrob",
+                "nálezisko",
+                "výzkum",
+                "plán",
+                "srpen",
+                "1958",
                 "písek",
-                "vojtěška",
-                "přilehlé pole",
-                "majitel",
-                "předmět"
+                "pískovna",
+                "pole",
+                "obec",
+                "Chodoun",
+                "vojtěška"
             ],
             "extracted_keywords_en": [
-                "quarry",
-                "village",
+                "grave",
+                "site",
+                "excavation",
+                "research",
+                "planned",
+                "August",
+                "1958",
                 "sand",
-                "nettle",
-                "adjacent field",
-                "owner",
-                "subject"
+                "quarry",
+                "field",
+                "village",
+                "Chodoun",
+                "vojtěška"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -313,31 +329,27 @@
         "original_text": "těží dle potřeby písek. Přilehlé pole je oseto vojtěškou. Majitel obou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "písek",
+                "výzkum",
+                "pískovna",
                 "vojtěška",
-                "oblast",
-                "přilehlé pole",
-                "místní občané",
-                "předmět",
-                "písek",
-                "oblast",
-                "přilehlé pole",
-                "místní občané"
+                "pole",
+                "majitel",
+                "souhlas",
+                "hrob",
+                "žárový"
             ],
             "extracted_keywords_en": [
-                "sand",
-                "vetch",
-                "area",
-                "adjacent field",
-                "local residents",
-                "subject",
-                "sand",
-                "area",
-                "adjacent field",
-                "local residents"
+                "research",
+                "sandpit",
+                "vojtěška",
+                "field",
+                "owner",
+                "permission",
+                "grave",
+                "cremation"
             ],
-            "teater_category": "pohřebiště v sakrální stavbě",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -349,23 +361,19 @@
         "original_text": "pozemků neměl námitek proti provedení výzkumu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "písek",
-                "vojtěška",
-                "opuk",
-                "deskami",
-                "keramika",
-                "prsovitý"
+                "majitel",
+                "souhlas",
+                "výzkum",
+                "místo"
             ],
             "extracted_keywords_en": [
-                "sand",
-                "vetch",
-                "limestone",
-                "slabs",
-                "ceramics",
-                "rounded"
+                "landowner",
+                "permission",
+                "research",
+                "site"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -380,33 +388,19 @@
                 "žárový hrob",
                 "opukové desky",
                 "keramika",
-                "převzal",
+                "prsovitými vypnulinami",
                 "referent",
-                "zastoupení",
                 "KM Teplice",
-                "r. 1954",
-                "místech",
-                "koncem",
-                "rozrušen",
-                "vypnulinami",
-                "prsovitý",
-                "hladce",
-                "vymezené"
+                "r. 1954"
             ],
             "extracted_keywords_en": [
-                "cremation burial",
+                "cremation grave",
                 "limestone slabs",
                 "ceramics",
-                "took",
+                "smoothly outlined funnel beakers",
                 "representative",
                 "KM Teplice",
-                "r. 1954",
-                "places",
-                "end",
-                "disturbed",
-                "groove",
-                "smoothly",
-                "defined"
+                "r. 1954"
             ],
             "teater_category": "pohřební areál",
             "confidence_score": 0.8
@@ -421,16 +415,15 @@
         "original_text": "opukovými deskami a s keramikou s hladce vymezenými prsovitý-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "opukovými",
-                "deskami",
-                "keramikou",
-                "vypnulinami"
+                "opukové desky",
+                "keramika",
+                "prsovitými vypnulinami",
+                "žárový hrob"
             ],
             "extracted_keywords_en": [
-                "limestone",
-                "slabs",
+                "limestone slabs",
                 "ceramics",
-                "beakers"
+                "cremation burial"
             ],
             "teater_category": "pohřební areál",
             "confidence_score": 0.8
@@ -448,16 +441,32 @@
                 "žárový hrob",
                 "opukovými deskami",
                 "keramikou",
-                "vypnulinami"
+                "převzal",
+                "referent",
+                "v zastoupení",
+                "KM Teplice",
+                "museum",
+                "Budyni n.Ohří",
+                "rozmístění",
+                "nádob",
+                "okolnosti",
+                "neznámy"
             ],
             "extracted_keywords_en": [
-                "cremation burial",
+                "cremation grave",
                 "limestone slabs",
-                "ceramic",
-                "beakers"
+                "ceramics",
+                "acquired",
+                "representative",
+                "KM Teplice",
+                "museum",
+                "Budyni n.Ohří",
+                "remains",
+                "circumstances",
+                "unknown"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -469,23 +478,25 @@
         "original_text": "V r.1955 získalo odtud museum v Budyni n.Ohří další rozrušený hrob",
         "enrichment": {
             "extracted_keywords_cs": [
-                "opukovými",
-                "deskami",
-                "keramikou",
-                "vypnulinami",
+                "roku 1955",
+                "museum",
+                "Budyni",
                 "hrob",
-                "nádob"
+                "nádob",
+                "nález",
+                "rozhodnutí"
             ],
             "extracted_keywords_en": [
-                "marble",
-                "plates",
-                "ceramics",
-                "vessels",
-                "tomb",
-                "vessels"
+                "1955",
+                "museum",
+                "Budyni",
+                "hrob",
+                "nádob",
+                "nález",
+                "rozhodnutí"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -498,15 +509,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrob",
-                "nádob",
-                "nálezy"
+                "keramika",
+                "zlomky"
             ],
             "extracted_keywords_en": [
                 "grave",
-                "vessels",
-                "finds"
+                "pottery",
+                "shards"
             ],
-            "teater_category": "pohřební areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -519,22 +530,22 @@
         "original_text": "Při své poslední návštěvě 26.IX. jsem zjistil, že těžební",
         "enrichment": {
             "extracted_keywords_cs": [
-                "těžební plocha",
+                "těžební",
+                "plocha",
                 "zvětšila",
-                "roku 1955",
+                "třetí",
                 "hrob",
-                "obložení",
-                "zachovaly"
+                "exhumován"
             ],
             "extracted_keywords_en": [
-                "mining area",
+                "mining",
+                "area",
                 "increased",
-                "year 1955",
+                "three",
                 "grave",
-                "covering",
-                "remained"
+                "exhumed"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -548,33 +559,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "těžební plocha",
-                "plocha",
-                "roku 1955",
-                "zvětšila",
-                "cca 5 krát",
-                "odkryvem",
-                "rozrušen",
+                "rozšíření",
                 "hrob",
-                "obložení",
-                "opukové desky",
-                "prehrozený materiál",
-                "zlomky"
+                "opukové desky"
             ],
             "extracted_keywords_en": [
                 "mining area",
-                "area",
-                "year 1955",
-                "increased",
-                "cca 5 times",
-                "excavation",
-                "disturbed",
+                "expansion",
                 "grave",
-                "covering",
-                "limestone slabs",
-                "scattered material",
-                "fragments"
+                "stone slabs"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "areál jiné aktivity",
             "confidence_score": 0.8
         }
     },
@@ -588,15 +583,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrob",
-                "hrobka",
-                "opukové desky"
+                "opukové desky",
+                "nádob",
+                "miska",
+                "část nádoby"
             ],
             "extracted_keywords_en": [
                 "grave",
-                "tomb",
-                "stone slabs"
+                "stone slabs",
+                "vessels",
+                "bowl",
+                "part of a vessel"
             ],
-            "teater_category": "pohřební areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -610,19 +609,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "opukové desky",
-                "nádoby",
                 "osudí",
                 "miska",
-                "spodek nádoby"
+                "část spodku nádoby"
             ],
             "extracted_keywords_en": [
-                "limestone slabs",
-                "vessels",
+                "stone slabs",
                 "urns",
                 "bowl",
-                "vessel base"
+                "part of a vessel"
             ],
-            "teater_category": "pohřební objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -638,19 +635,28 @@
                 "nádob",
                 "osudí",
                 "miska",
-                "spodek",
+                "část",
+                "spodku",
+                "nádoby",
+                "blíže",
+                "neurčitelného",
+                "tvaru",
                 "mřížkovým",
                 "rýhováním"
             ],
             "extracted_keywords_en": [
-                "nádoby",
-                "osudí",
-                "miska",
-                "spodek",
-                "mřížkovým",
-                "rýhováním"
+                "vessels",
+                "jugs",
+                "bowl",
+                "part",
+                "bottom",
+                "vessel",
+                "uncertain",
+                "shape",
+                "grid",
+                "rulings"
             ],
-            "teater_category": "pohřební objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -663,31 +669,24 @@
         "original_text": "citelného tvaru s mřížkovým rýhováním). Poloha všech tří hrobů ukazuje",
         "enrichment": {
             "extracted_keywords_cs": [
+                "opukové desky",
                 "nádob",
                 "osudí",
                 "miska",
-                "část",
                 "spodku",
-                "nádoby",
-                "blíže",
-                "tvaru",
                 "mřížkovým",
                 "rýhováním"
             ],
             "extracted_keywords_en": [
+                "stone slabs",
                 "vessels",
-                "urns",
-                "bowl",
-                "part",
-                "bottom",
-                "vessel",
-                "more",
-                "shape",
-                "grid",
-                "grooving"
+                "miskas",
+                "spodku",
+                "mřížkovým",
+                "rýhováním"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -701,18 +700,14 @@
             "extracted_keywords_cs": [
                 "smer",
                 "výšina",
-                "svah",
-                "pole",
-                "hradiště"
+                "pole"
             ],
             "extracted_keywords_en": [
                 "direction",
                 "hill",
-                "slope",
-                "field",
-                "hillfort"
+                "field"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -725,25 +720,22 @@
         "original_text": "vyvýšeninu, zasahující z části již do pole. Při povrchovém sběru",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vyvýšeninu",
-                "zasahující",
-                "pole",
-                "únětický",
-                "mlat",
-                "žlábkovým",
-                "sedlem"
+                "výšeninu",
+                "směr",
+                "povrchový sběr",
+                "kámen",
+                "mlat"
             ],
             "extracted_keywords_en": [
-                "mound",
-                "encroaching",
-                "field",
-                "Únětice",
-                "hammer",
-                "grooved",
-                "seat"
+                "hill",
+                "slope",
+                "direction",
+                "surface collection",
+                "stone",
+                "axe"
             ],
-            "teater_category": "pohřební objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -755,18 +747,20 @@
         "original_text": "byl dále nalezen kamenný únětický mlat se žlábkovým sedlem (délka",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kamenný",
                 "únětický",
                 "mlat",
                 "žlábkové",
                 "sedlo"
             ],
             "extracted_keywords_en": [
-                "unetice",
-                "hammer",
+                "stone",
+                "Unetice",
+                "axe",
                 "grooved",
-                "seat"
+                "handle"
             ],
-            "teater_category": "kultovní/sakrální objekt",
+            "teater_category": "kultovní areál",
             "confidence_score": 0.8
         }
     },
@@ -779,17 +773,19 @@
         "original_text": "Navrhuji, aby výzkum v příštím roce byl proveden několika",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příčnými sondami",
+                "prozkoumat",
                 "pohřebiště",
-                "pískovna"
+                "pískovna",
+                "příčnými sondami"
             ],
             "extracted_keywords_en": [
-                "cross-section trenches",
-                "burial site",
-                "quarry"
+                "prozkoumat",
+                "pohřebiště",
+                "pískovna",
+                "příčnými sondami"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -801,18 +797,22 @@
         "original_text": "příčnými sondami, jimiž by byl praeoex zachycen rozsah pohřebiště,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "prozkoumat",
+                "příští",
+                "výzkum",
                 "pohřebiště",
                 "pískovna",
-                "těžení"
+                "těžba"
             ],
             "extracted_keywords_en": [
-                "prozkoumat",
-                "pohřebiště",
-                "pískovna",
-                "těžení"
+                "prospective",
+                "excavation",
+                "site",
+                "burial",
+                "site",
+                "sandpit",
+                "mining"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -826,22 +826,22 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "vyzkum",
+                "vykopávky",
                 "místo",
-                "investigace",
-                "blízké",
-                "těžba"
+                "jámy",
+                "pískovna",
+                "doly"
             ],
             "extracted_keywords_en": [
                 "research",
                 "excavation",
                 "site",
-                "investigation",
-                "nearby",
+                "pits",
+                "sandpit",
                 "mining"
             ],
-            "teater_category": "geofyzikální průzkum",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -853,27 +853,27 @@
         "original_text": "bude pravděpodobně těžení pokračovat. Vzhledem k malé mocnosti or-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příčnými sondami",
-                "praeoex",
-                "pohřebiště",
-                "pískovna",
-                "těžení",
-                "mocnosti",
-                "nalezišti",
-                "návršíčka"
+                "pravděpodobně",
+                "těžba",
+                "pokračovat",
+                "malá",
+                "plocha",
+                "vrchol",
+                "300",
+                "metrů"
             ],
             "extracted_keywords_en": [
-                "cross-sections",
-                "praeoex",
-                "burial ground",
-                "quarry",
+                "probable",
                 "mining",
-                "thickness",
-                "site",
-                "hillock"
+                "continue",
+                "small",
+                "area",
+                "hill",
+                "300",
+                "meters"
             ],
-            "teater_category": "geofyzikální průzkum",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -885,21 +885,23 @@
         "original_text": "nice na nalezišti a poměrně malé ploše návršíčka (cca 300 m ), kde",
         "enrichment": {
             "extracted_keywords_cs": [
+                "těžba",
+                "naleziště",
                 "pohřebiště",
-                "nalezišti",
-                "návršíčka",
-                "pohřebiště",
+                " návrší",
+                "300m",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "burial site",
+                "mining",
                 "site",
+                "graveyard",
                 "hill",
-                "burial site",
-                "burial site"
+                "300m",
+                "graveyard"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "areál jiné aktivity",
+            "confidence_score": 0.8
         }
     },
     {
@@ -917,31 +919,39 @@
                 "návršíčka",
                 "cca",
                 "m",
+                "pohřebiště",
+                "možno",
+                "strojern",
                 "datum",
                 "odoslání",
                 "čitelný",
                 "podpis",
                 "zprávy",
                 "koreferentú",
-                "komisi"
+                "komisi",
+                "vyhotovto"
             ],
             "extracted_keywords_en": [
-                "cemetery",
-                "site",
-                "area",
-                "hill",
+                "pohřebiště",
+                "nalezišti",
+                "ploše",
+                "návršíčka",
                 "cca",
                 "m",
-                "date",
-                "sending",
-                "readable",
-                "signature",
-                "reports",
-                "coordinator",
-                "commission"
+                "pohřebiště",
+                "možno",
+                "strojern",
+                "datum",
+                "odoslání",
+                "čitelný",
+                "podpis",
+                "zprávy",
+                "koreferentú",
+                "komisi",
+                "vyhotovto"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -953,37 +963,29 @@
         "original_text": "Poznámka: Pikte pokud možno strojern. Nn konci uvedte datum odoslání a čitelný podpis. Zprávy koreferentú a komisi",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Pikte",
                 "pohřebiště",
                 "nalezišti",
-                "ploše",
                 "návršíčka",
-                "cca",
-                "m",
                 "datum",
-                "odoslání",
-                "čitelný",
                 "podpis",
                 "zprávy",
                 "koreferentú",
                 "komisi"
             ],
             "extracted_keywords_en": [
-                "graveyard",
-                "site",
-                "area",
-                "hill",
-                "cca",
-                "m",
-                "date",
-                "sending",
-                "readable",
-                "signature",
-                "reports",
-                "referent",
-                "commission"
+                "Pikte",
+                "pohřebiště",
+                "nalezišti",
+                "návršíčka",
+                "datum",
+                "podpis",
+                "zprávy",
+                "koreferentú",
+                "komisi"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -996,14 +998,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "vyhotovto"
+                "hrob",
+                "pohřeb",
+                "lokál"
             ],
             "extracted_keywords_en": [
-                "cemetery",
-                "draft"
+                "graveyard",
+                "grave",
+                "burial",
+                "site"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -1016,26 +1022,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "plánované",
-                "časti",
-                "prozkoumáno",
+                "době",
                 "příštím",
-                "roce",
-                "Praze",
-                "říjen",
-                "1957"
+                "roce"
             ],
             "extracted_keywords_en": [
                 "plánované",
-                "časti",
-                "prozkoumáno",
+                "době",
                 "příštím",
-                "roce",
-                "Praze",
-                "říjen",
-                "1957"
+                "roce"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1062,8 +1060,8 @@
                 "J",
                 "Hrala"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -1075,27 +1073,13 @@
         "original_text": "J. Hrala",
         "enrichment": {
             "extracted_keywords_cs": [
-                "P2",
-                "L3",
-                "Praha",
-                "1",
-                "říjen",
-                "1957",
-                "J",
-                "Hrala"
+                "J. Hrala"
             ],
             "extracted_keywords_en": [
-                "P2",
-                "L3",
-                "Praha",
-                "1",
-                "říjen",
-                "1957",
-                "J",
-                "Hrala"
+                "J. Hrala"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     }
 ]

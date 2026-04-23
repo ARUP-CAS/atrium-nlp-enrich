@@ -8,15 +8,19 @@
         "original_text": "o P ATOVICEn.Le",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Patovice",
-                "osada"
+                "PATOVICE",
+                "LE",
+                "KATEGORIE OBCHODNÍHO MÍSTA",
+                "OSADA"
             ],
             "extracted_keywords_en": [
                 "PATOVICE",
-                "osada"
+                "LE",
+                "KAT. OBCHOD",
+                "OSADA"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.98
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -28,16 +32,16 @@
         "original_text": "Kat. obec:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "obec",
-                "osada",
-                "trať"
+                "Pardubice",
+                "Osada",
+                "Trať"
             ],
             "extracted_keywords_en": [
                 "Pardubice",
                 "Osada",
                 "Trať"
             ],
-            "teater_category": "katastrální území",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -59,7 +63,7 @@
                 "Pardubice",
                 "okres"
             ],
-            "teater_category": "Honduras",
+            "teater_category": "nerelevantní",
             "confidence_score": 0.95
         }
     },
@@ -73,17 +77,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Pardubice",
-                "osada",
-                "trať",
-                "okres"
+                "trať"
             ],
             "extracted_keywords_en": [
                 "Pardubice",
-                "Osada",
-                "Trať",
-                "Okres"
+                "trať"
             ],
-            "teater_category": "Honduras",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -111,7 +111,7 @@
                 "druh",
                 "kultura"
             ],
-            "teater_category": "rané mladohradištní období",
+            "teater_category": "nerelevantní",
             "confidence_score": 0.95
         }
     },
@@ -124,14 +124,16 @@
         "original_text": "Druh a kultura:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužické sídliště",
+                "Lužické sídliště",
                 "sídliště",
-                "lužická kultura"
+                "obývané místo",
+                "osadní činnost"
             ],
             "extracted_keywords_en": [
                 "Lužické sídliště",
                 "sídlo",
-                "lužická kultura"
+                "obydlí",
+                "osadní aktivita"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -146,15 +148,19 @@
         "original_text": "Lužické sídliště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužické sídliště",
-                "zpráva"
+                "Lužické sídliště",
+                "sídliště",
+                "obývané místo",
+                "osadní činnost"
             ],
             "extracted_keywords_en": [
                 "Lužické sídliště",
-                "zpráva"
+                "sídlo",
+                "obydlí",
+                "osadní aktivita"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -166,16 +172,18 @@
         "original_text": "Zpráva",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužická osada",
+                "Lužické sídliště",
                 "zpráva",
-                "výzkum"
+                "výzkum",
+                "povrchová vrstva"
             ],
             "extracted_keywords_en": [
                 "Lužické sídliště",
                 "zpráva",
-                "výzkum"
+                "výzkum",
+                "povrchová vrstva"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -189,15 +197,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "mladé hradištní období"
+                "sáhara"
             ],
             "extracted_keywords_en": [
                 "XXWžkumu",
                 "XAterenta",
                 "kmixxxx"
             ],
-            "teater_category": "vyspělé mladohradištní období",
-            "confidence_score": 0.95
+            "teater_category": "Západní Sahara",
+            "confidence_score": 0.8
         }
     },
     {
@@ -209,11 +217,14 @@
         "original_text": "XAterenta",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum povrchové vrstvy"
+                "výzkum",
+                "povrchová vrstva",
+                "kategorie obec"
             ],
             "extracted_keywords_en": [
                 "výzkum",
-                "povrchová vrstva"
+                "povrchová vrstva",
+                "kat. obec"
             ],
             "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
@@ -228,13 +239,14 @@
         "original_text": "kmixxxx",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum povrchové vrstvy"
+                "vyspělé",
+                "mladohradištní období"
             ],
             "extracted_keywords_en": [
-                "výzkum",
-                "povrchová vrstva"
+                "vyspělé",
+                "mladohradištní období"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -248,13 +260,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "vedoucí oddělení",
-                "období"
+                "pro období"
             ],
             "extracted_keywords_en": [
                 "ved. oddělení",
-                "období"
+                "za období"
             ],
-            "teater_category": "časný eneolit",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -274,7 +286,33 @@
                 "ved. oddělení",
                 "období"
             ],
-            "teater_category": "Česko",
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX197402444",
+        "page": 1,
+        "line": 20,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pískovna",
+                "Opatovice nad Labem",
+                "výzkum povrchu",
+                "ČSAV",
+                "zastavená práce"
+            ],
+            "extracted_keywords_en": [
+                "pískovna",
+                "Opatovice n.L. (Opatovice nad Labem, Czechia/Czech Republic),",
+                "záchranný výzkum",
+                "ČSAV (Československá akademie věd, Czechoslovak Academy of Sciences, Prague, Czechia/Czech Republic, 1956-1959",
+                "zastavena práce"
+            ],
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -287,20 +325,28 @@
         "original_text": "v Opatovicích n.L., známou z velkého záchraného výzkumu AŮ ČSAV",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovna (sandpit, implies a site related to mining or construction, potentially a historical site),",
-                "Opatovice nad Labem (a specific location in the Czech Republic, a historical site),",
-                "záchranný výzkum (archaeological excavation, a significant event in the historical context, specifically mentioning the Czechoslovak Academy of Sciences, a key institution involved in the research),",
-                "ČSAV (Czech Academy of Sciences, a historical and cultural institution in Czechoslovakia, implying a specific time period and its involvement in archaeological research),",
-                "přerušen (interrupted, indicating a significant event that halted the excavation or research)"
+                "pískovna",
+                "Opatovice nad Labem (specific location, Czech Republic )",
+                "záchranný výzkum",
+                "ČSAV",
+                "Praha",
+                "1956-1959",
+                "přerušen",
+                "výzkum",
+                "pískovna"
             ],
             "extracted_keywords_en": [
                 "pískovna",
-                "Opatovice n.L. (Opatovice nad Labem, Czech Republic, location name, specific to the context of archaeological research in Czechoslovakia/Czech Republic during the 20th century, implies a historical site/archaeological location),",
-                "záchranný výzkum (archaeological excavation, specifically mentioning a significant research project by ČSAV, the Czechoslovak Academy of Sciences, in the 1950s, implying a historical archaeological site/period, likely from the Middle Ages or earlier),",
-                "ČSAV (Česká akademie věd, Czechoslovak Academy of Sciences, a significant scientific institution in Czechoslovakia during the 20th century, involved in archaeological research, implying a historical context and a specific time period, likely the mid-20th century),",
-                "přerušen (interrupted, indicating the suspension of the excavation or research due to circumstances, such as the halt in 1959)"
+                "Opatovice n.L. (Opatovice nad Labem, Czech Republic, location name, likely a village/town name )",
+                "Záchranný výzkum (archaeological excavation, rescue archaeology )",
+                "ČSAV (Czech Academy of Sciences, an academic institution )",
+                "Praha (Prague, Czech Republic, location name )",
+                "1956-1959 (date range of the excavation )",
+                "přerušen (interrupted )",
+                "výzkum (research )",
+                "pískovna (sandpit, likely a site type )"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -314,13 +360,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovna",
-                "Opatovice nad Labem"
+                "Opatovice nad Labem",
+                "záchranný výzkum",
+                "ČSAV (Československá akademie věd)"
             ],
             "extracted_keywords_en": [
                 "pískovna",
-                "Opatovice n.L."
+                "Opatovice n.L. (Opatovice nad Labem, Czech Republic?)"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -333,24 +381,18 @@
         "original_text": "a proto výzkum byl přerušen.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Opatovice u L.,",
-                "záchranný výzkum ČSAV,",
-                "Praha,",
-                "pískovna,",
-                "přerušení výzkumu,",
-                "obnovení prací,",
-                "rozsah pískovny"
+                "Opatovice u Prahy, pískovna, záchranný výzkum, ČSAV, přerušen, obnoveny, rozsah pískovny"
             ],
             "extracted_keywords_en": [
-                "Opatovice n.L. (Opatovice near L),",
-                "záchranný výzkum (excavation, rescue excavation) ČSAV (Czech Academy of Sciences, ČSAV),",
-                "Praze (Prague, Czech Republic),",
-                "pískovna (sandpit),",
-                "přerušení výzkumu (research interruption),",
-                "obnovení prací (resumption of work),",
-                "rozsah pískovny (sandpit extent)"
+                "Opatovice n.L. (Opatovice near Prague, Czech Republic",
+                "pískovna (sandpit",
+                "záchranný výzkum (archaeological excavation",
+                "ČSAV (Czech Academy of Sciences",
+                "přerušen (interrupted",
+                "obnoveny (resumed",
+                "rozsah pískovny (sandpit extent"
             ],
-            "teater_category": "archeolog",
+            "teater_category": "archeoentomologie",
             "confidence_score": 0.95
         }
     },
@@ -364,25 +406,23 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovna",
-                "výzkum",
-                "obnovení prací",
+                "obnoveny práce",
                 "rozsah pískovny",
-                "bagr",
-                "skryté objekty",
+                "zvětšil",
+                "bagrem skryté ploše",
                 "hlubší objekty",
-                "záchranný výzkum"
+                "skrývka"
             ],
             "extracted_keywords_en": [
                 "pískovna",
-                "výzkum",
-                "obnovení prací",
+                "obnoveny práce",
                 "rozsah pískovny",
-                "bagr",
-                "skryté objekty",
+                "zvětšil",
+                "bagrem skryté ploše",
                 "hlubší objekty",
-                "záchranný výzkum"
+                "skrývka"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -397,24 +437,22 @@
             "extracted_keywords_cs": [
                 "pískovna",
                 "rozsah",
-                "objekty",
                 "bagr",
-                "skryté ploše",
-                "hluboké objekty",
-                "záchranný výzkum",
-                "hluboko"
+                "objekty",
+                "skryvka",
+                "hlubina",
+                "záchranný výzkum"
             ],
             "extracted_keywords_en": [
                 "pískovna",
                 "rozsah",
+                "bagr",
                 "objekty",
-                "bagrem",
-                "skryté ploše",
-                "hluboké objekty",
-                "záchranný výzkum",
-                "hluboko"
+                "skryvka",
+                "hlubina",
+                "záchranný výzkum"
             ],
-            "teater_category": "archeolog",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -429,20 +467,22 @@
             "extracted_keywords_cs": [
                 "pískovna",
                 "záchranný výzkum",
-                "objekty",
                 "bagr",
+                "objekty",
+                "skryvka",
                 "hlubina",
                 "zničení objektů"
             ],
             "extracted_keywords_en": [
                 "pískovna",
                 "záchranný výzkum",
-                "objekty",
                 "bagr",
+                "objekty",
+                "skryvka",
                 "hlubina",
                 "zničení objektů"
             ],
-            "teater_category": "archeolog",
+            "teater_category": "vyspělé mladohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -457,18 +497,22 @@
             "extracted_keywords_cs": [
                 "pískovna",
                 "bagr",
-                "hluboké objekty",
-                "záchranný výzkum",
+                "objekty",
+                "skryté ploše",
+                "hlubší",
+                "zničené",
                 "terénní pozorování"
             ],
             "extracted_keywords_en": [
                 "pískovna",
                 "bagr",
-                "hluboké objekty",
-                "záchranný výzkum",
+                "objekty",
+                "zkryté ploše",
+                "hlubší",
+                "zničené",
                 "terénní pozorování"
             ],
-            "teater_category": "terénní odkryv",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -481,15 +525,15 @@
         "original_text": "zničeny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bagrem (bagr – stroj na kopání a odstraňování půdy",
-                "skryté ploše (skrytá oblast na povrchu země",
-                "hlubší objekty (objekty pohřbené pod povrchem",
-                "terénní pozorování (pozorování provedené přímo v terénu)"
+                "bagrem skryté ploše",
+                "3—4 hlubší objekty",
+                "skrývka",
+                "zničeny",
+                "teréní pozorování"
             ],
             "extracted_keywords_en": [
-                "bagrem",
-                "skryté ploše",
-                "hlubší objekty",
+                "bagrem skryté ploše",
+                "hluboké objekty",
                 "terénní pozorování"
             ],
             "teater_category": "terénní odkryv",
@@ -505,16 +549,16 @@
         "original_text": "Podle teréního pozorování",
         "enrichment": {
             "extracted_keywords_cs": [
-                "terénní pozorování",
                 "sídliště",
-                "část"
+                "terénní pozorování",
+                "část sídliště"
             ],
             "extracted_keywords_en": [
-                "terénní pozorování",
                 "sídliště",
-                "část"
+                "terénní pozorování",
+                "část sídliště"
             ],
-            "teater_category": "hřeben",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -527,16 +571,14 @@
         "original_text": "je ještě část sídliště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "terénní pozorování",
-                "zachována část",
                 "sídliště",
+                "zachována",
                 "parc.č. 1503",
                 "sběrem"
             ],
             "extracted_keywords_en": [
-                "terénní pozorování",
-                "zachována část",
                 "sídliště",
+                "zachována",
                 "parc.č. 1503",
                 "sběrem"
             ],
@@ -554,17 +596,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sídliště",
-                "katastrální číslo 1503",
-                "sběr",
-                "lžická keramika"
+                "keramika",
+                "sběrem",
+                "naleziště"
             ],
             "extracted_keywords_en": [
                 "sídliště",
-                "parc.č. 1503",
-                "sběr",
-                "lžická keramika"
+                "keramika",
+                "sběrem",
+                "naleziště"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
         }
     },
@@ -577,18 +619,21 @@
         "original_text": "získali lžickou kera-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lzeická keramika",
+                "keramika",
                 "střepy",
                 "pískovna",
-                "žárový hrob"
+                "hrob",
+                "žárový pohřeb"
             ],
             "extracted_keywords_en": [
-                "lzeická keramika",
-                "střepy",
-                "pískovna",
-                "žárový hrob"
+                "keramic",
+                "Lzička (pottery",
+                "střepy (shards",
+                "pískovna (sandpit",
+                "hrob (grave",
+                "žárový (cremation"
             ],
-            "teater_category": "nálezová zpráva",
+            "teater_category": "archeolog",
             "confidence_score": 0.95
         }
     },
@@ -604,17 +649,17 @@
                 "lžická keramika",
                 "střepy",
                 "pískovna",
-                "žárový hrob",
-                "Ústředí Akademie věd České republiky v Praze"
+                "žárové hroby",
+                "Ústředí Akademie věd České republiky"
             ],
             "extracted_keywords_en": [
-                "lžická keramika",
+                "lzečická keramika",
                 "střepy",
                 "pískovna",
-                "žárový hrob",
-                "AÚ ČSAV v Praze"
+                "žárové hroby",
+                "AÚ ČSAV"
             ],
-            "teater_category": "nálezová zpráva",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -627,20 +672,24 @@
         "original_text": "Ty však mohou pocházet z rozrušených žárových hrobů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužické sídliště",
+                "lužický",
+                "keramikou",
+                "pískovna",
+                "žárový hrob",
                 "výzkum",
-                "hrobů",
-                "pohřebišť žárových hrobů",
-                "Ústředí Akademie věd České republiky v Praze"
+                "Ústav archeologie ČSAV",
+                "Praha"
             ],
             "extracted_keywords_en": [
-                "lužické sídliště",
+                "lužický",
+                "keramikou",
+                "pískovna",
+                "žárový hrob",
                 "výzkum",
-                "hrobů",
-                "žárových hrobů",
-                "AÚ ČSAV v Praze"
+                "AÚ ČSAV",
+                "Praha"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "archeoentomologie",
             "confidence_score": 0.95
         }
     },
@@ -655,18 +704,19 @@
             "extracted_keywords_cs": [
                 "lužické sídliště",
                 "výzkum",
+                "půdorys pravěké vesnice",
                 "pohřebiště",
-                "pravěká vesnice",
-                "půdorys"
+                "Ústředí Akademie věd ČSSR (AÚ ČSAV) v Praze"
             ],
             "extracted_keywords_en": [
                 "lužické sídliště",
                 "výzkum",
+                "půdorys pravěké vesnice",
                 "pohřebiště",
-                "pravěká vesnice",
-                "půdorys"
+                "AÚ ČSAV",
+                "Praha"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -681,18 +731,20 @@
             "extracted_keywords_cs": [
                 "lužické sídliště",
                 "výzkum",
+                "půdorys",
+                "pravěká vesnice",
                 "pohřebiště",
-                "půdorys pravěké vesnice",
                 "Hradec Králové"
             ],
             "extracted_keywords_en": [
                 "lužické sídliště",
                 "výzkum",
+                "půdorys",
+                "pravěká vesnice",
                 "pohřebiště",
-                "půdorys pravěké vesnice",
                 "Hradec Králové"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -706,19 +758,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "lužické sídliště",
-                "výzkum",
-                "půdorys",
+                "pravěká vesnice",
                 "pohřebiště",
-                "pravěká vesnice"
+                "výzkum",
+                "půdorys"
             ],
             "extracted_keywords_en": [
                 "lužické sídliště",
-                "výzkum",
-                "půdorys",
+                "pravěká vesnice",
                 "pohřebiště",
-                "pravěká vesnice"
+                "výzkum",
+                "půdorys"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -732,19 +784,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "lužické sídliště",
-                "plán pravěké vesnice",
+                "pravěká vesnice",
                 "pohřebiště",
                 "Hradec Králové",
-                "27.11.1974"
+                "půdorys",
+                "výzkum"
             ],
             "extracted_keywords_en": [
                 "lužické sídliště",
-                "půdorys pravěké vesnice",
+                "pravěká vesnice",
                 "pohřebiště",
                 "Hradec Králové",
-                "1974"
+                "půdorys",
+                "výzkum"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
         }
     },
@@ -757,20 +811,20 @@
         "original_text": ".předejte prosím Dr.J.Ratajo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Hradec Králové",
                 "Opatovice",
+                "Hradec Králové",
                 "výzkum",
-                "doktor J. Rataj",
-                "sídliště"
+                "sídliště",
+                "Dr. J. Rataj"
             ],
             "extracted_keywords_en": [
-                "Hradec Králové",
                 "Opatovice",
+                "Hradec Králové",
                 "výzkum",
-                "Dr. J. Rataj",
-                "sídliště"
+                "sídliště",
+                "Dr. J. Rataj"
             ],
-            "teater_category": "Východní Timor",
+            "teater_category": "výzkumná instituce",
             "confidence_score": 0.95
         }
     },
@@ -783,22 +837,22 @@
         "original_text": "| ver,výzkumu v Opatovicích.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "Opatovice",
+                "výzkum",
                 "sídliště",
-                "vedoucí výzkumu",
+                "doktor J. Rataj",
                 "V. Vokolek",
-                "blízkost pracoviště"
+                "jednání"
             ],
             "extracted_keywords_en": [
-                "výzkum",
                 "Opatovice",
+                "výzkum",
                 "sídliště",
-                "vedoucí výzkumu",
+                "Dr. J. Rataj",
                 "V. Vokolek",
-                "blízkost pracoviště"
+                "jednání"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -811,24 +865,26 @@
         "original_text": "Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum v Opatovicích",
+                "Opatovice",
                 "sídliště",
+                "výzkum",
+                "dokt. J. Rataj",
                 "V. Vokolek",
+                "instituce",
                 "jednání",
-                "ústav",
-                "další výzkum",
                 "blízkost pracoviště"
             ],
             "extracted_keywords_en": [
-                "výzkum v Opatovicích",
+                "Opatovice",
                 "sídliště",
+                "výzkum",
+                "Dr. J. Rataj",
                 "V. Vokolek",
-                "jednání",
                 "ústav",
-                "další výzkum",
+                "jednání",
                 "blízkost pracoviště"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -841,24 +897,26 @@
         "original_text": "V.Vokolek by mohl-vzhledem k blízkosti svého pracoviště zahájit jednání",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "Opatovice",
+                "výzkum",
                 "sídliště",
                 "V. Vokolek",
                 "ústav",
                 "jednání",
-                "další výzkum"
+                "dále",
+                "svěřen"
             ],
             "extracted_keywords_en": [
-                "výzkum",
                 "Opatovice",
+                "výzkum",
                 "sídliště",
                 "V. Vokolek",
                 "ústav",
                 "jednání",
-                "další výzkum"
+                "dále",
+                "svěřen"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -871,22 +929,22 @@
         "original_text": "s ústavem o další výzkum na sídlišti . Doporučuji, aby tento výzkum",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
+                "Opatovice",
                 "sídliště",
+                "výzkum",
                 "ústav",
-                "další výzkum",
                 "jednání",
-                "svěřen"
+                "svěřit"
             ],
             "extracted_keywords_en": [
-                "výzkum",
+                "Opatovice",
                 "sídliště",
+                "výzkum",
                 "ústav",
-                "další výzkum",
                 "jednání",
-                "svěřen"
+                "svěřit"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -902,17 +960,17 @@
                 "výzkum",
                 "sídliště",
                 "ústav",
-                "dále",
+                "jednání",
                 "svěřen"
             ],
             "extracted_keywords_en": [
                 "výzkum",
                 "sídliště",
                 "ústav",
-                "dále",
+                "jednání",
                 "svěřen"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
+            "teater_category": "Východní Timor",
             "confidence_score": 0.95
         }
     },
@@ -926,25 +984,29 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "sídliště",
-                "doporučení",
-                "ústav",
-                "psaní strojem",
-                "zprávy",
-                "komise",
-                "duplikát"
+                "osídlení",
+                "instituce",
+                "další výzkum",
+                "svěřit",
+                "Praha",
+                "datum odeslání",
+                "podpis",
+                "zprávy referenta",
+                "komise"
             ],
             "extracted_keywords_en": [
-                "výzkum",
+                "research",
                 "sídliště",
-                "doporučení",
                 "ústav",
-                "psaní strojem",
-                "zprávy",
-                "komise",
-                "duplikát"
+                "další výzkum",
+                "svěřen",
+                "Praha",
+                "datum odeslání",
+                "podpis",
+                "zprávy koreferenta",
+                "komise"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -957,26 +1019,23 @@
         "original_text": "Poznámka: Pište pokud možno strojem. Na konci uveďte datum odeslání a čitelný podpis. Zprávy koreferenta komisí",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zpráva",
-                "komise",
-                "koreferent",
-                "dokumentace",
-                "datum",
-                "podpis",
-                "kopie",
-                "archivní dokument"
+                "poznámka",
+                "psát strojem",
+                "datum odeslání",
+                "čitelný podpis",
+                "dvojmo",
+                "auditing"
             ],
             "extracted_keywords_en": [
-                "zpráva",
-                "komise",
-                "koreferent",
-                "dokumentace",
-                "datum",
-                "podpis",
-                "kopie",
-                "archivní materiál"
+                "report",
+                "note",
+                "machine writing",
+                "date of submission",
+                "readable signature",
+                "duplicate",
+                "auditing"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -989,20 +1048,20 @@
         "original_text": "7) vyhotovte dvojmo. ;",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zprávy koreferenta komisí",
-                "dvojmo",
-                "archivní dokument",
-                "kulturní památka"
+                "zprávy",
+                "komise",
+                "koreferent",
+                "dokumentace",
+                "duplikát"
             ],
             "extracted_keywords_en": [
-                "zprávy koreferenta",
+                "zprávy",
                 "komise",
+                "korelent",
                 "dokumentace",
-                "duplikát",
-                "archivní materiál",
-                "kulturní dědictví"
+                "duplikát"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -1015,22 +1074,24 @@
         "original_text": "v^UlíLa uq (AAuu Aud. AnMlut",
         "enrichment": {
             "extracted_keywords_cs": [
-                "dvojité kopie",
-                "ulice",
-                "auditorium",
+                "auditu",
                 "komise",
-                "zprávy",
-                "dokumentace"
+                "zpráva",
+                "dvojité",
+                "připravit",
+                "datum",
+                "podpis"
             ],
             "extracted_keywords_en": [
-                "dvojmo",
-                "ulice",
-                "auditorium",
-                "komise",
-                "zprávy",
-                "dokumentace"
+                "audit",
+                "commission",
+                "report",
+                "duplicate",
+                "preparation",
+                "date",
+                "signature"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -1043,12 +1104,23 @@
         "original_text": "V r Wrr (ia 7 TcedLir). 2 {",
         "enrichment": {
             "extracted_keywords_cs": [
-                "geodetický průzkum"
+                "vyhotovte dvojmo",
+                "vůle uq (AAuu Aud. AnMlut",
+                "V r Wrr (ia 7 TcedLir). 2 {",
+                "zpráva",
+                "výzkum",
+                "dokumentace",
+                "architektonický kontext"
             ],
             "extracted_keywords_en": [
-                "geodetický průzkum"
+                "report",
+                "fieldwork",
+                "documentation",
+                "archaeological",
+                "site",
+                "context"
             ],
-            "teater_category": "geodetický průzkum",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     }

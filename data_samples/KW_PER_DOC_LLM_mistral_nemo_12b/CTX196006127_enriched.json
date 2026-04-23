@@ -15,7 +15,7 @@
                 "TOWN",
                 "Žinkovy"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -28,12 +28,16 @@
         "original_text": "Žinkovy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Žinkovy"
+                "OBEC",
+                "Žinkovy",
+                "OKRES"
             ],
             "extracted_keywords_en": [
-                "Žinkovy"
+                "TOWN",
+                "Zinkovy",
+                "DISTRICT"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -48,20 +52,18 @@
             "extracted_keywords_cs": [
                 "OKRES",
                 "I",
-                "lzeň",
-                "jih",
+                "lzeň- jih",
                 "vir",
                 "Blovice"
             ],
             "extracted_keywords_en": [
                 "DISTRICT",
                 "I",
-                "lzeň",
-                "south",
+                "lzeň- south",
                 "vir",
                 "Blovice"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -74,18 +76,20 @@
         "original_text": "I lzeň- jih",
         "enrichment": {
             "extracted_keywords_cs": [
+                "OKRES",
                 "I",
-                "jih",
+                "lzeň- jih",
                 "vir",
                 "Blovice"
             ],
             "extracted_keywords_en": [
+                "DISTRICT",
                 "I",
-                "south",
+                "lzeň- south",
                 "vir",
                 "Blovice"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -98,14 +102,16 @@
         "original_text": "vir -Blovice)",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
-                "Blovice"
+                "OKRES",
+                "I lzeň- jih",
+                "vir -Blovice"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "Blovice"
+                "REGION",
+                "I lens- south",
+                "vir -Blovice"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -118,12 +124,12 @@
         "original_text": "Č. poř.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště"
+                "Číslo parcely"
             ],
             "extracted_keywords_en": [
-                "hillfort"
+                "Parcely number"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -141,7 +147,7 @@
             "extracted_keywords_en": [
                 "PARCEL NUMBER"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -154,12 +160,12 @@
         "original_text": "NÁZEV TRATI",
         "enrichment": {
             "extracted_keywords_cs": [
-                "název trati"
+                "NÁZEV TRATI"
             ],
             "extracted_keywords_en": [
-                "name of the path"
+                "NAME OF THE PATH"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -173,14 +179,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "PřUohy",
-                "Potentštejn"
+                "Potenštejn"
             ],
             "extracted_keywords_en": [
                 "PřUohy",
-                "Potentštejn"
+                "Potenštejn"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -201,7 +207,7 @@
                 "Culture",
                 "Middle Ages"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "sídlo elity",
             "confidence_score": 0.95
         }
     },
@@ -215,15 +221,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kultura",
-                "moravská",
-                "malovaná",
-                "keramika"
+                "středověk"
             ],
             "extracted_keywords_en": [
                 "culture",
-                "Moravian",
-                "painted",
-                "pottery"
+                "middle ages"
             ],
             "teater_category": "kultura s moravskou malovanou keramikou 2",
             "confidence_score": 1.0
@@ -261,7 +263,7 @@
             "extracted_keywords_en": [
                 "map number"
             ],
-            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -279,10 +281,10 @@
             ],
             "extracted_keywords_en": [
                 "ceramic",
-                "bones"
+                "bone"
             ],
-            "teater_category": "hrazené sídliště",
-            "confidence_score": 0.95
+            "teater_category": "keramika",
+            "confidence_score": 1.0
         }
     },
     {
@@ -294,10 +296,12 @@
         "original_text": "keramika",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramika"
+                "keramika",
+                "kosti"
             ],
             "extracted_keywords_en": [
-                "ceramic"
+                "ceramic",
+                "bone"
             ],
             "teater_category": "keramika",
             "confidence_score": 1.0
@@ -312,12 +316,12 @@
         "original_text": "a kosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kosti"
+                "kost lidská"
             ],
             "extracted_keywords_en": [
-                "bones"
+                "human bone"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "kost lidská",
             "confidence_score": 1.0
         }
     },
@@ -330,16 +334,20 @@
         "original_text": "Literatura A. Sedláček, lístopisný slovnik historický,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Literatura",
-                "A. Sedláček",
-                "lístopisný slovník historický"
+                "keramika",
+                "kosti",
+                "literatura",
+                "slovník",
+                "historický"
             ],
             "extracted_keywords_en": [
-                "Literature",
-                "A. Sedláček",
-                "historical dictionary"
+                "ceramic",
+                "bone",
+                "literature",
+                "dictionary",
+                "historical"
             ],
-            "teater_category": "kultura s moravskou malovanou keramikou 2",
+            "teater_category": "kost lidská",
             "confidence_score": 0.95
         }
     },
@@ -359,8 +367,8 @@
                 "storage",
                 "os blovi ca"
             ],
-            "teater_category": "environmentální vzorek",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -372,14 +380,16 @@
         "original_text": "OS Blovi ca",
         "enrichment": {
             "extracted_keywords_cs": [
-                "OS Blovi ca",
+                "uložení",
+                "os blovi ca",
                 "čís. inv."
             ],
             "extracted_keywords_en": [
-                "OS Blovi ca",
+                "storage",
+                "os blovi ca",
                 "inv. no."
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -397,7 +407,7 @@
             "extracted_keywords_en": [
                 "inventory number"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -410,14 +420,19 @@
         "original_text": "Dno 20. dubna l%0 jsem na výsva správee 6kresního muzea v Blovi-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zřícenina",
-                "hradiště"
+                "správee",
+                "hrd",
+                "zříceninu",
+                "odkryto",
+                "téměž"
             ],
             "extracted_keywords_en": [
+                "museum",
                 "ruin",
-                "hillfort"
+                "exposed",
+                "rectangle"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -430,14 +445,18 @@
         "original_text": "eích o ním prohlódla zříceninu hrd \"ku Poten3te jna, k.o. Žinkovy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zřícenina",
-                "hradiště"
+                "muzeum",
+                "vykopávky",
+                "hrad",
+                "lokalita"
             ],
             "extracted_keywords_en": [
-                "ruin",
-                "hillfort"
+                "museum",
+                "excavation",
+                "castle",
+                "site"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -451,14 +470,22 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zřícenina",
-                "hradiště"
+                "hrad",
+                "odkryto",
+                "důl",
+                "keramika",
+                "hradištní"
             ],
             "extracted_keywords_en": [
                 "ruin",
+                "castle",
+                "exposed",
+                "pit",
+                "pottery",
                 "hillfort"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 0.95
         }
     },
     {
@@ -471,16 +498,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hradištní",
-                "keramiky",
+                "středověkého",
                 "zvířecí kostí"
             ],
             "extracted_keywords_en": [
                 "hillfort",
-                "pottery",
+                "medieval",
                 "animal bones"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.95
         }
     },
     {
@@ -492,16 +519,16 @@
         "original_text": "o krývání alive jsme nalez2í ein slomkry keramiky posdn hradištní",
         "enrichment": {
             "extracted_keywords_cs": [
-                "slomková keramika",
                 "hradištní",
-                "středověký"
+                "středověkého",
+                "keramiky"
             ],
             "extracted_keywords_en": [
-                "daub",
                 "hillfort",
-                "medieval"
+                "medieval",
+                "pottery"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 0.95
         }
     },
@@ -515,7 +542,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hradištní",
-                "středověkého",
+                "atředověkého",
                 "zvířecí kost"
             ],
             "extracted_keywords_en": [
@@ -523,7 +550,7 @@
                 "medieval",
                 "animal bone"
             ],
-            "teater_category": "vyspělé středohradištní období",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 0.95
         }
     },
@@ -537,18 +564,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "ostrožna",
-                "západ",
                 "val",
-                "příkop"
+                "příkop",
+                "západ",
+                "východ"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "west",
+                "hill",
                 "rampart",
-                "moat"
+                "moat",
+                "west",
+                "east"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 0.95
         }
     },
     {
@@ -561,21 +590,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "ostrožna",
-                "západ",
-                "zámku",
-                "příkop",
+                "zámek",
                 "val",
-                "hradiště"
+                "příkop",
+                "fortifikace"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "west",
+                "hill",
                 "castle",
+                "rampart",
                 "moat",
-                "rampart"
+                "fortification"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 0.95
         }
     },
     {
@@ -587,20 +615,16 @@
         "original_text": "širokým příkopem; popsaná stavba není na nejvyšším bode ostrožny.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ostrožna",
-                "západ",
                 "val",
                 "příkop",
-                "zámky"
+                "fortifikace"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "west",
                 "rampart",
                 "moat",
-                "castles"
+                "fortification"
             ],
-            "teater_category": "hrad",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 1.0
         }
     },
@@ -615,20 +639,18 @@
             "extracted_keywords_cs": [
                 "val",
                 "příkop",
-                "ostrožna",
-                "západ",
                 "zbytky",
-                "staveni"
+                "staveni",
+                "terén"
             ],
             "extracted_keywords_en": [
                 "rampart",
                 "moat",
-                "hill",
-                "west",
                 "remains",
-                "structure"
+                "structure",
+                "terrain"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -643,16 +665,14 @@
             "extracted_keywords_cs": [
                 "val",
                 "obepíná",
-                "celý vrch",
-                "trojnásobný"
+                "celý vrchol kopce"
             ],
             "extracted_keywords_en": [
                 "rampart",
                 "surrounds",
-                "entire hill",
-                "triple"
+                "entire peak of the hill"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 1.0
         }
     },
@@ -666,15 +686,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "val",
-                "zříceniny",
-                "stavby"
+                "obepíná",
+                "celý",
+                "vřebol",
+                "kopec"
             ],
             "extracted_keywords_en": [
                 "rampart",
-                "ruins",
-                "buildings"
+                "surrounds",
+                "whole",
+                "hill",
+                "hillock"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -691,16 +715,16 @@
                 "obepíná",
                 "celý",
                 "vrebol",
-                "kopec"
+                "kopoc"
             ],
             "extracted_keywords_en": [
                 "rampart",
                 "surrounds",
                 "whole",
                 "hill",
-                "hillfort"
+                "hillock"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 1.0
         }
     },
@@ -720,7 +744,7 @@
                 "rampart",
                 "outer"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -733,14 +757,18 @@
         "original_text": "fálezy ze sběru byly předány Ol v Blovicích.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fálezy ze sběru",
-                "Ol v Blovicích"
+                "fálezy",
+                "sběr",
+                "Ol",
+                "Blovice"
             ],
             "extracted_keywords_en": [
-                "flakes from collection",
-                "Ol in Blovice"
+                "flakes",
+                "collection",
+                "Ol",
+                "Blovice"
             ],
-            "teater_category": "vyspělé středohradištní období",
+            "teater_category": "areál jiné aktivity",
             "confidence_score": 0.95
         }
     },
@@ -753,16 +781,24 @@
         "original_text": "Hrúdek byl posteven v !• 12521259 Ptou z Křimic, trval v eúbělm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
+                "hrádek",
                 "postaven",
-                "Křimice"
+                "Křimice",
+                "13. století",
+                "1. století",
+                "zpustlý",
+                "sedláček"
             ],
             "extracted_keywords_en": [
-                "hillfort",
+                "hill settlement layer/sequence",
                 "built",
-                "Křimice"
+                "Křimice",
+                "13th century",
+                "1st century",
+                "abandoned",
+                "farmer"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 0.95
         }
     },
@@ -775,12 +811,12 @@
         "original_text": "13. a 1. stol* , počátkem 16. stole byl již zpustlý a vrch zarost-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramiky"
+                "hradištní keramika"
             ],
             "extracted_keywords_en": [
                 "hillfort pottery"
             ],
-            "teater_category": "vyspělé středohradištní období",
+            "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.95
         }
     },
@@ -793,12 +829,16 @@
         "original_text": "1$ 4 . Sedláčelt, Místopisný slovník historický, str.721).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramiky"
+                "hradištní keramiky",
+                "hrdek",
+                "sedláčtí"
             ],
             "extracted_keywords_en": [
-                "hillfort pottery"
+                "hradištní keraniky",
+                "hrdek",
+                "sedláčtí"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -812,13 +852,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hradištní keramika",
-                "hradiště"
+                "hradiště",
+                "nálezy"
             ],
             "extracted_keywords_en": [
                 "hillfort pottery",
-                "hillfort"
+                "hillfort",
+                "finds"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.95
         }
     },
@@ -831,16 +873,16 @@
         "original_text": "patrily otarším ocí^Q-nl slovonskému, nebylo při zbžné pronlídce",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramiky",
+                "hradištní keraniky",
                 "hradištní",
-                "hradek"
+                "keraniky"
             ],
             "extracted_keywords_en": [
                 "hillfort pottery",
                 "hillfort",
-                "fortress"
+                "pottery"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.95
         }
     },
@@ -853,14 +895,20 @@
         "original_text": "možno zjistit. $) /. (ren. - Ald, ,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramiky",
-                "hradištní"
+                "dokument",
+                "hlavička",
+                "lokální",
+                "kontextové",
+                "okno"
             ],
             "extracted_keywords_en": [
-                "hillfort pottery",
-                "hillfort"
+                "document",
+                "header",
+                "local",
+                "context",
+                "window"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -873,12 +921,14 @@
         "original_text": "8.12.1960. Ar. V. Stefgnovi-Seldov /",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Ar. V. Stefgnovi-Seldov"
+                "Ar. V. Stefgnovi-Seldov",
+                "1960"
             ],
             "extracted_keywords_en": [
-                "Ar. V. Stefgnovi-Seldov"
+                "Ar. V. Stefgnovi-Seldov",
+                "1960"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     }

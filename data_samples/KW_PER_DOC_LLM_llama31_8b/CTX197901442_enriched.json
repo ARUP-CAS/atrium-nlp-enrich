@@ -8,15 +8,15 @@
         "original_text": "OBEC",
         "enrichment": {
             "extracted_keywords_cs": [
+                "obec",
+                "okres"
+            ],
+            "extracted_keywords_en": [
                 "OBEC",
                 "OKRES"
             ],
-            "extracted_keywords_en": [
-                "MUNICIPALITY",
-                "DISTRICT"
-            ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -28,13 +28,13 @@
         "original_text": "OKRES",
         "enrichment": {
             "extracted_keywords_cs": [
-                "OKRES"
+                "okres"
             ],
             "extracted_keywords_en": [
-                "DISTRICT"
+                "OKRES"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -53,8 +53,8 @@
                 "Vysoký jez",
                 "Mad DrAMou"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -71,8 +71,8 @@
             "extracted_keywords_en": [
                 "Mad DrAMou"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -89,8 +89,8 @@
             "extracted_keywords_en": [
                 "Parcel Number"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -102,15 +102,13 @@
         "original_text": "Rychnov n.Kn.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Rychnov",
-                "n.Kn."
+                "Rychnov n.Kn."
             ],
             "extracted_keywords_en": [
-                "Rychnov",
-                "n.Kn."
+                "Rychnov nad Kněžnou"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -122,20 +120,17 @@
         "original_text": "Přílohy",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Přílohy",
                 "Homole",
-                "kopec",
-                "od",
-                "Vysokí-"
+                "kopec"
             ],
             "extracted_keywords_en": [
+                "Attachments",
                 "Homole",
-                "kopec",
-                "SZ",
-                "od",
-                "Vysokí-"
+                "hill"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -166,8 +161,8 @@
                 "pokytr",
                 "les"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -194,12 +189,12 @@
                 "south",
                 "from",
                 "Vysokí",
-                "Újezda",
+                "Újezd",
                 "covered",
                 "forest"
             ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -217,20 +212,21 @@
                 "od",
                 "Vysokí",
                 "Újezda",
-                "pokytr",
-                "les"
+                "pokryt",
+                "lesem"
             ],
             "extracted_keywords_en": [
                 "Homole",
-                "hill",
-                "from",
+                "kopec",
+                "SZ",
+                "od",
                 "Vysokí",
                 "Újezda",
-                "covered",
-                "forest"
+                "pokryt",
+                "lesem"
             ],
-            "teater_category": "poloha podle katastru",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -242,17 +238,23 @@
         "original_text": "Kultura Z.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Kultura Z",
-                "ČÍSLO MAPY",
-                "Druh nálezu"
+                "Kultura",
+                "Z",
+                "ČÍSLO",
+                "MAPY",
+                "Druh",
+                "nálezu"
             ],
             "extracted_keywords_en": [
-                "Culture Z",
+                "Culture",
+                "Z",
                 "MAP NUMBER",
-                "Type of find"
+                "Type",
+                "of",
+                "find"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -273,8 +275,8 @@
                 "Type of find",
                 "ceramic sherds"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -291,8 +293,8 @@
             "extracted_keywords_en": [
                 "Type of find"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -307,10 +309,10 @@
                 "keramcké střepy"
             ],
             "extracted_keywords_en": [
-                "ceramic sherds"
+                "ceramic shards"
             ],
             "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.9
+            "confidence_score": 0.8
         }
     },
     {
@@ -327,8 +329,8 @@
             "extracted_keywords_en": [
                 "LITERATURE"
             ],
-            "teater_category": "Dominika",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -343,10 +345,10 @@
                 "Uložení"
             ],
             "extracted_keywords_en": [
-                "Depositing"
+                "Uložení"
             ],
-            "teater_category": "Finsko",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -360,19 +362,20 @@
             "extracted_keywords_cs": [
                 "rukopisné",
                 "poznámky",
-                "strana",
-                "56",
-                "autor"
+                "str",
+                "autora",
+                "čis",
+                "inv"
             ],
             "extracted_keywords_en": [
-                "handwritten",
+                "manuscript",
                 "notes",
                 "page",
-                "56",
-                "author"
+                "author",
+                "inventory"
             ],
-            "teater_category": "pohřební objekt",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -389,8 +392,8 @@
             "extracted_keywords_en": [
                 "Inventory Number"
             ],
-            "teater_category": "Fidži",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -403,6 +406,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "P.Jirušek",
+                "starousedlík",
                 "Vysoký Újezd",
                 "Homole",
                 "krechty",
@@ -412,15 +416,16 @@
             ],
             "extracted_keywords_en": [
                 "P.Jirušek",
+                "starousedlík",
                 "Vysoký Újezd",
                 "Homole",
-                "cellars",
-                "potatoes",
-                "beets",
-                "potsherds"
+                "krechty",
+                "brambor",
+                "řepy",
+                "keramické střepy"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.0
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -433,28 +438,22 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "mnoho",
-                "letech",
-                "rolníci",
-                "Homole",
-                "krechty",
-                "brambor",
-                "řepy",
-                "keramické",
-                "střepy"
+                "let",
+                "zemědělské",
+                "uskladnění",
+                "keramika",
+                "štěrky"
             ],
             "extracted_keywords_en": [
                 "many",
                 "years",
-                "farmers",
-                "Homole",
-                "cellars",
-                "potatoes",
-                "beets",
-                "ceramic",
-                "sherds"
+                "agricultural",
+                "storage",
+                "pottery",
+                "shards"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.5
+            "teater_category": "obývání",
+            "confidence_score": 0.8
         }
     },
     {
@@ -473,10 +472,10 @@
             "extracted_keywords_en": [
                 "potatoes",
                 "beets",
-                "potsherds"
+                "ceramic sherds"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.5
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.0
         }
     },
     {
@@ -497,8 +496,8 @@
                 "material",
                 "preserved"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     }
 ]

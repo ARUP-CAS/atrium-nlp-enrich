@@ -12,10 +12,10 @@
                 "Žinkovy"
             ],
             "extracted_keywords_en": [
-                "Village",
+                "TOWN",
                 "Zinkovy"
             ],
-            "teater_category": "neurčený areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -33,7 +33,7 @@
             "extracted_keywords_en": [
                 "Zinkovy"
             ],
-            "teater_category": "objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -46,15 +46,13 @@
         "original_text": "OKRES",
         "enrichment": {
             "extracted_keywords_cs": [
-                "OKRES",
-                "I lzeň- jih"
+                "OKRES"
             ],
             "extracted_keywords_en": [
-                "district",
-                "south-east"
+                "district"
             ],
-            "teater_category": "katastrální území",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -70,11 +68,11 @@
                 "jih"
             ],
             "extracted_keywords_en": [
-                "Ilsen",
+                "I lzeň",
                 "south"
             ],
-            "teater_category": "areál jiné aktivity",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -93,7 +91,7 @@
                 "vir",
                 "Blovice"
             ],
-            "teater_category": "objekt",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -106,15 +104,13 @@
         "original_text": "Č. poř.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Č. poř",
-                "ČÍSLO PARCELY"
+                "Č. poř."
             ],
             "extracted_keywords_en": [
-                "Number",
-                "Parcel"
+                "Number"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -131,7 +127,7 @@
             "extracted_keywords_en": [
                 "PARCEL NUMBER"
             ],
-            "teater_category": "katastrální území",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -149,10 +145,10 @@
             ],
             "extracted_keywords_en": [
                 "NAME",
-                "ROUTE"
+                "ROAD"
             ],
-            "teater_category": "kultovní areál",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -169,7 +165,7 @@
             "extracted_keywords_en": [
                 "Pruohy"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -183,11 +179,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Potenštejn",
+                "Kultura",
                 "středověk"
             ],
             "extracted_keywords_en": [
-                "Potensstein",
-                "medieval"
+                "Potensky",
+                "Culture",
+                "Medieval"
             ],
             "teater_category": "středověk",
             "confidence_score": 1.0
@@ -240,15 +238,13 @@
         "original_text": "ČÍSLO MAPY",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ČÍSLO",
-                "MAPY"
+                "ČÍSLO MAPY"
             ],
             "extracted_keywords_en": [
-                "NUMBER",
-                "MAP"
+                "MAP NUMBER"
             ],
-            "teater_category": "část knihy",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -260,14 +256,16 @@
         "original_text": "Druh nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
+                "nálezu",
                 "keramika",
                 "kosti"
             ],
             "extracted_keywords_en": [
+                "find",
                 "ceramic",
                 "bones"
             ],
-            "teater_category": "keramika",
+            "teater_category": "kost lidská",
             "confidence_score": 1.0
         }
     },
@@ -303,7 +301,7 @@
             "extracted_keywords_en": [
                 "bones"
             ],
-            "teater_category": "kost",
+            "teater_category": "kost lidská",
             "confidence_score": 1.0
         }
     },
@@ -317,18 +315,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Literatura",
+                "Sedláček",
                 "lístopisný",
                 "slovnik",
                 "historický"
             ],
             "extracted_keywords_en": [
                 "Literature",
+                "Sedláček",
                 "chronological",
                 "dictionary",
                 "historical"
             ],
-            "teater_category": "neurčený areál",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -340,15 +340,13 @@
         "original_text": "Uložení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Uložení",
-                "Blovi"
+                "Uložení"
             ],
             "extracted_keywords_en": [
-                "Storage",
-                "Blovi"
+                "Storage"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -367,8 +365,8 @@
                 "OS",
                 "Blovi"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.9
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
         }
     },
     {
@@ -385,7 +383,7 @@
             "extracted_keywords_en": [
                 "inventory number"
             ],
-            "teater_category": "část knihy",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -398,15 +396,41 @@
         "original_text": "Dno 20. dubna l%0 jsem na výsva správee 6kresního muzea v Blovi-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
-                "zřícenina"
+                "Dno",
+                "20. dubna",
+                "l%0",
+                "jsem",
+                "na",
+                "výsva",
+                "správee",
+                "6kresního",
+                "muzea",
+                "Blovi-ích",
+                "prohlódla",
+                "zříceninu",
+                "hrd",
+                "Poten3te",
+                "Žinkovy"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "ruins"
+                "Bottom",
+                "April 20th",
+                "l%0",
+                "I am",
+                "on",
+                "celebration",
+                "exhibition",
+                "6graphic",
+                "museum",
+                "Bolvi-ích",
+                "explored",
+                "ruins",
+                "hrd",
+                "Poten3te",
+                "Zinkovy"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -418,14 +442,12 @@
         "original_text": "eích o ním prohlódla zříceninu hrd \"ku Poten3te jna, k.o. Žinkovy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
-                "Potence",
-                "Zřícenina"
+                "zřícenina",
+                "hrad"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "Potence",
-                "Ruins"
+                "ruins",
+                "castle"
             ],
             "teater_category": "hradiště",
             "confidence_score": 0.95
@@ -443,15 +465,17 @@
                 "zřícenina",
                 "hradiště",
                 "terén",
-                "vévod"
+                "krytina",
+                "zemině"
             ],
             "extracted_keywords_en": [
                 "ruins",
                 "hillfort",
                 "terrain",
-                "area"
+                "roofing",
+                "ground"
             ],
-            "teater_category": "hrazený areál",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -466,14 +490,16 @@
             "extracted_keywords_cs": [
                 "hradiště",
                 "zřícenina",
-                "hrdin"
+                "hrdin",
+                "východ"
             ],
             "extracted_keywords_en": [
                 "hillfort",
                 "ruins",
-                "hero"
+                "hero",
+                "east"
             ],
-            "teater_category": "hrazený areál",
+            "teater_category": "hradiště",
             "confidence_score": 0.95
         }
     },
@@ -487,20 +513,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "krývání",
-                "slomkry keramiky",
-                "posdn hradištní",
-                "atředověkého charaktera",
-                "zvířeeí kost1"
+                "slomková keramika",
+                "posdn hradiště",
+                "atředověké",
+                "zvířecí kost"
             ],
             "extracted_keywords_en": [
                 "covering",
-                "fragments of pottery",
+                "slag pottery",
                 "late hillfort",
-                "medieval character",
-                "animal bones"
+                "medieval",
+                "animal bone"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -523,7 +549,7 @@
                 "animal",
                 "bones"
             ],
-            "teater_category": "zvonice",
+            "teater_category": "zahrada",
             "confidence_score": 0.85
         }
     },
@@ -536,18 +562,36 @@
         "original_text": "umístn na ostrožnu. Která vybíhá smžrem k západu o epadá ostře dolů",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ostrožna",
-                "západ",
+                "umístn",
+                "ostrožnu",
+                "vybíhá",
+                "smžrem",
+                "západu",
+                "epadá",
+                "dolů",
+                "zámkcu",
+                "chránn",
+                "mohutnýn",
+                "příčným",
                 "valen",
-                "příkop"
+                "příkopem"
             ],
             "extracted_keywords_en": [
+                "located",
                 "promontory",
-                "west",
-                "rampart",
-                "moat"
+                "extends",
+                "southwest",
+                "western",
+                "steep",
+                "down",
+                "castle",
+                "protected",
+                "massive",
+                "cyclopean",
+                "wall",
+                "ditch"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -560,18 +604,19 @@
         "original_text": "k dnešnímu zámkcu. Od východu je chránn mohutnýn příčným valen se",
         "enrichment": {
             "extracted_keywords_cs": [
-                "chrání",
+                "zámkcu",
+                "chránn",
                 "příčným",
                 "valen",
                 "příkopem"
             ],
             "extracted_keywords_en": [
-                "protecting",
-                "longitudinal",
-                "rampart",
-                "moat"
+                "castle",
+                "protective",
+                "embanked",
+                "ditch"
             ],
-            "teater_category": "hradba",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -584,14 +629,16 @@
         "original_text": "širokým příkopem; popsaná stavba není na nejvyšším bode ostrožny.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "široký",
-                "příkop"
+                "ostrožna",
+                "příkop",
+                "val"
             ],
             "extracted_keywords_en": [
-                "wide",
-                "moat"
+                "promontory",
+                "moat",
+                "rampart"
             ],
-            "teater_category": "příkop",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -604,16 +651,50 @@
         "original_text": "Tato se smren k západu zvedá, jsou na ní zbytky Siltová vže umí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "západ",
+                "Tato",
+                "se",
+                "smren",
+                "k",
+                "západu",
+                "zvedá",
+                "jsou",
+                "na",
+                "ní",
                 "zbytky",
-                "Siltová vže"
+                "Siltová",
+                "vže",
+                "umístné",
+                "vně",
+                "ji",
+                "ho",
+                "západní",
+                "ho",
+                "rohu",
+                "stavby"
             ],
             "extracted_keywords_en": [
+                "This",
+                "is",
+                "inclined",
+                "to",
+                "the",
                 "west",
+                "rises",
+                "there",
+                "are",
+                "on",
+                "it",
                 "remains",
-                "Siltová vže"
+                "Siltová",
+                "structures",
+                "outside",
+                "it",
+                "its",
+                "western",
+                "corner",
+                "structure"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -626,14 +707,18 @@
         "original_text": "stné vně ji ho západní ho rohu stavby; terén zle je velmi nerový a",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příkop",
-                "terén"
+                "stavba",
+                "západní roh",
+                "terén",
+                "val"
             ],
             "extracted_keywords_en": [
-                "ditch",
-                "terrain"
+                "structure",
+                "western corner",
+                "terrain",
+                "bank"
             ],
-            "teater_category": "příkop",
+            "teater_category": "ohrazení polygonální velké",
             "confidence_score": 0.95
         }
     },
@@ -648,16 +733,14 @@
             "extracted_keywords_cs": [
                 "val",
                 "obepíná",
-                "kopoc",
-                "trojnásobný"
+                "kopoc"
             ],
             "extracted_keywords_en": [
                 "bank",
                 "surrounds",
-                "hill",
-                "threefold"
+                "hill"
             ],
-            "teater_category": "hradba",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 0.95
         }
     },
@@ -670,15 +753,20 @@
         "original_text": "obepíná celý vrebol kopoc, je zde trojnásobný, přičemš nejméně snatel",
         "enrichment": {
             "extracted_keywords_cs": [
-                "trojnásobný",
-                "val"
+                "val",
+                "obepíná",
+                "vrebol",
+                "kopoc",
+                "trojnásobný"
             ],
             "extracted_keywords_en": [
-                "triple",
-                "rampart"
+                "bank",
+                "surrounds",
+                "mound",
+                "multiple"
             ],
-            "teater_category": "val",
-            "confidence_score": 0.95
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 1.0
         }
     },
     {
@@ -697,7 +785,7 @@
                 "bank",
                 "outer"
             ],
-            "teater_category": "val",
+            "teater_category": "ohrazení/fortifikace",
             "confidence_score": 1.0
         }
     },
@@ -711,16 +799,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "fálezy",
-                "sběru",
-                "předány"
+                "sбěru",
+                "předány",
+                "Ol",
+                "Blovicích"
             ],
             "extracted_keywords_en": [
-                "flakes",
+                "cliffs",
                 "collection",
-                "delivered"
+                "given",
+                "Ol",
+                "Blovic"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -733,20 +825,24 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Hrúdek",
-                "posteven",
+                "postaven",
+                "1252",
                 "Ptou",
-                "z",
-                "Křimic"
+                "z Křimic",
+                "13. století",
+                "16. století"
             ],
             "extracted_keywords_en": [
                 "Hrúdek",
-                "fortified",
+                "constructed",
+                "1252",
                 "Ptou",
-                "from",
-                "Křimic"
+                "from Křimic",
+                "13th century",
+                "16th century"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -758,18 +854,18 @@
         "original_text": "13. a 1. stol* , počátkem 16. stole byl již zpustlý a vrch zarost-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
-                "13. století",
-                "1. století",
-                "16. století"
+                "13. a 1. století",
+                "počátkem 16. století",
+                "zpustlý",
+                "zarostlý"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "13th century",
-                "1st century",
-                "16th century"
+                "13th and 1st centuries",
+                "beginning of 16th century",
+                "abandoned",
+                "overgrown"
             ],
-            "teater_category": "hradiště",
+            "teater_category": "pozdní středohradištní období",
             "confidence_score": 0.95
         }
     },
@@ -787,12 +883,12 @@
                 "str.721"
             ],
             "extracted_keywords_en": [
-                "Sedláčelt",
+                "Peasant Dictionary",
                 "Historical Dictionary",
                 "page 721"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "teater_category": "hradiště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -806,15 +902,14 @@
             "extracted_keywords_cs": [
                 "hradištní",
                 "keranikry",
-                "hradek",
-                "službám",
+                "hrdek",
+                "otarším",
                 "slovonskému"
             ],
             "extracted_keywords_en": [
+                "hillfort pottery",
                 "hillfort",
-                "ceramics",
-                "small hill",
-                "service",
+                "Ottoman",
                 "Slavic"
             ],
             "teater_category": "hradiště",
@@ -830,19 +925,16 @@
         "original_text": "patrily otarším ocí^Q-nl slovonskému, nebylo při zbžné pronlídce",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní",
-                "keranikry",
-                "hradkem",
+                "patrily",
+                "otarším",
                 "slovonskému"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "ceramics",
-                "hillfort",
-                "Slavic"
+                "belonged",
+                "Slavonic"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -854,15 +946,19 @@
         "original_text": "možno zjistit. $) /. (ren. - Ald, ,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "možno",
                 "zjistit",
-                "Ar."
+                "Ar",
+                "Steinnow-Seldow"
             ],
             "extracted_keywords_en": [
+                "possible",
                 "determine",
-                "Archaeologist"
+                "Ar",
+                "Steinnow-Seldow"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -874,15 +970,19 @@
         "original_text": "8.12.1960. Ar. V. Stefgnovi-Seldov /",
         "enrichment": {
             "extracted_keywords_cs": [
+                "8.12.1960",
                 "Ar",
-                "Steinnowi-Seldov"
+                "V",
+                "Stefgnovi-Seldov"
             ],
             "extracted_keywords_en": [
+                "8.12.1960",
                 "Ar",
-                "Steinnowi-Seldov"
+                "V",
+                "Stefgnovi-Seldov"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     }
 ]

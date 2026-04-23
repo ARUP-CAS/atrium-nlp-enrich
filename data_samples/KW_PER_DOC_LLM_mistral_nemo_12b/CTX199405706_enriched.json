@@ -20,16 +20,16 @@
             ],
             "extracted_keywords_en": [
                 "ondrejov",
-                "district praha-east",
-                "date: 1820",
-                "culture: 7",
-                "location: bubníkova farmstead",
-                "find: skeleton grave",
-                "context: digging foundation of potter, furnace",
-                "storage: 7",
+                "okr. praha-východ",
+                "dat: 1820",
+                "kult: 7",
+                "lok: bubníkova usedlost",
+                "nalez: human bone grave",
+                "okol: digging foundation for potter, furnace",
+                "ulož: 7",
                 "lit: kalina b. d. a"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "pohřební areál",
             "confidence_score": 1.0
         }
     },
@@ -47,7 +47,7 @@
             "extracted_keywords_en": [
                 "burial"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "pohřební areál",
             "confidence_score": 1.0
         }
     },
@@ -60,17 +60,14 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiště",
-                "kopání základu",
+                "hrnčíř",
                 "pece"
             ],
             "extracted_keywords_en": [
-                "hillfort",
-                "excavation of foundation",
-                "kiln"
+                "pottery kiln"
             ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.95
+            "teater_category": "pec hrnčířská",
+            "confidence_score": 1.0
         }
     }
 ]

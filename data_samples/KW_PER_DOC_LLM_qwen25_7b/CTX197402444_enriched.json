@@ -8,13 +8,23 @@
         "original_text": "o P ATOVICEn.Le",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Osada"
+                "P1",
+                "L1",
+                "P",
+                "A",
+                "T",
+                "O",
+                "V",
+                "I",
+                "C",
+                "E",
+                "n",
+                ".",
+                "Le"
             ],
-            "extracted_keywords_en": [
-                "Settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -26,13 +36,12 @@
         "original_text": "Kat. obec:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Osada"
+                "Kat",
+                "obec"
             ],
-            "extracted_keywords_en": [
-                "Settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.85
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -49,8 +58,8 @@
             "extracted_keywords_en": [
                 "Settlement"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -62,12 +71,14 @@
         "original_text": "Trať: Pardubice",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Trať"
+                "Trať",
+                "Pardubice"
             ],
             "extracted_keywords_en": [
-                "Railway"
+                "Line",
+                "Pardubice"
             ],
-            "teater_category": "areál jiné aktivity",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.8
         }
     },
@@ -85,8 +96,8 @@
             "extracted_keywords_en": [
                 "District"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -98,12 +109,12 @@
         "original_text": "Druh a kultura:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Lužické sídliště"
+                "Druh a kultura"
             ],
             "extracted_keywords_en": [
-                "Lusatian settlement"
+                "Type and culture"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -139,8 +150,8 @@
             "extracted_keywords_en": [
                 "Report"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -152,13 +163,11 @@
         "original_text": "XXWžkumu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "XXWžkumu"
+                "Zpráva"
             ],
-            "extracted_keywords_en": [
-                "XXW context"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.85
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -172,10 +181,8 @@
             "extracted_keywords_cs": [
                 "Aterenta"
             ],
-            "extracted_keywords_en": [
-                "Aterenta"
-            ],
-            "teater_category": "hrad",
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -190,11 +197,9 @@
             "extracted_keywords_cs": [
                 "kmixxxx"
             ],
-            "extracted_keywords_en": [
-                "kmixxxx"
-            ],
-            "teater_category": "univerzita",
-            "confidence_score": 0.7
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -206,13 +211,15 @@
         "original_text": "ved. oddělení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ved. oddělení"
+                "vedené",
+                "oddělení"
             ],
             "extracted_keywords_en": [
-                "excavation director's office"
+                "managed",
+                "department"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.7
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -224,13 +231,12 @@
         "original_text": "za období:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "období"
+                "vedené",
+                "oddělení"
             ],
-            "extracted_keywords_en": [
-                "period"
-            ],
-            "teater_category": "časná doba laténská (LtA)",
-            "confidence_score": 0.85
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -242,14 +248,37 @@
         "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovna",
-                "záchraného výzkumu"
+                "Dne",
+                "19.III.1974",
+                "navštívili",
+                "pískovnu",
+                "Opatovicích",
+                "známou",
+                "velkého",
+                "záchraného",
+                "výzkumu",
+                "AŮ ČSAV",
+                "Praze",
+                "letech",
+                "práce",
+                "zastavena"
             ],
             "extracted_keywords_en": [
-                "quarry",
-                "rescue excavation"
+                "On March 19, 1974",
+                "visited",
+                "sand pit",
+                "Opatovice",
+                "known",
+                "large",
+                "rescue",
+                "excavation",
+                "AŮ ČSAV",
+                "Prague",
+                "years",
+                "work",
+                "stopped"
             ],
-            "teater_category": "zaniklá lokalita",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -262,16 +291,15 @@
         "original_text": "v Opatovicích n.L., známou z velkého záchraného výzkumu AŮ ČSAV",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchrané výzkumu",
+                "Opatovicích",
+                "záchraného výzkumu",
                 "AŮ ČSAV",
-                "Praze"
+                "Praze",
+                "letech",
+                "1956-1959"
             ],
-            "extracted_keywords_en": [
-                "rescue archaeology",
-                "AŮ ČSAV",
-                "Praha"
-            ],
-            "teater_category": "zaniklý/historický areál",
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -293,7 +321,7 @@
                 "years",
                 "1956-1959"
             ],
-            "teater_category": "zaniklý/historický areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -313,8 +341,8 @@
                 "excavation",
                 "interrupted"
             ],
-            "teater_category": "zaniklý/historický areál",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -330,16 +358,16 @@
                 "pískovna",
                 "obnoveny",
                 "výzkum",
-                "přerušen"
+                "zastavena"
             ],
             "extracted_keywords_en": [
-                "works",
+                "work",
                 "quarry",
                 "resumed",
                 "research",
-                "interrupted"
+                "stopped"
             ],
-            "teater_category": "zaniklý/historický areál",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -353,22 +381,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovna",
-                "objekty",
-                "hranice",
-                "záchranného výzkumu",
-                "bagrem",
-                "skryté ploše"
+                "objekty"
             ],
             "extracted_keywords_en": [
                 "sandpit",
-                "objects",
-                "boundary",
-                "rescue excavation",
-                "with spade",
-                "hidden area"
+                "objects"
             ],
-            "teater_category": "těžební objekt",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -381,20 +401,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "bagrem",
-                "skryté",
-                "hlubší",
+                "skryté ploše",
                 "objekty",
                 "skrývka"
             ],
             "extracted_keywords_en": [
                 "excavator",
-                "hidden",
-                "deeper",
+                "hidden surface",
                 "objects",
                 "cover"
             ],
-            "teater_category": "záchranný",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -406,18 +424,16 @@
         "original_text": "však šla velmi hluboko, takže mad± mělčí objekty byly zcela",
         "enrichment": {
             "extracted_keywords_cs": [
-                "skrytka",
-                "hluboko",
                 "objekty",
+                "skrývka",
                 "zničeny"
             ],
             "extracted_keywords_en": [
-                "skrývka",
-                "very deep",
                 "objects",
+                "crypt",
                 "destroyed"
             ],
-            "teater_category": "záchranný",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -430,16 +446,10 @@
         "original_text": "zničeny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekty",
-                "skrývka",
                 "zničeny"
             ],
-            "extracted_keywords_en": [
-                "objects",
-                "depression",
-                "destroyed"
-            ],
-            "teater_category": "zaniklý/historický areál",
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -453,16 +463,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "teréního",
-                "pozorování",
-                "sídliště"
+                "pozorování"
             ],
-            "extracted_keywords_en": [
-                "field",
-                "observation",
-                "settlement"
-            ],
-            "teater_category": "areál jiné aktivity",
-            "confidence_score": 0.85
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -478,19 +483,12 @@
                 "část",
                 "sídliště",
                 "zachována",
-                "parc.č. 1503",
+                "parc.č",
                 "sběrem"
             ],
-            "extracted_keywords_en": [
-                "still",
-                "part",
-                "settlement",
-                "preserved",
-                "parcel no. 1503",
-                "collected"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -503,14 +501,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zachována",
-                "sídliště"
+                "sběrem",
+                "parc.č"
             ],
             "extracted_keywords_en": [
-                "preserved",
-                "settlement"
+                "still preserved",
+                "collected",
+                "parcel number"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -526,11 +526,11 @@
                 "keramiku"
             ],
             "extracted_keywords_en": [
-                "Lusatian",
+                "flint",
                 "ceramic"
             ],
-            "teater_category": "keramika",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -542,15 +542,17 @@
         "original_text": "miku. Další střepy jsme našli na parc.č. 1510, scvernt od pískovny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lžickou",
-                "keramiku"
+                "lžickou keramiku",
+                "parc.č. 1510",
+                "scvernt od pískovny"
             ],
             "extracted_keywords_en": [
-                "Lusatian",
-                "ceramic"
+                "pottery shard",
+                "parcel 1510",
+                "south of the sandpit"
             ],
-            "teater_category": "keramika",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -562,13 +564,15 @@
         "original_text": "Ty však mohou pocházet z rozrušených žárových hrobů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "žárových hrobů"
+                "žárových",
+                "hrobů"
             ],
             "extracted_keywords_en": [
-                "cremation burials"
+                "burnt",
+                "burials"
             ],
-            "teater_category": "pohřeb zvířete",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -582,25 +586,25 @@
             "extracted_keywords_cs": [
                 "domnáváme",
                 "AÚ ČSAV",
-                "přísně",
+                "Praze",
+                "dokončit",
                 "výzkum",
-                "lužického sídliště",
-                "půdorys",
-                "pravěké vesnice",
-                "pohřebiště"
+                "důležitého",
+                "lužického",
+                "sídliště"
             ],
             "extracted_keywords_en": [
                 "we assume",
-                "CAS",
-                "should conduct",
+                "CAS Institute",
+                "Prague",
+                "complete",
                 "research",
-                "late lusatian settlement",
-                "full plan",
-                "prehistoric village",
-                "cemetery"
+                "important",
+                "Lusatian",
+                "settlement"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -612,21 +616,21 @@
         "original_text": "Výzkum tohoto důležitého lužického sídliště, aby tak byl ukázán",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
-                "lužické sídliště",
-                "celý půdorys",
+                "Výzkum",
+                "lužického sídliště",
+                "půdorys",
                 "pravěké vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "excavation",
+                "research",
                 "Lusatian settlement",
-                "full plan",
+                "plan",
                 "prehistoric village",
                 "cemetery"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -647,8 +651,8 @@
                 "prehistoric village",
                 "cemetery"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -660,14 +664,14 @@
         "original_text": "V Hradci Králové, 27.111.1974",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Hradce Králové",
-                "pohřebiště"
+                "Hradec Králové",
+                "27.11.1974"
             ],
             "extracted_keywords_en": [
                 "Hradec Kralove",
-                "cemetery"
+                "11/27/1974"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -680,13 +684,21 @@
         "original_text": ".předejte prosím Dr.J.Ratajo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "předejte"
+                "předejte",
+                "prosím",
+                "Dr.J.Ratajo",
+                "výzkumu",
+                "Opatovicích"
             ],
             "extracted_keywords_en": [
-                "please forward"
+                "please",
+                "submit",
+                "Dr.J.Ratajo",
+                "excavation",
+                "Opatovicích"
             ],
-            "teater_category": "pseudolokalita (< 5 %)",
-            "confidence_score": 0.8
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -702,11 +714,11 @@
                 "Opatovicích"
             ],
             "extracted_keywords_en": [
-                "excavation",
+                "research",
                 "Opatovice"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.7
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -718,13 +730,21 @@
         "original_text": "Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr",
         "enrichment": {
             "extracted_keywords_cs": [
+                "dr",
+                "vedoucí",
+                "výzkumu",
+                "Opatovicích",
                 "sídlišti"
             ],
             "extracted_keywords_en": [
+                "dr",
+                "leading",
+                "research",
+                "Opatovice",
                 "settlement"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -736,13 +756,15 @@
         "original_text": "V.Vokolek by mohl-vzhledem k blízkosti svého pracoviště zahájit jednání",
         "enrichment": {
             "extracted_keywords_cs": [
+                "V.Vokolek",
+                "pracoviště",
+                "ústav",
+                "výzkum",
                 "sídlišti"
             ],
-            "extracted_keywords_en": [
-                "settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -754,12 +776,47 @@
         "original_text": "s ústavem o další výzkum na sídlišti . Doporučuji, aby tento výzkum",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídlišti"
+                "druhý",
+                "vedoucí",
+                "výzkumu",
+                "Opatovicích",
+                "sídlišti",
+                "blízkosti",
+                "svého",
+                "pracoviště",
+                "zahájit",
+                "jednání",
+                "ústavem",
+                "další",
+                "výzkum",
+                "doporučuji",
+                "aby",
+                "tento",
+                "mu",
+                "byl",
+                "svěřen"
             ],
             "extracted_keywords_en": [
-                "settlement"
+                "second",
+                "leading",
+                "researcher",
+                "Opatovice",
+                "settlement",
+                "proximity",
+                "his",
+                "workplace",
+                "initiate",
+                "with",
+                "institution",
+                "further",
+                "research",
+                "recommend",
+                "that",
+                "this",
+                "be",
+                "entrusted"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -779,8 +836,8 @@
                 "research",
                 "settlement"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.7
         }
     },
     {
@@ -799,8 +856,8 @@
                 "Prague",
                 "May 7, 1974"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -811,10 +868,30 @@
         "quality_score": 0.0,
         "original_text": "Poznámka: Pište pokud možno strojem. Na konci uveďte datum odeslání a čitelný podpis. Zprávy koreferenta komisí",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.7
+            "extracted_keywords_cs": [
+                "Poznámka",
+                "Pište",
+                "strojem",
+                "datum",
+                "odeslání",
+                "podpis",
+                "Zprávy",
+                "koreferenta",
+                "komisí"
+            ],
+            "extracted_keywords_en": [
+                "Note",
+                "Write",
+                "if possible",
+                "machine",
+                "date",
+                "submission",
+                "signature",
+                "correspondent",
+                "committees"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -831,10 +908,10 @@
             ],
             "extracted_keywords_en": [
                 "prepare",
-                "double"
+                "duplicate"
             ],
-            "teater_category": "zprávy a hlášení",
-            "confidence_score": 0.85
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -846,14 +923,18 @@
         "original_text": "v^UlíLa uq (AAuu Aud. AnMlut",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vulila",
-                "ulila"
+                "v^UlíLa",
+                "uq",
+                "AAuu",
+                "Aud",
+                "AnMlut",
+                "V",
+                "r",
+                "Wrr",
+                "TcedLir"
             ],
-            "extracted_keywords_en": [
-                "vulina",
-                "ulina"
-            ],
-            "teater_category": "náprstek",
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.85
         }
     },
@@ -866,15 +947,14 @@
         "original_text": "V r Wrr (ia 7 TcedLir). 2 {",
         "enrichment": {
             "extracted_keywords_cs": [
-                "V r Wrr",
+                "V",
+                "r",
+                "Wrr",
                 "TcedLir"
             ],
-            "extracted_keywords_en": [
-                "burial",
-                "grave"
-            ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.85
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     }
 ]

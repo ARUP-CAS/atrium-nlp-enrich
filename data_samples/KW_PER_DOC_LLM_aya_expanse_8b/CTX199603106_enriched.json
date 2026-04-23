@@ -8,10 +8,34 @@
         "original_text": "NÁLEZOVÁ ZPRÁVA O ARCHEOLOGICKÉM VÝZKUMU V DOMĚ ČP. 193/1 NA",
         "enrichment": {
             "extracted_keywords_cs": [
+                "nálezová zpráva o archeologickém výzkumu",
+                "dom č.p. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské"
+            ],
+            "extracted_keywords_en": [
                 "nálezová zpráva",
-                "archeologický výzkum",
-                "dům",
+                "archaeologický výzkum",
+                "dom",
                 "ČP. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské"
+            ],
+            "teater_category": "Západní Sahara",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX199603106",
+        "page": 1,
+        "line": 4,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "KŘIŽOVNICKÉN NÁMĚSTÍ NA STARÉM MĚSTĚ PRAŽSKÉM",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "archeologická zpráva",
+                "dom č.p. 193/1",
                 "Křížovnické náměstí",
                 "Staré Město Pražské"
             ],
@@ -29,44 +53,26 @@
     {
         "file_id": "CTX199603106",
         "page": 1,
-        "line": 4,
-        "categ": "Clear",
-        "quality_score": 0.0,
-        "original_text": "KŘIŽOVNICKÉN NÁMĚSTÍ NA STARÉM MĚSTĚ PRAŽSKÉM",
-        "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "dům ČP. 193/1",
-                "Křížovnické náměstí",
-                "Staré Město Pražské"
-            ],
-            "extracted_keywords_en": [
-                "archeologický výzkum",
-                "dom ČP. 193/1",
-                "Křížovnické náměstí",
-                "Staré Město Pražské"
-            ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.95
-        }
-    },
-    {
-        "file_id": "CTX199603106",
-        "page": 1,
         "line": 8,
         "categ": "Clear",
         "quality_score": 0.0,
         "original_text": "Obsah :",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Historie objektu",
-                "Historie"
+                "objekt",
+                "dům",
+                "Křížovnické náměstí",
+                "Staré Město Pražský",
+                "historie"
             ],
             "extracted_keywords_en": [
-                "Historie objektu",
-                "Dějin objektu"
+                "objekt",
+                "dům",
+                "Křížovnické náměstí",
+                "Staré Město Pražský",
+                "historie"
             ],
-            "teater_category": "Dánsko",
+            "teater_category": "historická budova/komplex",
             "confidence_score": 0.95
         }
     },
@@ -79,15 +85,22 @@
         "original_text": "1. Dějiny objektu 1",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Historie objektu",
-                "Popis nálezu"
+                "dům č.p. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "historie budovy",
+                "archeologický nález"
             ],
             "extracted_keywords_en": [
-                "Historie objektu",
-                "Popis nálezu"
+                "dům",
+                "ČP. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "historie objektu",
+                "nález"
             ],
-            "teater_category": "Dánsko",
-            "confidence_score": 0.98
+            "teater_category": "historická budova/komplex",
+            "confidence_score": 0.95
         }
     },
     {
@@ -99,16 +112,21 @@
         "original_text": "2, Popis nálezu i - 3",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nálezu i",
-                "vyhodnocení nálezu"
-            ],
-            "extracted_keywords_en": [
-                "nálezu",
-                "popis",
+                "nález",
+                "architektonický objekt",
+                "staré město pražské",
+                "křížovnické náměstí",
                 "hodnocení"
             ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.98
+            "extracted_keywords_en": [
+                "nález",
+                "architektonický objekt",
+                "staré město pražské",
+                "křížovnické náměstí",
+                "vyhodnocení"
+            ],
+            "teater_category": "Nová Kaledonie",
+            "confidence_score": 0.95
         }
     },
     {
@@ -121,15 +139,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "nález",
-                "vyhodnocení nálezu",
+                "hodnocení nálezu",
                 "literatura"
             ],
             "extracted_keywords_en": [
                 "nález",
                 "hodnocení",
+                "nálezu",
                 "literatura"
             ],
-            "teater_category": "vyspělé mladohradištní období",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -142,19 +161,20 @@
         "original_text": "4. Literatura 5",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nálezu",
-                "hodnocení",
+                "nález",
+                "vyhodnocení",
+                "literatura",
                 "fotografie",
-                "plánky",
-                "literatura"
+                "plánky"
             ],
             "extracted_keywords_en": [
-                "nálezu (find/findings",
-                "hodnocení (evaluation",
-                "fotografie (photographs",
-                "plánky (plans"
+                "nález",
+                "hodnocení",
+                "literatura",
+                "fotografie",
+                "plánky"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -168,19 +188,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "fotografie",
-                "plány",
-                "umění",
-                "kultura",
-                "dokumentace"
+                "plány"
             ],
             "extracted_keywords_en": [
                 "fotografie",
-                "plánky",
-                "umění",
-                "kultura",
-                "dokumentace"
+                "plánky"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Fidži",
             "confidence_score": 0.95
         }
     },
@@ -193,15 +207,14 @@
         "original_text": "6. Fotogra f 1 e 1 - 3",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fotografie objektů (digitální",
-                "plány"
-            ],
-            "extracted_keywords_en": [
                 "fotografie",
-                "obrázky",
                 "plánky"
             ],
-            "teater_category": "fotografie předmětů (digitální)",
+            "extracted_keywords_en": [
+                "photographs",
+                "plans"
+            ],
+            "teater_category": "Fidži",
             "confidence_score": 0.95
         }
     },
@@ -215,14 +228,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "plány",
-                "plány (digitální)"
+                "plán",
+                "výzkum",
+                "fotografie"
             ],
             "extracted_keywords_en": [
                 "plánky",
-                "fotografické plány",
-                "digitální plány"
+                "plán",
+                "výzkum",
+                "fotografie"
             ],
-            "teater_category": "plány (digitální)",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -235,18 +251,19 @@
         "original_text": "V Prase 15. 1. 1995",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Plány",
-                "výzkum terénu",
-                "povrchové vrstvy",
-                "datum",
-                "jméno osoby"
+                "nálezová zpráva o archeologickém výzkumu",
+                "plány",
+                "křížovnické náměstí (umístění na starém městě pražském)"
             ],
             "extracted_keywords_en": [
-                "Plánky",
-                "výzkum",
-                "povrchová vrstva",
+                "nálezová zpráva",
+                "architektonický průzkum",
+                "křížovnické náměstí",
+                "staré město pražské",
+                "plánky",
+                "výkopové práce",
                 "datum",
-                "osobní jméno"
+                "PhDr. Zdeněk Dragoun"
             ],
             "teater_category": "výzkum povrchové vrstvy",
             "confidence_score": 0.95
@@ -261,17 +278,25 @@
         "original_text": "PhDr. Zdeněk Dragoun",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Prase",
-                "15. 1. 1995",
-                "PhDr. Zdeněk Dragoun"
+                "PhDr. Zdeněk Dragoun",
+                "archeologický výzkum",
+                "nálezová zpráva",
+                "dom ČP. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "15. ledna 1995"
             ],
             "extracted_keywords_en": [
-                "Prase",
-                "1995",
-                "PhDr. Zdeněk Dragoun"
+                "Zdeněk Dragoun",
+                "archeologický výzkum",
+                "nálezová zpráva",
+                "dom ČP. 193/1",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "15. 1. 1995"
             ],
             "teater_category": "archeolog",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -283,14 +308,16 @@
         "original_text": "Dějiny objektu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "historie objektu",
                 "nejstarší dům",
-                "bezprostřední blízkost Karlova"
+                "blízkost Karlova náměstí",
+                "historie",
+                "budova"
             ],
             "extracted_keywords_en": [
-                "historie objektu",
                 "nejstarší dm",
-                "bezprostřední blízkost Karlova"
+                "bezprostřední blízkost Karlova",
+                "dům",
+                "historie objektu"
             ],
             "teater_category": "historická budova/komplex",
             "confidence_score": 0.95
@@ -305,25 +332,22 @@
         "original_text": "Jako nejstarší dm se v této bezprostřední blízkosti Karlova",
         "enrichment": {
             "extracted_keywords_cs": [
-                "historie objektu",
-                "domek celní",
+                "dům",
                 "Karlův most",
-                "mostecká zástavba",
-                "1406",
-                "1430"
+                "celní domek",
+                "1406 - 1430",
+                "spolehlivé písemné doložení",
+                "zastavení",
+                "15. století"
             ],
             "extracted_keywords_en": [
-                "historie",
-                "objekt",
-                "domek",
-                "celní",
-                "most",
+                "dom",
                 "Karlův most",
-                "mostecká",
-                "doložená existence",
-                "zástavba",
-                "1406",
-                "1430"
+                "celný domek",
+                "1406 - 1430",
+                "psaná doložení",
+                "zastavení",
+                "15. století"
             ],
             "teater_category": "historická budova/komplex",
             "confidence_score": 0.95
@@ -340,20 +364,20 @@
             "extracted_keywords_cs": [
                 "Karlův most",
                 "celní domek",
-                "psaná zmínka",
-                "stavební objekt",
-                "15. století",
-                "17. století",
-                "nákladná stavba"
+                "1406 - 1430",
+                "písemné doložení",
+                "zastavení",
+                "1640",
+                "nákladný dům"
             ],
             "extracted_keywords_en": [
                 "Karlův most",
-                "mostecký celní domek",
-                "písemné doložení",
-                "zástavba",
+                "celný domek",
                 "1406 - 1430",
+                "písemné doložení",
+                "zastavení",
                 "1640",
-                "nákladně vystavěný dům"
+                "nákladný dům"
             ],
             "teater_category": "historická budova/komplex",
             "confidence_score": 0.95
@@ -368,22 +392,14 @@
         "original_text": "Spolehlivé písemné doložená existence zástavby pochází až z roku",
         "enrichment": {
             "extracted_keywords_cs": [
-                "domk mostecký",
-                "celní celnice",
-                "zástavba",
-                "rok 1640",
-                "nákladné vystavěný dům",
-                "Sadelerův prospekt"
+                "dům",
+                "celnice"
             ],
             "extracted_keywords_en": [
-                "domk mostecký",
-                "celní celnice",
-                "zástavba",
-                "1640",
-                "nákladné vystavěný dům",
-                "Sadelerův prospekt"
+                "dom",
+                "celnice"
             ],
-            "teater_category": "historická budova/komplex",
+            "teater_category": "budova obytná",
             "confidence_score": 0.95
         }
     },
@@ -396,22 +412,28 @@
         "original_text": "\"1640, kdy je zde jednoznačné lokalizována \"nákladné vystavěný dům\"",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mostecký celní dům",
-                "stavební objekt",
-                "celní úřad",
-                "mapa Sadelerova",
+                "domek",
+                "celní celnice",
+                "zástavba",
+                "rok 1640",
+                "nákladně vystavěný dům",
+                "prospekt",
+                "Sadelerova",
                 "rok 1606",
-                "přidání 3. patra"
+                "dostaveno 3. patro"
             ],
             "extracted_keywords_en": [
-                "mostecký celní dům",
+                "domek",
+                "celní celnice",
                 "zástavba",
-                "celnice",
-                "Sadelerův prospekt",
+                "1640",
+                "nákladné vystavěný dům",
+                "prospekt",
+                "Sadelerová",
                 "1606",
-                "dostavení 3. patra"
+                "dostaveno 3. patro"
             ],
-            "teater_category": "historická budova/komplex",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -424,24 +446,18 @@
         "original_text": "celnice. Tento objekt je zřetelně zachycen na Sadelerové prospektu",
         "enrichment": {
             "extracted_keywords_cs": [
+                "skladba",
                 "celnice",
-                "nákladné vystavěný dům",
-                "prospekt",
-                "1606",
-                "třetí patro",
-                "ikonografické prameny",
-                "Langveil"
+                "17. století",
+                "mapa/plán/výhled/obraz"
             ],
             "extracted_keywords_en": [
-                "celnice",
-                "nákladný dům",
-                "Sadelerův prospekt",
-                "1606",
-                "3. patro",
-                "ikonografické prameny",
-                "Langveil"
+                "cellar",
+                "customs house",
+                "17th century",
+                "prospect (map/plan/view/image)"
             ],
-            "teater_category": "hřeben",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -455,23 +471,23 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "celnice",
-                "skladba domu",
-                "mapa (Sadelerova prospekt z roku 1606",
-                "přístavba patra",
-                "zdroje zobrazující budovu",
-                "model od Langveila",
-                "rekonstrukce v klasicistním stylu"
+                "nákladné vystavěný dům",
+                "Sadelerova prospekt",
+                "1606",
+                "3. patro",
+                "Langveilův model",
+                "klasicistní přestavba"
             ],
             "extracted_keywords_en": [
                 "celnice",
                 "nákladné vystavěný dům",
-                "Sadelerův prospekt",
+                "Sadelerova prospekt",
+                "1606",
                 "3. patro",
-                "ikonografické prameny",
                 "Langveilův model",
                 "klasicistní přestavba"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "historická budova/komplex",
             "confidence_score": 0.95
         }
     },
@@ -485,29 +501,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "celnice",
-                "prospekt",
-                "Sadelerův",
-                "z roku 1606",
-                "další patro",
-                "ikonografické prameny",
-                "model Langveila",
-                "klasicistní přestavba",
-                "rok 1841",
-                "Vilímková - Ebel"
-            ],
-            "extracted_keywords_en": [
-                "celnice",
-                "prospekt",
-                "Sadeler",
-                "1606",
-                "patro",
+                "budova",
                 "ikonomografické prameny",
                 "Langveilův model",
                 "klasicistní přestavba",
-                "1841",
                 "Vilímková - Ebel"
             ],
-            "teater_category": "architektonický článek",
+            "extracted_keywords_en": [
+                "celnice (customs house/building)”, "
+            ],
+            "teater_category": "budova obytná",
             "confidence_score": 0.95
         }
     },
@@ -520,22 +523,20 @@
         "original_text": "modelu. Dnešní vzhled budovy je výsledkem klasicistní přestavby",
         "enrichment": {
             "extracted_keywords_cs": [
-                "budova",
-                "patro",
-                "ikonografické prameny",
-                "model Langveila",
                 "klasicistní přestavba",
-                "rok 1841"
+                "budova",
+                "1841",
+                "Vilímková - Ebel 1988",
+                "vzhled"
             ],
             "extracted_keywords_en": [
-                "budova",
-                "patro",
-                "ikonomografické prameny",
-                "Langveilův model",
                 "klasicistní přestavba",
-                "1841"
+                "budova",
+                "1841",
+                "Vilímková - Ebel 1988",
+                "vzhled"
             ],
-            "teater_category": "historická budova/komplex",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -548,20 +549,28 @@
         "original_text": "z roku 1841 (Vilímková - Ebel 1988, s. 1 - 4).",
         "enrichment": {
             "extracted_keywords_cs": [
+                "nálezová zpráva",
+                "architektonický styl",
+                "klasicismus",
+                "restaurování",
                 "budova",
-                "klasicistní přestavba",
-                "rok 1841",
-                "nálezu",
-                "popis"
+                "Langveilův model",
+                "ikonomografické prameny",
+                "historie",
+                "Pražské Staré Město"
             ],
             "extracted_keywords_en": [
+                "nález",
+                "architektonický styl",
+                "klasicismus",
+                "restaurování",
                 "budova",
-                "klasicistní přestavba",
-                "1841",
-                "nálezu",
-                "popis"
+                "Langveilův model",
+                "ikonomografické prameny",
+                "historie",
+                "Pražské Staré Město"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
         }
     },
@@ -574,18 +583,24 @@
         "original_text": "Popis nálezu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nález",
-                "výkop",
-                "rekonstrukční práce",
+                "nálezu",
+                "archaeologický výzkum",
+                "domu",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "rekonstrukčních prací",
                 "objekt"
             ],
             "extracted_keywords_en": [
-                "nález",
-                "výkop",
-                "rekonstrukční práce",
+                "nálezu",
+                "archaeologický výzkum",
+                "domě",
+                "Křížovnické náměstí",
+                "Staré Město Pražské",
+                "rekonstrukčních prací",
                 "objekt"
             ],
-            "teater_category": "výkop",
+            "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
         }
     },
@@ -599,12 +614,12 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "nález",
-                "rekonstrukce",
+                "rekonstrukční práce",
                 "podlaha",
                 "místnost",
-                "západní stěna",
+                "západní fasáda",
                 "laguna",
-                "blízko Karlova mostu"
+                "Karlův most"
             ],
             "extracted_keywords_en": [
                 "nález",
@@ -613,10 +628,10 @@
                 "místnost",
                 "západní fasáda",
                 "laguna",
-                "Jižně od Karlova mostu"
+                "Karlův most"
             ],
-            "teater_category": "výkop",
-            "confidence_score": 0.95
+            "teater_category": "Nová Kaledonie",
+            "confidence_score": 0.98
         }
     },
     {
@@ -634,8 +649,8 @@
                 "západní fasáda",
                 "laguna",
                 "jižně od Karlova mostu",
-                "zdlvo",
-                "stavebně historický průzkum"
+                "stavebně historický průzkum",
+                "zdlvo"
             ],
             "extracted_keywords_en": [
                 "rekonstrukčních prací",
@@ -644,10 +659,10 @@
                 "západní fasáda",
                 "laguna",
                 "jižně od Karlova mostu",
-                "zdlvo",
-                "stavebně historický průzkum"
+                "stavebně historický průzkum",
+                "zdlvo"
             ],
-            "teater_category": "stavebně-historický průzkum",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -660,30 +675,30 @@
         "original_text": "tzv. lagunou jižně od Karlova mostu. Při této příležitosti bylo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rekonstrukční práce",
+                "rekonstrukčních prací",
                 "podlaha",
                 "místnost",
                 "západní fasáda",
                 "laguna",
-                "jižně od Karlova mostu",
+                "Karlův most",
                 "stavebně historický průzkum",
                 "torzo",
                 "pilíř",
                 "Karlov"
             ],
             "extracted_keywords_en": [
-                "rekonstrukční práce",
+                "rekonstrukčních prací",
                 "podlaha",
                 "místnost",
                 "západní fasáda",
                 "laguna",
-                "Jižně od Karlova mostu",
+                "Karlův most",
                 "stavebně historický průzkum",
                 "torzo",
                 "pilíř",
                 "Karlov"
             ],
-            "teater_category": "stavebně-historický průzkum",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -696,24 +711,23 @@
         "original_text": "odhaleno v delším úseku zdlvo, zaznamenané při stavebně historickém",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stavebně-historický průzkum",
-                "objekt",
+                "stavebně historický průzkum",
+                "torzo prvního pilíře",
                 "Karlův most",
-                "pilíř",
-                "zdlvo",
-                "torzo",
-                "staroměstský břeh"
+                "staroměstský břeh",
+                "zdlivá ze zdiva",
+                "architektonický prvek"
             ],
             "extracted_keywords_en": [
                 "stavebně historický průzkum",
-                "objekt",
-                "Karlův most",
-                "pilíř",
-                "zdlvo",
                 "torzo",
-                "staroměstský břeh"
+                "pilíř",
+                "Karlův most",
+                "staroměstský břeh",
+                "zdlivá",
+                "architektonický prvek"
             ],
-            "teater_category": "stavebně-historický průzkum",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -726,28 +740,24 @@
         "original_text": "průzkumu objektu a interpretované jako torzo prvního pilíře Karlova",
         "enrichment": {
             "extracted_keywords_cs": [
-                "laguna",
                 "Karlův most",
+                "stavebně historický průzkum",
                 "pilíř",
-                "stavebně-historický průzkum",
-                "torzo",
+                "staroměstský břeh",
                 "zdivo",
-                "místnost",
-                "západní strana",
-                "směr severně-jihově"
+                "líc",
+                "směr severně-jihově (SSZ) - jihozápadně (JJV)"
             ],
             "extracted_keywords_en": [
-                "laguna",
                 "Karlův most",
-                "pilíř",
                 "stavebně historický průzkum",
-                "torzo",
+                "pilíř",
+                "staroměstský břeh",
                 "zdivo",
-                "místnost",
-                "západní líc",
+                "líc",
                 "směr SSZ - JJV"
             ],
-            "teater_category": "stavebně-historický průzkum",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -760,28 +770,27 @@
         "original_text": "mostu od staroměstského břehu. Ze zdivá byla v inkriminované",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Karlův most",
-                "pilíř",
-                "stavebně-historický průzkum",
-                "staroměstský břeh",
+                "stavebně historický průzkum",
+                "pilíř Karlova mostu",
+                "břežní část Starého Města",
                 "zdivo",
-                "místnost",
-                "západní strana",
-                "severně-jižní orientace",
-                "východní stěna"
+                "západní líc zdiva",
+                "směr severně-jihově (SSZ) - jihozápadně (JJV)",
+                "hmota zdiva",
+                "východní stěna místnosti"
             ],
             "extracted_keywords_en": [
-                "Karlův most",
-                "pilíř",
                 "stavebně historický průzkum",
+                "pilíř",
+                "Karlův most",
                 "staroměstský břeh",
                 "zdivo",
-                "místnost",
-                "západní líc",
+                "líc zdiva",
                 "směr SSZ - JJV",
+                "hmota zdiva",
                 "východní stěna"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -794,19 +803,24 @@
         "original_text": "místnosti odhalena západní líc, probíhající ve směru SSZ - JJV.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pilíř mostu",
-                "staroměstský břeh",
-                "stěna místnosti",
-                "směr severně-jihovědný (západ-jih) (SSZ - JJV)"
-            ],
-            "extracted_keywords_en": [
                 "pilíř",
-                "most",
+                "Karlův most",
                 "staroměstský břeh",
                 "zdivo",
                 "místnost",
-                "směr SSZ - JJV",
-                "východní stěna",
+                "severně-jižně",
+                "jižně-severně",
+                "podlaha",
+                "cihly"
+            ],
+            "extracted_keywords_en": [
+                "pilier",
+                "Karlův most",
+                "staroměstský břeh",
+                "zdivo",
+                "místnost",
+                "SSZ",
+                "JJV",
                 "podlaha",
                 "cihly"
             ],
@@ -823,12 +837,13 @@
         "original_text": "Vlastní hmota zdivá dosahovala až k východní stěně místnosti. Na",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zeď",
+                "zdivo",
+                "stěna",
                 "místnost",
                 "cihly",
                 "podlaha",
-                "směr",
-                "západní líc"
+                "doba",
+                "architektonický prvek"
             ],
             "extracted_keywords_en": [
                 "zdivo",
@@ -836,8 +851,8 @@
                 "místnost",
                 "cihly",
                 "podlaha",
-                "SSZ",
-                "JJV"
+                "doba",
+                "architektonický prvek"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -852,20 +867,26 @@
         "original_text": "nevelkém dochovaném úseku bylo zdivo překryto podlahou z cihel",
         "enrichment": {
             "extracted_keywords_cs": [
-                "místnosti",
-                "zdivo",
+                "zeď",
+                "mramorová omítka",
                 "podlaha",
-                "cihly",
-                "stěny",
-                "severní stěna"
+                "cihelná dlažba",
+                "struktura",
+                "místnost",
+                "výkop",
+                "archeologický naleziště",
+                "chodník"
             ],
             "extracted_keywords_en": [
-                "místnosti",
-                "zdivo",
-                "podlaha",
-                "cihly",
-                "stěny",
-                "severní stěna"
+                "wall",
+                "masonry",
+                "floor",
+                "tile",
+                "structure",
+                "room",
+                "excavation",
+                "archaeological site",
+                "pavement"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -880,20 +901,31 @@
         "original_text": "formátu 30 x 14 x 6,5 cm. Před snižováním úrovně byla líc zdi",
         "enrichment": {
             "extracted_keywords_cs": [
+                "zeď",
+                "zdivo",
+                "podlaha",
+                "cihelná dlažba",
+                "struktura",
+                "místnost",
+                "zbytky",
+                "výzkum",
+                "kontext",
                 "zdi",
-                "cihelná podlaha",
-                "stěna",
-                "torzo",
-                "snížení",
-                "úrovně"
+                "zdi zlom",
+                "úroveň podlahy"
             ],
             "extracted_keywords_en": [
-                "zdivo",
-                "cihly",
-                "podlaha",
-                "stěna místnosti",
-                "torzo",
-                "snížení úrovně"
+                "wall",
+                "masonry",
+                "floor",
+                "tile",
+                "structure",
+                "room",
+                "remains",
+                "excavation",
+                "context",
+                "wall fragment",
+                "floor level"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -908,22 +940,26 @@
         "original_text": "zachycena pouze při severní stěně místnosti, do níž vystupovalo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "cihly",
-                "zdění",
+                "zeď",
+                "zdivo",
                 "podlaha",
+                "zbytky",
+                "struktura",
                 "místnost",
-                "torzo",
-                "stěna"
+                "cihelná dlažba",
+                "stavba"
             ],
             "extracted_keywords_en": [
-                "cihly",
-                "zdění",
-                "podlaha",
-                "místnost",
-                "torzo",
-                "stěna"
+                "wall",
+                "masonry",
+                "floor",
+                "remains",
+                "structure",
+                "room",
+                "tile",
+                "construction"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "struska",
             "confidence_score": 0.95
         }
     },
@@ -936,22 +972,28 @@
         "original_text": "torzo 70 cm vysoké a cm dlouhé. Po snížení podlahy bylo zřejmé, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stěna",
+                "zeď",
+                "mramorová zdiva",
+                "zbytky",
+                "struktura",
+                "komnata",
+                "výkop",
                 "torzo",
-                "konstrukce",
                 "úroveň podlahy",
-                "stavba",
-                "zbytky"
+                "kontext"
             ],
             "extracted_keywords_en": [
                 "wall",
-                "torso",
+                "masonry",
+                "remains",
                 "structure",
+                "room",
+                "excavation",
+                "torso",
                 "floor level",
-                "construction",
-                "remains"
+                "context"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -964,20 +1006,22 @@
         "original_text": "se jednalo pouze o nepatrnou část zdivá, probíhajícího přes celou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "torzo",
-                "keramika",
-                "zdívá",
+                "zdivo",
                 "stěna",
-                "místnost"
+                "místnost",
+                "torzo",
+                "naleziště",
+                "architektonický prvek"
             ],
             "extracted_keywords_en": [
-                "torzo",
-                "keramika",
-                "zdívá",
+                "zdivo",
                 "stěna",
-                "místnost"
+                "místnost",
+                "torzo",
+                "naleziště",
+                "architektonický prvek"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -993,17 +1037,17 @@
                 "délku místnosti",
                 "vertikálně pokračující do dále nesledované hloubky",
                 "výkop v interiéru",
-                "písčitá vrstva násypového charakteru",
-                "příměs malty a úlomků opuky a cihel"
+                "zasáhl do písčité vrstvy",
+                "náplň: malta a úlomky opuky a cihel"
             ],
             "extracted_keywords_en": [
-                "délku místnosti",
-                "vertikálně pokračující hloubky",
-                "výkop",
+                "délka místnosti",
+                "vertikálně pokračující hloubka",
+                "výkop v interiéru",
                 "písčitá vrstva",
-                "náplň (písčité vrstvy: malta, úlomky opuky, cihly)"
+                "náplň: malta, úlomky opuky a cihel"
             ],
-            "teater_category": "terénní odkryv",
+            "teater_category": "výkop",
             "confidence_score": 0.95
         }
     },
@@ -1016,24 +1060,16 @@
         "original_text": "hloubky. Výkop v interiéru zasáhl do písčité vrstvy násypového",
         "enrichment": {
             "extracted_keywords_cs": [
-                "délka místnosti",
-                "hloubka výkopu",
-                "výkop v interiéru",
+                "výkop",
                 "písčitá vrstva",
-                "náplň: malta, úlomky opuky, cihly",
-                "chybí chronologické zařazení artefaktů",
-                "hmota zdí"
+                "náplň (písčitá vrstva s maltou a úlomky opuky a cihel)"
             ],
             "extracted_keywords_en": [
-                "délka místnosti",
-                "vertikální hloubka",
-                "výkop v interiéru",
+                "výkop",
                 "písčitá vrstva",
-                "náplň: malta, úlomky opuky, cihly",
-                "chybějící chronologická citlivost artefaktů",
-                "hmota zdiva"
+                "náplň (písčitá vrstva s maltou a úlomky opuky a cihel) ,"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "výkop",
             "confidence_score": 0.95
         }
     },
@@ -1046,32 +1082,30 @@
         "original_text": "charakteru s příměsí malty a úlomků opuky a cihel, ani ä v ní byly",
         "enrichment": {
             "extracted_keywords_cs": [
-                "délka místnosti",
-                "hloubka výkopu",
-                "výkop v interiéru",
-                "písčitá vrstva",
+                "výkop",
+                "místnost",
+                "jámy",
+                "zemní vrstva",
+                "zdivo",
+                "opuka",
                 "malta",
-                "úlomky opuky",
                 "cihly",
-                "archeologicky významné nálezy",
-                "stěny",
-                "východní stěna",
-                "lomová opuka"
+                "artefakty",
+                "chronologický kontext"
             ],
             "extracted_keywords_en": [
-                "délka místnosti",
-                "vertikální hloubka",
-                "výkop v interiéru",
-                "písčitá vrstva násypu",
-                "malta",
-                "úlomky opuky",
-                "cihly",
-                "chronologicky citlivé artefakty",
-                "zdivo",
-                "východní zeď",
-                "lomová opuka"
+                "excavation",
+                "room",
+                "pits",
+                "soil layer",
+                "masonry",
+                "opac stone",
+                "cement",
+                "brick",
+                "artifacts",
+                "chronological context"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "archeolog",
             "confidence_score": 0.95
         }
     },
@@ -1084,26 +1118,30 @@
         "original_text": "nalezeny chronologicky citlivé artefakty. Vlastní hmota zdivá až",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výkop v interiéru",
-                "písčitá vrstva násypu",
-                "malta s úlomky",
-                "cihelná zeď",
-                "zdivo k východní zdi",
-                "lomová opuka",
-                "vápenná malta"
-            ],
-            "extracted_keywords_en": [
                 "výkop",
+                "vrstvy",
                 "písčitá vrstva",
-                "násyp",
                 "malta",
-                "úlomky opuky",
-                "cihel",
-                "zdivo",
+                "opuka",
+                "cihelné zdivo",
                 "východní zeď",
                 "lomová opuka",
                 "vápenná malta",
-                "řivnáč"
+                "řivnáčský kámen",
+                "stavba",
+                "masonry",
+                "stěna"
+            ],
+            "extracted_keywords_en": [
+                "excavation",
+                "stratigraphy",
+                "building",
+                "masonry",
+                "stone",
+                "malt",
+                "riverstone",
+                "construction",
+                "wall"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1118,24 +1156,24 @@
         "original_text": "k východní zdi místnosti byla vyaděna výlučně z lomové opuky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zdi",
-                "opuka",
-                "cihelné zdivo",
                 "malta",
+                "opuka",
+                "cihly",
+                "zdivo",
                 "vápenná malta",
                 "lomová opuka",
                 "říční písek",
-                "architektonická konstrukce"
+                "vápno"
             ],
             "extracted_keywords_en": [
-                "zdivo",
+                "maltu",
                 "opuka",
-                "cihelná",
-                "malta",
+                "cihly",
+                "zdivo",
                 "vápenná malta",
                 "lomová opuka",
                 "říční písek",
-                "architektonická struktura"
+                "vápno"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1150,28 +1188,28 @@
         "original_text": "nevelkých rozměrů, spojovaných vápennou maltou z hrubého říčního",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zdi",
-                "východní stěna",
-                "maltová omítka",
-                "lomová kámen",
+                "malt",
+                "lomová opuka",
+                "maltová směs",
+                "podíl vápna",
+                "pevnost malty",
                 "řecký písek",
-                "vápení",
-                "kvalita",
-                "pevnost",
-                "architektonický detail"
+                "stavební technika",
+                "zdi",
+                "architektonická konstrukce"
             ],
             "extracted_keywords_en": [
+                "malt",
+                "mramorová opuka",
+                "vápenitá malta",
+                "kvalita malty",
+                "vápno",
+                "říční písek",
+                "stavební technika",
                 "zdivo",
-                "východní zeď",
-                "maltová omítka",
-                "lomová opuka",
-                "hrubý říční písek",
-                "vápeno",
-                "kvalita",
-                "pevnost",
-                "architektonický prvek"
+                "architektonická struktura"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1184,24 +1222,24 @@
         "original_text": "písku. Přestože opticky nevypadá podíl vápna v maltě jako výrazný,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "maltu",
-                "vápenná malta",
-                "hrubý říční písek",
+                "malta",
+                "vápenato",
+                "písek z řeky",
                 "kvalitní",
                 "pevná",
                 "obklad",
-                "řádkovaný"
+                "řádek"
             ],
             "extracted_keywords_en": [
-                "maltu",
-                "vápenná malta",
-                "hrubý říční písek",
-                "kvalitní",
-                "pevná",
+                "malt",
+                "vápno",
+                "říční písek",
+                "kvalita",
+                "pevnost",
                 "obklad",
-                "řádkovaný"
+                "řádkování"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1215,27 +1253,27 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "malta",
-                "vápenitá malta",
-                "hrubý říční písek",
-                "kvalitní",
-                "pevná",
-                "líc zdiva",
+                "vápeno",
+                "písek",
+                "zdivo",
                 "obklad",
-                "pískovcové bloky",
-                "narezavěle sluněné zbarvení"
+                "pískovec",
+                "kvádr",
+                "barva",
+                "fotografie"
             ],
             "extracted_keywords_en": [
-                "malta",
-                "vápenná malta",
-                "hrubý říční písek",
-                "kvalitní",
-                "pevná",
-                "líc zdiva",
+                "malt",
+                "vápno",
+                "písek",
+                "zdivo",
                 "obklad",
-                "pískovcové kvádry",
-                "narezavěle Slutého zbarvení"
+                "pískovec",
+                "kvádr",
+                "barva",
+                "fotografie"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -1249,25 +1287,23 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "malta",
-                "písek",
                 "vápenec",
-                "zdivo",
-                "pískovcové kvádry",
+                "kvalita",
+                "pískovec",
                 "obklad",
-                "barva",
+                "zdivo",
                 "architektonický prvek"
             ],
             "extracted_keywords_en": [
                 "malt",
-                "písek",
                 "vápenec",
-                "zdivo",
-                "pískovcové kvádry",
+                "kvalita",
+                "pískovec",
                 "obklad",
-                "barva",
+                "zdivo",
                 "architektonický prvek"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1281,19 +1317,23 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "malta",
-                "pískovcové kvádry",
-                "obklad",
-                "písčité zbarvení",
-                "stavební keramika"
+                "pískovec (pískovcové kvádrů (pískovcové bloky))",
+                "zdivo (stěny (stěny))",
+                "obklad (facáda (facada))",
+                "opravdná kvalita (pevnost (pevnost))",
+                "barva (stárnutí (zbarvení (barva))",
+                "výška (výška (výška))"
             ],
             "extracted_keywords_en": [
-                "malta",
-                "pískovcové kvádry",
-                "obklad",
-                "písčité zbarvení",
-                "stavební keramika"
+                "malt",
+                "pískovec (sandstone) (sandstone) (pískovcové kvádrů (sandstone blocks))",
+                "zdivo (wall) (zdi (walls))",
+                "obklad (facing) (facade) (řádkovaný obklad (coursed rubble))",
+                "kvalita (quality) (pevnost (strength))",
+                "barva (color) (narezavěle Slutého zbarvení (faded grayish color))",
+                "výška (height) (156 cm (156 centimeters))"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -1306,22 +1346,26 @@
         "original_text": "1-3). Nejvyšší odhalená partie byla tvořena čtyřmi pískovcovými",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zdivo",
+                "pískovec",
                 "obklad",
-                "pískovcové kvádry",
-                "barva",
+                "zdivo",
+                "architektonická struktura",
                 "stěna",
                 "místnost",
-                "výška"
+                "výška",
+                "zbarvení",
+                "fotografie"
             ],
             "extracted_keywords_en": [
-                "zdivo",
+                "pískovec",
                 "obklad",
-                "pískovcové kvádry",
-                "barva",
-                "městská stěna",
+                "zdivo",
+                "architektonická struktura",
+                "stěna",
                 "místnost",
-                "výška"
+                "výška",
+                "zbarvení",
+                "fotografie"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1336,22 +1380,26 @@
         "original_text": "řádky o ce 1 kové výšce 156 cm. Dva horn í řádky o shodné výšce 35 cm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcové kvádry",
-                "nerezavělá barva",
-                "místnost",
-                "zdivo",
-                "řádky",
-                "výška",
-                "severní stěna"
+                "pískovcové kvádrů",
+                "narezavěle Slutého zbarvení",
+                "čtyři řádky",
+                "výška 156 cm",
+                "dva řádky",
+                "šodná výška 35 cm",
+                "severní stěna místnosti",
+                "nově odkryty řádky",
+                "pískovcové"
             ],
             "extracted_keywords_en": [
-                "pískovcové kvádry",
-                "nerezavělá barva",
-                "místnost",
-                "zdivo",
-                "řádky",
-                "výška",
-                "severní stěna"
+                "pískovcové kvádrů",
+                "narezavěle Slutého zbarvení",
+                "čtyři řádky",
+                "výška 156 cm",
+                "dva řádky",
+                "šodná výška 35 cm",
+                "severní stěna místnosti",
+                "nově odkryty řádky",
+                "pískovcové"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1366,22 +1414,10 @@
         "original_text": "byly dochovány jen u severní stěny místnosti a představují doposud",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovec",
-                "řádky zdi",
-                "komnata",
-                "výška zdí",
-                "nově objevené části",
-                "dvojitá vrstva zdí",
-                "fáze výstavby"
+                "pískovec (pískovec), zdivo (stěna), místnost (komnata), odhalená část (odhalená část), výška (výška), zachované (zachované), nově objevené (nově objevené), řádky (řady)"
             ],
             "extracted_keywords_en": [
-                "pískovec",
-                "řádky zdiva",
-                "místnost",
-                "dostupná výška",
-                "nově objevené řádky",
-                "dvojitý řádek",
-                "doba stavby"
+                "pískovec (sandstone) (stone), zdivo (wall), místnost (room), odhalená partie (exposed section), výška (height), dochované (preserved), nový (newly discovered), řádky (rows)"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1396,23 +1432,17 @@
         "original_text": "známý úsek zdivá. Nově byly odkryty dalSÍ dva pískovcové řádky.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ce 1 kové",
+                "pískovec",
+                "řádky zdiva",
                 "výška",
-                "řádky",
-                "pískovcové zdivo",
-                "dochované části",
-                "kompletně zachované kvádr",
-                "horizontální rozměry kamenů"
+                "kompletně dochované kvádrů",
+                "horizontální rozměr"
             ],
             "extracted_keywords_en": [
-                "ce 1 kové",
+                "pískovec",
+                "řádky zdiva",
                 "výška",
-                "řádky",
-                "pískovcové",
-                "zdivo",
-                "dochované",
-                "kompletně",
-                "kvádrů",
+                "kompletně dochované kvádrů",
                 "horizontální rozměr"
             ],
             "teater_category": "architektonický článek",
@@ -1428,22 +1458,24 @@
         "original_text": "Horní z nich kolísá ve výšce 32 - 36 cm a u 5 kompletně dochovaných",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcový zdivo",
-                "kvádr",
+                "pískovec",
+                "zdi",
+                "řady",
+                "kvádry",
                 "výška",
                 "rozměr",
-                "dvojitý řádek",
-                "stěna místnosti"
+                "úplně zachované"
             ],
             "extracted_keywords_en": [
-                "pískovcový zdivo",
-                "kvádr",
+                "pískovec",
+                "zdivo",
+                "řádky",
+                "kvádry",
                 "výška",
                 "rozměr",
-                "dvojitý řádek",
-                "stěna místnosti"
+                "kompletně dochované"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1456,20 +1488,22 @@
         "original_text": "kvádrů činil jejich horizontální rozměr 126, 120, 122, 130 a 116 cm.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcové řádky",
-                "kvádry",
+                "pískovec",
+                "řady zdí",
+                "kádrů",
                 "výška",
                 "rozměr",
-                "stavba"
+                "stavební prvek"
             ],
             "extracted_keywords_en": [
-                "pískovcové řádky",
-                "kvádry",
+                "pískovec",
+                "řádky zdiva",
+                "kádrů",
                 "výška",
                 "rozměr",
-                "doba stavby"
+                "architektonický prvek"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1482,18 +1516,24 @@
         "original_text": "Spodní řádek dosahoval výšky 52 cm a skládal se z kvádrů dlouhých",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kvádr",
+                "kvádrů",
+                "výška",
+                "délka",
+                "rozměr",
                 "důlek",
                 "uchycení",
-                "nůžková"
+                "nůžková konstrukce"
             ],
             "extracted_keywords_en": [
-                "kvádr",
-                "důlku",
+                "kvádrů",
+                "dálka",
+                "výška",
+                "horizontální rozměr",
+                "důlek",
                 "uchycení",
-                "nůžková"
+                "nůžková konstrukce"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1507,23 +1547,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kvádrů",
-                "rozměr",
-                "řádek",
-                "výška",
-                "důlek",
-                "krenpa",
-                "uchycení"
-            ],
-            "extracted_keywords_en": [
-                "kvádrů",
-                "horizontální rozměr",
                 "řádek",
                 "výška",
                 "důlek",
                 "nůžková krenpa",
                 "uchycení"
             ],
-            "teater_category": "architektonický článek",
+            "extracted_keywords_en": [
+                "kvádrů",
+                "řádek",
+                "výška",
+                "důlku",
+                "nůžková krenpa",
+                "uchycení"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -1536,14 +1574,22 @@
         "original_text": "své lícové stěně opatřena důlkem pro lepší uchycení do nůžkové",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kvádr",
-                "důlek (v zákopu pro uchycení krenpy, v zdivě)"
+                "kvádrů",
+                "důlku",
+                "nůžkové krenpy",
+                "zdivo",
+                "dvě řádky",
+                "dohodleně dochované zdivo"
             ],
             "extracted_keywords_en": [
-                "kvádr",
-                "důlku (dúlek, v zákopu, pro uchycení krenpy, v zdivě)"
+                "kvádrů",
+                "důlku",
+                "nůžkové krenpy",
+                "zdivo",
+                "dvě řádky",
+                "dohodleně dochované zdivo"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1556,24 +1602,22 @@
         "original_text": "krenpy, při čemě podstatně větší procento výskytu důlku bylo",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kvádru",
                 "důlky",
-                "kvádrů",
-                "lícové stěny",
-                "nůžková krenpy",
+                "nůžková krenpa",
                 "zdivo",
                 "horizontálně",
                 "vertikálně"
             ],
             "extracted_keywords_en": [
-                "důlky",
                 "kvádrů",
-                "lícové stěny",
-                "nůžková krenpy",
+                "důlku",
+                "nůžková krenpa",
                 "zdivo",
                 "horizontálně",
                 "vertikálně"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -1588,11 +1632,10 @@
             "extracted_keywords_cs": [
                 "důlky",
                 "zdivo",
-                "horizontálně",
-                "vertikálně",
+                "umístěny horizontálně",
+                "umístěny vertikálně",
                 "lícová stěna",
-                "nůžková",
-                "uchycení"
+                "nůžková krenpa"
             ],
             "extracted_keywords_en": [
                 "důlky",
@@ -1600,10 +1643,9 @@
                 "horizontálně",
                 "vertikálně",
                 "lícová stěna",
-                "nůžková",
-                "uchycení"
+                "nůžková krenpa"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -1618,18 +1660,19 @@
             "extracted_keywords_cs": [
                 "důlky",
                 "zdivo",
-                "umístění horizontální",
-                "rozměr vertikální",
-                "hrany kvádru",
-                "lícová hrana"
+                "umístěny horizontálně",
+                "umístěny vertikálně",
+                "lícové zdivo",
+                "umístění v kvádru"
             ],
             "extracted_keywords_en": [
                 "důlky",
                 "zdivo",
-                "horizontální umístění",
-                "vertikální rozměr",
-                "hrana kvádru",
-                "lícová hrana"
+                "horizontálně",
+                "vertikálně",
+                "lícové",
+                "umístění",
+                "kvádru"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1648,13 +1691,15 @@
                 "kvádry",
                 "vertikální rozměr",
                 "horní hrana",
+                "lícové kvádrů",
                 "stavební úpravy"
             ],
             "extracted_keywords_en": [
                 "důlky",
                 "kvádry",
                 "vertikální rozměr",
-                "hrana",
+                "horní hrana",
+                "lícové kvádrů",
                 "stavební úpravy"
             ],
             "teater_category": "architektonický článek",
@@ -1670,24 +1715,22 @@
         "original_text": "kvádrů, dosahují ce tak aä 6 cm šfřky. Stavební úpravy v sousední m",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rozměry",
-                "kvádry",
-                "stavební úpravy",
                 "sklep",
+                "stavební úpravy",
                 "podlaha",
-                "průkopy",
-                "západní strana"
+                "sousední prostor",
+                "výška",
+                "podlahy"
             ],
             "extracted_keywords_en": [
-                "rozměry",
-                "kvádry",
-                "stavební úpravy",
                 "sklep",
+                "stavební úpravy",
                 "podlaha",
-                "průkopy",
-                "západní strana"
+                "sousední prostor",
+                "výška",
+                "podlahy"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "sklep",
             "confidence_score": 0.95
         }
     },
@@ -1700,24 +1743,24 @@
         "original_text": "východním prostoru sklepa rovně zasáhly pod úroveň podlahy, i když",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kvádrů",
-                "stavební úpravy",
                 "sklep",
-                "úroveň podlahy",
+                "stavební úpravy",
+                "podlahy",
                 "průkopy",
                 "západní část",
                 "severní stěna",
-                "dodatečná příčka"
+                "dodatečná příčka",
+                "prostor"
             ],
             "extracted_keywords_en": [
-                "kvádrů",
-                "stavební úpravy",
                 "sklep",
-                "úroveň podlahy",
+                "stavební úpravy",
+                "podlahy",
                 "průkopy",
                 "západní část",
                 "severní stěna",
-                "dodatečná příčka"
+                "dodatečná příčka",
+                "prostor"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1732,24 +1775,30 @@
         "original_text": "ve výrazně omezenější míře. Zhruba 1 m široké průkopy podél západní",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kvádrů",
-                "stavební úpravy",
                 "sklep",
-                "opukové zdivo",
-                "maltou",
+                "stěna",
+                "příčka",
+                "zdivo",
+                "maltu",
+                "výška",
+                "podlaha",
+                "stavební úpravy",
                 "průkopy",
-                "příčka"
+                "opuk"
             ],
             "extracted_keywords_en": [
-                "kvádry",
-                "stavební úpravy",
                 "sklep",
-                "opukové zdivo",
+                "stěna",
+                "příčka",
+                "zdivo",
                 "maltu",
+                "výška",
+                "podlahy",
+                "stavební úpravy",
                 "průkopy",
-                "příčka"
+                "opuk"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -1763,19 +1812,25 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sklep",
-                "zdivo",
-                "mazanice",
-                "opuk",
-                "stěna",
-                "překážka"
+                "opukové zdivo",
+                "malta",
+                "západní část",
+                "severní stěna",
+                "příčka",
+                "podlaha",
+                "výška",
+                "prostor"
             ],
             "extracted_keywords_en": [
                 "sklep",
-                "zdivo",
+                "opukové zdivo",
                 "malta",
-                "opuk",
-                "stěna",
-                "příčka"
+                "západní část",
+                "severní stěna",
+                "příčka",
+                "podlaha",
+                "výška",
+                "prostor"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1794,20 +1849,18 @@
                 "malta",
                 "sklep",
                 "západní část",
-                "severní stěna",
-                "příčka",
-                "složení"
+                "stěna",
+                "příčka"
             ],
             "extracted_keywords_en": [
                 "opukové zdivo",
                 "malta",
                 "sklep",
                 "západní část",
-                "severní stěna",
-                "příčka",
-                "složení"
+                "stěna",
+                "příčka"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -1823,15 +1876,15 @@
                 "opukové zdivo",
                 "malta",
                 "sklep",
-                "západní část"
+                "západní část sklepa"
             ],
             "extracted_keywords_en": [
                 "opukové zdivo",
                 "malta",
                 "sklep",
-                "západní část"
+                "západní část sklepa"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "sklep",
             "confidence_score": 0.95
         }
     },
@@ -1844,20 +1897,22 @@
         "original_text": "hmota zdivá ukončena lícem, pouze v severní zdi stávajícího sklepa",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zdi",
-                "sklep",
+                "zdiva",
+                "sklepní prostory",
                 "stěna",
-                "kvádr",
-                "pískovec"
+                "spára",
+                "pískovec",
+                "kvádr"
             ],
             "extracted_keywords_en": [
-                "zdivo",
+                "zdiva",
                 "sklep",
                 "stěna",
-                "kvádr",
-                "pískovec"
+                "spára",
+                "pískovec",
+                "kvádr"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1870,20 +1925,24 @@
         "original_text": "byla v nevelké dochované výšce ve vzdálenosti 420 cm od západní zdi",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zdiva",
-                "sklepní prostor",
+                "sklepní prostory",
                 "stěna",
-                "pískovcový kvádro",
-                "pokračování zdi"
+                "spára",
+                "pískovcový kvádr",
+                "zdi",
+                "pokračování zdi",
+                "architektonická konstrukce"
             ],
             "extracted_keywords_en": [
-                "zdivo",
                 "sklep",
-                "stěna",
-                "pískovec",
-                "kvádro",
                 "zdi",
-                "prostor"
+                "stěna",
+                "kvádr",
+                "pískovec",
+                "spára",
+                "sklepařské práce",
+                "zdivo",
+                "architektonická struktura"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -1900,18 +1959,20 @@
             "extracted_keywords_cs": [
                 "sklepní prostory",
                 "stěna",
+                "spára",
                 "pískovcový kvádr",
                 "pokračování zdi",
-                "zdivo"
+                "západní zeď"
             ],
             "extracted_keywords_en": [
                 "sklepní prostory",
                 "stěna",
+                "spára",
                 "pískovcový kvádr",
                 "pokračování zdi",
-                "zdivo"
+                "západní zeď"
             ],
-            "teater_category": "stavební keramika",
+            "teater_category": "stavební/spojovací prvek",
             "confidence_score": 0.95
         }
     },
@@ -1926,22 +1987,26 @@
             "extracted_keywords_cs": [
                 "sklepní prostory",
                 "stěna",
-                "pískovcový kvádr",
+                "pískovec",
+                "kvádr",
                 "zdi",
+                "přizděno",
                 "pokračování",
-                "pískovcový blok",
-                "interiér sklepa"
+                "interiér sklepa",
+                "odlomeno"
             ],
             "extracted_keywords_en": [
                 "sklepní prostory",
                 "stěna",
-                "pískovcový kvádr",
+                "pískovec",
+                "kvádr",
                 "zdi",
+                "přizděno",
                 "pokračování",
-                "pískovcový blok",
-                "interiér sklepa"
+                "interiér sklepa",
+                "odlomeno"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -1957,23 +2022,17 @@
                 "pískovcový blok",
                 "sklep",
                 "zdi",
-                "pokračování",
-                "východní hrana",
-                "linie",
-                "kolmá",
-                "severní"
+                "interiér",
+                "východní hrana"
             ],
             "extracted_keywords_en": [
                 "pískovcový blok",
                 "sklep",
                 "zdi",
-                "pokračování",
-                "východní hrana",
-                "linie",
-                "kolmá",
-                "severní"
+                "interiér",
+                "východní hrana"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -1988,12 +2047,11 @@
             "extracted_keywords_cs": [
                 "pískovcový blok",
                 "sklep",
-                "vnitřek",
+                "interiér",
                 "obvodová zeď",
-                "řada",
+                "linie",
                 "kolmá",
-                "severní strana",
-                "plán"
+                "severní směr"
             ],
             "extracted_keywords_en": [
                 "pískovcový blok",
@@ -2002,10 +2060,9 @@
                 "obvodová zeď",
                 "linie",
                 "kolmá",
-                "severní",
-                "plánek"
+                "severní směr"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -2020,14 +2077,14 @@
             "extracted_keywords_cs": [
                 "plán",
                 "obvodová zeď",
-                "nález"
+                "zdi"
             ],
             "extracted_keywords_en": [
                 "plán",
                 "obvodová zeď",
-                "nález"
+                "zdi"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -2041,18 +2098,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "vyhodnocení nálezu",
-                "situování odkrytého zdiva",
-                "charakteru jeho"
+                "objekt",
+                "zdi",
+                "odkrytý",
+                "situování",
+                "charakter"
             ],
             "extracted_keywords_en": [
-                "vyhodnocení",
-                "nálezu",
+                "vyhodnocení nálezu",
+                "objekt",
+                "zdi",
+                "odkrytý",
                 "situování",
-                "odkrytého zdiva",
-                "charakteru",
-                "jeho"
+                "charakter"
             ],
-            "teater_category": "nálezová zpráva",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -2065,16 +2125,20 @@
         "original_text": "Vzhledem k situování odkrytého zdivá i k charakteru jeho",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vyhodnocení nálezu",
-                "situování odkrytého zdiva",
-                "charakter pískovcového obkladu",
-                "příslušnost"
+                "nález",
+                "zdí",
+                "pískovec",
+                "obklad",
+                "charakter",
+                "architektonický"
             ],
             "extracted_keywords_en": [
-                "vyhodnocení nálezu",
-                "situování odkrytého zdiva",
-                "charakter pískovcového obkladu",
-                "příslušnost"
+                "nález",
+                "zdivo",
+                "pískovec",
+                "obklad",
+                "charakter",
+                "architektonický"
             ],
             "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
@@ -2091,14 +2155,15 @@
             "extracted_keywords_cs": [
                 "gotický Karlův most",
                 "pískovcový obklad",
-                "torzo",
-                "zdivo"
+                "torzo zdi",
+                "architektonický kontext"
             ],
             "extracted_keywords_en": [
                 "gotický Karlův most",
                 "pískovcový obklad",
                 "torzo",
-                "zdivo"
+                "zdi",
+                "architektonický kontext"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2113,16 +2178,18 @@
         "original_text": "zjištěného torza ke gotickému Karlovu mostu. V úvahu přichází již",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcový obklad",
                 "gotický Karlův most",
-                "zbytky pilíře"
+                "pilíř",
+                "pískovcový obklad",
+                "torzo",
+                "mu (Muk 1988)"
             ],
             "extracted_keywords_en": [
-                "pískovcový obklad",
                 "gotický Karlův most",
-                "torzo",
                 "pilíř",
-                "Muk 1988"
+                "pískovcový obklad",
+                "torzo",
+                "mu (Muk 1988)"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2138,18 +2205,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "gotický Karlův most",
-                "zbytky",
-                "pilíř",
-                "obranná zeď",
-                "pevná konstrukce",
-                "spodní část mostu"
+                "zbytky pilíře",
+                "stavební konstrukce nábřežní zdi",
+                "nábřežní zeď",
+                "podstavba mostu"
             ],
             "extracted_keywords_en": [
                 "gotický Karlův most",
-                "torzo",
-                "pilíř",
+                "torzo pilíře",
+                "konstrukce zpevněné nábřežní zdi",
                 "nábřežní zeď",
-                "zpevněná konstrukce",
                 "paty mostu"
             ],
             "teater_category": "architektonický článek",
@@ -2166,17 +2231,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pilíř",
-                "zpevněná nábřežní zeď",
+                "nábřežní zeď",
                 "most",
-                "stavební zdivo",
-                "dispozice"
+                "zdivo",
+                "paty mostu"
             ],
             "extracted_keywords_en": [
                 "pilíř",
                 "nábřežní zeď",
                 "most",
                 "zdivo",
-                "dispozice"
+                "paty mostu"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2191,20 +2256,20 @@
         "original_text": "Rozsah a dispozice odkrytého zdivá jednoznačně hovoří pro prvou",
         "enrichment": {
             "extracted_keywords_cs": [
+                "zdivo",
                 "nábřežní zeď",
                 "most",
                 "sklep",
-                "dom",
-                "stěny",
-                "rozvržení"
+                "dispozice",
+                "pevná konstrukce"
             ],
             "extracted_keywords_en": [
+                "zdivo",
                 "nábřežní zeď",
                 "most",
                 "sklepní prostor",
-                "domu",
-                "zdivo",
-                "dispozice"
+                "dispozice",
+                "zpevněná konstrukce"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2220,21 +2285,26 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sklep",
-                "stěny",
-                "rozmístění",
-                "obklad",
-                "západní stěna",
-                "zachovalost",
-                "pískovec"
+                "dispozice",
+                "zdivo",
+                "sklepní prostor",
+                "zachovaná část",
+                "pískovcový obklad",
+                "jižní zhlaví",
+                "architektonický prvek",
+                "výzkum"
             ],
             "extracted_keywords_en": [
                 "sklep",
                 "zdivo",
-                "dispozice",
+                "prostor",
+                "sklepní",
+                "zachovaná",
+                "pískovec",
                 "obklad",
-                "jižní zhlaví",
-                "zachování",
-                "pískovec"
+                "zhlaví",
+                "architektonický",
+                "výzkum"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2249,18 +2319,20 @@
         "original_text": "zachovaná téměř celá západní líc pískovcového obkladu jižního zhlavl",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sklep",
-                "pískovec",
                 "gotický pilíř",
+                "pískovcový obklad",
+                "západní strana",
+                "sklep",
                 "zhlaví",
-                "hrot"
+                "architektonický detail"
             ],
             "extracted_keywords_en": [
-                "sklepní prostor",
-                "pískovcový obklad",
                 "gotický pilíř",
+                "pískovcový obklad",
+                "západní líc",
+                "sklepní prostor",
                 "zhlavlí",
-                "hrot"
+                "architektonický prvek"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2276,19 +2348,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "gotický pilíř",
+                "hrot",
                 "pískovcový obklad",
-                "jižní část střechy",
-                "stavební zdivo",
-                "jádro ze zdiva",
-                "zachovaný konec"
+                "jižní zhlavlí",
+                "zdivo",
+                "opukové jádro"
             ],
             "extracted_keywords_en": [
                 "gotický pilíř",
+                "hrot",
                 "pískovcový obklad",
-                "jižní zhlaví",
+                "jižní zhlavlí",
                 "zdivo",
-                "opukové jádro",
-                "dochovaný konec"
+                "opukové jádro"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2303,19 +2375,19 @@
         "original_text": "dochovaného konce zdivá. Opukové jádro zdivá bylo zaznamenáno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "gotický pilíř",
+                "gotického pilíře",
                 "hrot",
-                "zdi",
-                "jádro zdiva",
+                "zdiva",
+                "opukové jádro",
                 "sklepní prostor",
                 "pískovcový obklad"
             ],
             "extracted_keywords_en": [
-                "gotický pilíř",
+                "gotického pilíře",
                 "hrot",
-                "zdivo",
+                "zdivá",
                 "opukové jádro",
-                "sklepní prostor",
+                "sklepní prostoře",
                 "pískovcový obklad"
             ],
             "teater_category": "architektonický článek",
@@ -2334,7 +2406,7 @@
                 "zdivo",
                 "jádro zdiva",
                 "sklepní prostor",
-                "pískovcový obklad",
+                "obklad z pískovce",
                 "kvalita",
                 "plán"
             ],
@@ -2359,18 +2431,20 @@
         "original_text": "nedochoval (plánek č. 2). Je pravděpodobné. Že jako velmi kvalitní",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sklepní prostoře",
-                "pískovcový obklad",
-                "stavební materiál",
-                "dům čp. 193"
-            ],
-            "extracted_keywords_en": [
                 "sklepní prostor",
+                "sklep",
                 "pískovcový obklad",
                 "stavební materiál",
                 "domu čp. 193"
             ],
-            "teater_category": "stavební/spojovací prvek",
+            "extracted_keywords_en": [
+                "sklepní prostor",
+                "sklep",
+                "pískovcový obklad",
+                "stavební materiál",
+                "domu čp. 193"
+            ],
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -2384,19 +2458,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "stavební materiál",
-                "dům č. p. 193",
-                "zhlaví",
-                "stavba objektu",
+                "dom čp. 193",
+                "stavební objekt",
                 "16. století",
-                "začátek 17. století"
+                "17. století",
+                "muk 1988"
             ],
             "extracted_keywords_en": [
                 "stavební materiál",
-                "dům čp. 193",
-                "zhlaví",
-                "výstavba objektu",
+                "dom čp. 193",
+                "stavební objekt",
                 "16. století",
-                "začátek 17. století"
+                "17. století",
+                "muk 1988"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2412,25 +2486,27 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "stavební materiál",
-                "dům č.p. 193",
-                "fáze výstavby",
-                "druhá polovina 16. století",
+                "stavebba domu",
+                "stavební fáze",
+                "období 16. století",
                 "začátek 17. století",
                 "pískovcový kvádr",
                 "sklep",
-                "obvodová stěna"
+                "obvodová stěna",
+                "architektonický kontext"
             ],
             "extracted_keywords_en": [
                 "stavební materiál",
-                "dům čp. 193",
+                "stavebba domu",
                 "stavební fáze",
                 "16. století",
-                "začátek 17. století",
+                "17. století",
                 "pískovcový kvádr",
                 "sklep",
-                "obvodová stěna"
+                "obvodová stěna",
+                "architektonický kontext"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
         }
     },
@@ -2443,26 +2519,24 @@
         "original_text": "objektu ve 2. polovině 16. nebo na počátku 17. století (Muk 1988,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stavební materiál",
-                "dům č.p. 193",
-                "doba výstavby",
-                "druhá polovina 16. století",
-                "začátek 17. století",
                 "pískovcový kvádr",
                 "sklep",
                 "obvodová stěna",
-                "vnější strana"
+                "16. století",
+                "17. století",
+                "stavební materiál",
+                "domu čp. 193",
+                "staré město pražské"
             ],
             "extracted_keywords_en": [
-                "stavební materiál",
-                "dům čp. 193",
-                "období výstavby",
-                "16. století",
-                "začátek 17. století",
                 "pískovcový kvádr",
                 "sklep",
                 "obvodová stěna",
-                "vnější líce"
+                "16. století",
+                "17. století",
+                "stavební materiál",
+                "domu čp. 193",
+                "staré město pražské"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2478,14 +2552,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovcový kvádr",
-                "obvodová stěna sklepa",
+                "sklep",
+                "obvodová stěna",
                 "pilíř",
+                "zhlaví",
+                "linie vnější líce",
                 "niveleta koruny"
             ],
             "extracted_keywords_en": [
                 "pískovcový kvádr",
-                "obvodová stěna sklepa",
+                "sklep",
+                "obvodová stěna",
                 "pilíř",
+                "zhlaví",
+                "linie vnější líce",
                 "niveleta koruny"
             ],
             "teater_category": "architektonický článek",
@@ -2505,9 +2585,9 @@
                 "sklep",
                 "obvodová stěna",
                 "pilíř",
-                "jižní zhlaví",
-                "niveleta koruny",
-                "zdivo"
+                "zhlaví",
+                "niveleta koruny zdiva",
+                "ústupek"
             ],
             "extracted_keywords_en": [
                 "pískovcový kvádr",
@@ -2515,8 +2595,8 @@
                 "obvodová stěna",
                 "pilíř",
                 "zhlaví",
-                "niveleta koruny",
-                "zdivo"
+                "niveleta koruny zdiva",
+                "ústupek"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2535,16 +2615,20 @@
                 "sklep",
                 "obvodová stěna",
                 "pilíř",
-                "niveleta koruny",
-                "zdivo"
+                "jižní zhlaví",
+                "niveleta",
+                "koruna zdiva",
+                "ústupek"
             ],
             "extracted_keywords_en": [
                 "pískovcový kvádr",
                 "sklep",
                 "obvodová stěna",
                 "pilíř",
-                "niveleta koruny",
-                "zdivo"
+                "zhlaví",
+                "niveleta",
+                "zdivo",
+                "ústupek"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2559,18 +2643,12 @@
         "original_text": "dochovaného zdivá (188,9 m) odpovídá horní, ústupkem an*ené parti1",
         "enrichment": {
             "extracted_keywords_cs": [
-                "niveleta koruny (koruna zpevnění",
-                "zdivo (stěna",
-                "ústupek (výseč",
-                "části (části stavby",
-                "architektonický prvek (architektonický prvek)"
+                "niveleta koruny dochovaného zdiva",
+                "horní, ústupkem ane přilehlá parti1"
             ],
             "extracted_keywords_en": [
-                "niveleta koruny (crown leveling",
-                "zdivo (wall",
-                "ústupek (recess",
-                "části (part",
-                "architektonický prvek (architectural element)"
+                "niveleta koruny dochovaného zdiva",
+                "horní ústupkem ane přilehlá parti1"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2587,16 +2665,16 @@
             "extracted_keywords_cs": [
                 "pilíře",
                 "most",
-                "umístění",
-                "výška",
-                "stavební konstrukce"
+                "umístění spodní části",
+                "rozehněná",
+                "výška 186,1 - 186,2"
             ],
             "extracted_keywords_en": [
                 "pilíře",
                 "most",
-                "nástavení",
-                "úroveň",
-                "stavební detail"
+                "násazení spodní části",
+                "roze fřená",
+                "úroveň 186,1 - 186,2"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2613,16 +2691,16 @@
             "extracted_keywords_cs": [
                 "pilíře",
                 "most",
-                "hlavní část",
-                "střecha",
-                "vertikální konec"
-            ],
-            "extracted_keywords_en": [
-                "pilíře",
-                "most",
-                "zhlaví",
+                "úroveň",
                 "střecha",
                 "vertikální ukončení"
+            ],
+            "extracted_keywords_en": [
+                "pilíře (pillars/columns",
+                "most (bridge",
+                "úroveň (level",
+                "střecha (roof",
+                "vertikální ukončení (vertical termination"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2637,23 +2715,22 @@
         "original_text": "■ n. m. a přechod ve střechoví té vertikální ukončení zhlaví evidujeme",
         "enrichment": {
             "extracted_keywords_cs": [
-                "most",
                 "pilíř mostu",
                 "střecha",
-                "konec střechy",
                 "vertikální ukončení",
+                "zhlaví",
+                "výška",
                 "oblouk",
-                "rozpětí oblouku",
-                "výška"
+                "rozpon"
             ],
             "extracted_keywords_en": [
-                "most",
-                "pilíř",
+                "pilíř mostu",
                 "střecha",
+                "vertikální ukončení",
                 "zhlaví",
+                "výška",
                 "oblouk",
-                "rozpon",
-                "výška"
+                "rozpon"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2669,23 +2746,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "střecha",
-                "konec vertikálního střechy",
-                "zhlaví",
-                "výška",
-                "oblouk",
+                "arch",
+                "vertikální ukončení",
+                "schodiště",
                 "pilíř",
                 "Staroměstská mostecká věž",
-                "rozpětí"
+                "mostní věž"
             ],
             "extracted_keywords_en": [
-                "střecha",
-                "vertikální ukončení",
-                "zhlaví",
-                "výška",
-                "oblouk",
-                "pilíř",
+                "roofing",
+                "arch",
+                "vertical termination",
+                "stairway",
+                "pilaster",
                 "Staroměstská mostecká věž",
-                "rozpon"
+                "bridge tower"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2701,19 +2776,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pilíř",
-                "oblouk",
                 "Staroměstská mostecká věž",
+                "rozměr oblouku",
+                "rozměry",
                 "Vltava",
-                "řečiště",
-                "vzdálenost",
-                "konstrukční prvky"
+                "řečiště"
             ],
             "extracted_keywords_en": [
                 "pilíř",
-                "oblouk",
                 "Staroměstská mostecká věž",
-                "Vltavské řečiště",
-                "vzdálenost mezi pilíři"
+                "rozhodnutí oblouku",
+                "rozměry",
+                "vltavské řečiště"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2731,18 +2805,21 @@
                 "pilíř",
                 "Staroměstská mostecká věž",
                 "Vltava",
-                "rozpon oblouku",
-                "břežní okraje"
+                "řečiště",
+                "rozdálenost",
+                "oblouk",
+                "břežní"
             ],
             "extracted_keywords_en": [
                 "pilíř",
                 "Staroměstská mostecká věž",
                 "Vltavské řečiště",
-                "rozpon oblouku",
-                "břežní okraje"
+                "rozdálenost",
+                "oblouk",
+                "břežní"
             ],
-            "teater_category": "architektonický článek",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 0.85
         }
     },
     {
@@ -2754,22 +2831,24 @@
         "original_text": "zhruba mezi 20,5 až 22 m. Menší rozpon oblouku u břehu nepovažujeme",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vltavském řečišti",
-                "pilíři",
-                "rozpon oblouku",
-                "Karlova mostu",
-                "dokumentací",
-                "situování"
+                "Vltava",
+                "Karlův most",
+                "pilíř",
+                "oblouk",
+                "rozdíl rozpětí",
+                "dokumentace",
+                "neznámý pilíř"
             ],
             "extracted_keywords_en": [
-                "Vltavském řečišti",
-                "pilíři",
-                "rozpon oblouku",
-                "Karlova mostu",
-                "dokumentací",
-                "situování"
+                "Vltavské řečiště",
+                "Karlův most",
+                "pilíř",
+                "oblouk",
+                "rozdíl rozponu",
+                "dokumentace",
+                "neznámý pilíř"
             ],
-            "teater_category": "geodetický průzkum",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -2782,18 +2861,18 @@
         "original_text": "za výjimečný zjev. Provedenou dokumentací tak byla potvrzena",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Karlův most",
                 "pilíř",
-                "dokumentace",
-                "podobnost",
-                "umístění"
-            ],
-            "extracted_keywords_en": [
                 "Karlův most",
-                "pilíř",
                 "dokumentace",
                 "obdoba",
-                "situování"
+                "konstrukce mostu"
+            ],
+            "extracted_keywords_en": [
+                "pilíř",
+                "Karlův most",
+                "dokumentace",
+                "obdoba",
+                "mostní konstrukce"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2808,22 +2887,24 @@
         "original_text": "existence donedávna neznámého pilíře Karlova mostu. Přesné situování",
         "enrichment": {
             "extracted_keywords_cs": [
+                "nálezová zpráva",
+                "architektonický nález",
                 "Karlův most",
                 "pilíř",
                 "řeka Vltava",
-                "stabilizovaný pravý břeh",
                 "dokumentace",
-                "umístění"
+                "stabilizace břehu"
             ],
             "extracted_keywords_en": [
+                "naleziště",
+                "architektonický nález",
                 "Karlův most",
                 "pilíř",
                 "Vltava",
-                "stabilizovaný pravý břeh",
                 "dokumentace",
-                "situování"
+                "stabilizace břehu"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "nálezová zpráva",
             "confidence_score": 0.95
         }
     },
@@ -2853,7 +2934,7 @@
                 "východní sousedství",
                 "umístění"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -2866,12 +2947,12 @@
         "original_text": "předpokládat v těsném východním sousedství zjištěného pilíře,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "románský",
+                "románská",
                 "kvádříkový dům",
                 "Colloredo"
             ],
             "extracted_keywords_en": [
-                "románský",
+                "románská",
                 "kvádříkový dům",
                 "Colloredo"
             ],
@@ -2888,18 +2969,20 @@
         "original_text": "protože pozůstatky románské (kvádříkový dům v Colloredo",
         "enrichment": {
             "extracted_keywords_cs": [
-                "románský styl",
-                "dům z kvádrů",
-                "palác Colloredo-Mannsfeld",
-                "č.p. 189/1",
-                "raně gotická architektura"
-            ],
-            "extracted_keywords_en": [
                 "románský",
+                "raně gotický",
+                "zastavba",
                 "kvádříkový dům",
                 "Colloredo-Mannsfeldský palác",
-                "čp. 189/1",
-                "raně gotická zástavba"
+                "čp. 189/1"
+            ],
+            "extracted_keywords_en": [
+                "románská",
+                "gotická",
+                "zastavba",
+                "kvádříkový dům",
+                "Colloredo-Mannsfeldský palác",
+                "čp. 189/1"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -2914,22 +2997,22 @@
         "original_text": "- Mannsfeldském paláci čp. 189/1) a raně gotické zástavby",
         "enrichment": {
             "extracted_keywords_cs": [
-                "románský styl",
-                "dům z kvádrů",
-                "palác Colloredo-Mannsfeld",
-                "č.p. 189/1",
-                "raně gotická architektura",
-                "kostel svatého Františka"
-            ],
-            "extracted_keywords_en": [
                 "románský",
                 "kvádříkový dům",
-                "Colloredo Mannsfeldský palác",
+                "Colloredo-Mannsfeldský palác",
+                "čp. 189/1",
+                "raně gotický",
+                "křižovnícký kostel sv. Františka"
+            ],
+            "extracted_keywords_en": [
+                "románská architektura",
+                "kvádříkový dům",
+                "Colloredo-Mannsfeldský palác",
                 "čp. 189/1",
                 "raně gotická zástavba",
                 "křižovnícký kostel sv. Františka"
             ],
-            "teater_category": "historická budova/komplex",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -2942,20 +3025,21 @@
         "original_text": "(křižovnícký kostel sv. Františka) jsou v bezprostřední blízkosti.",
         "enrichment": {
             "extracted_keywords_cs": [
+                "křižovnícký kostel",
+                "sv. Františka",
                 "Mannsfeldský palác",
                 "čp. 189/1",
                 "raně gotická zástavba",
-                "křižovnícký kostel svatého Františka",
-                "blízkost"
+                "staré město pražské"
             ],
             "extracted_keywords_en": [
+                "křižovnícký kostel",
+                "sv. Františka",
                 "Mannsfeldský palác",
                 "čp. 189/1",
-                "raně gotická zástavba",
-                "křižovnícký kostel sv. Františka",
-                "bezprostřední blízkost"
+                "raně gotická zástavba"
             ],
-            "teater_category": "kostel",
+            "teater_category": "národní kulturní památka",
             "confidence_score": 0.95
         }
     },
@@ -2973,7 +3057,7 @@
             "extracted_keywords_en": [
                 "literatura"
             ],
-            "teater_category": "Litva",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -2988,7 +3072,7 @@
             "extracted_keywords_cs": [
                 "stavební historie",
                 "pasport domu",
-                "Státní ústřední archiv Praha"
+                "Ústřední úřad pro státní památkovou péči (SÚRPMO)"
             ],
             "extracted_keywords_en": [
                 "stavební historie",
@@ -3008,20 +3092,18 @@
         "original_text": "SÚRPMO Praha.",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Pasport domu p. 193/1",
                 "stavební historie",
-                "pasport domu",
-                "stručné dějiny budovy",
-                "Státní ústřední archiv Praha"
+                "SÚRPMO Praha",
+                "stručné dějiny budovy"
             ],
             "extracted_keywords_en": [
-                "Stavební historie",
                 "Pasport domu",
-                "Stručné dějiny budovy",
+                "Stavební historie",
                 "SÚRPMO Praha",
-                "Vilímková Milada",
-                "Ebel Martin"
+                "Stručné dějiny budovy"
             ],
-            "teater_category": "doklad umění/kultu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3034,20 +3116,20 @@
         "original_text": "Vilímková Milada - Ebel Martin 1988, Stručné dějiny budovy, in:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Ústřední úřad pro záchranu historických památek (SÚRPMO) Praha",
-                "Milada Vilímková",
-                "Martin Ebel",
-                "Stručné dějiny budovy",
-                "Pasport domu č.p. 193/1"
-            ],
-            "extracted_keywords_en": [
-                "SÚRPMO Praha",
                 "Vilímková Milada",
                 "Ebel Martin",
                 "Stručné dějiny budovy",
-                "Pasport domu čp. 193/1"
+                "Pasport domu čp. 193/1",
+                "SÚRPMO Praha"
             ],
-            "teater_category": "historická budova/komplex",
+            "extracted_keywords_en": [
+                "Vilímková Milada",
+                "Ebel Martin",
+                "Stručné dějiny budovy",
+                "Pasport domu čp. 193/1",
+                "SÚRPMO Praha"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3060,19 +3142,14 @@
         "original_text": "Pasport domu čp. 193/1. SÚRPMO Praha.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Stručné dějiny budovy",
-                "pasport domu",
-                "čp. 193/1",
+                "Pasport domu čp. 193/1",
                 "Státní ústřední archiv Praha"
             ],
             "extracted_keywords_en": [
-                "Stručné dějiny budovy",
-                "Pasport domu",
-                "čp. 193/1",
-                "SÚRPMO Praha",
-                "fotografie"
+                "Pasport domu čp. 193/1",
+                "SÚRPMO Praha"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3087,14 +3164,16 @@
             "extracted_keywords_cs": [
                 "pískovcový obklad",
                 "pilíř",
-                "fotografie"
+                "fotografie",
+                "odhalená"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "pilíř",
-                "fotografie"
+                "fotografie",
+                "odhalená"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3111,18 +3190,20 @@
                 "pilíř",
                 "úsek dochovaných řádků",
                 "pohled od jihozápadu",
-                "archivní fotografie",
-                "fotograf: K. Fink"
+                "archivní materiál",
+                "fotograf",
+                "číslo fotografie"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "pilíř",
                 "dochované řádky",
-                "pohled od jihozápadu",
-                "archivní fotografie",
-                "fotograf: K. Fink"
+                "fotografie",
+                "archivní materiál",
+                "fotograf",
+                "číslo fotografie"
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3137,8 +3218,7 @@
             "extracted_keywords_cs": [
                 "pískovcový obklad",
                 "pilíř",
-                "zbytky",
-                "čtyři řádky",
+                "úsek dochovaných čtyř řádků",
                 "pohled od jihozápadu",
                 "fotografie",
                 "archivní dokumentace"
@@ -3146,13 +3226,11 @@
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "pilíř",
-                "zbytky",
-                "čtyři řádky",
-                "pohled od jihozápadu",
+                "dochované řádky",
                 "fotografie",
                 "archivní dokumentace"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "Fidži",
             "confidence_score": 0.95
         }
     },
@@ -3165,12 +3243,25 @@
         "original_text": "PÚPP, č. fot. 56 814. Foto K. Fink.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcový obklad"
+                "pískovcový obklad",
+                "pilíř",
+                "líc",
+                "úsek",
+                "dochované řádky",
+                "pohled",
+                "archivní fotografie",
+                "K. Fink"
             ],
             "extracted_keywords_en": [
-                "pískovcový obklad (sandstone cladding)"
+                "pískovcový obklad",
+                "pilíř",
+                "líc",
+                "dochované řádky",
+                "fotografie",
+                "archivní materiál",
+                "K. Fink"
             ],
-            "teater_category": "objekt/stopa výroby",
+            "teater_category": "Fidži",
             "confidence_score": 0.95
         }
     },
@@ -3183,18 +3274,20 @@
         "original_text": "Foto 2. Střední partie odkryté líce pískovcového obkladu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcový obklad",
-                "pilíře",
-                "důlky",
-                "zednické kleště",
-                "západní pohled"
+                "pískovec (sandstone) (pískovec",
+                "obklad (plastering) (obklad",
+                "pilíře (pillars) (pilíře",
+                "důlky (holes) (důlky",
+                "zednické kleště (bricklaying tools) (zednické kleště",
+                "západní pohled (western view) (západní pohled"
             ],
             "extracted_keywords_en": [
-                "pískovcový obklad (sandstone cladding)”, ",
-                "pilíře (pillars)”, ",
-                "důlky (holes)”, ",
-                "zednické kleště (bricklayer's tools)”, ",
-                "západní pohled (western view)"
+                "pískovec (sandstone) (sandstone",
+                "obklad (plastering) (plastering",
+                "pilíře (pillars) (pillars",
+                "důlky (holes) (holes",
+                "zednické kleště (bricklaying tools) (bricklaying tools",
+                "západní pohled (western view) (western view"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3212,17 +3305,17 @@
                 "pískovcový obklad",
                 "pilíře",
                 "důlky",
-                "uchycení kvádrů",
                 "zednické kleště",
-                "pohled od západu"
+                "architektonický detail",
+                "obnovy"
             ],
             "extracted_keywords_en": [
-                "pískovcový obklad (sandstone cladding)”, ",
-                " pilíře (pillars)”, ",
-                " důlky (holes)”, ",
-                " uchycení (attachment)”, ",
-                " zednické kleště (bricklayer's tools)”, ",
-                " pohled od západu (west view)"
+                "pískovcový obklad",
+                "pilíře",
+                "důlky",
+                "zednické kleště",
+                "architektonický detail",
+                "obnovy"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3238,21 +3331,21 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovcový obklad",
-                "pilíře",
-                "důlky",
+                "pilíř",
+                "dírky",
                 "zednické kleště",
-                "západ",
-                "detal",
-                "pískovec"
+                "detal architektury",
+                "fotografie",
+                "archivní dokumentace"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
-                "pilíře",
+                "pilíř",
                 "důlky",
                 "zednické kleště",
-                "západ",
-                "detal",
-                "pískovec"
+                "architektonický detail",
+                "fotografie",
+                "archivní materiál"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3269,16 +3362,18 @@
             "extracted_keywords_cs": [
                 "pískovcový obklad",
                 "pilíř",
-                "mazanice",
-                "spár",
-                "pohled od jihu"
+                "malta",
+                "spára",
+                "fotografie",
+                "K. Fink"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "pilíř",
                 "malta",
-                "spár",
-                "pohled od jihu"
+                "spára",
+                "fotografie",
+                "K. Fink"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3295,22 +3390,22 @@
             "extracted_keywords_cs": [
                 "pískovcový obklad",
                 "pilíř",
-                "mazanice (daub) (maltová směs pro omítku/obklad)",
-                "spár (mezeru mezi kameny vyplňující směsí)",
-                "pohled od jihu",
-                "archív PÚPP (Archeologický ústav Praha – Přirodivé vědy)",
-                "č. fot. (číslo fotografie)"
+                "malta",
+                "spára",
+                "fotografie",
+                "archív PÚPP",
+                "č. fot."
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "pilíř",
                 "malta",
-                "spár",
-                "pohled od jihu",
+                "spára",
+                "fotografie",
                 "archív PÚPP",
                 "č. fot."
             ],
-            "teater_category": "architektonický článek",
+            "teater_category": "Filipíny",
             "confidence_score": 0.95
         }
     },
@@ -3324,33 +3419,25 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovcový obklad",
+                "malta",
                 "pilíř",
-                "rozetřená malta",
-                "spára",
-                "pohled od jihu",
-                "archív PÚPP",
-                "č. fot. (fotografické číslo/identifikátor fotografie",
+                "suterén",
                 "plán",
-                "návrh podlahy",
-                "domu",
-                "čp. 193/1",
-                "suterén"
+                "dom",
+                "archív",
+                "fotografie"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
-                "pilíř",
                 "malta",
-                "spár",
-                "pohled od jihu",
-                "archív PÚPP",
-                "č. fot. (fotografické číslo/identifikátor fotografie",
-                "plánek",
-                "návrh podlahy",
-                "domu",
-                "čp. 193/1",
-                "suterén"
+                "pilíř",
+                "suterén",
+                "plán",
+                "dom",
+                "archív",
+                "fotografie"
             ],
-            "teater_category": "plán objektu",
+            "teater_category": "architektonický článek",
             "confidence_score": 0.95
         }
     },
@@ -3363,22 +3450,30 @@
         "original_text": "Plánek č. 1. Půdorys domu čp. 193/1 v úrovni suterénu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plán lokality",
-                "domu čp. 193/1",
+                "plán",
+                "půdorys domu",
+                "úrovně suterénu",
                 "nálezu",
                 "pískovcový obklad",
-                "opukové zdivo",
-                "líc pilíře"
+                "pilíře",
+                "zachycené opukové zdlvo jádra",
+                "předpokládaný průběh líce"
             ],
             "extracted_keywords_en": [
                 "plán",
+                "půdorys",
                 "domu",
+                "suterénu",
                 "nálezu",
-                "pískovcový obklad",
-                "opukové zdlvo",
-                "líc pilíře"
+                "pískovcový",
+                "obklad",
+                "pilíře",
+                "opukové",
+                "zdlvo",
+                "jádra",
+                "líce"
             ],
-            "teater_category": "plán lokality",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3391,15 +3486,15 @@
         "original_text": "s vynesením nálezu. 1 - pískovcový obklad pilíře 2 - zachycené",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovcový obklad pilíře",
+                "pískovcový obklad",
                 "zbytky jádra pilíře z opuky",
-                "předpokládaný průběh líce",
+                "vnější strana pilířů",
                 "pilíře"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "opukové zdlvo jádra pilíře",
-                "líc pilíře",
+                "líc pilířů",
                 "pilíře"
             ],
             "teater_category": "architektonický článek",
@@ -3416,15 +3511,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovcový obklad",
-                "opukové zdivo jádra pilíře",
-                "líc pilíře",
-                "pilíře"
+                "zbytky jádra pilíře z opuky",
+                "pilíře",
+                "vnější strana pilíře"
             ],
             "extracted_keywords_en": [
                 "pískovcový obklad",
                 "opukové zdlvo jádra pilíře",
-                "líc pilíře",
-                "pilíře"
+                "pilíře",
+                "líce pilíře"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3441,20 +3536,16 @@
             "extracted_keywords_cs": [
                 "pilíře",
                 "pískovcový obklad",
-                "zbytky jádra pilíře",
+                "zbytky jádra z opuky",
                 "vnější strana",
-                "kresba",
-                "plán",
-                "staroměstský"
+                "pilíř ze starého města"
             ],
             "extracted_keywords_en": [
                 "pilíře",
                 "pískovcový obklad",
                 "opukové zdlvo jádra",
                 "líce",
-                "kresba",
-                "plán",
-                "staroměstský"
+                "staroměstský pilíř"
             ],
             "teater_category": "architektonický článek",
             "confidence_score": 0.95
@@ -3469,16 +3560,18 @@
         "original_text": "Plánek č. 2. ŠlrSÍ situace prvního staroměstského pilíře.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plán lokality",
-                "situace prvního staroměstského pilíře"
+                "plán",
+                "situace",
+                "pilíř",
+                "staroměstský"
             ],
             "extracted_keywords_en": [
                 "plán",
                 "situace",
-                "pilíře",
-                "první staroměstský pilíř"
+                "pilíř",
+                "staroměstský"
             ],
-            "teater_category": "plán lokality",
+            "teater_category": "mapa",
             "confidence_score": 0.95
         }
     },
@@ -3492,8 +3585,8 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "plán",
-                "situace prvního pilíře",
-                "staroměstský",
+                "situace",
+                "pilíř",
                 "kresba",
                 "J. Mourek"
             ],
@@ -3501,11 +3594,10 @@
                 "plán",
                 "situace",
                 "pilíř",
-                "staroměstský",
                 "kresba",
                 "J. Mourek"
             ],
-            "teater_category": "kresba předmětu",
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -3519,14 +3611,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "plán č. 1",
-                "řeka Vltava"
+                "Vltava"
             ],
             "extracted_keywords_en": [
                 "plán",
                 "č. 1",
                 "Vltava"
             ],
-            "teater_category": "geologická/přirozená vrstva",
+            "teater_category": "mapa",
             "confidence_score": 0.95
         }
     },
@@ -3544,8 +3636,8 @@
             "extracted_keywords_en": [
                 "Vltava"
             ],
-            "teater_category": "geologická/přirozená vrstva",
-            "confidence_score": 1.0
+            "teater_category": "geologická sonda",
+            "confidence_score": 0.95
         }
     }
 ]
