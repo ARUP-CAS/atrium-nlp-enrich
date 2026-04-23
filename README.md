@@ -1,10 +1,10 @@
 <p align="center">
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" title="Python Version"></a>
-  <a href="https://lindat.mff.cuni.cz/services/udpipe/api-reference.php"><img src="https://img.shields.io/badge/API-UDPipe%202-0055A4.svg" title="UDPipe 2 API (Lindat)"></a>
-  <a href="https://lindat.mff.cuni.cz/services/nametag/api-reference.php"><img src="https://img.shields.io/badge/API-NameTag%203-0055A4.svg" title="NameTag 3 API (Lindat)"></a>
-  <a href="https://github.com/ufal/ker"><img src="https://img.shields.io/badge/dep-KER-lightgrey.svg" title="KER Keyword Extraction"></a>
-  <a href="https://opensource.org/license/mit/"><img src="https://img.shields.io/github/license/ufal/atrium-nlp-enrich" title="MIT License"></a>
-  <a href="https://atrium-research.eu/"><img src="https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg" title="ATRIUM Project"></a>
+  <a href="[https://www.python.org/downloads/](https://www.python.org/downloads/)"><img src="[https://img.shields.io/badge/python-3.8+-blue.svg](https://img.shields.io/badge/python-3.8+-blue.svg)" title="Python Version"></a>
+  <a href="[https://lindat.mff.cuni.cz/services/udpipe/api-reference.php](https://lindat.mff.cuni.cz/services/udpipe/api-reference.php)"><img src="[https://img.shields.io/badge/API-UDPipe%202-0055A4.svg](https://img.shields.io/badge/API-UDPipe%202-0055A4.svg)" title="UDPipe 2 API (Lindat)"></a>
+  <a href="[https://lindat.mff.cuni.cz/services/nametag/api-reference.php](https://lindat.mff.cuni.cz/services/nametag/api-reference.php)"><img src="[https://img.shields.io/badge/API-NameTag%203-0055A4.svg](https://img.shields.io/badge/API-NameTag%203-0055A4.svg)" title="NameTag 3 API (Lindat)"></a>
+  <a href="[https://github.com/ufal/ker](https://github.com/ufal/ker)"><img src="[https://img.shields.io/badge/dep-KER-lightgrey.svg](https://img.shields.io/badge/dep-KER-lightgrey.svg)" title="KER Keyword Extraction"></a>
+  <a href="[https://opensource.org/license/mit/](https://opensource.org/license/mit/)"><img src="[https://img.shields.io/github/license/ufal/atrium-nlp-enrich](https://img.shields.io/github/license/ufal/atrium-nlp-enrich)" title="MIT License"></a>
+  <a href="[https://atrium-research.eu/](https://atrium-research.eu/)"><img src="[https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg](https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg)" title="ATRIUM Project"></a>
 </p>
 
 ---
@@ -100,12 +100,10 @@ over keeping CoNLL-U, TSV, and image files in separate silos:
       <s id="doc1.s1" text="Výroční zpráva 2012 .">
         <lb id="doc1.TL_1" bbox="142 210 680 255"/>
 
-        <!-- plain token -->
         <tok id="doc1.s1.w1" type="w" lemma="výroční" upos="ADJ"
              feats="Case=Nom|..." deprel="amod"
              bbox="142 210 310 255">Výroční</tok>
 
-        <!-- named-entity span -->
         <name type="ORG" cnec="if">
           <tok id="doc1.s1.w3" type="w" lemma="ministerstvo" upos="NOUN"
                bbox="320 210 580 255">Ministerstvo</tok>
@@ -741,7 +739,7 @@ Use flexiconv **before** running this pipeline when:
 
 > [!NOTE]
 > This is an advanced, optional step. It utilizes local Large Language Models (LLMs) via the 
-> Hugging Face `transformers` library to semantically analyze text lines and rigidly map them to 
+> Hugging Face `transformers` library (optimized with Flash Attention 2 for memory efficiency) to semantically analyze text lines and rigidly map them to 
 > a nested, controlled archaeological vocabulary (e.g., TEATER or AMCR).
 
 This pipeline goes beyond traditional keyword extraction by using **Constrained Decoding** (via 
@@ -752,12 +750,12 @@ entirely eliminating hallucinated formatting.
 ### ⚙️ Configuration ([llm_config.txt](llm_config.txt) 📎)
 
 The pipeline reads its runtime parameters from a plain text configuration file placed in the 
-repository root. This allows you to easily swap the underlying LLM (e.g., `qwen2.5-14b-awq` or
+repository root. This allows you to easily swap the underlying LLM (e.g., `qwen3-14b` or
 `mistral-nemo-12b`) and tweak input filtering to prevent processing uninformative or noisy text.
 
 ```text
-# Switch between: qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b | llama3.1-8b
-MODEL_KEY=qwen2.5-14b-awq
+# Switch between: qwen3-14b | qwen3-8b | qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b | llama3.1-8b
+MODEL_KEY=qwen3-14b
 
 # Only needed for gated models like llama3.1-8b
 # HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
@@ -823,6 +821,8 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 ```
 
 Output examples per model:
+- [KW_PER_DOC_LLM_qwen3_14b](data_samples/KW_PER_DOC_LLM_qwen3_14b) 📂 by Qwen 3-14B [^18]
+- [KW_PER_DOC_LLM_qwen3_8b](data_samples/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 - [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
@@ -938,7 +938,6 @@ the paradata logger.
 > records worth keeping long-term.
 
 ---
-
 ## Acknowledgements 🙏
 
 **For support write to:** lutsai.k@gmail.com responsible for this GitHub repository [^8] 🔗
@@ -972,3 +971,6 @@ the paradata logger.
 [^15]: https://huggingface.co/CohereForAI/aya-expanse-8b
 [^16]: https://huggingface.co/speakleash/Bielik-11B-v2.3-Instruct
 [^17]: https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct
+[^18]: [https://huggingface.co/Qwen/Qwen3-14B-Instruct](https://huggingface.co/Qwen/Qwen3-14B-Instruct)
+[^19]: [https://huggingface.co/Qwen/Qwen3-8B-Instruct](https://huggingface.co/Qwen/Qwen3-8B-Instruct)
+
