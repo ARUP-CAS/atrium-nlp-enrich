@@ -89,7 +89,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     },
 }
 
-MAX_NEW_TOKENS = 1024
+MAX_NEW_TOKENS = 2048
 CONTEXT_RESERVED = MAX_NEW_TOKENS + 512
 _ALWAYS_SKIP_CATEG = {"Empty", "Trash"}
 
@@ -274,8 +274,6 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
             prompt += f"\n--- {theme_name} ---\n"
             prompt += "\n".join(f"- {line}" for line in lines) + "\n"
 
-        # Heavily cap the 'Other' section (15 terms) to prevent country/generic hallucinations.
-        # The sorted order (_term_priority) already promotes higher-quality terms to the front.
         if other_terms:
             prompt += "\n--- Other (Misc) ---\n"
             prompt += "\n".join(
@@ -328,8 +326,12 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
         tokenizer.pad_token = tokenizer.eos_token
 
     model = AutoModelForCausalLM.from_pretrained(
-        hf_id, device_map="auto", torch_dtype=spec["torch_dtype"],
-        trust_remote_code=spec["trust_remote_code"], token=hf_token or None
+        hf_id,
+        device_map="auto",
+        torch_dtype=spec["torch_dtype"],
+        trust_remote_code=spec["trust_remote_code"],
+        token=hf_token or None,
+        attn_implementation="flash_attention_2"
     )
     model.eval()
     return model, tokenizer, spec
@@ -338,26 +340,6 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
 # ---------------------------------------------------------------------------
 # 8. Utilities
 # ---------------------------------------------------------------------------
-def _clamp_confidence(json_str: str) -> str:
-    """
-    Robustly clamp confidence_score to [0.0, 1.0].
-    Handles: floats (0.85), integers (1), out-of-range (85, 1.000001),
-    and negatives. Leaves the rest of the JSON untouched.
-    """
-    def _clamp_match(m: re.Match) -> str:
-        try:
-            val = float(m.group(1))
-        except ValueError:
-            return m.group(0)  # unparseable — leave as-is, let Pydantic report it
-        clamped = min(1.0, max(0.0, val))
-        return f'"confidence_score": {clamped}'
-
-    return re.sub(
-        r'"confidence_score"\s*:\s*(-?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)',
-        _clamp_match,
-        json_str,
-    )
-
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
     """
     Returns a sliding context window of up to `window` lines before and after
@@ -380,8 +362,6 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
     parts = []
 
     # --- Global Document Header ---
-    # Only injected when the target line is far enough from the start that the
-    # ±window context window can no longer reach the document opening.
     if center_idx > window + 2:
         parts.append("--- GLOBAL DOCUMENT HEADER ---")
         header_lines_added = 0
@@ -466,8 +446,14 @@ def process_document(
 
             with torch.no_grad():
                 output = model.generate(
-                    **inputs, max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
-                    pad_token_id=tokenizer.pad_token_id, eos_token_id=tokenizer.eos_token_id,
+                    **inputs,
+                    max_new_tokens=MAX_NEW_TOKENS,
+                    do_sample=False,
+                    temperature=None,
+                    top_p=None,
+                    top_k=None,
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
                     prefix_allowed_tokens_fn=prefix_function,
                 )
 
@@ -477,11 +463,19 @@ def process_document(
             try:
                 semantic_data = EnrichmentModel.model_validate_json(result_json)
             except ValidationError:
-                # Apply the robust RegEx fallback for the out-of-range floats/integers
-                cleaned_json = _clamp_confidence(result_json)
                 try:
-                    semantic_data = EnrichmentModel.model_validate_json(cleaned_json)
-                except ValidationError as e:
+                    # Fallback: Safely parse literal unescaped control chars (e.g., \t)
+                    raw_dict = json.loads(result_json, strict=False)
+
+                    # Safely clamp the confidence score in dictionary space
+                    if "confidence_score" in raw_dict:
+                        try:
+                            val = float(raw_dict["confidence_score"])
+                            raw_dict["confidence_score"] = min(1.0, max(0.0, val))
+                        except (ValueError, TypeError):
+                            pass
+                    semantic_data = EnrichmentModel.model_validate(raw_dict)
+                except (json.JSONDecodeError, ValidationError) as e:
                     print(f"  [{file_id}] Persistent validation error P{page_num} L{line_num}: {e}")
                     stats["skipped_error"] += 1
                     continue
