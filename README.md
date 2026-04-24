@@ -821,17 +821,19 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 ```
 
 Output examples per model:
-Output examples per model:
 - [KW_PER_DOC_LLM_qwen3_14b](data_samples/KW_PER_DOC_LLM_qwen3_14b) 📂 by Qwen 3-14B [^18]
 - [KW_PER_DOC_LLM_qwen3_8b](data_samples/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
-- [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
-- [KW_PER_DOC_LLM_aya_expanse_8b](data_samples/KW_PER_DOC_LLM_aya_expanse_8b) 📂 by Aya Expanse 8B [^15]
-- [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/KW_PER_DOC_LLM_bielik_11b_v30) 📂 by Bielik 11B v3.0 [^16]
-- [KW_PER_DOC_LLM_llama31_8b](data_samples/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
 - [KW_PER_DOC_LLM_gemma_3_12b_it](data_samples/KW_PER_DOC_LLM_gemma_3_12b_it) 📂 by Gemma 3-12B-IT [^20]
-- [KW_PER_DOC_LLM_ministral_3_14b](data_samples/KW_PER_DOC_LLM_ministral_3_14b) 📂 by Ministral 3-14B [^21]
+
+Archived (unsuccessful model results):
+- [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
+- [KW_PER_DOC_LLM_aya_expanse_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_aya_expanse_8b) 📂 by Aya Expanse 8B [^15]
+- [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_bielik_11b_v30) 📂 by Bielik 11B v3.0 [^16]
+- [KW_PER_DOC_LLM_llama31_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
+- [KW_PER_DOC_LLM_ministral_3_14b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_ministral_3_14b) 📂 by Ministral 3-14B [^21]
+
 ### 📊 Paradata Integration
 
 Just like the main shell script pipelines, the LLM enrichment natively hooks into `atrium_paradata.py`. It automatically logs:
