@@ -1,0 +1,979 @@
+[
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 1,
+        "categ": "Noisy",
+        "quality_score": 0.0,
+        "original_text": "Kat- obec: C H 0 D O UNY",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Katastr",
+                "obec",
+                "CH",
+                "0",
+                "D",
+                "UNY",
+                "Osada",
+                "Trať",
+                "Čmejlova",
+                "pískovna"
+            ],
+            "extracted_keywords_en": [
+                "Kat",
+                "obec",
+                "CH",
+                "0",
+                "D",
+                "UNY",
+                "Osada",
+                "Trať",
+                "Čmejlova",
+                "pískovna"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 2,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Osada:",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "osada"
+            ],
+            "extracted_keywords_en": [
+                "settlement"
+            ],
+            "teater_category": "sídliště",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 3,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Trať: Čmejlova pískovna",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Čmejlova pískovna"
+            ],
+            "extracted_keywords_en": [
+                "Čmejlova pískovna"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 5,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "tou;",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "tou"
+            ],
+            "extracted_keywords_en": [
+                "tou"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 6,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Okres: Roudnice n. Labem",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Okres",
+                "Roudnice",
+                "Labem"
+            ],
+            "extracted_keywords_en": [
+                "Okres",
+                "Roudnice",
+                "Labem"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 11,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "pohřebiště - lužická",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pohřebiště",
+                "lužická"
+            ],
+            "extracted_keywords_en": [
+                "burial site",
+                "Lusatian"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 12,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "ved. výzkurnu",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "výzkurnu"
+            ],
+            "extracted_keywords_en": [
+                "research"
+            ],
+            "teater_category": "badatelský",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 13,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Zdráva / za obdobi",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Zdráva",
+                "obdobi"
+            ],
+            "extracted_keywords_en": [
+                "Zdráva",
+                "obdobi"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 14,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "veý. oddélcni",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "oddélcni"
+            ],
+            "extracted_keywords_en": [
+                "oddélcni"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 16,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Dne 26.1X.1957 jsem zajel do Chodoun, abych zjistil možnosti",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "zajel",
+                "Chodoun",
+                "možnosti",
+                "výzkumu",
+                "lužického",
+                "žárového",
+                "pohřebiště",
+                "plánovaného",
+                "srpen",
+                "1958",
+                "naleziště",
+                "východní",
+                "pískovna",
+                "místní",
+                "občané"
+            ],
+            "extracted_keywords_en": [
+                "zajel",
+                "Chodoun",
+                "možnosti",
+                "výzkumu",
+                "lužického",
+                "žárového",
+                "pohřebiště",
+                "plánovaného",
+                "srpen",
+                "1958",
+                "naleziště",
+                "východní",
+                "pískovna",
+                "místní",
+                "občané"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 17,
+        "categ": "Noisy",
+        "quality_score": 0.0,
+        "original_text": "výzkumu lužického žárového pohřebiště, plánovaného na srpen 1958# Naleziště",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "výzkumu",
+                "pohřebiště",
+                "lužického",
+                "žárového",
+                "srpen",
+                "1958"
+            ],
+            "extracted_keywords_en": [
+                "research",
+                "burial ground",
+                "Lužice",
+                "cremation",
+                "August",
+                "1958"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 18,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "je asi 1 km vých. od obce v malé pískovně, kde místní občané",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pískovna",
+                "východ",
+                "pole",
+                "vojtěška",
+                "pozemky",
+                "výzkum"
+            ],
+            "extracted_keywords_en": [
+                "pískovna",
+                "východ",
+                "pole",
+                "vojtěška",
+                "pozemky",
+                "výzkum"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 19,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "těží dle potřeby písek. Přilehlé pole je oseto vojtěškou. Majitel obou",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "písek",
+                "pole",
+                "vojtěška",
+                "východ",
+                "občané",
+                "potřeby",
+                "výzkumu",
+                "naleziště"
+            ],
+            "extracted_keywords_en": [
+                "písek",
+                "pole",
+                "vojtěška",
+                "východ",
+                "občané",
+                "potřeby",
+                "výzkumu",
+                "naleziště"
+            ],
+            "teater_category": "osídlený skalní prostor",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 20,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "pozemků neměl námitek proti provedení výzkumu.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "vlastník",
+                "výzkum",
+                "průzkum"
+            ],
+            "extracted_keywords_en": [
+                "landowner",
+                "excavation",
+                "research"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 21,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "V těchto místech byl koncem r.1954 rozrušen 1 žárový hrob, obložený",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "žárový hrob",
+                "opukové desky",
+                "keramika",
+                "vypnulinami"
+            ],
+            "extracted_keywords_en": [
+                "žárový hrob",
+                "opukové desky",
+                "keramika",
+                "vypnulinami"
+            ],
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 22,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "opukovými deskami a s keramikou s hladce vymezenými prsovitý-",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "hrob",
+                "žárový",
+                "opuk",
+                "desky",
+                "keramika",
+                "vymezenými",
+                "prsovitými",
+                "vypnulinami"
+            ],
+            "extracted_keywords_en": [
+                "hrob",
+                "žárový",
+                "opuk",
+                "desky",
+                "keramika",
+                "vymezenými",
+                "prsovitými",
+                "vypnulinami"
+            ],
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 23,
+        "categ": "Noisy",
+        "quality_score": 0.0,
+        "original_text": "mi vypnulinami (převzal tehdy referent v zastoupení KM Teplice).",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "hrob",
+                "žárový",
+                "keramika",
+                "vypoulinami",
+                "KM Teplice"
+            ],
+            "extracted_keywords_en": [
+                "grave",
+                "cremation",
+                "ceramics",
+                "outlines",
+                "KM Teplice"
+            ],
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 24,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "V r.1955 získalo odtud museum v Budyni n.Ohří další rozrušený hrob",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "hrob",
+                "muzeum",
+                "Budyně n.Ohří",
+                "nález",
+                "nádoby"
+            ],
+            "extracted_keywords_en": [
+                "hrob",
+                "museum",
+                "Budyně n.Ohří",
+                "nález",
+                "nádoby"
+            ],
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 25,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "(velký okřín a zlomky dalších asi 5 nádob; další nález, okolnosti neznámy).",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "hrob",
+                "okřín",
+                "nádob",
+                "nález"
+            ],
+            "extracted_keywords_en": [
+                "hrob",
+                "okřín",
+                "nádob",
+                "nález"
+            ],
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 27,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Při své poslední návštěvě 26.IX. jsem zjistil, že těžební",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "těžební",
+                "plocha",
+                "odkryvem",
+                "hrob"
+            ],
+            "extracted_keywords_en": [
+                "těžební",
+                "plocha",
+                "odkryvem",
+                "hrob"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 28,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "plocha se proti roku 1955 zvětšila cca 5 krát. Odkryvem byl rozrušen",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "plocha",
+                "těžební",
+                "rozrušen",
+                "hrob"
+            ],
+            "extracted_keywords_en": [
+                "plocha",
+                "těžební",
+                "rozrušen",
+                "hrob"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 29,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "další, v pořadí již třetí hrob, z jehož obložení se zachovaly",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "hrob",
+                "obložení",
+                "opukové desky",
+                "zlomky",
+                "nádoby",
+                "míska",
+                "spodní část nádoby"
+            ],
+            "extracted_keywords_en": [
+                "grave",
+                "lining",
+                "limestone slabs",
+                "fragments",
+                "vessels",
+                "bowl",
+                "bottom of vessel"
+            ],
+            "teater_category": "pohřební areál",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 30,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "opět opukové desky. Dále byly nalezeny v přehozeném materiálu zlomky",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "opukové desky",
+                "zlomky",
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "extracted_keywords_en": [
+                "opukové desky",
+                "zlomky",
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 31,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "z několika nádob (osudí, miska a část spodku nádoby blíže neur-",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "extracted_keywords_en": [
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 32,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "citelného tvaru s mřížkovým rýhováním). Poloha všech tří hrobů ukazuje",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "extracted_keywords_en": [
+                "nádoby",
+                "osudí",
+                "miska",
+                "spodku nádoby",
+                "mřížkovým rýhováním"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 33,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "zároveň směr, kam asi další hroby pokračují, totiž na mírnou",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "směr",
+                "vyvýšenina",
+                "hroby",
+                "pokračují"
+            ],
+            "extracted_keywords_en": [
+                "direction",
+                "slope",
+                "burials",
+                "continue"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 34,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "vyvýšeninu, zasahující z části již do pole. Při povrchovém sběru",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "vyvýšeninu",
+                "pole",
+                "povrchový sběr"
+            ],
+            "extracted_keywords_en": [
+                "vyvýšeninu",
+                "pole",
+                "povrchový sběr"
+            ],
+            "teater_category": "osídlený skalní prostor",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 35,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "byl dále nalezen kamenný únětický mlat se žlábkovým sedlem (délka",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "kamenný",
+                "únětický",
+                "mlat",
+                "žlábkové sedlo"
+            ],
+            "extracted_keywords_en": [
+                "stone",
+                "Únětice",
+                "mace",
+                "grooved seat"
+            ],
+            "teater_category": "nález v druhotné poloze",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 37,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Navrhuji, aby výzkum v příštím roce byl proveden několika",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "výzkum",
+                "příčné sondy",
+                "pohřebiště",
+                "okolí",
+                "pískovna"
+            ],
+            "extracted_keywords_en": [
+                "výzkum",
+                "příčné sondy",
+                "pohřebiště",
+                "okolí",
+                "pískovna"
+            ],
+            "teater_category": "sonda",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 38,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "příčnými sondami, jimiž by byl praeoex zachycen rozsah pohřebiště,",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "sondami",
+                "příčnými",
+                "pohřebiště",
+                "rozsah",
+                "okolí",
+                "pískovny"
+            ],
+            "extracted_keywords_en": [
+                "sondami",
+                "příčnými",
+                "pohřebiště",
+                "rozsah",
+                "okolí",
+                "pískovny"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 39,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "zejména pak prozkoumat nej bližší okolí pískovny v těch místech, kde",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pohřebiště",
+                "okolí",
+                "pískovna",
+                "místa",
+                "těžení"
+            ],
+            "extracted_keywords_en": [
+                "pohřebiště",
+                "okolí",
+                "pískovna",
+                "místa",
+                "těžení"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 40,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "bude pravděpodobně těžení pokračovat. Vzhledem k malé mocnosti or-",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pravděpodobně",
+                "těžení",
+                "pokračovat",
+                "okolí",
+                "pískovna"
+            ],
+            "extracted_keywords_en": [
+                "pravděpodobně",
+                "těžení",
+                "pokračovat",
+                "okolí",
+                "pískovna"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 42,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "nice na nalezišti a poměrně malé ploše návršíčka (cca 300 m ), kde",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "návršíčka",
+                "300 m",
+                "pohřebiště"
+            ],
+            "extracted_keywords_en": [
+                "návršíčka",
+                "300 m",
+                "pohřebiště"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 43,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "pohřebiště předpokládám, věřím, že by pohřebiště mohlo být z větší",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pohřebiště",
+                "pohřeb"
+            ],
+            "extracted_keywords_en": [
+                "burial ground",
+                "burial",
+                "graveyard"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 44,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "Poznámka: Pikte pokud možno strojern. Nn konci uvedte datum odoslání a čitelný podpis. Zprávy koreferentú a komisi",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Poznámka",
+                "Pikte",
+                "strojern",
+                "datum",
+                "čitelný podpis",
+                "zprávy",
+                "koreferentú",
+                "komisi",
+                "vyhotovto"
+            ],
+            "extracted_keywords_en": [
+                "Poznámka",
+                "Pikte",
+                "strojern",
+                "datum",
+                "čitelný podpis",
+                "zprávy",
+                "koreferentú",
+                "komisi",
+                "vyhotovto"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 45,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "vyhotovto dvojmo.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pohřebiště",
+                "pohřebiště"
+            ],
+            "extracted_keywords_en": [
+                "pohřebiště",
+                "pohřebiště"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 2,
+        "line": 1,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "části prozkoumáno v plánované době v příštím roce",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "části",
+                "prozkoumáno",
+                "plánované",
+                "doba",
+                "příští rok"
+            ],
+            "extracted_keywords_en": [
+                "parts",
+                "examined",
+                "planned",
+                "time",
+                "next year"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 2,
+        "line": 3,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "V Praze 1. října 1957.",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "Praha",
+                "říjen",
+                "1957",
+                "J. Hrala"
+            ],
+            "extracted_keywords_en": [
+                "Praha",
+                "October",
+                "1957",
+                "J. Hrala"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 2,
+        "line": 4,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "J. Hrala",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "J. Hrala"
+            ],
+            "extracted_keywords_en": [
+                "J. Hrala"
+            ],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
+        }
+    }
+]

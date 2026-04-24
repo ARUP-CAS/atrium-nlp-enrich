@@ -31,18 +31,40 @@ from vocab_manager import VocabularyManager
 MODEL_REGISTRY: Dict[str, Dict] = {
     # --- New Qwen 3 Models ---
     "qwen3-14b": {
-        "hf_id": "Qwen/Qwen3-14B-Instruct",
-        "context_window": 32768,
+        "hf_id": "OpenPipe/Qwen3-14B-Instruct",
+        "context_window": 131072, # Extended via YaRN
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
     "qwen3-8b": {
-        "hf_id": "Qwen/Qwen3-8B-Instruct",
-        "context_window": 32768,
+        "hf_id": "Qwen/Qwen3-8B",
+        "context_window": 131072, # Extended via YaRN
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+    },
+    # new models apart from qwen3
+    "gemma-3-12b-it": {
+        "hf_id": "google/gemma-3-12b-it",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+    "bielik-11b-v3.0": {
+        "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
+        "context_window": 8192,
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "ministral-3-14b": {
+        "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
+        "context_window": 32768,
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False, # The extracted repo is public
     },
     # --- Existing Registry ---
     "qwen2.5-14b-awq": {
@@ -310,6 +332,29 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
 # ---------------------------------------------------------------------------
 # 7. Model + Tokenizer Loader
 # ---------------------------------------------------------------------------
+
+def _load_ministral_tokenizer(hf_id: str, spec: dict, hf_token: Optional[str] = None):
+    """
+    The official Ministral-3 tokenizer_config.json contains malformed entries
+    (e.g., 'TokenizersBackend' class and list-based extra_special_tokens) that crash
+    AutoTokenizer in transformers.
+
+    Since Ministral-3 uses the exact same v3 'Tekken' tokenizer as Mistral-Nemo,
+    we can safely load the Mistral-Nemo tokenizer as a 1:1 drop-in replacement.
+    """
+    from transformers import AutoTokenizer
+
+    nemo_id = "mistralai/Mistral-Nemo-Instruct-2407"
+    print(f"[INFO] Bypassing malformed tokenizer config for {hf_id}. Loading Tekken tokenizer from {nemo_id}...")
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        nemo_id,
+        trust_remote_code=spec["trust_remote_code"],
+        token=hf_token or None,
+    )
+    return tokenizer
+
+
 def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
     if model_key not in MODEL_REGISTRY:
         raise ValueError(f"Unknown MODEL_KEY '{model_key}'. Available: {', '.join(MODEL_REGISTRY.keys())}")
@@ -321,21 +366,64 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
         raise EnvironmentError("Model requires a HuggingFace token. Set HF_TOKEN in config.")
 
     print(f"=== Loading: {hf_id} ===")
-    tokenizer = AutoTokenizer.from_pretrained(hf_id, trust_remote_code=spec["trust_remote_code"], token=hf_token or None)
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
+    # --- Ministral3 KeyError & Registration Patch ---
+    if model_key == "ministral-3-14b":
+        from transformers import CONFIG_MAPPING, AutoConfig, AutoModelForCausalLM
+        from transformers.models.mistral.configuration_mistral import MistralConfig
+        from transformers.models.mistral.modeling_mistral import MistralForCausalLM
+
+        # Current transformers versions are missing the 'ministral3' text config mapping,
+        # which causes a KeyError when parsing the model config.
+        if "ministral3" not in CONFIG_MAPPING:
+
+            # 1. Create a dummy config claiming the "ministral3" name
+            class MinistralTextConfig(MistralConfig):
+                model_type = "ministral3"
+
+            # 2. Create a dummy model class that links explicitly to our dummy config.
+            # This bypasses the strict validation check in AutoModel.register().
+            class MinistralCausalLM(MistralForCausalLM):
+                config_class = MinistralTextConfig
+
+            # 3. Register BOTH together so they pass the consistency check
+            AutoConfig.register("ministral3", MinistralTextConfig, exist_ok=True)
+            if hasattr(CONFIG_MAPPING, "_extra_content"):
+                CONFIG_MAPPING._extra_content["ministral3"] = MinistralTextConfig
+
+            AutoModelForCausalLM.register(MinistralTextConfig, MinistralCausalLM, exist_ok=True)
+    # ---------------------------------
+
+    # --- Tokenizer Loading ---
+    if model_key == "ministral-3-14b":
+        tokenizer = _load_ministral_tokenizer(hf_id, spec, hf_token)
+    else:
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(
+            hf_id,
+            trust_remote_code=spec["trust_remote_code"],
+            token=hf_token or None,
+        )
+
+    if getattr(tokenizer, "pad_token", None) is None:
+        tokenizer.pad_token = getattr(tokenizer, "eos_token", None)
+    # ----------------------------------------
+
+    # --- Model Loading ---
+    from transformers import AutoModelForCausalLM
+    ModelClass = AutoModelForCausalLM
+    attn_impl = "sdpa"
+
+    model = ModelClass.from_pretrained(
         hf_id,
         device_map="auto",
         torch_dtype=spec["torch_dtype"],
         trust_remote_code=spec["trust_remote_code"],
         token=hf_token or None,
-        attn_implementation="flash_attention_2"
+        attn_implementation=attn_impl
     )
     model.eval()
     return model, tokenizer, spec
-
 
 # ---------------------------------------------------------------------------
 # 8. Utilities
@@ -505,6 +593,11 @@ def process_document(
 # 10. Pipeline Execution
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
+    # Allow the CUDA allocator to extend existing segments instead of
+    # failing on fragmentation. Must be set before any CUDA allocation.
+    import os
+    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+
     config = load_config("llm_config.txt")
 
     MODEL_KEY    = config.get("MODEL_KEY",    "qwen2.5-14b-awq")

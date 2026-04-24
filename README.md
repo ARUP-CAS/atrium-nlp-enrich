@@ -754,7 +754,7 @@ repository root. This allows you to easily swap the underlying LLM (e.g., `qwen3
 `mistral-nemo-12b`) and tweak input filtering to prevent processing uninformative or noisy text.
 
 ```text
-# Switch between: qwen3-14b | qwen3-8b | qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b | llama3.1-8b
+# Switch between: qwen3-14b | qwen3-8b | qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b-v3.0 | llama3.1-8b | gemma-3-12b-it | ministral-3-14b
 MODEL_KEY=qwen3-14b
 
 # Only needed for gated models like llama3.1-8b
@@ -821,15 +821,17 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 ```
 
 Output examples per model:
+Output examples per model:
 - [KW_PER_DOC_LLM_qwen3_14b](data_samples/KW_PER_DOC_LLM_qwen3_14b) 📂 by Qwen 3-14B [^18]
 - [KW_PER_DOC_LLM_qwen3_8b](data_samples/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 - [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
 - [KW_PER_DOC_LLM_aya_expanse_8b](data_samples/KW_PER_DOC_LLM_aya_expanse_8b) 📂 by Aya Expanse 8B [^15]
-- [KW_PER_DOC_LLM_bielik_11b](data_samples/KW_PER_DOC_LLM_bielik_11b) 📂 by Bielik 11B [^16]
+- [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/KW_PER_DOC_LLM_bielik_11b_v3_0) 📂 by Bielik 11B v3.0 [^16]
 - [KW_PER_DOC_LLM_llama31_8b](data_samples/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
-
+- [KW_PER_DOC_LLM_gemma_3_12b_it](data_samples/KW_PER_DOC_LLM_gemma_3_12b_it) 📂 by Gemma 3-12B-IT [^20]
+- [KW_PER_DOC_LLM_ministral_3_14b](data_samples/KW_PER_DOC_LLM_ministral_3_14b) 📂 by Ministral 3-14B [^21]
 ### 📊 Paradata Integration
 
 Just like the main shell script pipelines, the LLM enrichment natively hooks into `atrium_paradata.py`. It automatically logs:
@@ -969,8 +971,9 @@ the paradata logger.
 [^13]: https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
 [^14]: https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407
 [^15]: https://huggingface.co/CohereForAI/aya-expanse-8b
-[^16]: https://huggingface.co/speakleash/Bielik-11B-v2.3-Instruct
+[^16]: https://huggingface.co/speakleash/Bielik-11B-v3.0-Instruct
 [^17]: https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct
-[^18]: [https://huggingface.co/Qwen/Qwen3-14B-Instruct](https://huggingface.co/Qwen/Qwen3-14B-Instruct)
-[^19]: [https://huggingface.co/Qwen/Qwen3-8B-Instruct](https://huggingface.co/Qwen/Qwen3-8B-Instruct)
-
+[^18]: https://huggingface.co/Qwen/Qwen3-14B-Instruct
+[^19]: https://huggingface.co/Qwen/Qwen3-8B-Instruct
+[^20]: https://huggingface.co/google/gemma-3-12b-it
+[^21]: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
