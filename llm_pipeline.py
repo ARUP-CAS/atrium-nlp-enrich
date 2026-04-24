@@ -29,7 +29,6 @@ from vocab_manager import VocabularyManager
 # ---------------------------------------------------------------------------
 
 MODEL_REGISTRY: Dict[str, Dict] = {
-    # --- New Qwen 3 Models ---
     "qwen3-14b": {
         "hf_id": "OpenPipe/Qwen3-14B-Instruct",
         "context_window": 131072, # Extended via YaRN
@@ -44,7 +43,6 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
-    # new models apart from qwen3
     "gemma-3-12b-it": {
         "hf_id": "google/gemma-3-12b-it",
         "context_window": 131072,
@@ -64,9 +62,8 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "context_window": 32768,
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
-        "hf_token_required": False, # The extracted repo is public
+        "hf_token_required": False,
     },
-    # --- Existing Registry ---
     "qwen2.5-14b-awq": {
         "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
         "context_window": 32768,
@@ -178,8 +175,9 @@ def build_schema(term_names: List[str]) -> type:
         extracted_keywords_cs: List[str] = Field(
             ...,
             description=(
-                "Key Czech archaeological terms found ONLY in the marked line (>>>). "
-                "Do not copy from surrounding context lines."
+                "Key Czech archaeological terms, methods, or objects found ONLY in the text marked with (>>>). "
+                "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
+                "If no relevant archaeological terms are present in the target line, return an empty list []."
             ),
         )
         extracted_keywords_en: List[str] = Field(
@@ -192,9 +190,7 @@ def build_schema(term_names: List[str]) -> type:
         teater_category: TermEnum = Field(
             ...,
             description=(
-                "The single most relevant category from the thematic vocabulary. "
-                "Use 'Nerelevantní (meta-text)' for headers, footers, table of contents, "
-                "or any line lacking direct archaeological significance."
+                "The single most relevant category from the thematic vocabulary."
             ),
         )
         confidence_score: float = Field(
@@ -245,18 +241,16 @@ def _term_priority(cs: str, en: str) -> int:
 def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[str, List[str]]:
     """
     Builds a system prompt structured by themes to improve LLM contextual mapping.
-    Includes an explicit meta-text escape hatch at position 0 (so it always survives
-    token-budget truncation) and caps the noisy 'Other' section at 15 terms to prevent
-    country-name / generic-term hallucination.
+    Parses both the legacy structure and the new taxonomy structure with "keywords" -> "cs"/"en".
     """
     header = (
         "You are an expert archaeological data extractor. "
-        "Analyze the MARKED LINE (>>>) within its surrounding document context. "
-        "Extract keywords specifically from the marked line. "
-        "Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
-        "CRITICAL: If the marked line is a title, table of contents, administrative "
-        "meta-text, running header, page number, or lacks direct archaeological "
-        "significance, you MUST select 'Nerelevantní (meta-text)'.\n"
+        "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> within its surrounding document context.\n"
+        "1. Extract ONLY archaeological entities, features, periods, or materials from the marked line. "
+        "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
+        "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
+        "CRITICAL: If and only if the marked line is purely administrative (e.g., page numbers, titles, author names) "
+        "and lacks archaeological context, you MUST select 'Nerelevantní (meta-text)'.\n"
         "You MUST use the exact Czech term as written.\n"
         "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
         "THEMATIC VOCABULARY:\n"
@@ -271,14 +265,23 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
         "en": "Irrelevant / Meta-text",
     })
 
-    for theme, terms in vocab_data.items():
-        if isinstance(terms, dict):
-            for cs_key, pair in terms.items():
-                en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
-                raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
+    # Support for new nested taxonomy structure and legacy structure
+    for theme, data in vocab_data.items():
+        if isinstance(data, dict):
+            if "keywords" in data and isinstance(data["keywords"], dict):
+                # New taxonomy format (has nested "keywords" with "cs" and "en" lists)
+                cs_list = data["keywords"].get("cs", [])
+                en_list = data["keywords"].get("en", [])
+                for i, cs_key in enumerate(cs_list):
+                    en = en_list[i] if i < len(en_list) else cs_key
+                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
+            else:
+                # Legacy format
+                for cs_key, pair in data.items():
+                    en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
+                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
     # Sort by priority: lower _term_priority value = higher relevance = listed first.
-    # The meta-text term at index 0 is deliberately kept at position 0 (priority=0 → listed first).
     prioritised = [raw_terms[0]] + sorted(raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"]))
 
     def build_candidate_prompt(term_list, other_cap: int = 15):
@@ -334,14 +337,6 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
 # ---------------------------------------------------------------------------
 
 def _load_ministral_tokenizer(hf_id: str, spec: dict, hf_token: Optional[str] = None):
-    """
-    The official Ministral-3 tokenizer_config.json contains malformed entries
-    (e.g., 'TokenizersBackend' class and list-based extra_special_tokens) that crash
-    AutoTokenizer in transformers.
-
-    Since Ministral-3 uses the exact same v3 'Tekken' tokenizer as Mistral-Nemo,
-    we can safely load the Mistral-Nemo tokenizer as a 1:1 drop-in replacement.
-    """
     from transformers import AutoTokenizer
 
     nemo_id = "mistralai/Mistral-Nemo-Instruct-2407"
@@ -373,20 +368,13 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
         from transformers.models.mistral.configuration_mistral import MistralConfig
         from transformers.models.mistral.modeling_mistral import MistralForCausalLM
 
-        # Current transformers versions are missing the 'ministral3' text config mapping,
-        # which causes a KeyError when parsing the model config.
         if "ministral3" not in CONFIG_MAPPING:
-
-            # 1. Create a dummy config claiming the "ministral3" name
             class MinistralTextConfig(MistralConfig):
                 model_type = "ministral3"
 
-            # 2. Create a dummy model class that links explicitly to our dummy config.
-            # This bypasses the strict validation check in AutoModel.register().
             class MinistralCausalLM(MistralForCausalLM):
                 config_class = MinistralTextConfig
 
-            # 3. Register BOTH together so they pass the consistency check
             AutoConfig.register("ministral3", MinistralTextConfig, exist_ok=True)
             if hasattr(CONFIG_MAPPING, "_extra_content"):
                 CONFIG_MAPPING._extra_content["ministral3"] = MinistralTextConfig
@@ -425,19 +413,14 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
     model.eval()
     return model, tokenizer, spec
 
+
 # ---------------------------------------------------------------------------
 # 8. Utilities
 # ---------------------------------------------------------------------------
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
     """
-    Returns a sliding context window of up to `window` lines before and after
-    center_idx, marked with '>>>'. Page boundaries are respected: context lines
-    from a different page than the center line are excluded.
-
-    For lines that are far from the document start (beyond window + 2 positions),
-    prepends a GLOBAL DOCUMENT HEADER containing the first 2 non-noise lines of
-    the document. This anchors the LLM when processing mid-document lines that
-    would otherwise have no indication of the document's domain or purpose.
+    Returns a sliding context window. Wraps the target line in XML tags
+    <target_line> ... </target_line> to provide a stronger attention anchor.
     """
     _NOISE_CATEG = {"Empty", "Trash", "Non-text"}
 
@@ -477,9 +460,13 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
         if i != center_idx and categ in _NOISE_CATEG:
             continue
 
-        marker = ">>>" if i == center_idx else "   "
-        text   = row.get("text", "").strip()
-        parts.append(f"{marker} [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text}")
+        text = row.get("text", "").strip()
+
+        # Enhanced anchoring with XML tags
+        if i == center_idx:
+            parts.append(f"<target_line> >>> [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text} </target_line>")
+        else:
+            parts.append(f"    [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text}")
 
     return "\n".join(parts)
 
@@ -525,7 +512,7 @@ def process_document(
 
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context_chunk}\n\nTask: Extract keywords and determine the TEATER category ONLY for the line marked with '>>>'."},
+            {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context_chunk}\n\nTask: Extract keywords and determine the TEATER category ONLY for the line marked inside <target_line>."},
         ]
         prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
@@ -552,10 +539,7 @@ def process_document(
                 semantic_data = EnrichmentModel.model_validate_json(result_json)
             except ValidationError:
                 try:
-                    # Fallback: Safely parse literal unescaped control chars (e.g., \t)
                     raw_dict = json.loads(result_json, strict=False)
-
-                    # Safely clamp the confidence score in dictionary space
                     if "confidence_score" in raw_dict:
                         try:
                             val = float(raw_dict["confidence_score"])
@@ -593,8 +577,6 @@ def process_document(
 # 10. Pipeline Execution
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    # Allow the CUDA allocator to extend existing segments instead of
-    # failing on fragmentation. Must be set before any CUDA allocation.
     import os
     os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
@@ -633,7 +615,10 @@ if __name__ == "__main__":
 
     vocab_mgr = VocabularyManager(vocab_path=VOCAB_PATH)
     vocab_data = vocab_mgr.load()
-    total_terms = sum(len(v) for v in vocab_data.values() if isinstance(v, dict))
+    total_terms = sum(
+        len(v.get("keywords", {}).get("cs", [])) if isinstance(v, dict) and "keywords" in v
+        else len(v) for v in vocab_data.values() if isinstance(v, dict)
+    )
     if total_terms == 0:
         raise RuntimeError("Vocabulary is empty. Run vocab_manager.py on a node with internet access first.")
     print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
