@@ -749,6 +749,12 @@ entirely eliminating hallucinated formatting.
 
 ### ⚙️ Configuration ([llm_config.txt](llm_config.txt) 📎)
 
+Install the required Python packages (necessary versions are provided in [requirements_llm.txt](requirements_llm.txt) 📎):
+
+```bash
+pip install -r requirements_llm.txt
+```
+
 The pipeline reads its runtime parameters from a plain text configuration file placed in the 
 repository root. This allows you to easily swap the underlying LLM (e.g., `qwen3-14b` or
 `mistral-nemo-12b`) and tweak input filtering to prevent processing uninformative or noisy text.
@@ -762,7 +768,7 @@ MODEL_KEY=qwen3-14b
 
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
 OUTPUT_DIR=data_samples/KW_PER_DOC_LLM
-VOCAB_PATH=data_samples/teater_vocab.json
+VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
 
 # Line Quality Filter Settings
@@ -826,6 +832,13 @@ Output examples per model:
 - [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 - [KW_PER_DOC_LLM_gemma_3_12b_it](data_samples/KW_PER_DOC_LLM_gemma_3_12b_it) 📂 by Gemma 3-12B-IT [^20]
+
+Recently added models:
+- [KW_PER_DOC_LLM_qwen_3.6_27b_it](data_samples/KW_PER_DOC_LLM_qwen_36_27b_it) 📂 by Qwen 3.6-27B-IT [^23]
+- [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MOE [^24]
+- [KW_PER_DOC_LLM_gemma_4_31b_it](data_samples/KW_PER_DOC_LLM_gemma_4_31b_it) 📂 by Gemma 4-31B-IT [^22]
+- [KW_PER_DOC_LLM_gemma_4_26b_a4b_it](data_samples/KW_PER_DOC_LLM_gemma_4_26b_a4b_it) 📂 by Gemma 4-26B-A4B-IT [^25]
+- [KW_PER_DOC_LLM_qwen_3.5_9b](data_samples/KW_PER_DOC_LLM_qwen_35_9b) 📂 by Qwen 3.5-9B [^26]
 
 Archived (unsuccessful model results):
 - [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
@@ -979,3 +992,8 @@ the paradata logger.
 [^19]: https://huggingface.co/Qwen/Qwen3-8B
 [^20]: https://huggingface.co/google/gemma-3-12b-it
 [^21]: https://huggingface.co/Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly
+[^22]: https://huggingface.co/google/gemma-4-31B-it
+[^23]: https://huggingface.co/Qwen/Qwen3.6-35B-A3B
+[^24]: https://huggingface.co/Qwen/Qwen3.6-27B
+[^25]: https://huggingface.co/google/gemma-4-26B-A4B-it
+[^26]: https://huggingface.co/Qwen/Qwen3.5-9B
