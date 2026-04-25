@@ -15,6 +15,83 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import torch
 
+# Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
+import transformers.tokenization_utils as _tu
+import transformers.tokenization_utils_base as _tub
+if not hasattr(_tu, 'PreTrainedTokenizerBase'):
+    _tu.PreTrainedTokenizerBase = _tub.PreTrainedTokenizerBase
+
+
+def _patch_params4bit_compat() -> bool:
+    """
+    Compatibility shim for bitsandbytes < 0.44 vs. newer transformers/accelerate.
+    """
+    try:
+        import bitsandbytes.nn as _bnb_nn
+        import bitsandbytes.functional as _bnb_func
+        import torch
+        import inspect
+
+        patched_anything = False
+
+        # --- 1. Patch Params4bit __new__ / __init__ (Stray kwarg fix) ---
+        new_sig = str(inspect.signature(_bnb_nn.Params4bit.__new__))
+        if "_is_hf_initialized" not in new_sig and "**" not in new_sig:
+            _orig_p4b_new = _bnb_nn.Params4bit.__new__
+
+            def _p4b_new(cls, *args, **kwargs):
+                kwargs.pop("_is_hf_initialized", None)
+                return _orig_p4b_new(cls, *args, **kwargs)
+
+            _bnb_nn.Params4bit.__new__ = _p4b_new
+
+            if '__init__' in _bnb_nn.Params4bit.__dict__:
+                _orig_p4b_init = _bnb_nn.Params4bit.__init__
+
+                def _p4b_init(self, *args, **kwargs):
+                    kwargs.pop("_is_hf_initialized", None)
+                    return _orig_p4b_init(self, *args, **kwargs)
+
+                _bnb_nn.Params4bit.__init__ = _p4b_init
+
+            patched_anything = True
+
+        # --- 2. Patch QuantState.as_dict (Meta tensor .item() fix) ---
+        if hasattr(_bnb_func, 'QuantState'):
+            _orig_as_dict = _bnb_func.QuantState.as_dict
+
+            def _patched_as_dict(self, packed: bool = False):
+                orig_offset = getattr(self, 'offset', None)
+                # Check if we have a nested offset that landed on the meta device
+                is_meta_offset = isinstance(orig_offset, torch.Tensor) and orig_offset.device.type == "meta"
+
+                if is_meta_offset:
+                    self.offset = torch.tensor(0.0)  # Temporarily provide a CPU scalar so .item() succeeds
+
+                try:
+                    return _orig_as_dict(self, packed=packed)
+                finally:
+                    if is_meta_offset:
+                        self.offset = orig_offset  # Restore the actual meta tensor
+
+            # Apply only if not already patched
+            if _bnb_func.QuantState.as_dict.__name__ != "_patched_as_dict":
+                _bnb_func.QuantState.as_dict = _patched_as_dict
+                patched_anything = True
+
+        if patched_anything:
+            print(
+                "[COMPAT] Patched bitsandbytes (Params4bit & QuantState) for accelerate/meta-device compatibility. "
+                "Permanent fix: pip install -U bitsandbytes inside your venv."
+            )
+        return patched_anything
+
+    except Exception as exc:
+        print(f"[WARN] Could not apply compatibility patch: {exc}")
+        return False
+
+_patch_params4bit_compat()
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from pydantic import BaseModel, Field, ValidationError
 from lmformatenforcer import JsonSchemaParser
@@ -36,6 +113,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
+        "load_in_4bit": True,   # <-- ADDED: Quantize to NF4 to fit within 44GB and leave room for KV cache
     },
     "qwen-3.6-35b-moe": {
         "hf_id": "Qwen/Qwen3.6-35B-A3B",
@@ -52,11 +130,12 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": False,
     },
     "gemma-4-26b-moe": {
-        "hf_id": "google/gemma-4-26B-A4B",
+        "hf_id": "google/gemma-4-26B-A4B-it",
         "context_window": 256000,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
+        "load_in_4bit": True,   # 26B total MoE weights ~52 GB bf16 → ~13 GB NF4; fits 44 GB GPU
     },
     "qwen-3.5-9b-it": {
         "hf_id": "Qwen/Qwen3.5-9B",
@@ -438,17 +517,37 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
     # ----------------------------------------
 
     # --- Model Loading ---
-    from transformers import AutoModelForCausalLM
+    from transformers import AutoModelForCausalLM, BitsAndBytesConfig
     ModelClass = AutoModelForCausalLM
     attn_impl = "sdpa"
+
+    # 4-bit quantization: used for large MoE models whose total weight size
+    # exceeds a single GPU VRAM (e.g. gemma-4-26B-A4B-it: 26B params ~52 GB bf16).
+    # NF4 + double-quant brings this to ~13 GB, leaving ample room for KV cache.
+    # llm_int8_enable_fp32_cpu_offload: required when device_map="auto" offloads any
+    # modules to CPU (e.g. embeddings or lm_head that cannot be 4-bit quantized).
+    # Without this flag, BitsAndBytes raises a ValueError even if only a tiny fraction
+    # of the model lands on CPU. The offloaded modules stay in fp32 on CPU while
+    # quantized transformer blocks remain on GPU — inference is slower but functional.
+    bnb_config = None
+    if spec.get("load_in_4bit"):
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=spec["torch_dtype"],  # bf16 matmuls
+            bnb_4bit_use_double_quant=True,              # nested quant saves ~0.4 bpw extra
+            bnb_4bit_quant_type="nf4",                   # optimal for normal weight distributions
+            llm_int8_enable_fp32_cpu_offload=True,       # allow CPU offloading of non-quantizable modules
+        )
+        print(f"[INFO] Loading {hf_id} with 4-bit NF4 quantization (BitsAndBytes)")
 
     model = ModelClass.from_pretrained(
         hf_id,
         device_map="auto",
-        torch_dtype=spec["torch_dtype"],
+        dtype=spec["torch_dtype"],          #  renamed to  in transformers 5.x
+        quantization_config=bnb_config,     # None = no quantization (default path)
         trust_remote_code=spec["trust_remote_code"],
         token=hf_token or None,
-        attn_implementation=attn_impl
+        attn_implementation=attn_impl,
     )
     model.eval()
     return model, tokenizer, spec
