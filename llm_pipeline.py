@@ -29,6 +29,44 @@ from vocab_manager import VocabularyManager
 # ---------------------------------------------------------------------------
 
 MODEL_REGISTRY: Dict[str, Dict] = {
+    # --- New Models Added ---
+    "gemma-4-31b-it": {
+        "hf_id": "google/gemma-4-31B-it",
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+    "qwen-3.6-35b-moe": {
+        "hf_id": "Qwen/Qwen3.6-35B-A3B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "qwen-3.6-27b-it": {
+        "hf_id": "Qwen/Qwen3.6-27B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "gemma-4-26b-moe": {
+        "hf_id": "google/gemma-4-26B-A4B",
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+    "qwen-3.5-9b-it": {
+        "hf_id": "Qwen/Qwen3.5-9B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+
+    # --- Accepted / Original Models ---
     "qwen3-14b": {
         "hf_id": "OpenPipe/Qwen3-14B-Instruct",
         "context_window": 131072, # Extended via YaRN
@@ -43,27 +81,6 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
-    "gemma-3-12b-it": {
-        "hf_id": "google/gemma-3-12b-it",
-        "context_window": 131072,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-    },
-    "bielik-11b-v3.0": {
-        "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
-        "context_window": 8192,
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "ministral-3-14b": {
-        "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
-        "context_window": 32768,
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
     "qwen2.5-14b-awq": {
         "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
         "context_window": 32768,
@@ -75,6 +92,29 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_id": "Qwen/Qwen2.5-7B-Instruct",
         "context_window": 32768,
         "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "gemma-3-12b-it": {
+        "hf_id": "google/gemma-3-12b-it",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+
+    # --- Archived / Unsuccessful Models ---
+    "bielik-11b-v3.0": {
+        "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
+        "context_window": 131072, # Updated context length
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "ministral-3-14b": {
+        "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
+        "context_window": 131072, # Updated context length
+        "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
@@ -582,7 +622,7 @@ if __name__ == "__main__":
 
     config = load_config("llm_config.txt")
 
-    MODEL_KEY    = config.get("MODEL_KEY",    "qwen2.5-14b-awq")
+    MODEL_KEY    = config.get("MODEL_KEY",    "qwen-3.6-27b-it")
     HF_TOKEN     = config.get("HF_TOKEN",     os.environ.get("HF_TOKEN", None))
     INPUT_DIR    = Path(config.get("INPUT_DIR",  "data_samples/DOC_LINE_LANG_CLASS"))
     VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
