@@ -828,17 +828,15 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 
 Output examples per model:
 - [KW_PER_DOC_LLM_qwen3_14b](data_samples/KW_PER_DOC_LLM_qwen3_14b) 📂 by Qwen 3-14B [^18]
-- [KW_PER_DOC_LLM_qwen3_8b](data_samples/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
-- [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 - [KW_PER_DOC_LLM_gemma_3_12b_it](data_samples/KW_PER_DOC_LLM_gemma_3_12b_it) 📂 by Gemma 3-12B-IT [^20]
-
-Recently added models:
 - [KW_PER_DOC_LLM_qwen_3.6_27b_it](data_samples/KW_PER_DOC_LLM_qwen_36_27b_it) 📂 by Qwen 3.6-27B-IT [^23]
-- [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MOE [^24]
 - [KW_PER_DOC_LLM_gemma_4_31b_it](data_samples/KW_PER_DOC_LLM_gemma_4_31b_it) 📂 by Gemma 4-31B-IT [^22]
-- [KW_PER_DOC_LLM_gemma_4_26b_a4b_it](data_samples/KW_PER_DOC_LLM_gemma_4_26b_a4b_it) 📂 by Gemma 4-26B-A4B-IT [^25]
 - [KW_PER_DOC_LLM_qwen_3.5_9b_it](data_samples/KW_PER_DOC_LLM_qwen_35_9b_it) 📂 by Qwen 3.5-9B-IT [^26]
+
+To be added:
+- [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MOE [^24]
+- [KW_PER_DOC_LLM_gemma_4_26b_a4b_it](data_samples/KW_PER_DOC_LLM_gemma_4_26b_a4b_it) 📂 by Gemma 4-26B-A4B-IT [^25]
 
 Archived (unsuccessful model results):
 - [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
@@ -846,6 +844,9 @@ Archived (unsuccessful model results):
 - [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_bielik_11b_v30) 📂 by Bielik 11B v3.0 [^16]
 - [KW_PER_DOC_LLM_llama31_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
 - [KW_PER_DOC_LLM_ministral_3_14b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_ministral_3_14b) 📂 by Ministral 3-14B [^21]
+- [KW_PER_DOC_LLM_qwen3_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
+- [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
+
 
 ### 📊 Paradata Integration
 
