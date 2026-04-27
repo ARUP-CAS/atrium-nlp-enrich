@@ -6,13 +6,19 @@ Output: Per-document JSON files, one record per processed line, with enriched se
         categories mapped to the TEATER/AMCR vocabulary.
 """
 
+# Must be set before ANY import that can touch CUDA (bitsandbytes initialises the
+# CUDA context on import via its C extension). Setting this inside __main__ is too
+# late — the allocator config is locked in when the context is first created.
+import os
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+
 import csv
+import gc
 import json
 import enum
-import os
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 import torch
 
 # Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
@@ -107,13 +113,20 @@ from vocab_manager import VocabularyManager
 
 MODEL_REGISTRY: Dict[str, Dict] = {
     # --- New Models Added ---
+    "gemma-4-26b-moe-gguf": {
+        "hf_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
+        "filename": "*Q4_K_M.gguf",
+        "context_window": 8192,  # Fixed context size for Llama.cpp allocation
+        "is_gguf": True,
+        "hf_token_required": False,
+    },
     "gemma-4-31b-it": {
         "hf_id": "google/gemma-4-31B-it",
         "context_window": 256000,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
-        "load_in_4bit": True,   # <-- ADDED: Quantize to NF4 to fit within 44GB and leave room for KV cache
+        "load_in_4bit": True,
     },
     "qwen-3.6-35b-moe": {
         "hf_id": "Qwen/Qwen3.6-35B-A3B",
@@ -121,6 +134,8 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "is_moe": True,
+        "bnb_experts_broken": True,
     },
     "qwen-3.6-27b-it": {
         "hf_id": "Qwen/Qwen3.6-27B",
@@ -128,6 +143,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "load_in_4bit": True,
     },
     "gemma-4-26b-moe": {
         "hf_id": "google/gemma-4-26B-A4B-it",
@@ -135,7 +151,8 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
-        "load_in_4bit": True,   # 26B total MoE weights ~52 GB bf16 → ~13 GB NF4; fits 44 GB GPU
+        "is_moe": True,
+        "bnb_experts_broken": True,
     },
     "qwen-3.5-9b-it": {
         "hf_id": "Qwen/Qwen3.5-9B",
@@ -144,86 +161,20 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
-
     # --- Accepted / Original Models ---
     "qwen3-14b": {
         "hf_id": "OpenPipe/Qwen3-14B-Instruct",
-        "context_window": 131072, # Extended via YaRN
+        "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
     "qwen3-8b": {
         "hf_id": "Qwen/Qwen3-8B",
-        "context_window": 131072, # Extended via YaRN
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "qwen2.5-14b-awq": {
-        "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
-        "context_window": 32768,
-        "trust_remote_code": False,
-        "torch_dtype": torch.float16,
-        "hf_token_required": False,
-    },
-    "qwen2.5-7b": {
-        "hf_id": "Qwen/Qwen2.5-7B-Instruct",
-        "context_window": 32768,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "gemma-3-12b-it": {
-        "hf_id": "google/gemma-3-12b-it",
         "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-    },
-
-    # --- Archived / Unsuccessful Models ---
-    "bielik-11b-v3.0": {
-        "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
-        "context_window": 131072, # Updated context length
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
-    },
-    "ministral-3-14b": {
-        "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
-        "context_window": 131072, # Updated context length
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "mistral-nemo-12b": {
-        "hf_id": "mistralai/Mistral-Nemo-Instruct-2407",
-        "context_window": 128000,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "aya-expanse-8b": {
-        "hf_id": "CohereForAI/aya-expanse-8b",
-        "context_window": 8192,
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "bielik-11b": {
-        "hf_id": "speakleash/Bielik-11B-v2.3-Instruct",
-        "context_window": 8192,
-        "trust_remote_code": True,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "llama3.1-8b": {
-        "hf_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
-        "context_window": 128000,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
     },
 }
 
@@ -330,8 +281,7 @@ def _term_priority(cs: str, en: str) -> int:
     if en.rstrip().endswith("(the)"):
         return 2
 
-    # Protect against empty strings to avoid IndexError
-    if cs == en and cs and cs[0].isupper() and "/" not in cs:
+    if cs == en and cs and cs[0].isupper() and "/ " not in cs:
         return 2
 
     cs_words = cs.split()
@@ -353,15 +303,19 @@ def _term_priority(cs: str, en: str) -> int:
 
     return 0
 
+def _count_tokens(text: str, tokenizer: Any) -> int:
+    """Helper to count tokens uniformly for both transformers and llama.cpp"""
+    if hasattr(tokenizer, 'tokenize') and not isinstance(tokenizer, _tu.PreTrainedTokenizerBase):
+        # Llama.cpp model instance acting as tokenizer
+        return len(tokenizer.tokenize(text.encode('utf-8')))
+    else:
+        # Transformers tokenizer
+        return len(tokenizer.encode(text))
 
 # ---------------------------------------------------------------------------
 # 6. Thematic System Prompt Builder
 # ---------------------------------------------------------------------------
 def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[str, List[str]]:
-    """
-    Builds a system prompt structured by themes to improve LLM contextual mapping.
-    Parses both the legacy structure and the new taxonomy structure with "keywords" -> "cs"/"en".
-    """
     header = (
         "You are an expert archaeological data extractor. "
         "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> within its surrounding document context.\n"
@@ -376,31 +330,25 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
     )
 
     raw_terms: List[dict] = []
-
-    # Position 0: explicit meta-text fallback — always survives token-budget truncation
     raw_terms.append({
         "theme": "Administrative / Meta",
         "cs": "Nerelevantní (meta-text)",
         "en": "Irrelevant / Meta-text",
     })
 
-    # Support for new nested taxonomy structure and legacy structure
     for theme, data in vocab_data.items():
         if isinstance(data, dict):
             if "keywords" in data and isinstance(data["keywords"], dict):
-                # New taxonomy format (has nested "keywords" with "cs" and "en" lists)
                 cs_list = data["keywords"].get("cs", [])
                 en_list = data["keywords"].get("en", [])
                 for i, cs_key in enumerate(cs_list):
                     en = en_list[i] if i < len(en_list) else cs_key
                     raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
             else:
-                # Legacy format
                 for cs_key, pair in data.items():
                     en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
                     raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
-    # Sort by priority: lower _term_priority value = higher relevance = listed first.
     prioritised = [raw_terms[0]] + sorted(raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"]))
 
     def build_candidate_prompt(term_list, other_cap: int = 15):
@@ -427,11 +375,11 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
         return prompt
 
     full_prompt = build_candidate_prompt(prioritised)
-    token_count = len(tokenizer.encode(full_prompt))
+    token_count = _count_tokens(full_prompt, tokenizer)
     print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
 
     if token_count <= max_tokens:
-        print("[vocab] Full vocabulary fits in context window — no truncation needed.")
+        print("[vocab] Full vocabulary fits in context window.")
         return full_prompt, [t["cs"] for t in prioritised]
 
     print(f"[WARN] Vocabulary ({token_count} tokens) exceeds budget ({max_tokens}). Truncating.")
@@ -440,7 +388,7 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
     while lo < hi - 1:
         mid = (lo + hi) // 2
         candidate = build_candidate_prompt(prioritised[:mid])
-        if len(tokenizer.encode(candidate)) <= max_tokens:
+        if _count_tokens(candidate, tokenizer) <= max_tokens:
             lo = mid
         else:
             hi = mid
@@ -454,20 +402,22 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
 # ---------------------------------------------------------------------------
 # 7. Model + Tokenizer Loader
 # ---------------------------------------------------------------------------
+def _verify_quantization_effective(model, model_key: str, spec: dict) -> None:
+    if not spec.get("load_in_4bit"):
+        return
 
-def _load_ministral_tokenizer(hf_id: str, spec: dict, hf_token: Optional[str] = None):
-    from transformers import AutoTokenizer
+    footprint_bytes = model.get_memory_footprint()
+    footprint_gb = footprint_bytes / 1024 ** 3
 
-    nemo_id = "mistralai/Mistral-Nemo-Instruct-2407"
-    print(f"[INFO] Bypassing malformed tokenizer config for {hf_id}. Loading Tekken tokenizer from {nemo_id}...")
+    total_params = sum(p.numel() for p in model.parameters())
+    bf16_estimate_gb = total_params * 2 / 1024 ** 3
+    ratio = footprint_gb / bf16_estimate_gb if bf16_estimate_gb > 0 else 0.0
 
-    tokenizer = AutoTokenizer.from_pretrained(
-        nemo_id,
-        trust_remote_code=spec["trust_remote_code"],
-        token=hf_token or None,
-    )
-    return tokenizer
+    print(f"[INFO] Model footprint: {footprint_gb:.1f} GB "
+          f"(BF16 estimate: {bf16_estimate_gb:.1f} GB, ratio: {ratio:.2f})")
 
+    if ratio > 0.50:
+        raise RuntimeError(f"Quantization failed for {model_key}. Review MoE BitsAndBytes bugs.")
 
 def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
     if model_key not in MODEL_REGISTRY:
@@ -476,79 +426,62 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
     spec = MODEL_REGISTRY[model_key]
     hf_id = spec["hf_id"]
 
-    if spec["hf_token_required"] and not hf_token:
-        raise EnvironmentError("Model requires a HuggingFace token. Set HF_TOKEN in config.")
+    if spec.get("is_gguf"):
+        try:
+            from llama_cpp import Llama
+        except ImportError:
+            raise ImportError("Please install llama-cpp-python to use GGUF models: pip install llama-cpp-python")
+
+        print(f"=== Loading GGUF via llama.cpp: {hf_id} ===")
+        model = Llama.from_pretrained(
+            repo_id=hf_id,
+            filename=spec.get("filename", "*.gguf"),
+            n_ctx=spec["context_window"],
+            n_gpu_layers=-1, # Push entirely to GPU
+            flash_attn=True,
+            verbose=False,
+        )
+        # llama_cpp.Llama object acts as both model and tokenizer
+        return model, model, spec
+
+    if spec.get("bnb_experts_broken") and spec.get("load_in_4bit"):
+        raise RuntimeError("BnB 4-bit requested for MoE model with fused experts. Use GGUF instead.")
 
     print(f"=== Loading: {hf_id} ===")
 
-    # --- Ministral3 KeyError & Registration Patch ---
-    if model_key == "ministral-3-14b":
-        from transformers import CONFIG_MAPPING, AutoConfig, AutoModelForCausalLM
-        from transformers.models.mistral.configuration_mistral import MistralConfig
-        from transformers.models.mistral.modeling_mistral import MistralForCausalLM
-
-        if "ministral3" not in CONFIG_MAPPING:
-            class MinistralTextConfig(MistralConfig):
-                model_type = "ministral3"
-
-            class MinistralCausalLM(MistralForCausalLM):
-                config_class = MinistralTextConfig
-
-            AutoConfig.register("ministral3", MinistralTextConfig, exist_ok=True)
-            if hasattr(CONFIG_MAPPING, "_extra_content"):
-                CONFIG_MAPPING._extra_content["ministral3"] = MinistralTextConfig
-
-            AutoModelForCausalLM.register(MinistralTextConfig, MinistralCausalLM, exist_ok=True)
-    # ---------------------------------
-
-    # --- Tokenizer Loading ---
-    if model_key == "ministral-3-14b":
-        tokenizer = _load_ministral_tokenizer(hf_id, spec, hf_token)
-    else:
-        from transformers import AutoTokenizer
-        tokenizer = AutoTokenizer.from_pretrained(
-            hf_id,
-            trust_remote_code=spec["trust_remote_code"],
-            token=hf_token or None,
-        )
+    from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+    tokenizer = AutoTokenizer.from_pretrained(
+        hf_id,
+        trust_remote_code=spec.get("trust_remote_code", False),
+        token=hf_token or None,
+    )
 
     if getattr(tokenizer, "pad_token", None) is None:
         tokenizer.pad_token = getattr(tokenizer, "eos_token", None)
-    # ----------------------------------------
 
-    # --- Model Loading ---
-    from transformers import AutoModelForCausalLM, BitsAndBytesConfig
-    ModelClass = AutoModelForCausalLM
-    attn_impl = "sdpa"
-
-    # 4-bit quantization: used for large MoE models whose total weight size
-    # exceeds a single GPU VRAM (e.g. gemma-4-26B-A4B-it: 26B params ~52 GB bf16).
-    # NF4 + double-quant brings this to ~13 GB, leaving ample room for KV cache.
-    # llm_int8_enable_fp32_cpu_offload: required when device_map="auto" offloads any
-    # modules to CPU (e.g. embeddings or lm_head that cannot be 4-bit quantized).
-    # Without this flag, BitsAndBytes raises a ValueError even if only a tiny fraction
-    # of the model lands on CPU. The offloaded modules stay in fp32 on CPU while
-    # quantized transformer blocks remain on GPU — inference is slower but functional.
     bnb_config = None
     if spec.get("load_in_4bit"):
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
-            bnb_4bit_compute_dtype=spec["torch_dtype"],  # bf16 matmuls
-            bnb_4bit_use_double_quant=True,              # nested quant saves ~0.4 bpw extra
-            bnb_4bit_quant_type="nf4",                   # optimal for normal weight distributions
-            llm_int8_enable_fp32_cpu_offload=True,       # allow CPU offloading of non-quantizable modules
+            bnb_4bit_compute_dtype=spec["torch_dtype"],
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+            llm_int8_enable_fp32_cpu_offload=True,
         )
-        print(f"[INFO] Loading {hf_id} with 4-bit NF4 quantization (BitsAndBytes)")
 
-    model = ModelClass.from_pretrained(
-        hf_id,
+    load_kwargs = dict(
         device_map="auto",
-        dtype=spec["torch_dtype"],          #  renamed to  in transformers 5.x
-        quantization_config=bnb_config,     # None = no quantization (default path)
-        trust_remote_code=spec["trust_remote_code"],
+        quantization_config=bnb_config,
+        trust_remote_code=spec.get("trust_remote_code", False),
         token=hf_token or None,
-        attn_implementation=attn_impl,
+        attn_implementation="sdpa",
     )
+
+    if bnb_config is None:
+        load_kwargs["dtype"] = spec["torch_dtype"]
+
+    model = AutoModelForCausalLM.from_pretrained(hf_id, **load_kwargs)
+    _verify_quantization_effective(model, model_key, spec)
     model.eval()
     return model, tokenizer, spec
 
@@ -557,10 +490,6 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
 # 8. Utilities
 # ---------------------------------------------------------------------------
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
-    """
-    Returns a sliding context window. Wraps the target line in XML tags
-    <target_line> ... </target_line> to provide a stronger attention anchor.
-    """
     _NOISE_CATEG = {"Empty", "Trash", "Non-text"}
 
     center_row  = rows[center_idx]
@@ -571,7 +500,6 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
 
     parts = []
 
-    # --- Global Document Header ---
     if center_idx > window + 2:
         parts.append("--- GLOBAL DOCUMENT HEADER ---")
         header_lines_added = 0
@@ -584,24 +512,19 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
                 if header_lines_added >= 2:
                     break
         parts.append("--- LOCAL CONTEXT WINDOW ---")
-    # --------------------------------
 
     for i in range(start, end):
         row      = rows[i]
         row_page = row.get("page_num", row.get("page", None))
         categ    = row.get("categ", "").strip()
 
-        # Exclude context lines from a different page (but always include the target)
         if row_page != center_page and i != center_idx:
             continue
 
-        # Exclude noise-category context lines (but always include the target)
         if i != center_idx and categ in _NOISE_CATEG:
             continue
 
         text = row.get("text", "").strip()
-
-        # Enhanced anchoring with XML tags
         if i == center_idx:
             parts.append(f"<target_line> >>> [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text} </target_line>")
         else:
@@ -614,26 +537,32 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
 # 9. Core Processing Logic
 # ---------------------------------------------------------------------------
 def process_document(
-    csv_path: Path, model: AutoModelForCausalLM, tokenizer: AutoTokenizer,
-    prefix_function, system_prompt: str, EnrichmentModel: type, max_input_tokens: int,
-    include_non_text: bool = True, min_char_count: int = 3, min_char_non_text: int = 8,
-    min_alpha_ratio_non_text: float = 0.40,
+    csv_path: Path, model: Any, tokenizer: Any,
+    parser: JsonSchemaParser, prefix_function: Any, system_prompt: str, EnrichmentModel: type,
+    max_input_tokens: int, is_gguf: bool, include_non_text: bool = True,
+    min_char_count: int = 3, min_char_non_text: int = 8, min_alpha_ratio_non_text: float = 0.40,
 ) -> Tuple[List[dict], Dict[str, int]]:
 
     file_id = csv_path.stem
     enriched_lines: List[dict] = []
     stats: Dict[str, int] = {"processed": 0, "skipped_filter": 0, "skipped_error": 0}
 
+    consecutive_errors = 0
+
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
+
+    # Initialize GGUF specific imports if needed
+    if is_gguf:
+        from lmformatenforcer.integrations.llamacpp import build_llamacpp_logits_processor
+        from llama_cpp import LogitsProcessorList
 
     for i, row in enumerate(rows):
         try:
             page_num = int(row.get("page_num", row.get("page", 0)))
             line_num = int(row.get("line_num", row.get("line", 0)))
         except (ValueError, TypeError):
-            print(f"  [{file_id}] Bad page/line value in row — skipping.")
             stats["skipped_filter"] += 1
             continue
 
@@ -653,27 +582,47 @@ def process_document(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context_chunk}\n\nTask: Extract keywords and determine the TEATER category ONLY for the line marked inside <target_line>."},
         ]
-        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
+        inputs = None
+        output = None
         try:
-            inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=max_input_tokens).to(model.device)
+            if is_gguf:
+                # Llama.cpp Inference Path
+                logits_processors = LogitsProcessorList([build_llamacpp_logits_processor(model, parser)])
 
-            with torch.no_grad():
-                output = model.generate(
-                    **inputs,
-                    max_new_tokens=MAX_NEW_TOKENS,
-                    do_sample=False,
-                    temperature=None,
-                    top_p=None,
-                    top_k=None,
-                    pad_token_id=tokenizer.pad_token_id,
-                    eos_token_id=tokenizer.eos_token_id,
-                    prefix_allowed_tokens_fn=prefix_function,
+                output = model.create_chat_completion(
+                    messages=messages,
+                    max_tokens=MAX_NEW_TOKENS,
+                    temperature=0.0,
+                    logits_processor=logits_processors
                 )
+                result_json = output["choices"][0]["message"]["content"]
 
-            generated_tokens = output[0][inputs["input_ids"].shape[1]:]
-            result_json = tokenizer.decode(generated_tokens, skip_special_tokens=True)
+            else:
+                # Transformers Inference Path
+                prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=max_input_tokens).to(model.device)
 
+                with torch.no_grad():
+                    output = model.generate(
+                        **inputs,
+                        max_new_tokens=MAX_NEW_TOKENS,
+                        do_sample=False,
+                        temperature=None,
+                        top_p=None,
+                        top_k=None,
+                        pad_token_id=tokenizer.pad_token_id,
+                        eos_token_id=tokenizer.eos_token_id,
+                        prefix_allowed_tokens_fn=prefix_function,
+                    )
+
+                generated_tokens = output[0][inputs["input_ids"].shape[1]:]
+                result_json = tokenizer.decode(generated_tokens, skip_special_tokens=True)
+
+                del inputs, output
+                torch.cuda.empty_cache()
+
+            # Parse Results
             try:
                 semantic_data = EnrichmentModel.model_validate_json(result_json)
             except ValidationError:
@@ -689,6 +638,9 @@ def process_document(
                 except (json.JSONDecodeError, ValidationError) as e:
                     print(f"  [{file_id}] Persistent validation error P{page_num} L{line_num}: {e}")
                     stats["skipped_error"] += 1
+                    consecutive_errors += 1
+                    if consecutive_errors >= 10:
+                        break
                     continue
 
             dump_data = semantic_data.model_dump()
@@ -704,10 +656,23 @@ def process_document(
                 "enrichment": dump_data,
             })
             stats["processed"] += 1
+            consecutive_errors = 0
 
         except Exception as e:
             print(f"  [{file_id}] Inference error P{page_num} L{line_num}: {e}")
             stats["skipped_error"] += 1
+            consecutive_errors += 1
+
+            if not is_gguf:
+                if inputs is not None: del inputs
+                if output is not None: del output
+                gc.collect()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+            if consecutive_errors >= 10:
+                print(f"  [{file_id}] Aborting document due to {consecutive_errors} consecutive errors.")
+                break
 
     return enriched_lines, stats
 
@@ -716,12 +681,9 @@ def process_document(
 # 10. Pipeline Execution
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    import os
-    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
-
     config = load_config("llm_config.txt")
 
-    MODEL_KEY    = config.get("MODEL_KEY",    "qwen-3.6-27b-it")
+    MODEL_KEY    = config.get("MODEL_KEY",    "gemma-4-26b-moe-gguf")
     HF_TOKEN     = config.get("HF_TOKEN",     os.environ.get("HF_TOKEN", None))
     INPUT_DIR    = Path(config.get("INPUT_DIR",  "data_samples/DOC_LINE_LANG_CLASS"))
     VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
@@ -760,9 +722,11 @@ if __name__ == "__main__":
     )
     if total_terms == 0:
         raise RuntimeError("Vocabulary is empty. Run vocab_manager.py on a node with internet access first.")
+
     print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
 
     model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
+    is_gguf = spec.get("is_gguf", False)
     max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
 
     system_prompt, surviving_terms = build_system_prompt(vocab_data, tokenizer, max_input_tokens)
@@ -770,7 +734,12 @@ if __name__ == "__main__":
 
     print("=== Compiling JSON Schema State Machine ===")
     parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
-    prefix_function = build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
+
+    if is_gguf:
+        prefix_function = None # Handled inline during process_document
+    else:
+        prefix_function = build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
+
     print("=== Pipeline ready ===")
 
     csv_files = sorted(INPUT_DIR.glob("*.csv"))
@@ -788,10 +757,11 @@ if __name__ == "__main__":
         print(f"Processing: {csv_file.name} ...")
         try:
             enriched_results, doc_stats = process_document(
-                csv_path=csv_file, model=model, tokenizer=tokenizer, prefix_function=prefix_function,
-                system_prompt=system_prompt, EnrichmentModel=EnrichmentModel, max_input_tokens=max_input_tokens,
-                include_non_text=INCLUDE_NON_TEXT, min_char_count=MIN_CHAR_COUNT, min_char_non_text=MIN_CHAR_NON_TEXT,
-                min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
+                csv_path=csv_file, model=model, tokenizer=tokenizer, parser=parser,
+                prefix_function=prefix_function, system_prompt=system_prompt,
+                EnrichmentModel=EnrichmentModel, max_input_tokens=max_input_tokens,
+                is_gguf=is_gguf, include_non_text=INCLUDE_NON_TEXT, min_char_count=MIN_CHAR_COUNT,
+                min_char_non_text=MIN_CHAR_NON_TEXT, min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
             )
 
             total_processed += doc_stats["processed"]
@@ -805,14 +775,14 @@ if __name__ == "__main__":
                 logger.log_success("json", count=1)
                 logger.log_document_success()
             else:
-                logger.log_skip(csv_file.name, f"No lines passed quality filter or all inference calls failed (stats={doc_stats}).")
+                logger.log_skip(csv_file.name, f"No lines passed quality filter or all inference calls failed.")
 
         except Exception as e:
             print(f"Critical error on {csv_file.name}: {e}")
             logger.log_skip(csv_file.name, str(e))
 
         finally:
-            if torch.cuda.is_available():
+            if not is_gguf and torch.cuda.is_available():
                 torch.cuda.empty_cache()
 
     already_done = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
