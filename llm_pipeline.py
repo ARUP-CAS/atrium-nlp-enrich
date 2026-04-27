@@ -247,7 +247,12 @@ def build_schema(term_names: List[str]) -> type:
             description=(
                 "Key Czech archaeological terms, methods, or objects found ONLY in the text marked with (>>>). "
                 "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
-                "If no relevant archaeological terms are present in the target line, return an empty list []."
+                "If no relevant archaeological terms are present in the target line, return an empty list []. "
+                "If teater_category is 'Nerelevantní (meta-text)', this array MUST be empty []. "
+                "Do not extract any terms from administrative lines. "
+                "Extract meaningful multi-word phrases when the archaeological entity is "
+                "a compound concept (e.g., 'zásobní jáma', 'kamenná konstrukce', "
+                "'kostrový pohřeb') rather than isolated single words."
             ),
         )
         extracted_keywords_en: List[str] = Field(
@@ -265,7 +270,14 @@ def build_schema(term_names: List[str]) -> type:
         )
         confidence_score: float = Field(
             ..., ge=0.0, le=1.0,
-            description="Confidence in this categorization (0.0 to 1.0).",
+            description=(
+                "Your confidence that the selected teater_category is correct. "
+                "Use 1.0 only when the line unambiguously matches the category with no interpretation required. "
+                "Use 0.7–0.9 for reasonable but non-obvious matches. "
+                "Use 0.5–0.7 when multiple categories could apply. "
+                "Use below 0.5 when forced to guess. "
+                "Do NOT output 1.0 uniformly — this field is used for quality filtering."
+            ),
         )
 
         def category_name(self) -> str:
@@ -324,6 +336,12 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
         "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
         "CRITICAL: If and only if the marked line is purely administrative (e.g., page numbers, titles, author names) "
         "and lacks archaeological context, you MUST select 'Nerelevantní (meta-text)'.\n"
+        "NEVER select a country name, language name, or geographic region name "
+        "as the teater_category for any line — including administrative lines. "
+        "For any line that lacks direct archaeological significance, "
+        "you MUST use 'Nerelevantní (meta-text)'.\n"
+        "When extracting keywords, normalize obvious OCR artifacts and typos to their correct Czech forms. "
+        "Do NOT include garbled tokens or split words as keywords. Prefer the normalized phrase over the raw OCR text.\n"
         "You MUST use the exact Czech term as written.\n"
         "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
         "THEMATIC VOCABULARY:\n"
@@ -372,6 +390,25 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
                 f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
             ) + "\n"
 
+        prompt += (
+            "\nEXAMPLES:\n\n"
+            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. století.\"\n"
+            "Correct output:\n"
+            "{\n"
+            "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
+            "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
+            "  \"teater_category\": \"kostel\",\n"
+            "  \"confidence_score\": 0.92\n"
+            "}\n\n"
+            "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
+            "Correct output:\n"
+            "{\n"
+            "  \"extracted_keywords_cs\": [],\n"
+            "  \"extracted_keywords_en\": [],\n"
+            "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
+            "  \"confidence_score\": 1.0\n"
+            "}\n"
+        )
         return prompt
 
     full_prompt = build_candidate_prompt(prioritised)
@@ -539,7 +576,7 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
 def process_document(
     csv_path: Path, model: Any, tokenizer: Any,
     parser: JsonSchemaParser, prefix_function: Any, system_prompt: str, EnrichmentModel: type,
-    max_input_tokens: int, is_gguf: bool, include_non_text: bool = True,
+    max_input_tokens: int, is_gguf: bool, model_key: str, include_non_text: bool = True,
     min_char_count: int = 3, min_char_non_text: int = 8, min_alpha_ratio_non_text: float = 0.40,
 ) -> Tuple[List[dict], Dict[str, int]]:
 
@@ -600,7 +637,25 @@ def process_document(
 
             else:
                 # Transformers Inference Path
-                prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                is_qwen3 = any(k in model_key.lower() for k in ("qwen3", "qwen-3.5", "qwen-3.6"))
+                if is_qwen3:
+                    # Add to messages as fallback in case tokenizer rejects enable_thinking param
+                    messages[-1]["content"] += "\n/no_think"
+
+                try:
+                    prompt = tokenizer.apply_chat_template(
+                        messages,
+                        tokenize=False,
+                        add_generation_prompt=True,
+                        **({"enable_thinking": False} if is_qwen3 else {})
+                    )
+                except TypeError:
+                    prompt = tokenizer.apply_chat_template(
+                        messages,
+                        tokenize=False,
+                        add_generation_prompt=True
+                    )
+
                 inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=max_input_tokens).to(model.device)
 
                 with torch.no_grad():
@@ -645,6 +700,10 @@ def process_document(
 
             dump_data = semantic_data.model_dump()
             dump_data["teater_category"] = semantic_data.category_name()
+
+            if dump_data.get("teater_category") == "Nerelevantní (meta-text)":
+                dump_data["extracted_keywords_cs"] = []
+                dump_data["extracted_keywords_en"] = []
 
             enriched_lines.append({
                 "file_id": file_id,
@@ -760,7 +819,7 @@ if __name__ == "__main__":
                 csv_path=csv_file, model=model, tokenizer=tokenizer, parser=parser,
                 prefix_function=prefix_function, system_prompt=system_prompt,
                 EnrichmentModel=EnrichmentModel, max_input_tokens=max_input_tokens,
-                is_gguf=is_gguf, include_non_text=INCLUDE_NON_TEXT, min_char_count=MIN_CHAR_COUNT,
+                is_gguf=is_gguf, model_key=MODEL_KEY, include_non_text=INCLUDE_NON_TEXT, min_char_count=MIN_CHAR_COUNT,
                 min_char_non_text=MIN_CHAR_NON_TEXT, min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
             )
 
