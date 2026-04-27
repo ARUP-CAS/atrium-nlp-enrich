@@ -21,6 +21,9 @@ import json
 import os
 import sys
 from pathlib import Path
+from pydantic import BaseModel, Field, ValidationError         # noqa: E402
+from typing import Any, Dict, List, Tuple
+import enum
 
 import torch
 from lmformatenforcer import JsonSchemaParser
@@ -31,16 +34,249 @@ from lmformatenforcer.integrations.transformers import (
 from atrium_paradata import ParadataLogger
 from vocab_manager import VocabularyManager
 
-from llm_utils import (
-    CONTEXT_RESERVED,
-    MAX_NEW_TOKENS,
-    build_schema,
-    build_system_prompt,
-    load_config,
-    load_model_and_tokenizer,
-    process_document,
-)
+from llm_utils import count_tokens, load_config, load_model_and_tokenizer, process_document
+from llm_utils import CONTEXT_RESERVED
 
+# ---------------------------------------------------------------------------
+# Vocabulary Helpers
+# ---------------------------------------------------------------------------
+
+def _term_priority(cs: str, en: str) -> int:
+    """
+    Return a sort key (lower = higher priority) for vocabulary term ordering.
+
+    Priority 2 (lowest / sorted last): ambiguous or proper-noun-only terms.
+    Priority 1: multi-word proper-noun pairs that are likely named entities.
+    Priority 0 (default): ordinary archaeological terms kept at front.
+    """
+    if en.rstrip().endswith("(the)"):
+        return 2
+
+    if cs == en and cs and cs[0].isupper() and "/ " not in cs:
+        return 2
+
+    cs_words = cs.split()
+    if (
+        len(cs_words) >= 2
+        and all(w[0].isupper() for w in cs_words if w)
+        and "/" not in cs
+        and not any(c.isdigit() for c in cs)
+    ):
+        _arch_keywords = {
+            "kultura", "doba", "období", "eneolit", "paleolit", "neolit",
+            "středověk", "novověk", "pravěk", "mezolit", "bronzová",
+            "laténská", "halštatská", "stěhování",
+        }
+        _arch_prefixes = ("Creative", "HaA", "HaB", "HaC", "HaD")
+
+        if not cs.startswith(_arch_prefixes) and not any(
+            kw in cs.lower() for kw in _arch_keywords
+        ):
+            en_words = en.split()
+            _stop = {"a", "an", "the", "of", "and", "in"}
+            if len(en_words) >= 2 and all(
+                w[0].isupper() for w in en_words if w.lower() not in _stop
+            ):
+                return 1
+
+    return 0
+
+# ---------------------------------------------------------------------------
+# Dynamic Pydantic Schema Builder
+# ---------------------------------------------------------------------------
+
+def build_schema(term_names: List[str]) -> type:
+    """
+    Dynamically construct a Pydantic model whose teater_category field is an
+    Enum constrained to exactly the vocabulary terms that survived the token
+    budget.  This drives the lm-format-enforcer JSON schema state machine so
+    the model can only ever output a valid category.
+    """
+    if not term_names:
+        raise ValueError(
+            "term_names is empty — vocabulary failed to load or was fully truncated."
+        )
+
+    TermEnum = enum.Enum(
+        "TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)}
+    )
+
+    class ConstrainedEnrichment(BaseModel):
+        extracted_keywords_cs: List[str] = Field(
+            ...,
+            description=(
+                "Key Czech archaeological terms, methods, or objects found ONLY in the text "
+                "marked with (>>>). "
+                "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
+                "If no relevant archaeological terms are present in the target line, return []. "
+                "If teater_category is 'Nerelevantní (meta-text)', this array MUST be empty []. "
+                "Do not extract any terms from administrative lines. "
+                "Extract meaningful multi-word phrases when the archaeological entity is "
+                "a compound concept (e.g., 'zásobní jáma', 'kamenná konstrukce', "
+                "'kostrový pohřeb') rather than isolated single words."
+            ),
+        )
+        extracted_keywords_en: List[str] = Field(
+            ...,
+            description=(
+                "Accurate English translations of extracted_keywords_cs. "
+                "Do not copy the Czech words unchanged."
+            ),
+        )
+        teater_category: TermEnum = Field(
+            ...,
+            description="The single most relevant category from the thematic vocabulary.",
+        )
+        confidence_score: float = Field(
+            ...,
+            ge=0.0,
+            le=1.0,
+            description=(
+                "Your confidence that the selected teater_category is correct. "
+                "Use 1.0 only when the line unambiguously matches the category with no "
+                "interpretation required. "
+                "Use 0.7–0.9 for reasonable but non-obvious matches. "
+                "Use 0.5–0.7 when multiple categories could apply. "
+                "Use below 0.5 when forced to guess. "
+                "Do NOT output 1.0 uniformly — this field is used for quality filtering."
+            ),
+        )
+
+        def category_name(self) -> str:
+            return self.teater_category.value
+
+    return ConstrainedEnrichment
+
+# ---------------------------------------------------------------------------
+# Thematic System Prompt Builder
+# ---------------------------------------------------------------------------
+
+def build_system_prompt(
+    vocab_data: dict, tokenizer: Any, max_tokens: int
+) -> Tuple[str, List[str]]:
+    """
+    Build the system prompt that embeds the thematic vocabulary.
+
+    If the full vocabulary exceeds the token budget (max_tokens), binary-search
+    for the largest prefix that still fits, preserving the highest-priority terms.
+
+    Returns:
+        (system_prompt_text, surviving_term_names_cs)
+    """
+    header = (
+        "You are an expert archaeological data extractor. "
+        "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> "
+        "within its surrounding document context.\n"
+        "1. Extract ONLY archaeological entities, features, periods, or materials "
+        "from the marked line. "
+        "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
+        "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
+        "CRITICAL: If and only if the marked line is purely administrative "
+        "(e.g., page numbers, titles, author names) and lacks archaeological context, "
+        "you MUST select 'Nerelevantní (meta-text)'.\n"
+        "NEVER select a country name, language name, or geographic region name "
+        "as the teater_category for any line — including administrative lines. "
+        "For any line that lacks direct archaeological significance, "
+        "you MUST use 'Nerelevantní (meta-text)'.\n"
+        "When extracting keywords, normalize obvious OCR artifacts and typos to their "
+        "correct Czech forms. "
+        "Do NOT include garbled tokens or split words as keywords. "
+        "Prefer the normalized phrase over the raw OCR text.\n"
+        "You MUST use the exact Czech term as written.\n"
+        "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
+        "THEMATIC VOCABULARY:\n"
+    )
+
+    # Collect and prioritise all vocabulary terms
+    raw_terms: List[dict] = []
+    raw_terms.append({
+        "theme": "Administrative / Meta",
+        "cs": "Nerelevantní (meta-text)",
+        "en": "Irrelevant / Meta-text",
+    })
+
+    for theme, data in vocab_data.items():
+        if isinstance(data, dict):
+            if "keywords" in data and isinstance(data["keywords"], dict):
+                cs_list = data["keywords"].get("cs", [])
+                en_list = data["keywords"].get("en", [])
+                for i, cs_key in enumerate(cs_list):
+                    en = en_list[i] if i < len(en_list) else cs_key
+                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
+            else:
+                for cs_key, pair in data.items():
+                    en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
+                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
+
+    prioritised = [raw_terms[0]] + sorted(
+        raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"])
+    )
+
+    def _build_candidate_prompt(term_list: List[dict], other_cap: int = 15) -> str:
+        themes: Dict[str, List[str]] = {}
+        other_terms: List[dict] = []
+
+        for t in term_list:
+            if t["theme"] == "Other":
+                other_terms.append(t)
+            else:
+                themes.setdefault(t["theme"], []).append(f"{t['cs']} ({t['en']})")
+
+        prompt = header
+        for theme_name, lines in themes.items():
+            prompt += f"\n--- {theme_name} ---\n"
+            prompt += "\n".join(f"- {line}" for line in lines) + "\n"
+
+        if other_terms:
+            prompt += "\n--- Other (Misc) ---\n"
+            prompt += "\n".join(
+                f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
+            ) + "\n"
+
+        prompt += (
+            "\nEXAMPLES:\n\n"
+            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. století.\"\n"
+            "Correct output:\n"
+            "{\n"
+            "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
+            "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
+            "  \"teater_category\": \"kostel\",\n"
+            "  \"confidence_score\": 0.92\n"
+            "}\n\n"
+            "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
+            "Correct output:\n"
+            "{\n"
+            "  \"extracted_keywords_cs\": [],\n"
+            "  \"extracted_keywords_en\": [],\n"
+            "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
+            "  \"confidence_score\": 1.0\n"
+            "}\n"
+        )
+        return prompt
+
+    full_prompt = _build_candidate_prompt(prioritised)
+    token_count = count_tokens(full_prompt, tokenizer)
+    print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
+
+    if token_count <= max_tokens:
+        print("[vocab] Full vocabulary fits in context window.")
+        return full_prompt, [t["cs"] for t in prioritised]
+
+    print(f"[WARN] Vocabulary ({token_count} tokens) exceeds budget ({max_tokens}). Truncating.")
+
+    lo, hi = 0, len(prioritised)
+    while lo < hi - 1:
+        mid = (lo + hi) // 2
+        candidate = _build_candidate_prompt(prioritised[:mid])
+        if count_tokens(candidate, tokenizer) <= max_tokens:
+            lo = mid
+        else:
+            hi = mid
+
+    surviving_terms = prioritised[:lo]
+    surviving_prompt = _build_candidate_prompt(surviving_terms)
+    surviving_cs = [t["cs"] for t in surviving_terms]
+    return surviving_prompt, surviving_cs
 
 # ---------------------------------------------------------------------------
 # Entry Point

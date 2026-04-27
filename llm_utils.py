@@ -18,7 +18,6 @@ os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 import csv
 import gc
 import json
-import enum
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -233,303 +232,7 @@ def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# 3. Line Quality Filter
-# ---------------------------------------------------------------------------
-
-def _should_process_line(
-    text: str,
-    categ: str,
-    include_non_text: bool,
-    min_char_count: int,
-    min_char_non_text: int,
-    min_alpha_ratio_non_text: float,
-) -> Tuple[bool, str]:
-    """
-    Return (should_process, skip_reason).
-
-    Applies category-level and character-level filters before sending a line
-    to the LLM, avoiding wasted inference on noise rows.
-    """
-    if not text:
-        return False, "empty text"
-
-    if categ in _ALWAYS_SKIP_CATEG:
-        return False, f"categ={categ}"
-
-    if categ == "Non-text":
-        if not include_non_text:
-            return False, "Non-text excluded by config"
-        char_count = len(text)
-        if char_count < min_char_non_text:
-            return False, f"Non-text too short ({char_count} < {min_char_non_text} chars)"
-        alpha_count = sum(c.isalpha() for c in text)
-        alpha_ratio = alpha_count / char_count if char_count else 0.0
-        if alpha_ratio < min_alpha_ratio_non_text:
-            return False, f"Non-text alpha ratio too low ({alpha_ratio:.2f})"
-        return True, ""
-
-    if len(text) < min_char_count:
-        return False, f"text too short ({len(text)} < {min_char_count} chars)"
-
-    return True, ""
-
-
-# ---------------------------------------------------------------------------
-# 4. Dynamic Pydantic Schema Builder
-# ---------------------------------------------------------------------------
-
-def build_schema(term_names: List[str]) -> type:
-    """
-    Dynamically construct a Pydantic model whose teater_category field is an
-    Enum constrained to exactly the vocabulary terms that survived the token
-    budget.  This drives the lm-format-enforcer JSON schema state machine so
-    the model can only ever output a valid category.
-    """
-    if not term_names:
-        raise ValueError(
-            "term_names is empty — vocabulary failed to load or was fully truncated."
-        )
-
-    TermEnum = enum.Enum(
-        "TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)}
-    )
-
-    class ConstrainedEnrichment(BaseModel):
-        extracted_keywords_cs: List[str] = Field(
-            ...,
-            description=(
-                "Key Czech archaeological terms, methods, or objects found ONLY in the text "
-                "marked with (>>>). "
-                "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
-                "If no relevant archaeological terms are present in the target line, return []. "
-                "If teater_category is 'Nerelevantní (meta-text)', this array MUST be empty []. "
-                "Do not extract any terms from administrative lines. "
-                "Extract meaningful multi-word phrases when the archaeological entity is "
-                "a compound concept (e.g., 'zásobní jáma', 'kamenná konstrukce', "
-                "'kostrový pohřeb') rather than isolated single words."
-            ),
-        )
-        extracted_keywords_en: List[str] = Field(
-            ...,
-            description=(
-                "Accurate English translations of extracted_keywords_cs. "
-                "Do not copy the Czech words unchanged."
-            ),
-        )
-        teater_category: TermEnum = Field(
-            ...,
-            description="The single most relevant category from the thematic vocabulary.",
-        )
-        confidence_score: float = Field(
-            ...,
-            ge=0.0,
-            le=1.0,
-            description=(
-                "Your confidence that the selected teater_category is correct. "
-                "Use 1.0 only when the line unambiguously matches the category with no "
-                "interpretation required. "
-                "Use 0.7–0.9 for reasonable but non-obvious matches. "
-                "Use 0.5–0.7 when multiple categories could apply. "
-                "Use below 0.5 when forced to guess. "
-                "Do NOT output 1.0 uniformly — this field is used for quality filtering."
-            ),
-        )
-
-        def category_name(self) -> str:
-            return self.teater_category.value
-
-    return ConstrainedEnrichment
-
-
-# ---------------------------------------------------------------------------
-# 5. Vocabulary Helpers
-# ---------------------------------------------------------------------------
-
-def _term_priority(cs: str, en: str) -> int:
-    """
-    Return a sort key (lower = higher priority) for vocabulary term ordering.
-
-    Priority 2 (lowest / sorted last): ambiguous or proper-noun-only terms.
-    Priority 1: multi-word proper-noun pairs that are likely named entities.
-    Priority 0 (default): ordinary archaeological terms kept at front.
-    """
-    if en.rstrip().endswith("(the)"):
-        return 2
-
-    if cs == en and cs and cs[0].isupper() and "/ " not in cs:
-        return 2
-
-    cs_words = cs.split()
-    if (
-        len(cs_words) >= 2
-        and all(w[0].isupper() for w in cs_words if w)
-        and "/" not in cs
-        and not any(c.isdigit() for c in cs)
-    ):
-        _arch_keywords = {
-            "kultura", "doba", "období", "eneolit", "paleolit", "neolit",
-            "středověk", "novověk", "pravěk", "mezolit", "bronzová",
-            "laténská", "halštatská", "stěhování",
-        }
-        _arch_prefixes = ("Creative", "HaA", "HaB", "HaC", "HaD")
-
-        if not cs.startswith(_arch_prefixes) and not any(
-            kw in cs.lower() for kw in _arch_keywords
-        ):
-            en_words = en.split()
-            _stop = {"a", "an", "the", "of", "and", "in"}
-            if len(en_words) >= 2 and all(
-                w[0].isupper() for w in en_words if w.lower() not in _stop
-            ):
-                return 1
-
-    return 0
-
-
-def _count_tokens(text: str, tokenizer: Any) -> int:
-    """Count tokens uniformly for both transformers tokenizers and llama.cpp models."""
-    if hasattr(tokenizer, "tokenize") and not isinstance(
-        tokenizer, _tu.PreTrainedTokenizerBase
-    ):
-        # llama_cpp.Llama acts as both model and tokenizer
-        return len(tokenizer.tokenize(text.encode("utf-8")))
-    return len(tokenizer.encode(text))
-
-
-# ---------------------------------------------------------------------------
-# 6. Thematic System Prompt Builder
-# ---------------------------------------------------------------------------
-
-def build_system_prompt(
-    vocab_data: dict, tokenizer: Any, max_tokens: int
-) -> Tuple[str, List[str]]:
-    """
-    Build the system prompt that embeds the thematic vocabulary.
-
-    If the full vocabulary exceeds the token budget (max_tokens), binary-search
-    for the largest prefix that still fits, preserving the highest-priority terms.
-
-    Returns:
-        (system_prompt_text, surviving_term_names_cs)
-    """
-    header = (
-        "You are an expert archaeological data extractor. "
-        "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> "
-        "within its surrounding document context.\n"
-        "1. Extract ONLY archaeological entities, features, periods, or materials "
-        "from the marked line. "
-        "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
-        "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
-        "CRITICAL: If and only if the marked line is purely administrative "
-        "(e.g., page numbers, titles, author names) and lacks archaeological context, "
-        "you MUST select 'Nerelevantní (meta-text)'.\n"
-        "NEVER select a country name, language name, or geographic region name "
-        "as the teater_category for any line — including administrative lines. "
-        "For any line that lacks direct archaeological significance, "
-        "you MUST use 'Nerelevantní (meta-text)'.\n"
-        "When extracting keywords, normalize obvious OCR artifacts and typos to their "
-        "correct Czech forms. "
-        "Do NOT include garbled tokens or split words as keywords. "
-        "Prefer the normalized phrase over the raw OCR text.\n"
-        "You MUST use the exact Czech term as written.\n"
-        "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
-        "THEMATIC VOCABULARY:\n"
-    )
-
-    # Collect and prioritise all vocabulary terms
-    raw_terms: List[dict] = []
-    raw_terms.append({
-        "theme": "Administrative / Meta",
-        "cs": "Nerelevantní (meta-text)",
-        "en": "Irrelevant / Meta-text",
-    })
-
-    for theme, data in vocab_data.items():
-        if isinstance(data, dict):
-            if "keywords" in data and isinstance(data["keywords"], dict):
-                cs_list = data["keywords"].get("cs", [])
-                en_list = data["keywords"].get("en", [])
-                for i, cs_key in enumerate(cs_list):
-                    en = en_list[i] if i < len(en_list) else cs_key
-                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
-            else:
-                for cs_key, pair in data.items():
-                    en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
-                    raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
-
-    prioritised = [raw_terms[0]] + sorted(
-        raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"])
-    )
-
-    def _build_candidate_prompt(term_list: List[dict], other_cap: int = 15) -> str:
-        themes: Dict[str, List[str]] = {}
-        other_terms: List[dict] = []
-
-        for t in term_list:
-            if t["theme"] == "Other":
-                other_terms.append(t)
-            else:
-                themes.setdefault(t["theme"], []).append(f"{t['cs']} ({t['en']})")
-
-        prompt = header
-        for theme_name, lines in themes.items():
-            prompt += f"\n--- {theme_name} ---\n"
-            prompt += "\n".join(f"- {line}" for line in lines) + "\n"
-
-        if other_terms:
-            prompt += "\n--- Other (Misc) ---\n"
-            prompt += "\n".join(
-                f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
-            ) + "\n"
-
-        prompt += (
-            "\nEXAMPLES:\n\n"
-            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. století.\"\n"
-            "Correct output:\n"
-            "{\n"
-            "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
-            "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
-            "  \"teater_category\": \"kostel\",\n"
-            "  \"confidence_score\": 0.92\n"
-            "}\n\n"
-            "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
-            "Correct output:\n"
-            "{\n"
-            "  \"extracted_keywords_cs\": [],\n"
-            "  \"extracted_keywords_en\": [],\n"
-            "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
-            "  \"confidence_score\": 1.0\n"
-            "}\n"
-        )
-        return prompt
-
-    full_prompt = _build_candidate_prompt(prioritised)
-    token_count = _count_tokens(full_prompt, tokenizer)
-    print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
-
-    if token_count <= max_tokens:
-        print("[vocab] Full vocabulary fits in context window.")
-        return full_prompt, [t["cs"] for t in prioritised]
-
-    print(f"[WARN] Vocabulary ({token_count} tokens) exceeds budget ({max_tokens}). Truncating.")
-
-    lo, hi = 0, len(prioritised)
-    while lo < hi - 1:
-        mid = (lo + hi) // 2
-        candidate = _build_candidate_prompt(prioritised[:mid])
-        if _count_tokens(candidate, tokenizer) <= max_tokens:
-            lo = mid
-        else:
-            hi = mid
-
-    surviving_terms = prioritised[:lo]
-    surviving_prompt = _build_candidate_prompt(surviving_terms)
-    surviving_cs = [t["cs"] for t in surviving_terms]
-    return surviving_prompt, surviving_cs
-
-
-# ---------------------------------------------------------------------------
-# 7. Model + Tokenizer Loader
+# 3. Model + Tokenizer Loader
 # ---------------------------------------------------------------------------
 
 def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> None:
@@ -557,6 +260,16 @@ def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> No
         raise RuntimeError(
             f"Quantization failed for {model_key}. Review MoE BitsAndBytes bugs."
         )
+
+
+def count_tokens(text: str, tokenizer: Any) -> int:
+    """Count tokens uniformly for both transformers tokenizers and llama.cpp models."""
+    if hasattr(tokenizer, "tokenize") and not isinstance(
+        tokenizer, _tu.PreTrainedTokenizerBase
+    ):
+        # llama_cpp.Llama acts as both model and tokenizer
+        return len(tokenizer.tokenize(text.encode("utf-8")))
+    return len(tokenizer.encode(text))
 
 
 def load_model_and_tokenizer(
@@ -645,8 +358,45 @@ def load_model_and_tokenizer(
 
 
 # ---------------------------------------------------------------------------
-# 8. Context Window Builder
+# 4. Core Document Processor
 # ---------------------------------------------------------------------------
+
+def _should_process_line(
+        text: str,
+        categ: str,
+        include_non_text: bool,
+        min_char_count: int,
+        min_char_non_text: int,
+        min_alpha_ratio_non_text: float,
+) -> Tuple[bool, str]:
+    """
+    Return (should_process, skip_reason).
+
+    Applies category-level and character-level filters before sending a line
+    to the LLM, avoiding wasted inference on noise rows.
+    """
+    if not text:
+        return False, "empty text"
+
+    if categ in _ALWAYS_SKIP_CATEG:
+        return False, f"categ={categ}"
+
+    if categ == "Non-text":
+        if not include_non_text:
+            return False, "Non-text excluded by config"
+        char_count = len(text)
+        if char_count < min_char_non_text:
+            return False, f"Non-text too short ({char_count} < {min_char_non_text} chars)"
+        alpha_count = sum(c.isalpha() for c in text)
+        alpha_ratio = alpha_count / char_count if char_count else 0.0
+        if alpha_ratio < min_alpha_ratio_non_text:
+            return False, f"Non-text alpha ratio too low ({alpha_ratio:.2f})"
+        return True, ""
+
+    if len(text) < min_char_count:
+        return False, f"text too short ({len(text)} < {min_char_count} chars)"
+
+    return True, ""
 
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
     """
@@ -702,10 +452,6 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
     return "\n".join(parts)
 
 
-# ---------------------------------------------------------------------------
-# 9. Core Document Processor
-# ---------------------------------------------------------------------------
-
 def process_document(
     csv_path: Path,
     model: Any,
@@ -729,6 +475,9 @@ def process_document(
         (enriched_lines, stats)  where stats keys are
         'processed', 'skipped_filter', 'skipped_error'.
     """
+
+
+
     file_id = csv_path.stem
     enriched_lines: List[dict] = []
     stats: Dict[str, int] = {"processed": 0, "skipped_filter": 0, "skipped_error": 0}
