@@ -1,9 +1,12 @@
 """
-llm_pipeline.py — LLM Semantic Enrichment Pipeline for ATRIUM archaeological documents.
+llm_utils.py — Reusable components for the LLM Semantic Enrichment Pipeline.
 
-Input:  CSV files produced by the ALTO postprocessing pipeline.
-Output: Per-document JSON files, one record per processed line, with enriched semantic
-        categories mapped to the TEATER/AMCR vocabulary.
+Contains: compatibility shims, model registry, config loader, line-quality filter,
+dynamic Pydantic schema builder, vocabulary helpers, system-prompt builder,
+model/tokenizer loader, context-window helper, and core document processor.
+
+Import this module before any other CUDA-touching library — the PYTORCH_CUDA_ALLOC_CONF
+guard at the top of this file must be the very first thing that runs.
 """
 
 # Must be set before ANY import that can touch CUDA (bitsandbytes initialises the
@@ -18,29 +21,37 @@ import json
 import enum
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any, Dict, List, Optional, Tuple
+
 import torch
 
+# ---------------------------------------------------------------------------
 # Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
+# ---------------------------------------------------------------------------
 import transformers.tokenization_utils as _tu
 import transformers.tokenization_utils_base as _tub
-if not hasattr(_tu, 'PreTrainedTokenizerBase'):
+if not hasattr(_tu, "PreTrainedTokenizerBase"):
     _tu.PreTrainedTokenizerBase = _tub.PreTrainedTokenizerBase
 
 
 def _patch_params4bit_compat() -> bool:
     """
     Compatibility shim for bitsandbytes < 0.44 vs. newer transformers/accelerate.
+
+    Patches two known breakage points:
+      1. Params4bit.__new__ / __init__ chokes on the _is_hf_initialized kwarg.
+      2. QuantState.as_dict raises when offset is a meta-device tensor.
+
+    Permanent fix: pip install -U bitsandbytes inside your venv.
     """
     try:
         import bitsandbytes.nn as _bnb_nn
         import bitsandbytes.functional as _bnb_func
-        import torch
         import inspect
 
         patched_anything = False
 
-        # --- 1. Patch Params4bit __new__ / __init__ (Stray kwarg fix) ---
+        # --- 1. Patch Params4bit __new__ / __init__ (stray kwarg fix) ---
         new_sig = str(inspect.signature(_bnb_nn.Params4bit.__new__))
         if "_is_hf_initialized" not in new_sig and "**" not in new_sig:
             _orig_p4b_new = _bnb_nn.Params4bit.__new__
@@ -51,7 +62,7 @@ def _patch_params4bit_compat() -> bool:
 
             _bnb_nn.Params4bit.__new__ = _p4b_new
 
-            if '__init__' in _bnb_nn.Params4bit.__dict__:
+            if "__init__" in _bnb_nn.Params4bit.__dict__:
                 _orig_p4b_init = _bnb_nn.Params4bit.__init__
 
                 def _p4b_init(self, *args, **kwargs):
@@ -62,32 +73,32 @@ def _patch_params4bit_compat() -> bool:
 
             patched_anything = True
 
-        # --- 2. Patch QuantState.as_dict (Meta tensor .item() fix) ---
-        if hasattr(_bnb_func, 'QuantState'):
+        # --- 2. Patch QuantState.as_dict (meta-tensor .item() fix) ---
+        if hasattr(_bnb_func, "QuantState"):
             _orig_as_dict = _bnb_func.QuantState.as_dict
 
             def _patched_as_dict(self, packed: bool = False):
-                orig_offset = getattr(self, 'offset', None)
-                # Check if we have a nested offset that landed on the meta device
-                is_meta_offset = isinstance(orig_offset, torch.Tensor) and orig_offset.device.type == "meta"
-
+                orig_offset = getattr(self, "offset", None)
+                is_meta_offset = (
+                    isinstance(orig_offset, torch.Tensor)
+                    and orig_offset.device.type == "meta"
+                )
                 if is_meta_offset:
-                    self.offset = torch.tensor(0.0)  # Temporarily provide a CPU scalar so .item() succeeds
-
+                    self.offset = torch.tensor(0.0)
                 try:
                     return _orig_as_dict(self, packed=packed)
                 finally:
                     if is_meta_offset:
-                        self.offset = orig_offset  # Restore the actual meta tensor
+                        self.offset = orig_offset
 
-            # Apply only if not already patched
             if _bnb_func.QuantState.as_dict.__name__ != "_patched_as_dict":
                 _bnb_func.QuantState.as_dict = _patched_as_dict
                 patched_anything = True
 
         if patched_anything:
             print(
-                "[COMPAT] Patched bitsandbytes (Params4bit & QuantState) for accelerate/meta-device compatibility. "
+                "[COMPAT] Patched bitsandbytes (Params4bit & QuantState) for "
+                "accelerate/meta-device compatibility. "
                 "Permanent fix: pip install -U bitsandbytes inside your venv."
             )
         return patched_anything
@@ -96,15 +107,18 @@ def _patch_params4bit_compat() -> bool:
         print(f"[WARN] Could not apply compatibility patch: {exc}")
         return False
 
+
 _patch_params4bit_compat()
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from pydantic import BaseModel, Field, ValidationError
-from lmformatenforcer import JsonSchemaParser
-from lmformatenforcer.integrations.transformers import build_transformers_prefix_allowed_tokens_fn
+from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: E402
+from pydantic import BaseModel, Field, ValidationError         # noqa: E402
+from lmformatenforcer import JsonSchemaParser                  # noqa: E402
+from lmformatenforcer.integrations.transformers import (       # noqa: E402
+    build_transformers_prefix_allowed_tokens_fn,
+)
 
-from atrium_paradata import ParadataLogger
-from vocab_manager import VocabularyManager
+from atrium_paradata import ParadataLogger   # noqa: E402
+from vocab_manager import VocabularyManager  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -112,11 +126,10 @@ from vocab_manager import VocabularyManager
 # ---------------------------------------------------------------------------
 
 MODEL_REGISTRY: Dict[str, Dict] = {
-    # --- New Models Added ---
     "gemma-4-26b-moe-gguf": {
         "hf_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
         "filename": "*Q4_K_M.gguf",
-        "context_window": 8192,  # Fixed context size for Llama.cpp allocation
+        "context_window": 8192,
         "is_gguf": True,
         "hf_token_required": False,
     },
@@ -161,7 +174,6 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
-    # --- Accepted / Original Models ---
     "qwen3-14b": {
         "hf_id": "OpenPipe/Qwen3-14B-Instruct",
         "context_window": 131072,
@@ -176,6 +188,22 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
     },
+    "gemma-4-26b-moe-awq": {
+        "hf_id": "google/gemma-4-26B-A4B-it",   # update to actual AWQ repo when available
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+    },
+    "qwen2.5-14b-awq": {
+        "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.float16,
+        "hf_token_required": False,
+    },
 }
 
 MAX_NEW_TOKENS = 2048
@@ -186,7 +214,9 @@ _ALWAYS_SKIP_CATEG = {"Empty", "Trash"}
 # ---------------------------------------------------------------------------
 # 2. Configuration Loader
 # ---------------------------------------------------------------------------
+
 def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
+    """Parse a simple KEY=VALUE config file, ignoring blank lines and # comments."""
     config: Dict[str, str] = {}
     path = Path(config_path)
     if not path.exists():
@@ -205,10 +235,21 @@ def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
 # ---------------------------------------------------------------------------
 # 3. Line Quality Filter
 # ---------------------------------------------------------------------------
+
 def _should_process_line(
-    text: str, categ: str, include_non_text: bool, min_char_count: int,
-    min_char_non_text: int, min_alpha_ratio_non_text: float
+    text: str,
+    categ: str,
+    include_non_text: bool,
+    min_char_count: int,
+    min_char_non_text: int,
+    min_alpha_ratio_non_text: float,
 ) -> Tuple[bool, str]:
+    """
+    Return (should_process, skip_reason).
+
+    Applies category-level and character-level filters before sending a line
+    to the LLM, avoiding wasted inference on noise rows.
+    """
     if not text:
         return False, "empty text"
 
@@ -229,25 +270,38 @@ def _should_process_line(
 
     if len(text) < min_char_count:
         return False, f"text too short ({len(text)} < {min_char_count} chars)"
+
     return True, ""
 
 
 # ---------------------------------------------------------------------------
-# 4. Dynamic Schema Definition
+# 4. Dynamic Pydantic Schema Builder
 # ---------------------------------------------------------------------------
-def build_schema(term_names: List[str]) -> type:
-    if not term_names:
-        raise ValueError("term_names is empty — vocabulary failed to load or was fully truncated.")
 
-    TermEnum = enum.Enum("TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)})
+def build_schema(term_names: List[str]) -> type:
+    """
+    Dynamically construct a Pydantic model whose teater_category field is an
+    Enum constrained to exactly the vocabulary terms that survived the token
+    budget.  This drives the lm-format-enforcer JSON schema state machine so
+    the model can only ever output a valid category.
+    """
+    if not term_names:
+        raise ValueError(
+            "term_names is empty — vocabulary failed to load or was fully truncated."
+        )
+
+    TermEnum = enum.Enum(
+        "TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)}
+    )
 
     class ConstrainedEnrichment(BaseModel):
         extracted_keywords_cs: List[str] = Field(
             ...,
             description=(
-                "Key Czech archaeological terms, methods, or objects found ONLY in the text marked with (>>>). "
+                "Key Czech archaeological terms, methods, or objects found ONLY in the text "
+                "marked with (>>>). "
                 "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
-                "If no relevant archaeological terms are present in the target line, return an empty list []. "
+                "If no relevant archaeological terms are present in the target line, return []. "
                 "If teater_category is 'Nerelevantní (meta-text)', this array MUST be empty []. "
                 "Do not extract any terms from administrative lines. "
                 "Extract meaningful multi-word phrases when the archaeological entity is "
@@ -264,15 +318,16 @@ def build_schema(term_names: List[str]) -> type:
         )
         teater_category: TermEnum = Field(
             ...,
-            description=(
-                "The single most relevant category from the thematic vocabulary."
-            ),
+            description="The single most relevant category from the thematic vocabulary.",
         )
         confidence_score: float = Field(
-            ..., ge=0.0, le=1.0,
+            ...,
+            ge=0.0,
+            le=1.0,
             description=(
                 "Your confidence that the selected teater_category is correct. "
-                "Use 1.0 only when the line unambiguously matches the category with no interpretation required. "
+                "Use 1.0 only when the line unambiguously matches the category with no "
+                "interpretation required. "
                 "Use 0.7–0.9 for reasonable but non-obvious matches. "
                 "Use 0.5–0.7 when multiple categories could apply. "
                 "Use below 0.5 when forced to guess. "
@@ -289,7 +344,15 @@ def build_schema(term_names: List[str]) -> type:
 # ---------------------------------------------------------------------------
 # 5. Vocabulary Helpers
 # ---------------------------------------------------------------------------
+
 def _term_priority(cs: str, en: str) -> int:
+    """
+    Return a sort key (lower = higher priority) for vocabulary term ordering.
+
+    Priority 2 (lowest / sorted last): ambiguous or proper-noun-only terms.
+    Priority 1: multi-word proper-noun pairs that are likely named entities.
+    Priority 0 (default): ordinary archaeological terms kept at front.
+    """
     if en.rstrip().endswith("(the)"):
         return 2
 
@@ -297,9 +360,12 @@ def _term_priority(cs: str, en: str) -> int:
         return 2
 
     cs_words = cs.split()
-    if (len(cs_words) >= 2 and all(w[0].isupper() for w in cs_words if w)
-        and "/" not in cs and not any(c.isdigit() for c in cs)):
-
+    if (
+        len(cs_words) >= 2
+        and all(w[0].isupper() for w in cs_words if w)
+        and "/" not in cs
+        and not any(c.isdigit() for c in cs)
+    ):
         _arch_keywords = {
             "kultura", "doba", "období", "eneolit", "paleolit", "neolit",
             "středověk", "novověk", "pravěk", "mezolit", "bronzová",
@@ -307,46 +373,70 @@ def _term_priority(cs: str, en: str) -> int:
         }
         _arch_prefixes = ("Creative", "HaA", "HaB", "HaC", "HaD")
 
-        if not cs.startswith(_arch_prefixes) and not any(kw in cs.lower() for kw in _arch_keywords):
+        if not cs.startswith(_arch_prefixes) and not any(
+            kw in cs.lower() for kw in _arch_keywords
+        ):
             en_words = en.split()
             _stop = {"a", "an", "the", "of", "and", "in"}
-            if len(en_words) >= 2 and all(w[0].isupper() for w in en_words if w.lower() not in _stop):
+            if len(en_words) >= 2 and all(
+                w[0].isupper() for w in en_words if w.lower() not in _stop
+            ):
                 return 1
 
     return 0
 
+
 def _count_tokens(text: str, tokenizer: Any) -> int:
-    """Helper to count tokens uniformly for both transformers and llama.cpp"""
-    if hasattr(tokenizer, 'tokenize') and not isinstance(tokenizer, _tu.PreTrainedTokenizerBase):
-        # Llama.cpp model instance acting as tokenizer
-        return len(tokenizer.tokenize(text.encode('utf-8')))
-    else:
-        # Transformers tokenizer
-        return len(tokenizer.encode(text))
+    """Count tokens uniformly for both transformers tokenizers and llama.cpp models."""
+    if hasattr(tokenizer, "tokenize") and not isinstance(
+        tokenizer, _tu.PreTrainedTokenizerBase
+    ):
+        # llama_cpp.Llama acts as both model and tokenizer
+        return len(tokenizer.tokenize(text.encode("utf-8")))
+    return len(tokenizer.encode(text))
+
 
 # ---------------------------------------------------------------------------
 # 6. Thematic System Prompt Builder
 # ---------------------------------------------------------------------------
-def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[str, List[str]]:
+
+def build_system_prompt(
+    vocab_data: dict, tokenizer: Any, max_tokens: int
+) -> Tuple[str, List[str]]:
+    """
+    Build the system prompt that embeds the thematic vocabulary.
+
+    If the full vocabulary exceeds the token budget (max_tokens), binary-search
+    for the largest prefix that still fits, preserving the highest-priority terms.
+
+    Returns:
+        (system_prompt_text, surviving_term_names_cs)
+    """
     header = (
         "You are an expert archaeological data extractor. "
-        "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> within its surrounding document context.\n"
-        "1. Extract ONLY archaeological entities, features, periods, or materials from the marked line. "
+        "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> "
+        "within its surrounding document context.\n"
+        "1. Extract ONLY archaeological entities, features, periods, or materials "
+        "from the marked line. "
         "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
         "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
-        "CRITICAL: If and only if the marked line is purely administrative (e.g., page numbers, titles, author names) "
-        "and lacks archaeological context, you MUST select 'Nerelevantní (meta-text)'.\n"
+        "CRITICAL: If and only if the marked line is purely administrative "
+        "(e.g., page numbers, titles, author names) and lacks archaeological context, "
+        "you MUST select 'Nerelevantní (meta-text)'.\n"
         "NEVER select a country name, language name, or geographic region name "
         "as the teater_category for any line — including administrative lines. "
         "For any line that lacks direct archaeological significance, "
         "you MUST use 'Nerelevantní (meta-text)'.\n"
-        "When extracting keywords, normalize obvious OCR artifacts and typos to their correct Czech forms. "
-        "Do NOT include garbled tokens or split words as keywords. Prefer the normalized phrase over the raw OCR text.\n"
+        "When extracting keywords, normalize obvious OCR artifacts and typos to their "
+        "correct Czech forms. "
+        "Do NOT include garbled tokens or split words as keywords. "
+        "Prefer the normalized phrase over the raw OCR text.\n"
         "You MUST use the exact Czech term as written.\n"
         "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
         "THEMATIC VOCABULARY:\n"
     )
 
+    # Collect and prioritise all vocabulary terms
     raw_terms: List[dict] = []
     raw_terms.append({
         "theme": "Administrative / Meta",
@@ -367,9 +457,11 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
                     en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
                     raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
-    prioritised = [raw_terms[0]] + sorted(raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"]))
+    prioritised = [raw_terms[0]] + sorted(
+        raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"])
+    )
 
-    def build_candidate_prompt(term_list, other_cap: int = 15):
+    def _build_candidate_prompt(term_list: List[dict], other_cap: int = 15) -> str:
         themes: Dict[str, List[str]] = {}
         other_terms: List[dict] = []
 
@@ -411,7 +503,7 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
         )
         return prompt
 
-    full_prompt = build_candidate_prompt(prioritised)
+    full_prompt = _build_candidate_prompt(prioritised)
     token_count = _count_tokens(full_prompt, tokenizer)
     print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
 
@@ -424,14 +516,14 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
     lo, hi = 0, len(prioritised)
     while lo < hi - 1:
         mid = (lo + hi) // 2
-        candidate = build_candidate_prompt(prioritised[:mid])
+        candidate = _build_candidate_prompt(prioritised[:mid])
         if _count_tokens(candidate, tokenizer) <= max_tokens:
             lo = mid
         else:
             hi = mid
 
     surviving_terms = prioritised[:lo]
-    surviving_prompt = build_candidate_prompt(surviving_terms)
+    surviving_prompt = _build_candidate_prompt(surviving_terms)
     surviving_cs = [t["cs"] for t in surviving_terms]
     return surviving_prompt, surviving_cs
 
@@ -439,7 +531,13 @@ def build_system_prompt(vocab_data: dict, tokenizer, max_tokens: int) -> Tuple[s
 # ---------------------------------------------------------------------------
 # 7. Model + Tokenizer Loader
 # ---------------------------------------------------------------------------
-def _verify_quantization_effective(model, model_key: str, spec: dict) -> None:
+
+def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> None:
+    """
+    Sanity-check that 4-bit quantization actually reduced memory footprint.
+    Raises RuntimeError if the ratio vs. BF16 baseline is suspiciously high,
+    which usually means bitsandbytes silently fell back to full precision.
+    """
     if not spec.get("load_in_4bit"):
         return
 
@@ -450,43 +548,67 @@ def _verify_quantization_effective(model, model_key: str, spec: dict) -> None:
     bf16_estimate_gb = total_params * 2 / 1024 ** 3
     ratio = footprint_gb / bf16_estimate_gb if bf16_estimate_gb > 0 else 0.0
 
-    print(f"[INFO] Model footprint: {footprint_gb:.1f} GB "
-          f"(BF16 estimate: {bf16_estimate_gb:.1f} GB, ratio: {ratio:.2f})")
+    print(
+        f"[INFO] Model footprint: {footprint_gb:.1f} GB "
+        f"(BF16 estimate: {bf16_estimate_gb:.1f} GB, ratio: {ratio:.2f})"
+    )
 
     if ratio > 0.50:
-        raise RuntimeError(f"Quantization failed for {model_key}. Review MoE BitsAndBytes bugs.")
+        raise RuntimeError(
+            f"Quantization failed for {model_key}. Review MoE BitsAndBytes bugs."
+        )
 
-def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
+
+def load_model_and_tokenizer(
+    model_key: str, hf_token: Optional[str] = None
+) -> Tuple[Any, Any, dict]:
+    """
+    Load model and tokenizer for the given registry key.
+
+    Returns:
+        (model, tokenizer, spec)  — for GGUF models the same llama_cpp.Llama
+        object is returned for both model and tokenizer positions.
+    """
     if model_key not in MODEL_REGISTRY:
-        raise ValueError(f"Unknown MODEL_KEY '{model_key}'. Available: {', '.join(MODEL_REGISTRY.keys())}")
+        raise ValueError(
+            f"Unknown MODEL_KEY '{model_key}'. "
+            f"Available: {', '.join(MODEL_REGISTRY.keys())}"
+        )
 
     spec = MODEL_REGISTRY[model_key]
     hf_id = spec["hf_id"]
 
+    # --- GGUF path (llama.cpp) ---
     if spec.get("is_gguf"):
         try:
             from llama_cpp import Llama
         except ImportError:
-            raise ImportError("Please install llama-cpp-python to use GGUF models: pip install llama-cpp-python")
+            raise ImportError(
+                "Please install llama-cpp-python to use GGUF models: "
+                "pip install llama-cpp-python"
+            )
 
         print(f"=== Loading GGUF via llama.cpp: {hf_id} ===")
         model = Llama.from_pretrained(
             repo_id=hf_id,
             filename=spec.get("filename", "*.gguf"),
             n_ctx=spec["context_window"],
-            n_gpu_layers=-1, # Push entirely to GPU
+            n_gpu_layers=-1,
             flash_attn=True,
             verbose=False,
         )
-        # llama_cpp.Llama object acts as both model and tokenizer
-        return model, model, spec
+        return model, model, spec  # llama.cpp object acts as both model & tokenizer
 
+    # --- Transformers path ---
     if spec.get("bnb_experts_broken") and spec.get("load_in_4bit"):
-        raise RuntimeError("BnB 4-bit requested for MoE model with fused experts. Use GGUF instead.")
+        raise RuntimeError(
+            "BnB 4-bit requested for MoE model with fused experts. Use GGUF instead."
+        )
 
     print(f"=== Loading: {hf_id} ===")
 
     from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
     tokenizer = AutoTokenizer.from_pretrained(
         hf_id,
         trust_remote_code=spec.get("trust_remote_code", False),
@@ -506,14 +628,13 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
             llm_int8_enable_fp32_cpu_offload=True,
         )
 
-    load_kwargs = dict(
+    load_kwargs: Dict[str, Any] = dict(
         device_map="auto",
         quantization_config=bnb_config,
         trust_remote_code=spec.get("trust_remote_code", False),
         token=hf_token or None,
         attn_implementation="sdpa",
     )
-
     if bnb_config is None:
         load_kwargs["dtype"] = spec["torch_dtype"]
 
@@ -524,18 +645,27 @@ def load_model_and_tokenizer(model_key: str, hf_token: Optional[str] = None):
 
 
 # ---------------------------------------------------------------------------
-# 8. Utilities
+# 8. Context Window Builder
 # ---------------------------------------------------------------------------
+
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
+    """
+    Build a text snippet around rows[center_idx] for use as the LLM user prompt.
+
+    The target line is wrapped in <target_line> tags. Surrounding lines on the
+    same page (within ±window) are included as plain context. For non-leading
+    rows, the first two non-noise lines of the document are prepended as a
+    global header so the model can anchor the archaeological context.
+    """
     _NOISE_CATEG = {"Empty", "Trash", "Non-text"}
 
-    center_row  = rows[center_idx]
+    center_row = rows[center_idx]
     center_page = center_row.get("page_num", center_row.get("page", None))
 
     start = max(0, center_idx - window)
-    end   = min(len(rows), center_idx + window + 1)
+    end = min(len(rows), center_idx + window + 1)
 
-    parts = []
+    parts: List[str] = []
 
     if center_idx > window + 2:
         parts.append("--- GLOBAL DOCUMENT HEADER ---")
@@ -543,7 +673,7 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
         for row in rows:
             if row.get("categ", "").strip() not in _NOISE_CATEG:
                 pg = row.get("page_num", row.get("page", 0))
-                ln = row.get("line_num",  row.get("line", 0))
+                ln = row.get("line_num", row.get("line", 0))
                 parts.append(f"    [P{pg} L{ln}] {row.get('text', '').strip()}")
                 header_lines_added += 1
                 if header_lines_added >= 2:
@@ -551,95 +681,122 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
         parts.append("--- LOCAL CONTEXT WINDOW ---")
 
     for i in range(start, end):
-        row      = rows[i]
+        row = rows[i]
         row_page = row.get("page_num", row.get("page", None))
-        categ    = row.get("categ", "").strip()
+        categ = row.get("categ", "").strip()
 
         if row_page != center_page and i != center_idx:
             continue
-
         if i != center_idx and categ in _NOISE_CATEG:
             continue
 
         text = row.get("text", "").strip()
+        pg = row_page
+        ln = row.get("line_num", row.get("line", 0))
+
         if i == center_idx:
-            parts.append(f"<target_line> >>> [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text} </target_line>")
+            parts.append(f"<target_line> >>> [P{pg} L{ln}] {text} </target_line>")
         else:
-            parts.append(f"    [P{row_page} L{row.get('line_num', row.get('line', 0))}] {text}")
+            parts.append(f"    [P{pg} L{ln}] {text}")
 
     return "\n".join(parts)
 
 
 # ---------------------------------------------------------------------------
-# 9. Core Processing Logic
+# 9. Core Document Processor
 # ---------------------------------------------------------------------------
-def process_document(
-    csv_path: Path, model: Any, tokenizer: Any,
-    parser: JsonSchemaParser, prefix_function: Any, system_prompt: str, EnrichmentModel: type,
-    max_input_tokens: int, is_gguf: bool, model_key: str, include_non_text: bool = True,
-    min_char_count: int = 3, min_char_non_text: int = 8, min_alpha_ratio_non_text: float = 0.40,
-) -> Tuple[List[dict], Dict[str, int]]:
 
+def process_document(
+    csv_path: Path,
+    model: Any,
+    tokenizer: Any,
+    parser: JsonSchemaParser,
+    prefix_function: Any,
+    system_prompt: str,
+    EnrichmentModel: type,
+    max_input_tokens: int,
+    is_gguf: bool,
+    model_key: str,
+    include_non_text: bool = True,
+    min_char_count: int = 3,
+    min_char_non_text: int = 8,
+    min_alpha_ratio_non_text: float = 0.40,
+) -> Tuple[List[dict], Dict[str, int]]:
+    """
+    Run LLM inference over every qualifying line in a single CSV document.
+
+    Returns:
+        (enriched_lines, stats)  where stats keys are
+        'processed', 'skipped_filter', 'skipped_error'.
+    """
     file_id = csv_path.stem
     enriched_lines: List[dict] = []
     stats: Dict[str, int] = {"processed": 0, "skipped_filter": 0, "skipped_error": 0}
-
     consecutive_errors = 0
 
     with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
+        rows = list(csv.DictReader(f))
 
-    # Initialize GGUF specific imports if needed
     if is_gguf:
         from lmformatenforcer.integrations.llamacpp import build_llamacpp_logits_processor
         from llama_cpp import LogitsProcessorList
 
     for i, row in enumerate(rows):
-        try:
-            page_num = int(row.get("page_num", row.get("page", 0)))
-            line_num = int(row.get("line_num", row.get("line", 0)))
-        except (ValueError, TypeError):
-            stats["skipped_filter"] += 1
-            continue
-
-        text_chunk = row.get("text", "").strip()
-        categ      = row.get("categ", "").strip()
-
-        should_process, skip_reason = _should_process_line(
-            text_chunk, categ, include_non_text, min_char_count, min_char_non_text, min_alpha_ratio_non_text
-        )
-        if not should_process:
-            stats["skipped_filter"] += 1
-            continue
-
-        context_chunk = get_context_window(rows, i, window=2)
-
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context_chunk}\n\nTask: Extract keywords and determine the TEATER category ONLY for the line marked inside <target_line>."},
-        ]
-
         inputs = None
         output = None
         try:
-            if is_gguf:
-                # Llama.cpp Inference Path
-                logits_processors = LogitsProcessorList([build_llamacpp_logits_processor(model, parser)])
+            try:
+                page_num = int(row.get("page_num", row.get("page", 0)))
+                line_num = int(row.get("line_num", row.get("line", 0)))
+            except (ValueError, TypeError):
+                stats["skipped_filter"] += 1
+                continue
 
+            text_chunk = row.get("text", "").strip()
+            categ = row.get("categ", "").strip()
+
+            should_process, _ = _should_process_line(
+                text_chunk, categ,
+                include_non_text, min_char_count,
+                min_char_non_text, min_alpha_ratio_non_text,
+            )
+            if not should_process:
+                stats["skipped_filter"] += 1
+                continue
+
+            context_chunk = get_context_window(rows, i, window=2)
+
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {
+                    "role": "user",
+                    "content": (
+                        f"DOCUMENT CONTEXT:\n{context_chunk}\n\n"
+                        "Task: Extract keywords and determine the TEATER category "
+                        "ONLY for the line marked inside <target_line>."
+                    ),
+                },
+            ]
+
+            # --- Inference ---
+            if is_gguf:
+                logits_processors = LogitsProcessorList(
+                    [build_llamacpp_logits_processor(model, parser)]
+                )
                 output = model.create_chat_completion(
                     messages=messages,
                     max_tokens=MAX_NEW_TOKENS,
                     temperature=0.0,
-                    logits_processor=logits_processors
+                    logits_processor=logits_processors,
                 )
                 result_json = output["choices"][0]["message"]["content"]
 
             else:
-                # Transformers Inference Path
-                is_qwen3 = any(k in model_key.lower() for k in ("qwen3", "qwen-3.5", "qwen-3.6"))
+                is_qwen3 = any(
+                    k in model_key.lower()
+                    for k in ("qwen3", "qwen-3.5", "qwen-3.6")
+                )
                 if is_qwen3:
-                    # Add to messages as fallback in case tokenizer rejects enable_thinking param
                     messages[-1]["content"] += "\n/no_think"
 
                 try:
@@ -647,16 +804,21 @@ def process_document(
                         messages,
                         tokenize=False,
                         add_generation_prompt=True,
-                        **({"enable_thinking": False} if is_qwen3 else {})
+                        **({"enable_thinking": False} if is_qwen3 else {}),
                     )
                 except TypeError:
                     prompt = tokenizer.apply_chat_template(
                         messages,
                         tokenize=False,
-                        add_generation_prompt=True
+                        add_generation_prompt=True,
                     )
 
-                inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=max_input_tokens).to(model.device)
+                inputs = tokenizer(
+                    prompt,
+                    return_tensors="pt",
+                    truncation=True,
+                    max_length=max_input_tokens,
+                ).to(model.device)
 
                 with torch.no_grad():
                     output = model.generate(
@@ -672,12 +834,14 @@ def process_document(
                     )
 
                 generated_tokens = output[0][inputs["input_ids"].shape[1]:]
-                result_json = tokenizer.decode(generated_tokens, skip_special_tokens=True)
+                result_json = tokenizer.decode(
+                    generated_tokens, skip_special_tokens=True
+                )
 
                 del inputs, output
                 torch.cuda.empty_cache()
 
-            # Parse Results
+            # --- Parse & validate ---
             try:
                 semantic_data = EnrichmentModel.model_validate_json(result_json)
             except ValidationError:
@@ -691,7 +855,10 @@ def process_document(
                             pass
                     semantic_data = EnrichmentModel.model_validate(raw_dict)
                 except (json.JSONDecodeError, ValidationError) as e:
-                    print(f"  [{file_id}] Persistent validation error P{page_num} L{line_num}: {e}")
+                    print(
+                        f"  [{file_id}] Persistent validation error "
+                        f"P{page_num} L{line_num}: {e}"
+                    )
                     stats["skipped_error"] += 1
                     consecutive_errors += 1
                     if consecutive_errors >= 10:
@@ -723,130 +890,19 @@ def process_document(
             consecutive_errors += 1
 
             if not is_gguf:
-                if inputs is not None: del inputs
-                if output is not None: del output
+                if inputs is not None:
+                    del inputs
+                if output is not None:
+                    del output
                 gc.collect()
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
 
             if consecutive_errors >= 10:
-                print(f"  [{file_id}] Aborting document due to {consecutive_errors} consecutive errors.")
+                print(
+                    f"  [{file_id}] Aborting document after "
+                    f"{consecutive_errors} consecutive errors."
+                )
                 break
 
     return enriched_lines, stats
-
-
-# ---------------------------------------------------------------------------
-# 10. Pipeline Execution
-# ---------------------------------------------------------------------------
-if __name__ == "__main__":
-    config = load_config("llm_config.txt")
-
-    MODEL_KEY    = config.get("MODEL_KEY",    "gemma-4-26b-moe-gguf")
-    HF_TOKEN     = config.get("HF_TOKEN",     os.environ.get("HF_TOKEN", None))
-    INPUT_DIR    = Path(config.get("INPUT_DIR",  "data_samples/DOC_LINE_LANG_CLASS"))
-    VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
-    PARADATA_DIR = config.get("PARADATA_DIR", "paradata")
-
-    _base_out     = Path(config.get("OUTPUT_DIR", "data_samples/KW_PER_DOC_LLM"))
-    _model_suffix = MODEL_KEY.replace(".", "").replace("-", "_")
-    OUTPUT_DIR    = _base_out.parent / f"{_base_out.name}_{_model_suffix}"
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"=== Output directory: {OUTPUT_DIR} ===")
-
-    INCLUDE_NON_TEXT         = config.get("INCLUDE_NON_TEXT", "true").lower() == "true"
-    MIN_CHAR_COUNT           = int(config.get("MIN_CHAR_COUNT", "3"))
-    MIN_CHAR_NON_TEXT        = int(config.get("MIN_CHAR_NON_TEXT", "8"))
-    MIN_ALPHA_RATIO_NON_TEXT = float(config.get("MIN_ALPHA_RATIO_NON_TEXT", "0.40"))
-
-    logger = ParadataLogger(
-        program="nlp-enrich",
-        config={
-            **config,
-            "output_dir_resolved": str(OUTPUT_DIR),
-            "include_non_text": INCLUDE_NON_TEXT,
-            "min_char_count": MIN_CHAR_COUNT,
-            "min_char_non_text": MIN_CHAR_NON_TEXT,
-            "min_alpha_ratio_non_text": MIN_ALPHA_RATIO_NON_TEXT,
-        },
-        paradata_dir=PARADATA_DIR,
-        output_types=["json"],
-    )
-
-    vocab_mgr = VocabularyManager(vocab_path=VOCAB_PATH)
-    vocab_data = vocab_mgr.load()
-    total_terms = sum(
-        len(v.get("keywords", {}).get("cs", [])) if isinstance(v, dict) and "keywords" in v
-        else len(v) for v in vocab_data.values() if isinstance(v, dict)
-    )
-    if total_terms == 0:
-        raise RuntimeError("Vocabulary is empty. Run vocab_manager.py on a node with internet access first.")
-
-    print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
-
-    model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
-    is_gguf = spec.get("is_gguf", False)
-    max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
-
-    system_prompt, surviving_terms = build_system_prompt(vocab_data, tokenizer, max_input_tokens)
-    EnrichmentModel = build_schema(surviving_terms)
-
-    print("=== Compiling JSON Schema State Machine ===")
-    parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
-
-    if is_gguf:
-        prefix_function = None # Handled inline during process_document
-    else:
-        prefix_function = build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
-
-    print("=== Pipeline ready ===")
-
-    csv_files = sorted(INPUT_DIR.glob("*.csv"))
-    total_processed = 0
-    total_errors    = 0
-
-    for csv_file in csv_files:
-        out_file = OUTPUT_DIR / f"{csv_file.stem}_enriched.json"
-
-        if out_file.exists():
-            print(f"[skip] {csv_file.name} — output already exists.")
-            logger.log_skip(csv_file.name, "already_exists")
-            continue
-
-        print(f"Processing: {csv_file.name} ...")
-        try:
-            enriched_results, doc_stats = process_document(
-                csv_path=csv_file, model=model, tokenizer=tokenizer, parser=parser,
-                prefix_function=prefix_function, system_prompt=system_prompt,
-                EnrichmentModel=EnrichmentModel, max_input_tokens=max_input_tokens,
-                is_gguf=is_gguf, model_key=MODEL_KEY, include_non_text=INCLUDE_NON_TEXT, min_char_count=MIN_CHAR_COUNT,
-                min_char_non_text=MIN_CHAR_NON_TEXT, min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
-            )
-
-            total_processed += doc_stats["processed"]
-            total_errors    += doc_stats["skipped_error"]
-            print(f"  processed={doc_stats['processed']}, skipped_filter={doc_stats['skipped_filter']}, errors={doc_stats['skipped_error']}")
-
-            if enriched_results:
-                with open(out_file, "w", encoding="utf-8") as out_f:
-                    json.dump(enriched_results, out_f, indent=4, ensure_ascii=False)
-                print(f"  -> {len(enriched_results)} records → {out_file.name}")
-                logger.log_success("json", count=1)
-                logger.log_document_success()
-            else:
-                logger.log_skip(csv_file.name, f"No lines passed quality filter or all inference calls failed.")
-
-        except Exception as e:
-            print(f"Critical error on {csv_file.name}: {e}")
-            logger.log_skip(csv_file.name, str(e))
-
-        finally:
-            if not is_gguf and torch.cuda.is_available():
-                torch.cuda.empty_cache()
-
-    already_done = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
-    true_failures = sum(1 for s in logger._skipped if s.get("reason") != "already_exists")
-    print(f"\n=== Paradata note: {already_done} files skipped (already done), {true_failures} files skipped (errors) ===")
-
-    print(f"=== Run complete: {total_processed} lines enriched, {total_errors} inference errors across {len(csv_files)} files ===")
-    logger.finalize(input_total=len(csv_files))

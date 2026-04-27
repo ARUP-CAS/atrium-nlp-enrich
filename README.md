@@ -791,14 +791,17 @@ and caches it locally to prevent exhausting the LLM's context window.
 python3 vocab_manager.py
 ```
 
-**2. LLM Inference Pipeline ([llm_pipeline.py](llm_pipeline.py) 📎)**
+**2. LLM Inference Pipeline ([llm_run.py](llm_run.py) 📎)**
 This script reads the page and line-ordered text chunks from the CSV files. It dynamically 
 filters out lines that are too short or classified as noise based on the config. For valid lines, 
 it injects the nested vocabulary and a sliding window of surrounding document context into the 
 system prompt, and executes the constrained LLM generation. 
 
+> [!TIP] The exact implementations of LLM prompts can 
+> be found in the [llm_utils.py](llm_utils.py) 📎 utilities script file
+
 ```bash
-python3 llm_pipeline.py
+python3 llm_run.py
 ```
 
 ### 📁 Inputs and Outputs
