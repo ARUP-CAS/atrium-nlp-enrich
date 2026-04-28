@@ -195,13 +195,65 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": True,
         "is_moe": True,
         "bnb_experts_broken": True,
+        "is_awq": True,
     },
-    "qwen2.5-14b-awq": {
-        "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
+    "qwen2.5-7b": {
+        "hf_id": "Qwen/Qwen2.5-7B-Instruct",
+        "context_window": 32768,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "gemma-3-12b-it": {
+        "hf_id": "google/gemma-3-12b-it",
         "context_window": 131072,
         "trust_remote_code": False,
-        "torch_dtype": torch.float16,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+
+    # --- Archived / Unsuccessful Models ---
+    "bielik-11b-v3.0": {
+        "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
+        "context_window": 131072,  # Updated context length
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+    },
+    "ministral-3-14b": {
+        "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
+        "context_window": 131072,  # Updated context length
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "mistral-nemo-12b": {
+        "hf_id": "mistralai/Mistral-Nemo-Instruct-2407",
+        "context_window": 128000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "aya-expanse-8b": {
+        "hf_id": "CohereForAI/aya-expanse-8b",
+        "context_window": 8192,
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "bielik-11b": {
+        "hf_id": "speakleash/Bielik-11B-v2.3-Instruct",
+        "context_window": 8192,
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+    "llama3.1-8b": {
+        "hf_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "context_window": 128000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
     },
 }
 
@@ -331,8 +383,11 @@ def load_model_and_tokenizer(
     if getattr(tokenizer, "pad_token", None) is None:
         tokenizer.pad_token = getattr(tokenizer, "eos_token", None)
 
+    # --- Detect quantization method ---
+    is_awq = spec.get("is_awq", False)
+
     bnb_config = None
-    if spec.get("load_in_4bit"):
+    if spec.get("load_in_4bit") and not is_awq:
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=spec["torch_dtype"],
@@ -341,15 +396,43 @@ def load_model_and_tokenizer(
             llm_int8_enable_fp32_cpu_offload=True,
         )
 
+    # AWQ: bypass transformers' quantizer detection (broken in 4.51+ without gptqmodel)
+    # and load directly via autoawq, which is already installed and compatible.
+    if is_awq:
+        try:
+            from awq import AutoAWQForCausalLM
+        except ImportError:
+            raise ImportError(
+                f"Model '{model_key}' is AWQ-quantized. Install autoawq:\n"
+                "  pip install autoawq"
+            )
+        model = AutoAWQForCausalLM.from_quantized(
+            hf_id,
+            fuse_layers=False,  # True can conflict with newer transformers internals
+            device_map="auto",
+            token=hf_token or None,
+        )
+        # Patch missing .device attribute — autoawq doesn't expose it but
+        # process_document uses model.device to move tokenizer tensors onto the GPU.
+        if not hasattr(model, "device"):
+            model.device = next(model.parameters()).device
+
+
+        import warnings
+        warnings.filterwarnings("ignore", category=DeprecationWarning, module="awq")
+        model.eval()
+        return model, tokenizer, spec
+
+    # --- Standard transformers path (BnB / plain fp16/bf16) ---
     load_kwargs: Dict[str, Any] = dict(
         device_map="auto",
-        quantization_config=bnb_config,
+        dtype=spec["torch_dtype"],
         trust_remote_code=spec.get("trust_remote_code", False),
         token=hf_token or None,
         attn_implementation="sdpa",
     )
-    if bnb_config is None:
-        load_kwargs["dtype"] = spec["torch_dtype"]
+    if bnb_config is not None:
+        load_kwargs["quantization_config"] = bnb_config
 
     model = AutoModelForCausalLM.from_pretrained(hf_id, **load_kwargs)
     _verify_quantization_effective(model, model_key, spec)
@@ -475,8 +558,6 @@ def process_document(
         (enriched_lines, stats)  where stats keys are
         'processed', 'skipped_filter', 'skipped_error'.
     """
-
-
 
     file_id = csv_path.stem
     enriched_lines: List[dict] = []
