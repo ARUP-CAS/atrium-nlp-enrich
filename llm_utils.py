@@ -300,6 +300,18 @@ def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> No
     Sanity-check that 4-bit quantization actually reduced memory footprint.
     Raises RuntimeError if the ratio vs. BF16 baseline is suspiciously high,
     which usually means bitsandbytes silently fell back to full precision.
+
+    The default threshold is 0.65. For large dense models (≳20 B params) the
+    embedding table plus non-quantisable layernorm/lm-head weights are several
+    GB in BF16, pushing the legitimate quantised ratio well above the naive
+    theoretical 0.25. Empirically, correctly-quantised 27–31 B models land
+    around 0.54–0.60, so 0.65 gives comfortable headroom while still catching
+    genuine full-precision fallbacks (ratio ≈ 1.0). MoE models that cannot be
+    quantised at all should be flagged with ``bnb_experts_broken: True`` in the
+    registry rather than relying on this check.
+
+    Per-model override: add ``"max_quant_ratio": <float>`` to the registry
+    entry to use a different threshold for a specific model.
     """
     if not spec.get("load_in_4bit"):
         return
@@ -316,9 +328,13 @@ def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> No
         f"(BF16 estimate: {bf16_estimate_gb:.1f} GB, ratio: {ratio:.2f})"
     )
 
-    if ratio > 0.50:
+    threshold = spec.get("max_quant_ratio", 0.65)
+    if ratio > threshold:
         raise RuntimeError(
-            f"Quantization failed for {model_key}. Review MoE BitsAndBytes bugs."
+            f"Quantization ineffective for {model_key}: footprint ratio {ratio:.2f} "
+            f"exceeds threshold {threshold:.2f} (expected ≲0.35 for clean 4-bit, "
+            f"≲0.65 for large dense models). "
+            f"If this is a MoE model, set bnb_experts_broken=True and use GGUF instead."
         )
 
 

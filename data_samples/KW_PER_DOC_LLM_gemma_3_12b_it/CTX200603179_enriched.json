@@ -7,26 +7,8 @@
         "quality_score": 0.0,
         "original_text": "BÍTOV U KONĚPRUS, OKR. BEROUN - STAVBA ELEKTRICKÉ PŘÍPOJKY K RD",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Bítov u Koněprus",
-                "Okres Beroun",
-                "Stavba elektrické přípojky",
-                "RD",
-                "ČP. 10",
-                "Nálezová zpráva",
-                "Archeologický dohled",
-                "P"
-            ],
-            "extracted_keywords_en": [
-                "Bítov u Koněprus",
-                "Okres Beroun",
-                "Stavba elektrické přípojky",
-                "RD",
-                "ČP. 10",
-                "Nálezová zpráva",
-                "Archeologický dohled",
-                "P"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -39,16 +21,10 @@
         "quality_score": 0.0,
         "original_text": "ČP. 10",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ČP",
-                "10"
-            ],
-            "extracted_keywords_en": [
-                "ČP",
-                "10"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -59,16 +35,10 @@
         "quality_score": 0.0,
         "original_text": "NÁLEZOVÁ ZPRÁVA O ARCHEOLOGICKÉM DOHLEDU P",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "nálezová zpráva",
-                "archeologický dohled"
-            ],
-            "extracted_keywords_en": [
-                "nálezová zpráva",
-                "archeologický dohled"
-            ],
-            "teater_category": "nálezová zpráva",
-            "confidence_score": 0.99
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -79,20 +49,10 @@
         "quality_score": 0.0,
         "original_text": "*AVerPEPNeblogický ústav",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "AVerPEPNeblogický",
-                "ústav",
-                "ÚAPPSČ",
-                "PRAHA"
-            ],
-            "extracted_keywords_en": [
-                "AVerPEPNeblogický",
-                "ústav",
-                "ÚAPPSČ",
-                "PRAHA"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -103,16 +63,10 @@
         "quality_score": 0.0,
         "original_text": "ÚAPPSČ PRAHA",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ÚAPPSČ",
-                "PRAHA"
-            ],
-            "extracted_keywords_en": [
-                "ÚAPPSČ",
-                "PRAHA"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -123,14 +77,10 @@
         "quality_score": 0.0,
         "original_text": "Zprávu podává: DANIEL STOLZ",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Daniel Stolz"
-            ],
-            "extracted_keywords_en": [
-                "Daniel Stolz"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -141,22 +91,10 @@
         "quality_score": 0.0,
         "original_text": "Čislo jednací: 424/05 Kl",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Číslo",
-                "jednací",
-                "424",
-                "05",
-                "Kl"
-            ],
-            "extracted_keywords_en": [
-                "Čislo",
-                "jednací",
-                "424",
-                "05",
-                "Kl"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -167,15 +105,10 @@
         "quality_score": 0.0,
         "original_text": "Základní údaje:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Základní údaje"
-            ],
-            "extracted_keywords_en": [
-                "Základní údaje",
-                "Basic data"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -191,11 +124,11 @@
                 "Bítov u Koněprus"
             ],
             "extracted_keywords_en": [
-                "Katastrální území",
+                "Cadastral area",
                 "Bítov u Koněprus"
             ],
             "teater_category": "lokalita",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -210,10 +143,10 @@
                 "lokalita"
             ],
             "extracted_keywords_en": [
-                "lokalita"
+                "site"
             ],
             "teater_category": "lokalita",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -224,16 +157,10 @@
         "quality_score": 0.0,
         "original_text": "Parcelní čislo: 18",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Parcelní číslo",
-                "18"
-            ],
-            "extracted_keywords_en": [
-                "Parcelní čislo",
-                "18"
-            ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.98
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -244,15 +171,9 @@
         "quality_score": 0.0,
         "original_text": "Okres Beroun",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Beroun",
-                "okres"
-            ],
-            "extracted_keywords_en": [
-                "Beroun",
-                "district"
-            ],
-            "teater_category": "krajina",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -265,17 +186,13 @@
         "original_text": "Lokalizace v mapě 1:10 000:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lokalizace",
-                "mapa",
-                "1:10 000"
+                "mapa"
             ],
             "extracted_keywords_en": [
-                "lokalizace",
-                "mapa",
-                "1:10 000"
+                "map"
             ],
             "teater_category": "lokalita",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -286,27 +203,9 @@
         "quality_score": 0.0,
         "original_text": "Mapový list 12-41-17 okolo bodu 68/217 mm od Z a J sekční čáry",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Mapový list",
-                "12-41-17",
-                "bod",
-                "68/217",
-                "mm",
-                "Z",
-                "J",
-                "sekční čára"
-            ],
-            "extracted_keywords_en": [
-                "Mapový list",
-                "12-41-17",
-                "bod",
-                "68/217",
-                "mm",
-                "Z",
-                "J",
-                "sekční čára"
-            ],
-            "teater_category": "lokalita",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -318,19 +217,10 @@
         "quality_score": 0.0,
         "original_text": "Název a druh akce: Stavba elektrické přípojky k RD čp. 10",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Stavba elektrické přípojky k RD čp. 10",
-                "elektrická přípojka",
-                "RD",
-                "čp. 10"
-            ],
-            "extracted_keywords_en": [
-                "Stavba elektrické přípojky k RD čp. 10",
-                "electric connection",
-                "residential building"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.99
+            "confidence_score": 1.0
         }
     },
     {
@@ -341,20 +231,10 @@
         "quality_score": 0.0,
         "original_text": "Investor: Václav Kubík, Tyršova 75, 266 01 Beroun",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "investor",
-                "václav kubík",
-                "tyršova",
-                "beroun"
-            ],
-            "extracted_keywords_en": [
-                "investor",
-                "vaclav kubik",
-                "tyrsova",
-                "beroun"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.98
+            "confidence_score": 1.0
         }
     },
     {
@@ -366,19 +246,17 @@
         "original_text": "Základní metoda archeologického výzkumu, dohled",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický",
-                "výzkum",
                 "metoda",
+                "archeologický výzkum",
                 "dohled"
             ],
             "extracted_keywords_en": [
-                "archeological",
-                "research",
                 "method",
+                "archaeological survey",
                 "supervision"
             ],
             "teater_category": "průzkum",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -389,20 +267,10 @@
         "quality_score": 0.0,
         "original_text": "Doba výzkumu: únor 2005",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "doba",
-                "výzkumu",
-                "únor",
-                "2005"
-            ],
-            "extracted_keywords_en": [
-                "doba",
-                "výzkumu",
-                "únor",
-                "2005"
-            ],
-            "teater_category": "časný eneolit",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -413,18 +281,10 @@
         "quality_score": 0.0,
         "original_text": "Okolnosti a cil \\ýzkumu:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "okolnosti",
-                "cíl",
-                "výzkumu"
-            ],
-            "extracted_keywords_en": [
-                "circumstances",
-                "aim",
-                "research"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -436,16 +296,10 @@
         "original_text": "Byla provedena kontrola odkrytých výkopů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "provedena",
-                "kontrola",
-                "odkrytých",
                 "výkopů"
             ],
             "extracted_keywords_en": [
-                "provedena",
-                "kontrola",
-                "odkrytých",
-                "výkopů"
+                "excavations"
             ],
             "teater_category": "terénní odkryv",
             "confidence_score": 0.95
@@ -459,20 +313,10 @@
         "quality_score": 0.0,
         "original_text": "Zaměřeni:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Zaměřeni",
-                "provedeno",
-                "základní mapa",
-                "1:10 000"
-            ],
-            "extracted_keywords_en": [
-                "Zaměřeni",
-                "provedeno",
-                "základní mapa",
-                "1:10 000"
-            ],
-            "teater_category": "geodetický průzkum",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.85
         }
     },
     {
@@ -483,19 +327,9 @@
         "quality_score": 0.0,
         "original_text": "Zaměřeni bylo provedeno do základní mapy 1:10 000.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Zaměřeni",
-                "provedeno",
-                "základní mapa",
-                "1:10 000"
-            ],
-            "extracted_keywords_en": [
-                "Zaměřeni",
-                "provedeno",
-                "základní mapa",
-                "1:10 000"
-            ],
-            "teater_category": "geodetický průzkum",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -507,18 +341,10 @@
         "quality_score": 0.0,
         "original_text": "Popis terénni situace:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "terénní situace",
-                "popis",
-                "terén"
-            ],
-            "extracted_keywords_en": [
-                "terénní situace",
-                "description",
-                "terrain situation"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -529,15 +355,10 @@
         "quality_score": 0.0,
         "original_text": "Ve výkopu byly zjištěny pouze geologické situace",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "geologické situace"
-            ],
-            "extracted_keywords_en": [
-                "geologické situace",
-                "geological situations"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -548,16 +369,10 @@
         "quality_score": 0.0,
         "original_text": "Zhodnoceni:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Zhodnocení",
-                "archeologické situace"
-            ],
-            "extracted_keywords_en": [
-                "Zhodnoceni",
-                "archeologické situace"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -568,16 +383,10 @@
         "quality_score": 0.0,
         "original_text": "Nebyly porušeny archeologické situace.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologické situace",
-                "porušeny"
-            ],
-            "extracted_keywords_en": [
-                "archeologické situace",
-                "porušeny"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -588,16 +397,8 @@
         "quality_score": 0.0,
         "original_text": "V Kladně 30. 12. 2005 Mgr. Daniel Stolz",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Kladno",
-                "30. 12. 2005",
-                "Mgr. Daniel Stolz"
-            ],
-            "extracted_keywords_en": [
-                "Kladno",
-                "30. 12. 2005",
-                "Mgr. Daniel Stolz"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -610,24 +411,10 @@
         "quality_score": 0.0,
         "original_text": "ÚSTAV ARCHEOLOGICKÉ PAMÁTKOVÉ",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ÚSTAV",
-                "ARCHEOLOGICKÉ",
-                "PAMÁTKOVÉ",
-                "PÉČE",
-                "STŘEDNÍCH",
-                "ČECH"
-            ],
-            "extracted_keywords_en": [
-                "ÚSTAV",
-                "ARCHEOLOGICKÉ",
-                "PAMÁTKOVÉ",
-                "PÉČE",
-                "STŘEDNÍCH",
-                "ČECH"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.99
+            "confidence_score": 0.95
         }
     },
     {
@@ -638,24 +425,10 @@
         "quality_score": 0.0,
         "original_text": "PÉČE STŘEDNÍCH ČECH",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ÚSTAV",
-                "ARCHEOLOGICKÉ",
-                "PAMÁTKOVÉ",
-                "PÉČE",
-                "STŘEDNÍCH",
-                "ČECH"
-            ],
-            "extracted_keywords_en": [
-                "ÚSTAV",
-                "ARCHEOLOGICKÉ",
-                "PAMÁTKOVÉ",
-                "PÉČE",
-                "STŘEDNÍCH",
-                "ČECH"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.99
+            "confidence_score": 0.95
         }
     },
     {
@@ -666,14 +439,8 @@
         "quality_score": 0.0,
         "original_text": "EXPERTNÍ LIST KE STAVBĚ",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "EXPERT LIST",
-                "CONSTRUCTION"
-            ],
-            "extracted_keywords_en": [
-                "EXPERT LIST",
-                "CONSTRUCTION"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
@@ -686,32 +453,10 @@
         "quality_score": 0.0,
         "original_text": "Dokument je určen pro investora stavby jako doklad realizovaného záchranného",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "dokument",
-                "investor",
-                "stavby",
-                "doklad",
-                "záchranný",
-                "výzkumu",
-                "stavební",
-                "akce",
-                "stavební aktivitou",
-                "neplatný"
-            ],
-            "extracted_keywords_en": [
-                "dokument",
-                "investor",
-                "stavby",
-                "doklad",
-                "záchranný",
-                "výzkumu",
-                "stavební",
-                "akce",
-                "stavební aktivitou",
-                "neplatný"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -722,22 +467,10 @@
         "quality_score": 0.0,
         "original_text": "výzkumu. Je nedílnou součástí konkrétní stavební akce.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výzkumu",
-                "záchranného",
-                "stavby",
-                "stavební",
-                "akce"
-            ],
-            "extracted_keywords_en": [
-                "výzkumu",
-                "záchranného",
-                "stavby",
-                "stavební",
-                "akce"
-            ],
-            "teater_category": "záchranný",
-            "confidence_score": 0.98
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -748,18 +481,10 @@
         "quality_score": 0.0,
         "original_text": "V souvislosti s jinou stavební aktivitou je neplatný.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "stavební aktivita",
-                "stavební",
-                "neplatný"
-            ],
-            "extracted_keywords_en": [
-                "stavební aktivita",
-                "stavební",
-                "neplatný"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -770,18 +495,10 @@
         "quality_score": 0.0,
         "original_text": "KATASTRÁLNÍ UZEMÍ: BTOVU KONĚPRUS-A OKRES:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "katastrální území",
-                "Bítova Koněprus-A",
-                "okres"
-            ],
-            "extracted_keywords_en": [
-                "katastrální území",
-                "BTOVU KONĚPRUS-A",
-                "okres"
-            ],
-            "teater_category": "lokalita",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -792,20 +509,10 @@
         "quality_score": 0.0,
         "original_text": "INVESTOR: VÁCLAVKUBIK- •",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "investor",
-                "Václav Kubík",
-                "Tyršova",
-                "Beroun"
-            ],
-            "extracted_keywords_en": [
-                "investor",
-                "vaclavkubik",
-                "tyrsova",
-                "beroun"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -817,21 +524,13 @@
         "original_text": "TYRSOVA5===aras ..v 277",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Tyrsova",
-                "5",
-                "266",
-                "01",
-                "Beroun"
+                "pec"
             ],
             "extracted_keywords_en": [
-                "Tyrsova",
-                "5",
-                "266",
-                "01",
-                "Beroun"
+                "kiln"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "teater_category": "pec",
+            "confidence_score": 0.85
         }
     },
     {
@@ -842,20 +541,10 @@
         "quality_score": 0.0,
         "original_text": "266 01 BEROUN 2=: aEsne \" K- . - -",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "investor",
-                "Václav Kubík",
-                "Tyršova",
-                "Beroun"
-            ],
-            "extracted_keywords_en": [
-                "investor",
-                "vaclavkubik",
-                "tyrsova",
-                "beroun"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -866,18 +555,8 @@
         "quality_score": 0.0,
         "original_text": "NÁZEVADRUHSTAVBY:ELEKTRICKÄPRPOJKANNK-RDČP. 10",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "NÁZEVADRUHSTAVBY",
-                "ELEKTRICKÄPRPOJKANNK",
-                "RD",
-                "ČP"
-            ],
-            "extracted_keywords_en": [
-                "NÁZEVADRUHSTAVBY",
-                "ELEKTRICKÄPRPOJKANNK",
-                "RD",
-                "ČP"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -890,17 +569,9 @@
         "quality_score": 0.0,
         "original_text": "DOBA VÝZKUMU: ÚNOR 2005",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "doba výzkumu",
-                "únor",
-                "2005"
-            ],
-            "extracted_keywords_en": [
-                "doba výzkumu",
-                "únor",
-                "2005"
-            ],
-            "teater_category": "časný eneolit",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -913,16 +584,10 @@
         "original_text": "FORMA ARCHEOLOGICKÉHO_VÝZKUMU: DOHLED",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "dohled",
-                "archeologické situace",
-                "nebyly zachyceny"
+                "archeologický výzkum"
             ],
             "extracted_keywords_en": [
-                "archaeological survey",
-                "supervision",
-                "archaeological situations",
-                "not captured"
+                "archaeological survey"
             ],
             "teater_category": "průzkum",
             "confidence_score": 0.95
@@ -936,16 +601,8 @@
         "quality_score": 0.0,
         "original_text": "VÝSLEDEK: NEBYLY ZACHYCENY ARCHEOLOGICKÉ SITUACE. BYLO",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologické situace",
-                "zdokumentováno",
-                "geologické podloží"
-            ],
-            "extracted_keywords_en": [
-                "archaeological situations",
-                "documented",
-                "geological background"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
@@ -958,16 +615,8 @@
         "quality_score": 0.0,
         "original_text": "ZDOKUMENTOVÁNO POUZE GEOLOGICKÉ PODLOŽÍ.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "zdokumentováno",
-                "geologické",
-                "podloží"
-            ],
-            "extracted_keywords_en": [
-                "documented",
-                "geological",
-                "underground"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
@@ -980,20 +629,10 @@
         "quality_score": 0.0,
         "original_text": "ÚZEMÍ ZASAŽENÉ STAVEBNÍ ČINNOSTÍ POSOUDIL: MGR. DANIEL STOLZ, .A.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "stavební činností",
-                "posoudil",
-                "mgr",
-                "daniel stolz"
-            ],
-            "extracted_keywords_en": [
-                "stavební činností",
-                "posoudil",
-                "mgr",
-                "daniel stolz"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -1004,20 +643,10 @@
         "quality_score": 0.0,
         "original_text": "ewa esmafkOV e",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ewa",
-                "esmafkOV",
-                "e",
-                "LEACOVISTEKAAPApuc"
-            ],
-            "extracted_keywords_en": [
-                "ewa",
-                "esmafkOV",
-                "e",
-                "LEACOVISTEKAAPApuc"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.99
+            "confidence_score": 1.0
         }
     },
     {
@@ -1028,14 +657,10 @@
         "quality_score": 0.0,
         "original_text": ". LEACOVISTEKAAPApuc",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "LEACOVISTEKAAPApuc"
-            ],
-            "extracted_keywords_en": [
-                "LEACOVISTEKAAPApuc"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.99
+            "confidence_score": 1.0
         }
     },
     {
@@ -1046,20 +671,8 @@
         "quality_score": 0.0,
         "original_text": "DATUM: 10.5. 2005 C.J. 119/2005 KL PODPIS: NoOL",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "DATUM",
-                "10.5. 2005",
-                "C.J. 119/2005",
-                "KL",
-                "PODPIS"
-            ],
-            "extracted_keywords_en": [
-                "DATUM",
-                "10.5. 2005",
-                "C.J. 119/2005",
-                "KL",
-                "PODPIS"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }

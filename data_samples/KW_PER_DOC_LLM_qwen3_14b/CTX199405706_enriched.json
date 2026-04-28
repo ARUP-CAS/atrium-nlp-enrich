@@ -8,24 +8,14 @@
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ONDREJOV",
-                "Praha-východ",
-                "1820",
-                "Bubníkova usedlost",
-                "kostr. hrob",
                 "hrnčíř",
-                "pece"
+                "pec"
             ],
             "extracted_keywords_en": [
-                "ONDREJOV",
-                "Praha-východ",
-                "1820",
-                "Bubníkova usedlost",
-                "skeletal grave",
                 "pottery kiln",
                 "furnace"
             ],
-            "teater_category": "pohřební areál",
+            "teater_category": "pec hrnčířská",
             "confidence_score": 0.85
         }
     },
@@ -39,20 +29,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kostr. hrob",
-                "KULT",
-                "LOK",
-                "Bubníkova usedlost",
-                "NALEZ"
+                "hrnčíř",
+                "pec"
             ],
             "extracted_keywords_en": [
-                "skeletal grave",
-                "KULT",
-                "LOK",
-                "Bubníkova usedlost",
-                "NALEZ"
+                "skeleton grave",
+                "pottery kiln",
+                "kiln"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.9
+            "teater_category": "pohřební objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -64,10 +50,12 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "základ",
                 "hrnčíř",
-                "pece"
+                "pec"
             ],
             "extracted_keywords_en": [
+                "foundation",
                 "pottery kiln",
                 "kiln"
             ],

@@ -7,22 +7,8 @@
         "quality_score": 0.0,
         "original_text": "CESKOSLOVENSKA AKADEM’E VEk",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "CESKOSLOVENSKA",
-                "AKADEM'EA",
-                "VEK",
-                "ABCHEOLOGICKÝ",
-                "ÚSTAV",
-                "Exgesitura"
-            ],
-            "extracted_keywords_en": [
-                "CZECHOSLOVAKIAN",
-                "ACADEMY",
-                "AGE",
-                "ARCHAEOLOGICAL",
-                "INSTITUTE",
-                "Exgesitura"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -35,14 +21,8 @@
         "quality_score": 0.0,
         "original_text": "ABCHEOLOGICKÝ ÚSTAV",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ABCHEOLOGICKÝ",
-                "ÚSTAV"
-            ],
-            "extracted_keywords_en": [
-                "Archaeological",
-                "Institute"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -55,14 +35,8 @@
         "quality_score": 0.0,
         "original_text": "Exgesitura v Plzal",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Exgesitura",
-                "Plzal"
-            ],
-            "extracted_keywords_en": [
-                "Exgesitura",
-                "Plzal"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -75,14 +49,8 @@
         "quality_score": 0.0,
         "original_text": "48/63 Plzeň",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "48/63",
-                "Plzeň"
-            ],
-            "extracted_keywords_en": [
-                "48/63",
-                "Pilsen"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -95,20 +63,8 @@
         "quality_score": 0.0,
         "original_text": "Zpráva o archeologické sbírce Vlastivědného muzea v Blovicích,",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Zpráva",
-                "archeologické sbírce",
-                "Vlastivědného muzea",
-                "Blovicích",
-                "okres Plzeň - jih"
-            ],
-            "extracted_keywords_en": [
-                "Report",
-                "archaeological collection",
-                "Local History Museum",
-                "Blovice",
-                "district Pilsen - south"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -121,14 +77,8 @@
         "quality_score": 0.0,
         "original_text": "/okres Plzeň - jih/.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "okres",
-                "Plzeň - jih"
-            ],
-            "extracted_keywords_en": [
-                "district",
-                "Pilsen - south"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -142,15 +92,17 @@
         "original_text": "Archeologická sbírka je poměrně mladého data, vznikla ponejvíce",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výšinných",
-                "sídlištích"
+                "vznikla",
+                "eneolitických",
+                "výšinných sídlištích"
             ],
             "extracted_keywords_en": [
-                "hill",
-                "settlements"
+                "formed",
+                "eneolithic",
+                "hilltop settlements"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -162,15 +114,17 @@
         "original_text": "ze sběří ředitele muzea Škrabka a spolupracovníka J.sýkory na nově objevených",
         "enrichment": {
             "extracted_keywords_cs": [
+                "eneolitických",
                 "výšinných",
                 "sídlištích"
             ],
             "extracted_keywords_en": [
-                "hill",
+                "eneolithic",
+                "hilltop",
                 "settlements"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -183,22 +137,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "eneolitických",
-                "výšinných",
-                "sídlištích",
-                "Blovicku",
-                "poříčí",
-                "Úslavy"
+                "výšinných sídlištích"
             ],
             "extracted_keywords_en": [
                 "eneolithic",
-                "hilltop",
-                "settlements",
-                "Blovicku",
-                "river",
-                "Uslavy"
+                "hilltop settlements"
             ],
-            "teater_category": "eneolit",
-            "confidence_score": 1.0
+            "teater_category": "výšinné sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -210,20 +156,16 @@
         "original_text": "Tyto sběry, doplněné ústavním depositem z výzkumu v Srbech 1960, podávají",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sběry",
-                "ústavní deponát",
+                "depost",
                 "výzkum",
-                "Srby",
-                "1960"
+                "Srbech"
             ],
             "extracted_keywords_en": [
-                "collections",
-                "institutional deposit",
+                "deposits",
                 "research",
-                "Serbia",
-                "1960"
+                "in Srbs"
             ],
-            "teater_category": "chamská kultura",
+            "teater_category": "depot",
             "confidence_score": 0.95
         }
     },
@@ -236,15 +178,15 @@
         "original_text": "výstižný přehled západočeské chamské skupiny. Z doby bronzové je",
         "enrichment": {
             "extracted_keywords_cs": [
-                "chamská",
-                "skupina"
+                "chamská skupina",
+                "západočeská"
             ],
             "extracted_keywords_en": [
-                "Cham",
-                "group"
+                "Cham group",
+                "West Bohemian"
             ],
-            "teater_category": "chamská kultura",
-            "confidence_score": 1.0
+            "teater_category": "neolit–eneolit",
+            "confidence_score": 0.95
         }
     },
     {
@@ -257,18 +199,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "depot",
-                "Blovicích",
-                "Libákovicích",
-                "Járova"
+                "mohylové bronz"
             ],
             "extracted_keywords_en": [
-                "depot",
-                "Blovicích",
-                "Libákovicích",
-                "Járova"
+                "hoard",
+                "burial bronze"
             ],
             "teater_category": "depot",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -280,29 +218,15 @@
         "original_text": "Mladší pravěké kultury nejsou zastoupeny, středověk jen drobnými",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Mladší",
-                "pravěké",
-                "kultury",
-                "nej",
-                "zastoupeny",
-                "středověk",
-                "jen",
-                "drobnými",
-                "nálezy"
+                "mladší pravěké kultury",
+                "středověk"
             ],
             "extracted_keywords_en": [
-                "Younger",
-                "prehistoric",
-                "cultures",
-                "not",
-                "represented",
-                "medieval",
-                "only",
-                "minor",
-                "finds"
+                "Late Prehistoric cultures",
+                "Medieval"
             ],
-            "teater_category": "neolit–eneolit",
-            "confidence_score": 1.0
+            "teater_category": "středověk",
+            "confidence_score": 0.85
         }
     },
     {
@@ -314,21 +238,15 @@
         "original_text": "nálezy. Materiál je přehledně zapsán ve 130 příri stkových položkách,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Materiál",
-                "přehledně",
-                "zapsán",
-                "přírůstkových",
-                "položkách"
+                "depo",
+                "nález"
             ],
             "extracted_keywords_en": [
-                "Material",
-                "comprehensively",
-                "recorded",
-                "incremental",
-                "entries"
+                "hoard",
+                "find"
             ],
-            "teater_category": "materiálová analýza",
-            "confidence_score": 1.0
+            "teater_category": "depot",
+            "confidence_score": 0.95
         }
     },
     {
@@ -339,31 +257,8 @@
         "quality_score": 0.0,
         "original_text": "instalace se připravuje. Muzeum vyvíjí značnou aktivitu v archeologii",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "instalace",
-                "se",
-                "připravuje",
-                "Muzeum",
-                "vyvíjí",
-                "značnou",
-                "aktivitu",
-                "archeologii",
-                "ohlašuje",
-                "nálezy",
-                "exposituře"
-            ],
-            "extracted_keywords_en": [
-                "installation",
-                "preparing",
-                "museum",
-                "developing",
-                "significant",
-                "activity",
-                "archaeology",
-                "announcing",
-                "finds",
-                "exposition"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -376,16 +271,8 @@
         "quality_score": 0.0,
         "original_text": "a ohlašuje nálezy exposituře / v r.1962 byl na základě jeho hlásení prOveden",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "exposituře",
-                "výzkum",
-                "Netunicích"
-            ],
-            "extracted_keywords_en": [
-                "exposition",
-                "research",
-                "Netunic"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -398,16 +285,10 @@
         "quality_score": 0.0,
         "original_text": "výzkum v Netunicích a d./, někdy ovšem zájem blovickych pracoví-",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výzkum",
-                "Netunicích"
-            ],
-            "extracted_keywords_en": [
-                "survey",
-                "Netunic"
-            ],
-            "teater_category": "výzkum povrchové vrstvy",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -419,23 +300,15 @@
         "original_text": "kv zavádí k nežádoucím drobným výkopům. Ústavní depositum /Srby/ shledáno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zavádí",
-                "nežádoucím",
-                "drobným",
-                "výkopům",
-                "Ústavní",
-                "depositum"
+                "depositum",
+                "výkopům"
             ],
             "extracted_keywords_en": [
-                "introduces",
-                "undesirable",
-                "minor",
-                "excavations",
-                "Constitutional",
-                "deposit"
+                "depositum",
+                "excavations"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -447,13 +320,13 @@
         "original_text": "v pořádku.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "v pořádku"
+                "depositum"
             ],
             "extracted_keywords_en": [
-                "in order"
+                "depositum"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "kultovní/sakrální objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -465,15 +338,15 @@
         "original_text": "Přehled sbírky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Přehled",
-                "sbírky"
+                "drobné nálezy",
+                "eneol. výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "Overview",
-                "collection"
+                "small finds",
+                "eneolithic hill settlement"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -485,23 +358,15 @@
         "original_text": "Bzí - drobné nálezy z eneol. výšinnéhoj sídliště . _",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Bzí",
-                "drobné",
-                "nálezy",
-                "eneol",
-                "výšinnéhoj",
-                "sídliště"
+                "drobné nálezy",
+                "eneol. výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "Bzí",
-                "minor",
-                "finds",
-                "eneol",
-                "hilltop",
-                "settlement"
+                "small finds",
+                "Eneolithic hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -513,31 +378,15 @@
         "original_text": "větší soubor z eneol.výš.sídliště - publ. Masek,AR IV 1962",
         "enrichment": {
             "extracted_keywords_cs": [
-                "větší",
-                "soubor",
-                "eneol",
-                "výš",
-                "sídliště",
-                "publ",
-                "Masek",
-                "AR",
-                "IV",
-                "1962"
+                "větší soubor",
+                "eneol.výš.sídliště"
             ],
             "extracted_keywords_en": [
-                "larger",
-                "collection",
-                "eneolithic",
-                "hill",
-                "settlement",
-                "published",
-                "Masek",
-                "AR",
-                "IV",
-                "1962"
+                "larger collection",
+                "eneolithic hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -549,17 +398,15 @@
         "original_text": "Vlkov- sběry z en eol.výš. sídli ště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vlkov",
                 "sběry",
-                "eneol.výš.sídliště"
+                "eneol.výš.sídliste"
             ],
             "extracted_keywords_en": [
-                "Vlkov",
                 "collections",
-                "eneolithic hill settlement"
+                "Eneolithic hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -571,19 +418,13 @@
         "original_text": "Polanka u Blovic - sběry z eneol.výs.sídliste",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Polanka",
-                "Blovic",
-                "sběry",
-                "eneol.výs.sídliste"
+                "en eol.výš. sídliště"
             ],
             "extracted_keywords_en": [
-                "Polanka",
-                "Blovic",
-                "collections",
-                "ENEOL.height.settlement"
+                "Eneolithic hilltop settlement"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "teater_category": "výšinné sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -595,15 +436,13 @@
         "original_text": "ojedinělé kam. nástroje - Plo víc e-Hradiš tě. Spálené. Poříčí.,. Ralov, dí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ojedinělé",
-                "kam. nástroje"
+                "ojedinělé kam. nástroje"
             ],
             "extracted_keywords_en": [
-                "isolated",
-                "stone tool"
+                "isolated stone tools"
             ],
-            "teater_category": "ojedinělý nález",
-            "confidence_score": 1.0
+            "teater_category": "nález v druhotné poloze",
+            "confidence_score": 0.95
         }
     },
     {
@@ -615,19 +454,13 @@
         "original_text": "rec- Myt, Nezbavětice, Radochovy , Stl to. v .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Myt",
-                "Nezbavětice",
-                "Radochovy",
-                "Stl to"
+                "mohyla"
             ],
             "extracted_keywords_en": [
-                "Myt",
-                "Nezbavětice",
-                "Radochovy",
-                "Stl to"
+                "burial mound"
             ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
-            "confidence_score": 1.0
+            "teater_category": "mohyla",
+            "confidence_score": 0.95
         }
     },
     {
@@ -639,35 +472,19 @@
         "original_text": "Jarov - bronz, terčoví tá jehlice, 2 pečetítkové j ehlic e, tyčink. nátamek",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Jarov",
                 "bronz",
-                "terčoví",
-                "tá jehlice",
-                "pečetítkové",
-                "jehlice",
-                "tyčinkový",
-                "nátamek",
-                "rozrušené",
-                "mohyly",
-                "Cábuzí",
-                "střední doba bronzová"
+                "terčoví tá jehlice",
+                "pečetítkové jehlice",
+                "tyčinkový nátamek"
             ],
             "extracted_keywords_en": [
-                "Jarov",
                 "bronze",
-                "target",
-                "awl",
-                "seal",
-                "awl",
-                "rod-shaped",
-                "tool",
-                "destroyed",
-                "tomb",
-                "Cábuzí",
-                "Middle Bronze Age"
+                "target pin",
+                "seal pin",
+                "rod-shaped pin"
             ],
-            "teater_category": "bronz",
-            "confidence_score": 1.0
+            "teater_category": "kost lidská",
+            "confidence_score": 0.85
         }
     },
     {
@@ -679,17 +496,15 @@
         "original_text": "z rozrušené mohyly v Cábuzí /střední d.bronz/",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rozrušená mohyla",
-                "Cábuzí",
-                "střední doba bronzu"
+                "rozrušené mohyly",
+                "střední doba bronzová"
             ],
             "extracted_keywords_en": [
-                "disturbed burial mound",
-                "Cábuzí",
+                "destroyed burial mound",
                 "Middle Bronze Age"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 1.0
+            "teater_category": "mohyla",
+            "confidence_score": 0.95
         }
     },
     {
@@ -701,25 +516,17 @@
         "original_text": "Libákovice_- bronz.depot z rozhraní střední a mladší d.bronz., publ.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Libákovice",
-                "bronz",
                 "depot",
-                "rozhraní",
-                "střední",
-                "mladší",
-                "d.bronz"
+                "střední doba bronzu",
+                "mladší doba bronzu"
             ],
             "extracted_keywords_en": [
-                "Libákovice",
-                "bronze",
                 "hoard",
-                "transition",
-                "middle",
-                "late",
-                "Bronze Age"
+                "Middle Bronze Age",
+                "Late Bronze Age"
             ],
             "teater_category": "depot",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -731,17 +538,15 @@
         "original_text": "V.Čtrnáct, AR XIII 1961.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "V.Čtrnáct",
-                "AR XIII",
-                "1961"
+                "bronz.depot",
+                "rozhraní střední a mladší d.bronz"
             ],
             "extracted_keywords_en": [
-                "V.Čtrnáct",
-                "AR XIII",
-                "1961"
+                "bronze depot",
+                "transition between middle and late bronze age"
             ],
-            "teater_category": "novověk",
-            "confidence_score": 1.0
+            "teater_category": "kultura s lineární keramikou",
+            "confidence_score": 0.85
         }
     },
     {
@@ -753,17 +558,15 @@
         "original_text": "Vrtěšíce - ojeď.nález bronz.oštěpu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vrtěšíce",
                 "ojeď.nález",
                 "bronz.oštěpu"
             ],
             "extracted_keywords_en": [
-                "Vrtěšíce",
-                "single find",
+                "isolated find",
                 "bronze javelin head"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 1.0
+            "teater_category": "nález v druhotné poloze",
+            "confidence_score": 0.95
         }
     },
     {
@@ -775,19 +578,13 @@
         "original_text": "Vlčice - Chýlava - středověká keramika, údajně \"Z mohyl*.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vlčice",
-                "Chýlava",
-                "středověká keramika",
-                "mohyla"
+                "středověká keramika"
             ],
             "extracted_keywords_en": [
-                "Vlčice",
-                "Chýlava",
-                "medieval pottery",
-                "barrow"
+                "medieval ceramic"
             ],
-            "teater_category": "středověk",
-            "confidence_score": 1.0
+            "teater_category": "keramika",
+            "confidence_score": 0.95
         }
     },
     {
@@ -799,29 +596,15 @@
         "original_text": "v muzeu je uložen rukopis zprávy Jana Žáka z r.1881 o výkopech mohyl",
         "enrichment": {
             "extracted_keywords_cs": [
-                "muzeu",
-                "uložen",
-                "rukopis",
-                "zprávy",
-                "Jan Žák",
-                "r.1881",
-                "výkopech",
-                "mohyl",
-                "Chýlinách"
+                "rukopis zprávy",
+                "výkopech mohyl"
             ],
             "extracted_keywords_en": [
-                "museum",
-                "stored",
-                "manuscript",
-                "report",
-                "Jan Žák",
-                "year 1881",
-                "excavations",
-                "barrows",
-                "Chýliny"
+                "manuscript report",
+                "excavations of barrows"
             ],
-            "teater_category": "papír s fotografiemi",
-            "confidence_score": 1.0
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -833,16 +616,14 @@
         "original_text": "v Chýlinách - Hladomří /částečně publikovaných J.Smolíkem v PA/.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Chýlinách",
-                "Hladomří",
-                "publikovaných"
+                "mohyla",
+                "Hladomří"
             ],
             "extracted_keywords_en": [
-                "Chýlinách",
-                "Hladomří",
-                "published"
+                "burial mound",
+                "Hladomří"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "mohyla",
             "confidence_score": 0.95
         }
     }

@@ -7,16 +7,8 @@
         "quality_score": 0.0,
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ONDREJOV",
-                "okr",
-                "Praha-východ"
-            ],
-            "extracted_keywords_en": [
-                "ONDREJOV",
-                "district",
-                "Prague-East"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -30,25 +22,17 @@
         "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "DAT",
-                "KULT",
-                "LOK",
-                "NALEZ",
-                "OKOL",
-                "ULOŽ",
-                "LIT"
+                "kostr. hrob",
+                "hrnčíř",
+                "pece"
             ],
             "extracted_keywords_en": [
-                "DATE",
-                "CULTURE",
-                "LOCATION",
-                "FIND",
-                "CONTEXT",
-                "STORAGE",
-                "REFERENCE"
+                "burial",
+                "pottery kiln",
+                "kiln"
             ],
-            "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "teater_category": "pohřební areál",
+            "confidence_score": 0.95
         }
     },
     {
@@ -60,19 +44,17 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kopání",
                 "základu",
                 "hrnčíř",
                 "pece"
             ],
             "extracted_keywords_en": [
-                "excavation",
                 "foundation",
-                "potter",
+                "pottery kiln",
                 "kiln"
             ],
             "teater_category": "pec hrnčířská",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     }
 ]
