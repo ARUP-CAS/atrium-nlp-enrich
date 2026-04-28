@@ -166,6 +166,14 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
     },
+    "qwen2.5-14b-awq": {
+        "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.float16,
+        "hf_token_required": False,
+        "is_awq": True,           # ← NEW
+    },
     "qwen-3.5-9b-it": {
         "hf_id": "Qwen/Qwen3.5-9B",
         "context_window": 262144,
