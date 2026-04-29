@@ -36,10 +36,10 @@
         "original_text": "Výzkum slovanského hradiště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "slovanského hradiště"
+                "slovanské hradiště"
             ],
             "extracted_keywords_en": [
-                "slavonic hillfort"
+                "Slavic hillfort"
             ],
             "teater_category": "hradiště",
             "confidence_score": 1.0
@@ -138,15 +138,15 @@
         "original_text": "křížovou sondou bylo ověřeno ukončení hradby středního vslu,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "křížovou sondou",
-                "hradby"
+                "křížová sonda",
+                "hradba"
             ],
             "extracted_keywords_en": [
-                "cross-trench",
+                "cross trench",
                 "defensive wall"
             ],
             "teater_category": "hradba",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -158,13 +158,13 @@
         "original_text": "připnutého k jižnímu srázu hradiska a horizontální a vertikální",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradiska"
+                "hradisko"
             ],
             "extracted_keywords_en": [
-                "hradiska"
+                "hillfort"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -179,10 +179,10 @@
                 "opevnění"
             ],
             "extracted_keywords_en": [
-                "opevnění"
+                "fortification"
             ],
             "teater_category": "ohrazení/fortifikace",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -194,17 +194,17 @@
         "original_text": "typu s kamennou a roštovou dřevěnou konsttukcí valového",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kamennou",
-                "dřevěnou konsttukcí",
-                "valového"
+                "kamenná konstrukce",
+                "roštová dřevěná konstrukce",
+                "valové těleso"
             ],
             "extracted_keywords_en": [
                 "stone construction",
-                "wooden construction",
-                "rampart"
+                "grated wooden construction",
+                "rampart body"
             ],
             "teater_category": "val",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -216,13 +216,13 @@
         "original_text": "tělesa.Pozůstatky dřevěné konstrukce místy i positivně nachovány.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "dřevěné konstrukce"
+                "Pozůstatky dřevěné konstrukce"
             ],
             "extracted_keywords_en": [
-                "wooden construction"
+                "remains of wooden structure"
             ],
             "teater_category": "konstrukce kůlová/sloupová",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -237,10 +237,10 @@
                 "Pracoviště 2/56"
             ],
             "extracted_keywords_en": [
-                "Pracoviště 2/56"
+                "Fieldwork unit 2/56"
             ],
             "teater_category": "terénní pracoviště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -254,7 +254,7 @@
             "extracted_keywords_cs": [
                 "jižní hradba",
                 "hradisko",
-                "kamenná pata"
+                "kamenná patka"
             ],
             "extracted_keywords_en": [
                 "southern wall",
@@ -262,7 +262,7 @@
                 "stone base"
             ],
             "teater_category": "hradba",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -274,13 +274,15 @@
         "original_text": "patou ve formě zřetelné kamenné podezdívky.Za touto kamennnou",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kamenná patka",
                 "kamenná podezdívka"
             ],
             "extracted_keywords_en": [
-                "kamenná podezdívka"
+                "stone base",
+                "stone foundation"
             ],
             "teater_category": "hradba",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -300,7 +302,7 @@
                 "ashy layers"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -316,11 +318,11 @@
                 "kůlů"
             ],
             "extracted_keywords_en": [
-                "wall",
+                "low walls",
                 "stakes"
             ],
-            "teater_category": "konstrukce kůlová/sloupová",
-            "confidence_score": 0.9
+            "teater_category": "sídliště",
+            "confidence_score": 0.85
         }
     },
     {
@@ -332,13 +334,13 @@
         "original_text": "2 základní slovanské sídlištní fáse a třetí ve formě stavební",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídlištní fáse"
+                "slovanské sídlištní fáse"
             ],
             "extracted_keywords_en": [
-                "sídlištní fáse"
+                "Slavic settlement phases"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -356,7 +358,7 @@
                 "deep storage pits"
             ],
             "teater_category": "jáma zásobní",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -368,13 +370,13 @@
         "original_text": "j ámy .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jámy"
+                "zásobní jámy"
             ],
             "extracted_keywords_en": [
-                "pits"
+                "storage pits"
             ],
             "teater_category": "jáma zásobní",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -386,13 +388,15 @@
         "original_text": "Pracoviště 5/56: Sondou bylo zachyceno prostorově omezené řadové",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sondou"
+                "Sonda",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "Sondou"
+                "trench",
+                "cemetery"
             ],
-            "teater_category": "sonda",
-            "confidence_score": 1.0
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.95
         }
     },
     {
@@ -405,14 +409,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "hrobovými jamami"
+                "hrobové jámy"
             ],
             "extracted_keywords_en": [
-                "pohřebiště",
-                "hrobovými jamami"
+                "cemetery",
+                "grave pits"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -434,7 +438,7 @@
                 "skeletons"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -446,13 +450,13 @@
         "original_text": "V-Z orientace,často etažovitě nad sebou uložené.Většina pohřbů",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřbů"
+                "pohřby"
             ],
             "extracted_keywords_en": [
-                "pohřbů"
+                "burials"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -464,13 +468,13 @@
         "original_text": "byla bez milodarů a bez ozdob. ' jedné čtvrtiny byly přiloženy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "milodarů"
+                "pohřby"
             ],
             "extracted_keywords_en": [
-                "milodary"
+                "burials"
             ],
-            "teater_category": "součást hrobu",
-            "confidence_score": 0.9
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.85
         }
     },
     {
@@ -482,13 +486,15 @@
         "original_text": "věci osobní potřeby.\"atím byl nejpříznačněxjší pohřeb muže",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřeb"
+                "věci osobní potřeby",
+                "pohřeb muže"
             ],
             "extracted_keywords_en": [
-                "pohřeb"
+                "personal belongings",
+                "male burial"
             ],
             "teater_category": "pohřební objekt",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -502,15 +508,15 @@
             "extracted_keywords_cs": [
                 "železnými nožíky",
                 "brouskem",
-                "pohřeb"
+                "pohřeb dítěte"
             ],
             "extracted_keywords_en": [
                 "iron knives",
                 "whetstone",
-                "burial"
+                "child burial"
             ],
             "teater_category": "pohřební objekt",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -522,17 +528,17 @@
         "original_text": "bronzovou záušničkou ,perlovým náhrdelníkem a částí textilie.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bronzovou záušničkou",
-                "perlovým náhrdelníkem",
+                "bronzová záušnička",
+                "perlový náhrdelník",
                 "textilie"
             ],
             "extracted_keywords_en": [
-                "bronze earring",
+                "bronze temple ring",
                 "pearl necklace",
                 "textile"
             ],
             "teater_category": "součást hrobu",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -545,14 +551,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Pohřebiště",
-                "mladší hradištní periody"
+                "mladší hradištní perioda"
             ],
             "extracted_keywords_en": [
-                "Pohřebiště",
-                "mladší hradištní periody"
+                "cemetery",
+                "Advanced Middle Hillfort Period"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -567,10 +573,10 @@
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "pohřebiště"
+                "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -585,10 +591,10 @@
                 "hradiště"
             ],
             "extracted_keywords_en": [
-                "hradiště"
+                "hillfort"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -606,7 +612,7 @@
                 "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -618,13 +624,13 @@
         "original_text": "celé prozkoumat plošným odkryvem při čemž byde naděje objeviti i",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plošným odkryvem"
+                "plošný odkryv"
             ],
             "extracted_keywords_en": [
                 "total excavation"
             ],
             "teater_category": "plošný odkryv",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -637,14 +643,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kostel",
-                "hrobové akumulace"
+                "hrobová akumulace"
             ],
             "extracted_keywords_en": [
                 "church",
                 "burial accumulation"
             ],
             "teater_category": "kostel",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -674,13 +680,13 @@
         "original_text": "fosfátové metody.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fosfátové metody"
+                "fosfátová metoda"
             ],
             "extracted_keywords_en": [
                 "phosphate method"
             ],
             "teater_category": "geochemický průzkum",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -709,10 +715,10 @@
                 "sondy"
             ],
             "extracted_keywords_en": [
-                "sondy"
+                "trenches"
             ],
             "teater_category": "sonda",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     }
 ]

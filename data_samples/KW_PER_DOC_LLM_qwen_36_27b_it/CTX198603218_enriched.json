@@ -7,16 +7,8 @@
         "quality_score": 0.0,
         "original_text": "479. TUROVEC, o. Nová Ves u Chýnova, okr. Tábor",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Turovec",
-                "Nová Ves u Chýnova",
-                "Tábor"
-            ],
-            "extracted_keywords_en": [
-                "Turovec",
-                "Nová Ves u Chýnova",
-                "Tábor"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -30,34 +22,12 @@
         "original_text": "1980-81 - KULT: Středověk. LOK: ZSV Kravín, ca 6,5km JV od Tábora; Ikm sev. od silnice",
         "enrichment": {
             "extracted_keywords_cs": [
-                "1980-81",
-                "KULT",
-                "Středověk",
-                "LOK",
-                "ZSV Kravín",
-                "ca 6,5km JV od Tábora",
-                "Ikm sev. od silnice",
-                "Planá n.Luž. - Turovec-Chýnov",
-                "v lese s pomístním názvem",
-                "Stará ves",
-                "Pustá ves",
-                "ZM 23-133 Tábor",
-                "217 od Z a 65 mm od J s.č."
+                "středověk",
+                "zaniklá středověká vesnice"
             ],
             "extracted_keywords_en": [
-                "1980-81",
-                "KULT",
-                "Středověk",
-                "LOK",
-                "ZSV Kravín",
-                "ca 6,5km JV od Tábora",
-                "Ikm sev. od silnice",
-                "Planá n.Luž. - Turovec-Chýnov",
-                "v lese s pomístním názvem",
-                "Stará ves",
-                "Pustá ves",
-                "ZM 23-133 Tábor",
-                "217 od Z a 65 mm od J s.č."
+                "Middle Ages",
+                "deserted medieval village"
             ],
             "teater_category": "středověk",
             "confidence_score": 0.95
@@ -71,18 +41,8 @@
         "quality_score": 0.0,
         "original_text": "Planá n.Luž. - Turovec-Chýnov; v lese s pomístním názvem \"Stará ves\" /\"Pustá ves\"/. ZM 23-133 Tábor,",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Planá n.Luž. - Turovec-Chýnov",
-                "Stará ves",
-                "Pustá ves",
-                "ZM 23-133 Tábor"
-            ],
-            "extracted_keywords_en": [
-                "Planá n.Luž. - Turovec-Chýnov",
-                "Stará ves",
-                "Pustá ves",
-                "ZM 23-133 Tábor"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
@@ -97,11 +57,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Systematický výzkum",
-                "zaniklé středověké vesnice",
+                "zaniklá středověká vesnice",
                 "Kravín"
             ],
             "extracted_keywords_en": [
-                "Systematic survey",
+                "systematic survey",
                 "deserted medieval village",
                 "Kravín"
             ],
@@ -118,13 +78,15 @@
         "original_text": "Po předchozích výzkumech v letech 1965-1967 a 1973-1974 odkryt jeden z dalších objektů ZSV, tentokrát",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekt ZSV"
+                "objekt",
+                "zaniklá středověká vesnice"
             ],
             "extracted_keywords_en": [
-                "ZSV feature"
+                "feature",
+                "deserted medieval village"
             ],
             "teater_category": "zaniklý/historický areál",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -136,16 +98,12 @@
         "original_text": "jako součást \"Experimentu na středověkém objektu\", prováděném ve spolupráci AÚ ČSAV Praha a MHRH",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Experiment na středověkém objektu",
-                "AÚ ČSAV Praha",
-                "MHRH Tábor"
+                "Experiment na středověkém objektu"
             ],
             "extracted_keywords_en": [
-                "Experiment on a medieval feature",
-                "Institute of Archaeology of the Czechoslovak Academy of Sciences Prague",
-                "Regional Museum of the South Bohemian Region Tábor"
+                "Experiment on a medieval feature"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
+            "teater_category": "experimentální archeologie",
             "confidence_score": 0.95
         }
     },
@@ -158,7 +116,7 @@
         "original_text": "Tábor. Výzkumem měla být ověřena vypovídací schopnost geodeticko-topografického průzkumu v detailní",
         "enrichment": {
             "extracted_keywords_cs": [
-                "geodeticko-topografického průzkumu"
+                "geodeticko-topografický průzkum"
             ],
             "extracted_keywords_en": [
                 "geodetic-topographic survey"
@@ -177,9 +135,9 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "objekt",
-                "Archeologický výzkum",
-                "výzkumného úkolu",
-                "systematického zkoumání"
+                "archeologický výzkum",
+                "výzkumný úkol",
+                "systematické zkoumání"
             ],
             "extracted_keywords_en": [
                 "feature",
@@ -187,8 +145,8 @@
                 "research task",
                 "systematic study"
             ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.95
+            "teater_category": "objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -200,20 +158,16 @@
         "original_text": "ZSV tzv. husitského období na Táborskú. Výzkumem byl zjištěn jednoprostorový obytný objekt zemnicové-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ZSV",
-                "husitského období",
-                "Táborsku",
+                "husitské období",
                 "obytný objekt",
-                "zemnicového typu"
+                "zemnice"
             ],
             "extracted_keywords_en": [
-                "ZSV",
                 "Hussite period",
-                "Tábor region",
                 "residential feature",
-                "pit-house type"
+                "pit house"
             ],
-            "teater_category": "budova obytná",
+            "teater_category": "(polo)zemnice",
             "confidence_score": 0.95
         }
     },
@@ -235,9 +189,9 @@
                 "fireplace",
                 "storage pit",
                 "entrance neck",
-                "stone plinth"
+                "stone floor"
             ],
-            "teater_category": "budova obytná",
+            "teater_category": "ohniště",
             "confidence_score": 0.95
         }
     },
@@ -250,16 +204,12 @@
         "original_text": "podpovrchových částí stěn. Objekt dosahoval rozměrů 500-540 x 220-270 cm s delší osou V - Z. Jihovýchodně",
         "enrichment": {
             "extracted_keywords_cs": [
-                "podpovrchových částí stěn",
-                "Objekt",
-                "500-540 x 220-270 cm",
-                "delší osou V - Z"
+                "objekt",
+                "stěny"
             ],
             "extracted_keywords_en": [
-                "subsurface parts of walls",
-                "Feature",
-                "500-540 x 220-270 cm",
-                "longer axis E - W"
+                "feature",
+                "walls"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -274,15 +224,15 @@
         "original_text": "od tohoto objektu, 350 cm od stěn a 250 cm od počátku vchodu do něj, byly odkryty zbytky povrchové stavby.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekt",
-                "zbytky povrchové stavby"
+                "zbytky",
+                "povrchová stavba"
             ],
             "extracted_keywords_en": [
-                "feature",
-                "remains of surface structure"
+                "remains",
+                "surface building"
             ],
             "teater_category": "budova obytná",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -294,14 +244,14 @@
         "original_text": "Rozkládala se na ploše cca 500 x 500 cm a její stěny byly shodně orientovány s obytným objektem. Získaný",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ploše",
+                "plocha",
                 "stěny",
-                "obytným objektem"
+                "obytný objekt"
             ],
             "extracted_keywords_en": [
                 "area",
                 "walls",
-                "residential object"
+                "residential building"
             ],
             "teater_category": "budova obytná",
             "confidence_score": 0.95
@@ -316,13 +266,13 @@
         "original_text": "materiál této sídelní jednotky /dům + oddělená hospodářská stavba/ je datován do první poloviny 15.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště",
+                "sídelní jednotka",
                 "dům",
                 "hospodářská stavba",
                 "první polovina 15. století"
             ],
             "extracted_keywords_en": [
-                "settlement",
+                "settlement unit",
                 "house",
                 "non-residential building",
                 "first half of the 15th century"
@@ -340,10 +290,12 @@
         "original_text": "století. Mezi objekty č. 1 /dům/ a č. 3 /povrchová stavba/byla odkryta oválná studna, prostě vyhloubená",
         "enrichment": {
             "extracted_keywords_cs": [
-                "studna"
+                "studna",
+                "oválná studna"
             ],
             "extracted_keywords_en": [
-                "water well"
+                "well",
+                "oval well"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -359,21 +311,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "studna",
-                "podloží",
-                "průměr",
-                "hloubka",
-                "dna",
-                "kruhovité",
-                "zahloubení"
+                "kruhovité zahloubení",
+                "odkalovač"
             ],
             "extracted_keywords_en": [
-                "water well",
-                "subsoil",
-                "diameter",
-                "depth",
-                "bottom",
-                "circular",
-                "sunken feature"
+                "well",
+                "circular depression",
+                "sluice"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -390,14 +334,14 @@
             "extracted_keywords_cs": [
                 "zahloubení",
                 "odkalovač",
-                "konec 13."
+                "konec 13. století"
             ],
             "extracted_keywords_en": [
                 "sunken feature",
                 "silt trap",
-                "end of 13th century"
+                "end of the 13th century"
             ],
-            "teater_category": "studna",
+            "teater_category": "zahloubený objekt",
             "confidence_score": 0.95
         }
     },
@@ -410,13 +354,15 @@
         "original_text": "či na přelom 13.-14. stol. V roce 1981 byla dále provedena preparace částí objektů z let 1973-1974a u jednoho",
         "enrichment": {
             "extracted_keywords_cs": [
-                "13.-14. stol."
+                "preparace",
+                "objekty"
             ],
             "extracted_keywords_en": [
-                "13th-14th century"
+                "preparation",
+                "features"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "teater_category": "objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -432,7 +378,7 @@
                 "kamení"
             ],
             "extracted_keywords_en": [
-                "water well",
+                "well",
                 "stone"
             ],
             "teater_category": "studna",
@@ -448,14 +394,14 @@
         "original_text": "průměru 80-90cm. Materiál datuje objekt do první poloviny 15. stol. ULOŽ: MHRH Tábor. LIT: Shrnuta",
         "enrichment": {
             "extracted_keywords_cs": [
-                "průměru 80-90cm",
-                "Materiál",
+                "průměr",
+                "materiál",
                 "objekt",
-                "první poloviny 15. stol."
+                "první polovina 15. století"
             ],
             "extracted_keywords_en": [
-                "diameter 80-90cm",
-                "Material",
+                "diameter",
+                "material",
                 "feature",
                 "first half of the 15th century"
             ],
@@ -471,12 +417,8 @@
         "quality_score": 0.0,
         "original_text": "in: Krajíc R. , Přehled archeologických výzkumů středověku na Táborskú/se zaměřením na ZSO/, Archeologické",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Krajíc R. , Přehled archeologických výzkumů středověku na Táborskú/se zaměřením na ZSO/, Archeologické"
-            ],
-            "extracted_keywords_en": [
-                "Krajíc R. , Přehled archeologických výzkumů středověku na Táborskú/se zaměřením na ZSO/, Archeologické"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -489,16 +431,10 @@
         "quality_score": 0.0,
         "original_text": "výzkumy v jižních Čechách 1, 1983, 101-105.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výzkumy",
-                "jižních Čechách"
-            ],
-            "extracted_keywords_en": [
-                "research",
-                "Southern Bohemia"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -509,12 +445,8 @@
         "quality_score": 0.0,
         "original_text": "R. Krajíc",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "R. Krajíc"
-            ],
-            "extracted_keywords_en": [
-                "R. Krajíc"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }

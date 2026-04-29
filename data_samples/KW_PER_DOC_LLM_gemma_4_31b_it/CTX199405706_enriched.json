@@ -7,12 +7,8 @@
         "quality_score": 0.0,
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ONDREJOV"
-            ],
-            "extracted_keywords_en": [
-                "ONDREJOV"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -26,13 +22,13 @@
         "original_text": "504/1 DAT: 1820. KULT: 7. LOK: Bubníkova usedlost. NALEZ: kostr. hrob.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kostr. hrob"
+                "kostrový hrob"
             ],
             "extracted_keywords_en": [
                 "inhumation burial"
             ],
             "teater_category": "pohřeb kostrový",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -44,13 +40,13 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrnčíř, pece"
+                "základ hrnčířské pece"
             ],
             "extracted_keywords_en": [
-                "pottery kiln"
+                "pottery kiln foundation"
             ],
             "teater_category": "pec hrnčířská",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     }
 ]

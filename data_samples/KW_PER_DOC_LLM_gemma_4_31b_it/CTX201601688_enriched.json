@@ -25,7 +25,7 @@
                 "Hrad"
             ],
             "extracted_keywords_en": [
-                "Hrad"
+                "castle"
             ],
             "teater_category": "hrad",
             "confidence_score": 1.0
@@ -173,16 +173,10 @@
         "quality_score": 0.0,
         "original_text": "Oglejené půdy na fylitech ( NÁLEVKA, B. 1977: Půdní poměry, in: Příroda Orlických hor a",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "půdy",
-                "fylity"
-            ],
-            "extracted_keywords_en": [
-                "půdy",
-                "fylity"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -223,16 +217,18 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "Hrad",
+                "ostrožní hrad",
                 "předhradí",
                 "hradní areál"
             ],
             "extracted_keywords_en": [
                 "castle",
+                "spur castle",
                 "outer bailey",
                 "castle area"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -286,13 +282,13 @@
         "original_text": "Sběr.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Sběr"
+                "sběr"
             ],
             "extracted_keywords_en": [
-                "Sběr"
+                "collection"
             ],
             "teater_category": "povrchový sběr",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -303,10 +299,14 @@
         "quality_score": 0.0,
         "original_text": "1. Sběr J. Slavík, Památkový ústav Pardubice.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Sběr"
+            ],
+            "extracted_keywords_en": [
+                "collection"
+            ],
+            "teater_category": "povrchový sběr",
+            "confidence_score": 0.85
         }
     },
     {
@@ -317,10 +317,14 @@
         "quality_score": 0.0,
         "original_text": "2. Sběr archeologický kroužek Villa Nova pod vedením D. Vícha.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Sběr archeologický"
+            ],
+            "extracted_keywords_en": [
+                "archaeological collection"
+            ],
+            "teater_category": "povrchový sběr",
+            "confidence_score": 0.85
         }
     },
     {
@@ -360,7 +364,7 @@
         "original_text": "Povrchový sběr.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Povrchový sběr"
+                "povrchový sběr"
             ],
             "extracted_keywords_en": [
                 "surface collection survey"
@@ -377,10 +381,14 @@
         "quality_score": 0.0,
         "original_text": "Zaměření",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "zaměření"
+            ],
+            "extracted_keywords_en": [
+                "survey"
+            ],
+            "teater_category": "geodetický průzkum",
+            "confidence_score": 0.85
         }
     },
     {
@@ -392,13 +400,13 @@
         "original_text": "Zaměření provedla autorka zprávy dle popisu sběračů do plánů hradu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradu"
+                "plány hradu"
             ],
             "extracted_keywords_en": [
-                "castle"
+                "castle plans"
             ],
-            "teater_category": "hrad",
-            "confidence_score": 1.0
+            "teater_category": "plány",
+            "confidence_score": 0.85
         }
     },
     {
@@ -429,12 +437,12 @@
                 "hrad"
             ],
             "extracted_keywords_en": [
-                "příkop",
-                "předhradí",
-                "hrad"
+                "moat",
+                "outer bailey",
+                "castle"
             ],
             "teater_category": "příkop",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -446,13 +454,13 @@
         "original_text": "plánek polohy 1). Nalezeny 4 fragmenty keramiky. 5. 3. 1998",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramiky"
-            ],
-            "extracted_keywords_en": [
                 "keramika"
             ],
+            "extracted_keywords_en": [
+                "ceramic"
+            ],
             "teater_category": "keramika",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -467,10 +475,10 @@
                 "Sběr archeologický"
             ],
             "extracted_keywords_en": [
-                "Sběr archeologický"
+                "archaeological survey"
             ],
             "teater_category": "povrchový sběr",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -482,13 +490,17 @@
         "original_text": "k vesnici (viz. plánek poloha 2). Nalezeno 14 drobnějších fragmentů, okraje a zl.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "fragmentů"
+                "fragmenty",
+                "okraje",
+                "zlomky"
             ],
             "extracted_keywords_en": [
-                "fragments"
+                "fragments",
+                "rims",
+                "shards"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.8
+            "confidence_score": 0.85
         }
     },
     {
@@ -506,7 +518,7 @@
                 "storage vessel"
             ],
             "teater_category": "zásobnice",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -518,15 +530,15 @@
         "original_text": "3. Sběr J. Slavík, jádro hradu (viz plánek polohy 3). Nalezeny 3 fragmenty keramiky. 5.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jádro hradu",
-                "fragmenty keramiky"
+                "hrad",
+                "keramika"
             ],
             "extracted_keywords_en": [
-                "castle core",
-                "pottery fragments"
+                "castle",
+                "ceramic"
             ],
             "teater_category": "hrad",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -553,8 +565,8 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zlomky keramiky",
-                "kulturních vrstev",
-                "hradu"
+                "kulturní vrstvy",
+                "hrad"
             ],
             "extracted_keywords_en": [
                 "potsherds",
@@ -562,7 +574,7 @@
                 "castle"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -574,13 +586,13 @@
         "original_text": "převaha zl. z 15. stol.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zl. (zlomky keramiky)"
-            ],
-            "extracted_keywords_en": [
                 "zlomky keramiky"
             ],
+            "extracted_keywords_en": [
+                "potsherds"
+            ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -721,7 +733,7 @@
                 "keramika"
             ],
             "extracted_keywords_en": [
-                "keramika"
+                "ceramic"
             ],
             "teater_category": "keramika",
             "confidence_score": 1.0
@@ -824,13 +836,15 @@
         "original_text": "3 atypické zlomky z výdutí",
         "enrichment": {
             "extracted_keywords_cs": [
-                "atypické zlomky"
+                "zlomky",
+                "nádob"
             ],
             "extracted_keywords_en": [
-                "atypical fragments"
+                "fragments",
+                "vessels"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -845,10 +859,10 @@
                 "nádob"
             ],
             "extracted_keywords_en": [
-                "nádob"
+                "vessels"
             ],
             "teater_category": "nádoba",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -860,13 +874,15 @@
         "original_text": "zboží, 2. pol. 15. stol. + zlomek",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zboží"
+                "zboží",
+                "zlomek"
             ],
             "extracted_keywords_en": [
-                "zboží"
+                "ware",
+                "fragment"
             ],
-            "teater_category": "nádoba",
-            "confidence_score": 0.6
+            "teater_category": "zlomek keramiky",
+            "confidence_score": 0.85
         }
     },
     {
@@ -878,13 +894,15 @@
         "original_text": "okraje - velmi nizké vysazené",
         "enrichment": {
             "extracted_keywords_cs": [
-                "okraje"
+                "okraje",
+                "vysazené okruží"
             ],
             "extracted_keywords_en": [
-                "okraje"
+                "rims",
+                "everted rim"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.8
+            "confidence_score": 0.85
         }
     },
     {
@@ -900,11 +918,11 @@
                 "červená linka"
             ],
             "extracted_keywords_en": [
-                "okruží",
-                "červená linka"
+                "rim",
+                "red line"
             ],
-            "teater_category": "nízká výpovědní hodnota",
-            "confidence_score": 0.6
+            "teater_category": "konvice",
+            "confidence_score": 0.75
         }
     },
     {
@@ -933,7 +951,7 @@
                 "keramika"
             ],
             "extracted_keywords_en": [
-                "keramika"
+                "ceramic"
             ],
             "teater_category": "keramika",
             "confidence_score": 1.0
@@ -979,10 +997,14 @@
         "quality_score": 0.0,
         "original_text": "sběr arch.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "sběr"
+            ],
+            "extracted_keywords_en": [
+                "collection"
+            ],
+            "teater_category": "povrchový sběr",
+            "confidence_score": 0.85
         }
     },
     {
@@ -997,10 +1019,10 @@
                 "kroužek"
             ],
             "extracted_keywords_en": [
-                "kroužek"
+                "ring"
             ],
             "teater_category": "korálek",
-            "confidence_score": 0.7
+            "confidence_score": 0.75
         }
     },
     {
@@ -1040,10 +1062,10 @@
         "original_text": "14 atypických zlomků keramiky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "atypických zlomků keramiky"
+                "zlomků keramiky"
             ],
             "extracted_keywords_en": [
-                "atypical pottery fragments"
+                "potsherds"
             ],
             "teater_category": "zlomek keramiky",
             "confidence_score": 1.0
@@ -1073,14 +1095,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zásobnice",
-                "okrajů"
+                "okraje"
             ],
             "extracted_keywords_en": [
                 "storage vessel",
                 "rims"
             ],
             "teater_category": "zásobnice",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1096,11 +1118,11 @@
                 "mísa"
             ],
             "extracted_keywords_en": [
-                "okruží",
-                "mísa"
+                "rim",
+                "bowl"
             ],
             "teater_category": "mísa",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -1114,15 +1136,15 @@
             "extracted_keywords_cs": [
                 "okraj",
                 "ucho",
-                "výdutě"
+                "výdutě nádob"
             ],
             "extracted_keywords_en": [
                 "rim",
                 "handle",
-                "bulge"
+                "vessel bulges"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -1137,10 +1159,10 @@
                 "nádob"
             ],
             "extracted_keywords_en": [
-                "nádob"
+                "vessels"
             ],
             "teater_category": "nádoba",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1279,10 +1301,10 @@
                 "zlomky"
             ],
             "extracted_keywords_en": [
-                "zlomky"
+                "fragments"
             ],
-            "teater_category": "zlomek keramiky",
-            "confidence_score": 0.9
+            "teater_category": "amorfní zlomek/předmět",
+            "confidence_score": 0.85
         }
     },
     {
@@ -1297,10 +1319,10 @@
                 "zlomek dna"
             ],
             "extracted_keywords_en": [
-                "zlomek dna"
+                "bottom fragment"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -1340,13 +1362,15 @@
         "original_text": "Obr. 1. SKUHROV NAD BĚLOU hrad, sběry 1998. Umístění lokality a plánek hradu se zákresem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrad"
+                "hrad",
+                "plánek hradu"
             ],
             "extracted_keywords_en": [
-                "castle"
+                "castle",
+                "castle plan"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1378,7 +1402,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1396,7 +1420,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1414,7 +1438,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1474,7 +1498,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1489,10 +1513,10 @@
                 "sběry"
             ],
             "extracted_keywords_en": [
-                "sběry"
+                "surface collection"
             ],
             "teater_category": "povrchový sběr",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -1510,7 +1534,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1528,7 +1552,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1539,12 +1563,8 @@
         "quality_score": 0.0,
         "original_text": "Skulrov nD-lou,",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Skulrov nD-lou"
-            ],
-            "extracted_keywords_en": [
-                "Skulrov nD-lou"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -1564,7 +1584,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -1596,7 +1616,7 @@
                 "castle"
             ],
             "teater_category": "hrad",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     }
 ]

@@ -232,7 +232,7 @@
                 "bones"
             ],
             "teater_category": "kost",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -299,14 +299,10 @@
         "quality_score": 0.0,
         "original_text": "Dno 20. dubna l%0 jsem na výsva správee 6kresního muzea v Blovi-",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Dno"
-            ],
-            "extracted_keywords_en": [
-                "dno sondy"
-            ],
-            "teater_category": "dno sondy",
-            "confidence_score": 0.8
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -318,13 +314,13 @@
         "original_text": "eích o ním prohlódla zříceninu hrd \"ku Poten3te jna, k.o. Žinkovy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zříceninu hrd"
+                "zřícenina hradu"
             ],
             "extracted_keywords_en": [
-                "zříceninu hrd"
+                "castle ruins"
             ],
             "teater_category": "hrad",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -336,13 +332,15 @@
         "original_text": "Ze zřiceníny \"je odkryto adivo v Síří asi 2 m tvořící téměž tverec",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zřicenina"
+                "zřizenina",
+                "divo"
             ],
             "extracted_keywords_en": [
-                "zřicenina"
+                "ruins",
+                "masonry"
             ],
-            "teater_category": "zaniklý/historický areál",
-            "confidence_score": 1.0
+            "teater_category": "pozůstatek sídliště",
+            "confidence_score": 0.85
         }
     },
     {
@@ -353,10 +351,14 @@
         "quality_score": 0.0,
         "original_text": "o straně 40 - 50 m s vehodem ve výchoní stně. V zemině ol hozené při",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "zdivo"
+            ],
+            "extracted_keywords_en": [
+                "masonry"
+            ],
+            "teater_category": "konstrukce kamenná",
+            "confidence_score": 0.85
         }
     },
     {
@@ -368,14 +370,14 @@
         "original_text": "o krývání alive jsme nalez2í ein slomkry keramiky posdn hradištní",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramiky",
-                "posdn hradištní"
+                "zlomky keramiky",
+                "pozdní hradištní"
             ],
             "extracted_keywords_en": [
-                "ceramics",
+                "potsherds",
                 "Final Hillfort Period"
             ],
-            "teater_category": "keramika",
+            "teater_category": "zlomek keramiky",
             "confidence_score": 0.95
         }
     },
@@ -388,15 +390,15 @@
         "original_text": "ho a atředověkého charaktera a četné zvířeeí kost1. rádei je",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramiky",
-                "zvířecí kost"
+                "keramika",
+                "zvířecí kosti"
             ],
             "extracted_keywords_en": [
                 "ceramic",
-                "animal bone"
+                "animal bones"
             ],
-            "teater_category": "keramika",
-            "confidence_score": 1.0
+            "teater_category": "kulturní vrstva/objekt",
+            "confidence_score": 0.85
         }
     },
     {
@@ -411,10 +413,10 @@
                 "ostrožna"
             ],
             "extracted_keywords_en": [
-                "ostrožna"
+                "promontory"
             ],
             "teater_category": "nespecifikovaný reliéfní útvar",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -426,15 +428,15 @@
         "original_text": "k dnešnímu zámkcu. Od východu je chránn mohutnýn příčným valen se",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zámkcu",
-                "valen"
-            ],
-            "extracted_keywords_en": [
                 "zámek",
                 "val"
             ],
+            "extracted_keywords_en": [
+                "chateau",
+                "rampart"
+            ],
             "teater_category": "val",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -446,13 +448,15 @@
         "original_text": "širokým příkopem; popsaná stavba není na nejvyšším bode ostrožny.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příkopem"
+                "příkop",
+                "stavba"
             ],
             "extracted_keywords_en": [
-                "ditch"
+                "moat",
+                "building"
             ],
             "teater_category": "příkop",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -467,10 +471,10 @@
                 "zbytky zdi"
             ],
             "extracted_keywords_en": [
-                "remains of wall"
+                "wall remains"
             ],
             "teater_category": "ohradní zeď/plot",
-            "confidence_score": 0.8
+            "confidence_score": 0.75
         }
     },
     {
@@ -484,7 +488,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -496,15 +500,17 @@
         "original_text": "pravpodobně kryje zíeeniny njakých dalších stavb. Val, který",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zíeeniny stavb",
+                "zíeeniny",
+                "stavb",
                 "Val"
             ],
             "extracted_keywords_en": [
-                "zíeeniny stavb",
-                "Val"
+                "ruins",
+                "buildings",
+                "rampart"
             ],
             "teater_category": "val",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -522,7 +528,7 @@
                 "rampart"
             ],
             "teater_category": "val",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -534,13 +540,13 @@
         "original_text": "ný je val vnější.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "val"
+                "val vnější"
             ],
             "extracted_keywords_en": [
-                "val"
+                "outer rampart"
             ],
             "teater_category": "val",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -551,10 +557,14 @@
         "quality_score": 0.0,
         "original_text": "fálezy ze sběru byly předány Ol v Blovicích.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "sběru"
+            ],
+            "extracted_keywords_en": [
+                "collection"
+            ],
+            "teater_category": "povrchový sběr",
+            "confidence_score": 0.75
         }
     },
     {
@@ -571,8 +581,8 @@
             "extracted_keywords_en": [
                 "Hrúdek"
             ],
-            "teater_category": "hrad",
-            "confidence_score": 0.8
+            "teater_category": "tvrz/hrádek",
+            "confidence_score": 0.85
         }
     },
     {
@@ -612,13 +622,15 @@
         "original_text": "Pokud nálezy hradištní keranikry souvisí se hrdkem, nebo pokud by",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramika"
+                "hradištní keramika",
+                "hrádek"
             ],
             "extracted_keywords_en": [
-                "hillfort ceramics"
+                "hillfort ceramics",
+                "small fort"
             ],
             "teater_category": "keramika",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {

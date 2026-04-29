@@ -176,13 +176,13 @@
         "original_text": "VĚC: zpráva o provedení záchranného archeologického výzkumu při akci - Čáslav - novostavba",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného archeologického výzkumu"
+                "záchranný archeologický výzkum"
             ],
             "extracted_keywords_en": [
-                "rescue archaeological research"
+                "rescue archaeological survey"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -193,13 +193,9 @@
         "quality_score": 0.0,
         "original_text": "rodinného domu na ppč. 1642/17,18 v k.ú. Čáslav.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "k.ú. Čáslav"
-            ],
-            "extracted_keywords_en": [
-                "k.ú. Čáslav"
-            ],
-            "teater_category": "katastrální území",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -268,15 +264,17 @@
         "original_text": "k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pravěkého osídlení",
-                "středověkého osídlení"
+                "pravěk",
+                "středověk",
+                "osídlení"
             ],
             "extracted_keywords_en": [
-                "prehistoric settlement",
-                "medieval settlement"
+                "prehistory",
+                "Middle Ages",
+                "settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -290,7 +288,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -302,13 +300,19 @@
         "original_text": "Archeologický dohled při stavbě proběhl formou revize (20.6.2014) skrývky ornice a výkopů základových",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Archeologický dohled"
+                "Archeologický dohled",
+                "revize",
+                "skrývka ornice",
+                "výkop základů"
             ],
             "extracted_keywords_en": [
-                "Archeologický dohled"
+                "archaeological supervision",
+                "revision",
+                "ploughsoil stripping",
+                "foundation trenches"
             ],
             "teater_category": "terénní zásah",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -320,13 +324,15 @@
         "original_text": "pasů pro rodinný dům. Na profilech výkopů bylo patrné souvrství hnědé ornice s podorničím na intaktním",
         "enrichment": {
             "extracted_keywords_cs": [
-                "souvrství"
+                "souvrství hnědé ornice",
+                "podorničí"
             ],
             "extracted_keywords_en": [
-                "settlement layer/sequence"
+                "brown ploughsoil sequence",
+                "subsoil"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.6
+            "teater_category": "sídlištní vrstva/souvrství",
+            "confidence_score": 0.85
         }
     },
     {
@@ -343,8 +349,8 @@
             "extracted_keywords_en": [
                 "loess"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.85
         }
     },
     {
@@ -439,10 +445,14 @@
         "quality_score": 0.0,
         "original_text": "archeologických památek.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "archeologické památky"
+            ],
+            "extracted_keywords_en": [
+                "archaeological monuments"
+            ],
+            "teater_category": "nemovitá památka",
+            "confidence_score": 0.85
         }
     },
     {

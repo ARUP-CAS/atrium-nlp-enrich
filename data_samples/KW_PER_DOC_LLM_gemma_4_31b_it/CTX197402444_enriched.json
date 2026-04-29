@@ -95,7 +95,7 @@
                 "Lužické sídliště"
             ],
             "extracted_keywords_en": [
-                "Lužické sídliště"
+                "Lusatian settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 1.0
@@ -197,10 +197,10 @@
                 "pískovnu"
             ],
             "extracted_keywords_en": [
-                "pískovnu"
+                "sand pit"
             ],
             "teater_category": "areál těžby",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -212,13 +212,13 @@
         "original_text": "v Opatovicích n.L., známou z velkého záchraného výzkumu AŮ ČSAV",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného výzkumu"
+                "záchranný výzkum"
             ],
             "extracted_keywords_en": [
-                "záchranného výzkumu"
+                "rescue excavation"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -229,10 +229,14 @@
         "quality_score": 0.0,
         "original_text": "v Praze v letech 1956-1959. Tehdy práce v pískovně byla zastavena",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "pískovně"
+            ],
+            "extracted_keywords_en": [
+                "sand pit"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.85
         }
     },
     {
@@ -243,10 +247,14 @@
         "quality_score": 0.0,
         "original_text": "a proto výzkum byl přerušen.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "výzkum"
+            ],
+            "extracted_keywords_en": [
+                "research"
+            ],
+            "teater_category": "průzkum",
+            "confidence_score": 0.85
         }
     },
     {
@@ -257,10 +265,14 @@
         "quality_score": 0.0,
         "original_text": "Zjistili jsme, že práce v pískovně byly obnoveny,",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "pískovně"
+            ],
+            "extracted_keywords_en": [
+                "sand pit"
+            ],
+            "teater_category": "areál těžby",
+            "confidence_score": 0.85
         }
     },
     {
@@ -275,10 +287,10 @@
                 "záchranný výzkum"
             ],
             "extracted_keywords_en": [
-                "záchranný výzkum"
+                "rescue excavation"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -294,11 +306,11 @@
                 "skrývka"
             ],
             "extracted_keywords_en": [
-                "objekty",
-                "skrývka"
+                "features",
+                "hoard"
             ],
             "teater_category": "objekt",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -313,10 +325,10 @@
                 "objekty"
             ],
             "extracted_keywords_en": [
-                "objekty"
+                "features"
             ],
             "teater_category": "objekt",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -341,10 +353,14 @@
         "quality_score": 0.0,
         "original_text": "Podle teréního pozorování",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "terénní pozorování"
+            ],
+            "extracted_keywords_en": [
+                "field observation"
+            ],
+            "teater_category": "vizuální/geodetický průzkum",
+            "confidence_score": 0.85
         }
     },
     {
@@ -377,10 +393,10 @@
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "sídliště"
+                "settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -395,10 +411,10 @@
                 "lžická keramika"
             ],
             "extracted_keywords_en": [
-                "lžická keramika"
+                "Lžice ceramics"
             ],
             "teater_category": "keramika",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -410,13 +426,15 @@
         "original_text": "miku. Další střepy jsme našli na parc.č. 1510, scvernt od pískovny",
         "enrichment": {
             "extracted_keywords_cs": [
+                "keramika",
                 "střepy"
             ],
             "extracted_keywords_en": [
+                "ceramics",
                 "potsherds"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -428,13 +446,13 @@
         "original_text": "Ty však mohou pocházet z rozrušených žárových hrobů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "žárových hrobů"
+                "žárové hroby"
             ],
             "extracted_keywords_en": [
                 "cremation burials"
             ],
             "teater_category": "pohřeb žárový",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -460,13 +478,13 @@
         "original_text": "Výzkum tohoto důležitého lužického sídliště, aby tak byl ukázán",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužického sídliště"
+                "lužické sídliště"
             ],
             "extracted_keywords_en": [
                 "Lusatian settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -478,15 +496,15 @@
         "original_text": "poprvé celý půdorys pravěké vesnice i s pohřebištěm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pravěké vesnice",
-                "pohřebištěm"
+                "pravěká vesnice",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
                 "prehistoric village",
                 "cemetery"
             ],
-            "teater_category": "vesnice/městečko",
-            "confidence_score": 0.9
+            "teater_category": "sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -543,10 +561,10 @@
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "sídliště"
+                "settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -575,10 +593,10 @@
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "sídliště"
+                "settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {

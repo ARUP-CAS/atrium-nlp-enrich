@@ -120,15 +120,15 @@
         "original_text": "eneolitických výšinných sídlištích na Blovicku v poříčí Úslavy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneolitických",
-                "výšinných sídlištích"
+                "eneolitická",
+                "výšinná sídliště"
             ],
             "extracted_keywords_en": [
-                "eneolithic",
+                "Eneolithic",
                 "hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -143,10 +143,10 @@
                 "depositem"
             ],
             "extracted_keywords_en": [
-                "depositem"
+                "deposit"
             ],
             "teater_category": "depot",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -162,11 +162,11 @@
                 "doba bronzová"
             ],
             "extracted_keywords_en": [
-                "chamská skupina",
-                "doba bronzová"
+                "Cham group",
+                "Bronze Age"
             ],
             "teater_category": "doba bronzová",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -182,11 +182,11 @@
                 "mohylové bronzy"
             ],
             "extracted_keywords_en": [
-                "depot",
-                "mohylové bronzy"
+                "hoard",
+                "tumulus bronzes"
             ],
             "teater_category": "depot",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -198,13 +198,15 @@
         "original_text": "Mladší pravěké kultury nejsou zastoupeny, středověk jen drobnými",
         "enrichment": {
             "extracted_keywords_cs": [
+                "pravěké kultury",
                 "středověk"
             ],
             "extracted_keywords_en": [
-                "středověk"
+                "prehistoric cultures",
+                "Middle Ages"
             ],
-            "teater_category": "středověk",
-            "confidence_score": 1.0
+            "teater_category": "pravěk",
+            "confidence_score": 0.85
         }
     },
     {
@@ -218,7 +220,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -246,7 +248,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -261,10 +263,10 @@
                 "výzkum"
             ],
             "extracted_keywords_en": [
-                "výzkum"
+                "survey"
             ],
             "teater_category": "průzkum",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     },
     {
@@ -276,15 +278,13 @@
         "original_text": "kv zavádí k nežádoucím drobným výkopům. Ústavní depositum /Srby/ shledáno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výkopům",
-                "depositum"
+                "výkopům"
             ],
             "extracted_keywords_en": [
-                "výkopům",
-                "depositum"
+                "excavations"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "výkop",
+            "confidence_score": 0.85
         }
     },
     {
@@ -324,15 +324,15 @@
         "original_text": "Bzí - drobné nálezy z eneol. výšinnéhoj sídliště . _",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneol",
-                "výšinného sídliště"
+                "eneolit",
+                "výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "eneolithic",
+                "Eneolithic",
                 "hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -344,13 +344,15 @@
         "original_text": "větší soubor z eneol.výš.sídliště - publ. Masek,AR IV 1962",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneol.výš.sídliště"
+                "eneolit",
+                "výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "eneol.výš.sídliště"
+                "Eneolithic",
+                "hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -362,13 +364,15 @@
         "original_text": "Vlkov- sběry z en eol.výš. sídli ště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneol.výš. sídli ště"
+                "eneolit",
+                "výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "eneol.výš. sídli ště"
+                "Eneolithic",
+                "hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -380,13 +384,13 @@
         "original_text": "Polanka u Blovic - sběry z eneol.výs.sídliste",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneol.výs.sídliste"
+                "eneolické výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "eneol.výs.sídliste"
+                "Eneolithic hill settlement"
             ],
             "teater_category": "výšinné sídliště",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -398,13 +402,13 @@
         "original_text": "ojedinělé kam. nástroje - Plo víc e-Hradiš tě. Spálené. Poříčí.,. Ralov, dí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kam. nástroje"
+                "kamenné nástroje"
             ],
             "extracted_keywords_en": [
-                "kam. nástroje"
+                "stone tools"
             ],
             "teater_category": "kámen štípaný",
-            "confidence_score": 0.9
+            "confidence_score": 0.85
         }
     },
     {
@@ -431,18 +435,20 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "bronz",
+                "terčoví",
                 "jehlice",
-                "jehlice",
-                "nátamek"
+                "pečetítkové jehlice",
+                "tyčinkový nátěm"
             ],
             "extracted_keywords_en": [
                 "bronze",
-                "clothing pin",
-                "clothing pin",
-                "earring"
+                "disc",
+                "needle",
+                "seal-needle",
+                "rod-shaped ornament"
             ],
             "teater_category": "bronz",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -458,11 +464,11 @@
                 "střední d.bronz"
             ],
             "extracted_keywords_en": [
-                "mohyly",
-                "střední d.bronz"
+                "burial mound",
+                "Middle Bronze Age"
             ],
             "teater_category": "mohyla",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -476,8 +482,8 @@
             "extracted_keywords_cs": [
                 "bronz",
                 "depot",
-                "střední d.bronz",
-                "mladší d.bronz"
+                "střední doba bronzová",
+                "mladší doba bronzová"
             ],
             "extracted_keywords_en": [
                 "bronze",
@@ -486,7 +492,7 @@
                 "Late Bronze Age"
             ],
             "teater_category": "depot",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -512,15 +518,15 @@
         "original_text": "Vrtěšíce - ojeď.nález bronz.oštěpu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ojeď.nález",
-                "bronz.oštěpu"
+                "ojedinělý nález",
+                "bronzový oštěp"
             ],
             "extracted_keywords_en": [
                 "single find",
                 "bronze javelin"
             ],
             "teater_category": "ojedinělý nález",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -533,14 +539,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "středověká keramika",
-                "mohyl"
+                "mohyla"
             ],
             "extracted_keywords_en": [
                 "medieval ceramics",
                 "burial mound"
             ],
             "teater_category": "keramika",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -552,13 +558,15 @@
         "original_text": "v muzeu je uložen rukopis zprávy Jana Žáka z r.1881 o výkopech mohyl",
         "enrichment": {
             "extracted_keywords_cs": [
+                "výkopy",
                 "mohyl"
             ],
             "extracted_keywords_en": [
+                "excavations",
                 "burial mounds"
             ],
             "teater_category": "mohyla",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -573,10 +581,10 @@
                 "mohyl"
             ],
             "extracted_keywords_en": [
-                "mohyl"
+                "burial mounds"
             ],
             "teater_category": "mohyla",
-            "confidence_score": 1.0
+            "confidence_score": 0.85
         }
     }
 ]

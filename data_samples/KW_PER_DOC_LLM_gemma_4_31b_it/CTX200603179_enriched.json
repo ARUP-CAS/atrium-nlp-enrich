@@ -39,7 +39,7 @@
                 "nálezová zpráva"
             ],
             "extracted_keywords_en": [
-                "nálezová zpráva"
+                "fieldwork report"
             ],
             "teater_category": "nálezová zpráva",
             "confidence_score": 1.0
@@ -124,10 +124,10 @@
         "original_text": "Katastrální území: Bítov u Koněprus",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Bítov u Koněprus"
+                "katastrální území"
             ],
             "extracted_keywords_en": [
-                "Bítov u Koněprus"
+                "cadastral area"
             ],
             "teater_category": "katastrální území",
             "confidence_score": 1.0
@@ -141,12 +141,8 @@
         "quality_score": 0.0,
         "original_text": "Lokalita:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Lokalita"
-            ],
-            "extracted_keywords_en": [
-                "Lokalita"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
@@ -188,7 +184,7 @@
         "original_text": "Lokalizace v mapě 1:10 000:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mapě"
+                "mapa"
             ],
             "extracted_keywords_en": [
                 "map"
@@ -248,15 +244,15 @@
         "original_text": "Základní metoda archeologického výzkumu, dohled",
         "enrichment": {
             "extracted_keywords_cs": [
-                "archeologického výzkumu",
+                "archeologický výzkum",
                 "dohled"
             ],
             "extracted_keywords_en": [
-                "archeologického výzkumu",
-                "dohled"
+                "archaeological survey",
+                "supervision"
             ],
             "teater_category": "průzkum",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -299,10 +295,10 @@
                 "výkopů"
             ],
             "extracted_keywords_en": [
-                "výkopů"
+                "cuts"
             ],
             "teater_category": "výkop",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -328,13 +324,13 @@
         "original_text": "Zaměřeni bylo provedeno do základní mapy 1:10 000.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mapy"
+                "základní mapa"
             ],
             "extracted_keywords_en": [
-                "map"
+                "basic map"
             ],
             "teater_category": "mapa",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -363,10 +359,10 @@
                 "výkop"
             ],
             "extracted_keywords_en": [
-                "výkop"
+                "cut"
             ],
             "teater_category": "výkop",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -462,13 +458,13 @@
         "original_text": "Dokument je určen pro investora stavby jako doklad realizovaného záchranného",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného"
+                "záchranný výzkum"
             ],
             "extracted_keywords_en": [
-                "rescue"
+                "rescue excavation"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -480,13 +476,13 @@
         "original_text": "výzkumu. Je nedílnou součástí konkrétní stavební akce.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "záchranného výzkumu"
+                "záchranný výzkum"
             ],
             "extracted_keywords_en": [
-                "rescue research"
+                "rescue excavation"
             ],
             "teater_category": "záchranný",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -515,7 +511,7 @@
                 "katastrální území"
             ],
             "extracted_keywords_en": [
-                "katastrální území"
+                "cadastral area"
             ],
             "teater_category": "katastrální území",
             "confidence_score": 1.0
@@ -604,11 +600,11 @@
                 "dohled"
             ],
             "extracted_keywords_en": [
-                "archeologický výzkum",
-                "dohled"
+                "archaeological research",
+                "supervision"
             ],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "teater_category": "průzkum",
+            "confidence_score": 0.95
         }
     },
     {
@@ -633,12 +629,8 @@
         "quality_score": 0.0,
         "original_text": "ZDOKUMENTOVÁNO POUZE GEOLOGICKÉ PODLOŽÍ.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "geologické podloží"
-            ],
-            "extracted_keywords_en": [
-                "geological substrate"
-            ],
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
