@@ -171,8 +171,8 @@ def build_system_prompt(
         "from the marked line. "
         "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
         "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
-        "CRITICAL: If and only if the marked line is purely administrative "
-        "(e.g., page numbers, titles, author names) and lacks archaeological context, "
+        "CRITICAL: If the marked line is purely administrative, a table of contents, a generic heading "
+        "(e.g., page numbers, titles, author names, 'Práce:', 'Obsah:', literature references) or lacks direct archaeological context, "
         "you MUST select 'Nerelevantní (meta-text)'.\n"
         "NEVER select a country name, language name, or geographic region name "
         "as the teater_category for any line — including administrative lines. "
@@ -196,6 +196,8 @@ def build_system_prompt(
     })
 
     for theme, data in vocab_data.items():
+        if theme.lower() == "other":
+            continue
         if isinstance(data, dict):
             if "keywords" in data and isinstance(data["keywords"], dict):
                 cs_list = data["keywords"].get("cs", [])
@@ -290,7 +292,7 @@ def main(config_path: str = "llm_config.txt") -> None:
     # ------------------------------------------------------------------
     config = load_config(config_path)
 
-    MODEL_KEY    = config.get("MODEL_KEY",    "gemma-4-26b-moe-gguf")
+    MODEL_KEY    = config.get("MODEL_KEY",    "qwen-3.6-27b-it")
     HF_TOKEN     = config.get("HF_TOKEN",     os.environ.get("HF_TOKEN", None))
     INPUT_DIR    = Path(config.get("INPUT_DIR",  "data_samples/DOC_LINE_LANG_CLASS"))
     VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")

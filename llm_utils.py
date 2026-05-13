@@ -125,6 +125,14 @@ from vocab_manager import VocabularyManager  # noqa: E402
 # ---------------------------------------------------------------------------
 
 MODEL_REGISTRY: Dict[str, Dict] = {
+    "qwen3-14b": {
+        "hf_id": "OpenPipe/Qwen3-14B-Instruct",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "load_in_4bit": True,
+    },
     "gemma-4-26b-moe-gguf": {
         "hf_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
         "filename": "*Q4_K_M.gguf",
@@ -172,18 +180,11 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.float16,
         "hf_token_required": False,
-        "is_awq": True,           # ← NEW
+        "is_awq": True,
     },
     "qwen-3.5-9b-it": {
         "hf_id": "Qwen/Qwen3.5-9B",
         "context_window": 262144,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "qwen3-14b": {
-        "hf_id": "OpenPipe/Qwen3-14B-Instruct",
-        "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
@@ -196,7 +197,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": False,
     },
     "gemma-4-26b-moe-awq": {
-        "hf_id": "google/gemma-4-26B-A4B-it",   # update to actual AWQ repo when available
+        "hf_id": "google/gemma-4-26B-A4B-it",
         "context_window": 256000,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
@@ -223,17 +224,19 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     # --- Archived / Unsuccessful Models ---
     "bielik-11b-v3.0": {
         "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
-        "context_window": 131072,  # Updated context length
+        "context_window": 131072,
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "load_in_4bit": True,
     },
     "ministral-3-14b": {
         "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
-        "context_window": 131072,  # Updated context length
+        "context_window": 131072,
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "load_in_4bit": True,
     },
     "mistral-nemo-12b": {
         "hf_id": "mistralai/Mistral-Nemo-Instruct-2407",
@@ -535,7 +538,15 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
                 header_lines_added += 1
                 if header_lines_added >= 2:
                     break
-        parts.append("--- LOCAL CONTEXT WINDOW ---")
+
+    current_section = "Unknown Section"
+    for i in range(center_idx - 1, -1, -1):
+        if rows[i].get("categ", "").strip() in {"Header", "Heading"}:
+            current_section = rows[i].get("text", "").strip()
+            break
+
+    parts.append(f"--- CURRENT SECTION: {current_section} ---")
+    parts.append("--- LOCAL CONTEXT WINDOW ---")
 
     for i in range(start, end):
         row = rows[i]
