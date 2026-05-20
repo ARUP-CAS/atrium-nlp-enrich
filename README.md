@@ -39,6 +39,11 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 - [EXTRA: Extract Keywords (KER / YAKE / KeyBERT)](#extra-extract-keywords-ker--yake--keybert)
 - [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv)
 - [EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)](#extra-llm-semantic-enrichment-vocabulary-mapping)
+  - [Configuration ⚙️](#️-configuration-llm_configtxt-)
+  - [Workflow](#-workflow)
+  - [Model Registry](#-model-registry)
+  - [Inputs and Outputs](#-inputs-and-outputs-1)
+  - [Paradata Integration](#-paradata-integration)
 - [Paradata Logs](#paradata-logs)
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
   - [`<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄](#output_dirprocessinglog--human-readable-runtime-log-)
@@ -144,6 +149,16 @@ Before you begin, set up your environment.
     pip install torch          # optional — enables CUDA GPU acceleration
     ```
     The original **legacy KER** backend requires no additional packages.
+
+    For the LLM Semantic Enrichment pipeline, install the inference backend you intend to use:
+    ```bash
+    # Transformers backend — single GPU, models ≤ 31 B (BnB 4-bit / AWQ / GGUF)
+    pip install -r requirements_llm.txt
+
+    # vLLM backend — multi-GPU, large models (≥ 70 B), Automatic Prefix Caching
+    # Replaces lmformatenforcer; uses xgrammar for native guided JSON decoding
+    pip install vllm
+    ```
 3. Review and update the [config_api.env](config_api.env) 📎 file with your specific paths and API configurations.
 You are now ready to start the workflow.
 
@@ -738,32 +753,33 @@ Use flexiconv **before** running this pipeline when:
 ## EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)
 
 > [!NOTE]
-> This is an advanced, optional step. It utilizes local Large Language Models (LLMs) via the 
-> Hugging Face `transformers` library (optimized with Flash Attention 2 for memory efficiency) to semantically analyze text lines and rigidly map them to 
-> a nested, controlled archaeological vocabulary (e.g., TEATER or AMCR).
+> This is an advanced, optional step. It runs a local Large Language Model to
+> semantically analyse each text line and map it to the controlled TEATER/AMCR
+> archaeological vocabulary. Two inference backends are supported:
+> **`transformers`** (HuggingFace + BnB 4-bit, single GPU, models ≤ 31 B) and
+> **`vllm`** (multi-GPU, Automatic Prefix Caching, native guided JSON decoding,
+> models ≥ 70 B or any multi-GPU node).
 
-This pipeline goes beyond traditional keyword extraction by using **Constrained Decoding** (via 
-Pydantic schemas and `lmformatenforcer`). This mathematically guarantees that the LLM only outputs 
-valid JSON structures and exclusively uses permitted terms from the injected hierarchical dictionary,
-entirely eliminating hallucinated formatting.
+This pipeline goes beyond traditional keyword extraction by using **Constrained Decoding**.
+For the `transformers` backend this is implemented via Pydantic schemas and `lmformatenforcer`.
+For the `vllm` backend, guided decoding is handled natively by **xgrammar** inside vLLM —
+no additional library is required. In both cases the model is mathematically prevented from
+producing any token that would violate the predefined JSON structure or select a vocabulary
+term outside the thematic dictionary, entirely eliminating hallucinated formatting.
 
 ### ⚙️ Configuration ([llm_config.txt](llm_config.txt) 📎)
 
-Install the required Python packages (necessary versions are provided in [requirements_llm.txt](requirements_llm.txt) 📎):
-
-```bash
-pip install -r requirements_llm.txt
-```
-
-The pipeline reads its runtime parameters from a plain text configuration file placed in the 
-repository root. This allows you to easily swap the underlying LLM (e.g., `qwen3-14b` or
-`mistral-nemo-12b`) and tweak input filtering to prevent processing uninformative or noisy text.
+The pipeline reads all runtime parameters from `llm_config.txt` in the repository root.
+The minimum required change is `MODEL_KEY`; every other key has a sensible default.
 
 ```text
-# Switch between: qwen3-14b | qwen3-8b | qwen2.5-14b-awq | qwen2.5-7b | mistral-nemo-12b | aya-expanse-8b | bielik-11b-v3.0 | llama3.1-8b | gemma-3-12b-it | ministral-3-14b
-MODEL_KEY=qwen3-14b
+# Single-GPU (BACKEND=transformers): qwen-3.6-27b-it | gemma-4-31b-it | qwen3-14b |
+#                                    qwen-3.5-9b-it | qwen2.5-14b-awq | gemma-3-12b-it
+# MoE / GGUF (single GPU):           gemma-4-26b-moe-gguf | qwen-3.6-35b-moe
+# Multi-GPU (BACKEND=vllm):          qwen3-235b-a22b-fp8 | deepseek-v3 | llama4-maverick | llama3.1-70b
+MODEL_KEY=qwen-3.6-27b-it
 
-# Only needed for gated models like llama3.1-8b
+# Only needed for gated models: gemma-4-*, llama4-maverick, llama3.1-70b
 # HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
 
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
@@ -771,47 +787,134 @@ OUTPUT_DIR=data_samples/KW_PER_DOC_LLM
 VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
 
-# Line Quality Filter Settings
 INCLUDE_NON_TEXT=true
 MIN_CHAR_COUNT=3
 MIN_CHAR_NON_TEXT=8
 MIN_ALPHA_RATIO_NON_TEXT=0.4
+
+# ── Backend ───────────────────────────────────────────────────────────────────
+# transformers  HuggingFace Transformers + BnB 4-bit + lmformatenforcer.
+#               Best for single-GPU runs on models ≤ 31 B.
+# vllm          vLLM + xgrammar guided decoding + Automatic Prefix Caching.
+#               Required for models ≥ 70 B or any multi-GPU node.
+BACKEND=transformers
+
+# ── vLLM-specific (ignored when BACKEND=transformers) ─────────────────────────
+TENSOR_PARALLEL_SIZE=1        # Number of GPUs to shard the model across
+GPU_MEMORY_UTILIZATION=0.90   # Fraction of each GPU's VRAM for the KV cache
+GUIDED_DECODING_BACKEND=xgrammar
+ENABLE_PREFIX_CACHING=true    # Automatic Prefix Caching — highly recommended
+VLLM_BATCH_SIZE=16            # Lines per generate() call; increase on ≥ 160 GB nodes
+# MAX_MODEL_LEN=65536          # Optional: cap context to reduce KV-cache pressure
 ```
 
-### 🗂 Workflow 
+### 🗂 Workflow
 
 **1. Vocabulary Harvesting ([vocab_manager.py](vocab_manager.py) 📎)**
-Before running the inference, the system must build the allowable vocabulary list. The vocabulary 
-manager actively queries upstream APIs (via HTTP GET requests with XML pagination) to fetch 
-Czech-English term pairs from the AMCR endpoint. It then structures them into a nested JSON 
-taxonomy guided by an external configuration ([taxonomy_config.json](data_samples/taxonomy_config.json) 📎) 
-and caches it locally to prevent exhausting the LLM's context window.
+
+Before running inference, build the allowable vocabulary list. The vocabulary manager
+queries the AMCR OAI-PMH endpoint via paginated HTTP GET requests to fetch Czech–English
+term pairs, groups them into a thematic taxonomy guided by
+[taxonomy_config.json](data_samples/taxonomy_config.json) 📎, and caches the result
+locally as `teater_nested_vocab.json`. The cache is written with `sort_keys=True` for
+deterministic diffs, and the serialised prompt string is memoised so repeated reads
+within one pipeline run are free.
 
 ```bash
 python3 vocab_manager.py
 ```
 
 **2. LLM Inference Pipeline ([llm_run.py](llm_run.py) 📎)**
-This script reads the page and line-ordered text chunks from the CSV files. It dynamically 
-filters out lines that are too short or classified as noise based on the config. For valid lines, 
-it injects the nested vocabulary and a sliding window of surrounding document context into the 
-system prompt, and executes the constrained LLM generation. 
 
-> [!TIP] The exact implementations of LLM prompts can 
-> be found in the [llm_utils.py](llm_utils.py) 📎 utilities script file
+Reads the CSV files, filters lines by quality, injects the nested vocabulary and a
+sliding context window into the system prompt, and executes constrained generation.
+Output files are named `<stem>_enriched.json` and written to
+`KW_PER_DOC_LLM_<model_suffix>/`.
+
+> [!TIP]
+> All model-loading logic, constrained-decoding helpers, and prompt templates live in
+> [llm_utils.py](llm_utils.py) 📎 and are shared between both backends.
 
 ```bash
+# Transformers backend (default)
+python3 llm_run.py
+
+# Custom config file
+python3 llm_run.py my_config.txt
+```
+
+**For multi-GPU runs (vLLM backend):**
+
+```bash
+# 1. Edit llm_config.txt:
+#    BACKEND=vllm
+#    MODEL_KEY=qwen3-235b-a22b-fp8
+#    TENSOR_PARALLEL_SIZE=2
+#    ENABLE_PREFIX_CACHING=true
 python3 llm_run.py
 ```
 
+### 🖥 Model Registry
+
+The built-in registry in `llm_utils.py` covers the full range of supported models.
+All VRAM figures assume BnB 4-bit for the transformers backend and FP8/BF16 for vLLM.
+
+#### Single-GPU — `BACKEND=transformers` (or `BACKEND=vllm`)
+
+| Registry key | Model | Size | Context | Est. VRAM | Notes |
+|---|---|---|---|---|---|
+| `qwen-3.6-27b-it` | Qwen/Qwen3.6-27B [^24] | 27 B dense | 262 k | ~18 GB | **Default.** Best accuracy/VRAM ratio on a single GPU. |
+| `gemma-4-31b-it` | google/gemma-4-31B-it [^22] | 31 B dense | 256 k | ~21 GB | Highest single-GPU accuracy. Gated — `HF_TOKEN` required. |
+| `qwen3-14b` | OpenPipe/Qwen3-14B-Instruct [^18] | 14 B dense | 128 k | ~9 GB | Good baseline; thinking mode suppressed automatically. |
+| `qwen-3.5-9b-it` | Qwen/Qwen3.5-9B [^26] | 9 B dense | 262 k | ~6 GB | Entry-level (8 GB VRAM). |
+| `qwen2.5-14b-awq` | Qwen/Qwen2.5-14B-Instruct-AWQ [^12] | 14 B AWQ | 128 k | ~9 GB | Pre-quantized; fast on NVIDIA GPUs. |
+| `gemma-3-12b-it` | google/gemma-3-12b-it [^20] | 12 B dense | 128 k | ~8 GB | Good bilingual extraction. Gated. |
+
+#### MoE models — GGUF / llama.cpp fallback (any GPU, any VRAM)
+
+| Registry key | Model | Active params | Context | Notes |
+|---|---|---|---|---|
+| `gemma-4-26b-moe-gguf` | bartowski/google_gemma-4-26B-A4B-it-GGUF | 4 B | 8 k | BnB 4-bit unsupported (fused experts). Q4_K_M quantization via llama.cpp. |
+
+#### MoE models — `BACKEND=vllm` (single GPU or multi-GPU)
+
+| Registry key | Model | Active params | Context | Notes |
+|---|---|---|---|---|
+| `qwen-3.6-35b-moe` | Qwen/Qwen3.6-35B-A3B [^23] | 3 B | 262 k | 35 B total / 3 B active. Single GPU usually fits. |
+| `gemma-4-26b-moe` | google/gemma-4-26B-A4B-it [^25] | 4 B | 256 k | 26 B total / 4 B active. Gated. |
+
+#### Large models — `BACKEND=vllm`, `TENSOR_PARALLEL_SIZE ≥ 2`
+
+| Registry key | Model | Total / Active | Context | Rec. TP | Notes |
+|---|---|---|---|---|---|
+| `qwen3-235b-a22b-fp8` | Qwen/Qwen3-235B-A22B-Instruct-2507-FP8 [^27] | 235 B / 22 B | 128 k | **2** | **Recommended for 144 GB / 200 GB nodes.** Native FP8 (~117 GB loaded). |
+| `qwen3-235b-a22b` | Qwen/Qwen3-235B-A22B-Instruct-2507 [^27] | 235 B / 22 B | 128 k | 2 | BF16 variant — heavier than FP8. |
+| `deepseek-v3` | deepseek-ai/DeepSeek-V3 [^28] | 671 B MoE / — | 128 k | **4** | FP8 official checkpoint available. 4×80 GB minimum. |
+| `llama4-maverick` | meta-llama/Llama-4-Maverick-17B-128E-Instruct [^29] | 128 experts / 17 B active | 1 M | 2 | Multimodal. 1 M token context. Gated — `HF_TOKEN` required. |
+| `llama3.1-70b` | meta-llama/Meta-Llama-3.1-70B-Instruct [^30] | 70 B dense / — | 128 k | 2 | Also works with `transformers` + 4-bit on 2×40 GB. Gated. |
+
+> [!TIP]
+> **Automatic Prefix Caching (APC)** — enabled by default for the vLLM backend
+> (`ENABLE_PREFIX_CACHING=true`). The system prompt (which embeds the full TEATER
+> vocabulary) is computed once per run; its KV-cache is reused across every line in
+> every document. This is the primary throughput multiplier: on a 500-line document the
+> vocabulary forward pass happens once instead of 500 times. APC also removes the need
+> to truncate the vocabulary to fit the token budget — the full thematic dictionary is
+> injected when APC is active.
+
 ### 📁 Inputs and Outputs
 
-* **Input:** `DOC_LINE_LANG_CLASS/*.csv` (Contains `file_id`, `page_num`, `line_num`, `categ`, 
-`quality_score`, and raw `text`).
-* **Output:** `KW_PER_DOC_LLM_<model_suffix>/*_enriched.json` (An array of highly structured 
-JSON objects securely merging the deterministic CSV metadata with the LLM's semantic extraction).
+* **Input:** `DOC_LINE_LANG_CLASS/*.csv` (contains `file_id`, `page_num`, `line_num`,
+  `categ`, `quality_score`, and raw `text`).
+* **Output:** `KW_PER_DOC_LLM_<model_suffix>/*_enriched.json` — one file per document,
+  containing an array of JSON objects that merge CSV metadata with the LLM's semantic
+  extraction.
+* **Abort sidecar:** `KW_PER_DOC_LLM_<model_suffix>/*_enriched.abort.json` — written
+  alongside the main output **only** when a document is abandoned after 10 consecutive
+  inference errors. Its presence is the canonical signal that the corresponding JSON
+  file contains partial results.
 
-**Example Output Record:**
+**Example output record:**
 ```json
 {
   "file_id": "CTX195603828",
@@ -829,19 +932,30 @@ JSON objects securely merging the deterministic CSV metadata with the LLM's sema
 }
 ```
 
+**Abort sidecar format (`*_enriched.abort.json`):**
+```json
+{
+  "aborted": true,
+  "abort_reason": "10 consecutive inference errors",
+  "processed_before_abort": 42,
+  "errors_before_abort": 10,
+  "timestamp_utc": "2026-05-20T09:14:33"
+}
+```
+
 Output examples per model:
 - [KW_PER_DOC_LLM_qwen3_14b](data_samples/KW_PER_DOC_LLM_qwen3_14b) 📂 by Qwen 3-14B [^18]
-- [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B [^12]
+- [KW_PER_DOC_LLM_qwen2.5-14b-awq](data_samples/KW_PER_DOC_LLM_qwen25_14b_awq) 📂 by Qwen 2.5-14B AWQ [^12]
 - [KW_PER_DOC_LLM_gemma_3_12b_it](data_samples/KW_PER_DOC_LLM_gemma_3_12b_it) 📂 by Gemma 3-12B-IT [^20]
-- [KW_PER_DOC_LLM_qwen_3.6_27b_it](data_samples/KW_PER_DOC_LLM_qwen_36_27b_it) 📂 by Qwen 3.6-27B-IT [^23]
+- [KW_PER_DOC_LLM_qwen_3.6_27b_it](data_samples/KW_PER_DOC_LLM_qwen_36_27b_it) 📂 by Qwen 3.6-27B-IT [^24]
 - [KW_PER_DOC_LLM_gemma_4_31b_it](data_samples/KW_PER_DOC_LLM_gemma_4_31b_it) 📂 by Gemma 4-31B-IT [^22]
 - [KW_PER_DOC_LLM_qwen_3.5_9b_it](data_samples/KW_PER_DOC_LLM_qwen_35_9b_it) 📂 by Qwen 3.5-9B-IT [^26]
 
-To be added:
-- [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MOE [^24]
+Pending (sample runs in progress):
+- [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MoE [^23]
 - [KW_PER_DOC_LLM_gemma_4_26b_a4b_it](data_samples/KW_PER_DOC_LLM_gemma_4_26b_a4b_it) 📂 by Gemma 4-26B-A4B-IT [^25]
 
-Archived (unsuccessful model results):
+Archived (unsuccessful — evaluation notes in issue #6):
 - [KW_PER_DOC_LLM_mistral-nemo-12b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_mistral_nemo_12b) 📂 by Mistral Nemo 12B [^14]
 - [KW_PER_DOC_LLM_aya_expanse_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_aya_expanse_8b) 📂 by Aya Expanse 8B [^15]
 - [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_bielik_11b_v30) 📂 by Bielik 11B v3.0 [^16]
@@ -850,14 +964,19 @@ Archived (unsuccessful model results):
 - [KW_PER_DOC_LLM_qwen3_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 
-
 ### 📊 Paradata Integration
 
-Just like the main shell script pipelines, the LLM enrichment natively hooks into `atrium_paradata.py`. It automatically logs:
-* Full snapshot of [llm_config.txt](llm_config.txt) 📎 and quality filter settings.
+Just like the main shell-script pipelines, LLM enrichment natively hooks into
+`atrium_paradata.py` and automatically logs:
+
+* Full snapshot of [llm_config.txt](llm_config.txt) 📎 and quality-filter settings.
 * Total processed lines (`json` success events).
-* Line-level tracking of errors and skips (e.g., lines skipped due to the quality 
-filter `skipped_filter`, inference faults `skipped_error`, or completely skipped files due to `already_exists`).
+* Per-line tracking of filter skips (`skipped_filter`), inference faults
+  (`skipped_error`), and already-completed files (`already_exists`).
+* **Abort events** — when a document is abandoned after 10 consecutive inference errors,
+  the paradata entry records the abort reason alongside the count of lines processed
+  before the failure. A sidecar `*.abort.json` file is also written next to the
+  (partial) output JSON for easy programmatic detection.
 The resulting logs are dropped into the specified `PARADATA_DIR` alongside the other pipeline execution records.
 
 ## Paradata Logs
@@ -982,6 +1101,7 @@ the paradata logger.
 [^4]: https://atrium-research.eu/
 [^5]: https://lindat.mff.cuni.cz/services/udpipe/api-reference.php
 [^6]: https://lindat.mff.cuni.cz/services/nametag/api-reference.php
+[^7]: https://ufal.mff.cuni.cz/
 [^8]: https://github.com/ufal/atrium-nlp-enrich
 [^9]: https://github.com/ufal/flexiconv
 [^10]: https://github.com/LIAAD/yake
@@ -1001,3 +1121,7 @@ the paradata logger.
 [^24]: https://huggingface.co/Qwen/Qwen3.6-27B
 [^25]: https://huggingface.co/google/gemma-4-26B-A4B-it
 [^26]: https://huggingface.co/Qwen/Qwen3.5-9B
+[^27]: https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507
+[^28]: https://huggingface.co/deepseek-ai/DeepSeek-V3
+[^29]: https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct
+[^30]: https://huggingface.co/meta-llama/Meta-Llama-3.1-70B-Instruct
