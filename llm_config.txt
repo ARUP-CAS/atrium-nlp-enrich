@@ -1,15 +1,111 @@
-# Switch between: gemma-4-31b-it | qwen-3.6-35b-moe | qwen-3.6-27b-it | gemma-4-26b-moe | gemma-4-26b-moe-awq | qwen-3.5-9b-it | qwen3-14b | qwen2.5-14b-awq | gemma-3-12b-it
+# =============================================================================
+# LLM Semantic Enrichment Pipeline — Configuration
+# =============================================================================
+#
+# MODEL_KEY  — Switch between any key listed in MODEL_REGISTRY inside llm_utils.py.
+#
+# SMALL MODELS (single GPU, BnB 4-bit via transformers backend):
+#   qwen-3.5-9b-it | qwen3-8b | qwen2.5-14b-awq | gemma-3-12b-it | qwen3-14b
+#
+# MID MODELS (single 80 GB GPU, BnB 4-bit or FP8):
+#   qwen-3.6-27b-it | gemma-4-31b-it | llama3.1-70b
+#
+# LARGE MODELS (multi-GPU, vLLM only — set BACKEND=vllm):
+#   qwen3-235b-a22b        2× 80 GB recommended (tensor_parallel_size=2)
+#   qwen3-235b-a22b-fp8    2× 80 GB (native FP8, best quality/speed ratio)
+#   deepseek-v3            4× 80 GB minimum     (tensor_parallel_size=4)
+#   llama4-maverick        2× 80 GB             (gated — HF_TOKEN required)
+#
+# MoE GGUF fallback (llama.cpp, single GPU, any VRAM via GGUF quant):
+#   gemma-4-26b-moe-gguf
+#
 MODEL_KEY=qwen-3.6-27b-it
 
-# Only needed for gated models like gemma-4, gemma-3, or llama3.1
+# =============================================================================
+# HuggingFace credentials
+# Only needed for gated models: gemma-4-*, gemma-3-*, llama3.1-70b, llama4-*
+# =============================================================================
 # HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxx
 
+# =============================================================================
+# Paths
+# =============================================================================
 INPUT_DIR=data_samples/DOC_LINE_LANG_CLASS
 OUTPUT_DIR=data_samples/KW_PER_DOC_LLM
 VOCAB_PATH=data_samples/teater_nested_vocab.json
 PARADATA_DIR=paradata
 
+# =============================================================================
+# Line-quality filter
+# =============================================================================
 INCLUDE_NON_TEXT=true
 MIN_CHAR_COUNT=3
 MIN_CHAR_NON_TEXT=8
 MIN_ALPHA_RATIO_NON_TEXT=0.4
+
+# =============================================================================
+# Backend selection
+# =============================================================================
+# BACKEND=transformers
+#   Uses HuggingFace Transformers + bitsandbytes 4-bit quantization.
+#   Recommended for single-GPU runs on small/mid models (≤ 31 B).
+#   Requires: transformers, bitsandbytes, lmformatenforcer, accelerate.
+#
+# BACKEND=vllm
+#   Uses vLLM for high-throughput, multi-GPU inference.
+#   Enables: Automatic Prefix Caching (APC), tensor parallelism,
+#   native xgrammar-based guided JSON decoding (no lmformatenforcer needed),
+#   and batched document processing.
+#   Recommended for all models ≥ 70 B and any multi-GPU node.
+#   Requires: vllm (pip install vllm)
+#
+BACKEND=transformers
+
+# =============================================================================
+# vLLM-specific settings (ignored when BACKEND=transformers)
+# =============================================================================
+#
+# TENSOR_PARALLEL_SIZE
+#   Number of GPUs to shard the model across.
+#   Set to 1 for single-GPU, 2 for two 80-GB GPUs, 4 for four GPUs.
+#   Rule of thumb: use the model's "recommended_tp" value from the registry.
+#
+TENSOR_PARALLEL_SIZE=1
+
+# GPU_MEMORY_UTILIZATION
+#   Fraction of each GPU's VRAM that vLLM may use for the KV cache.
+#   0.90 is the recommended default. Lower to 0.80 if you get OOM on very
+#   long documents. Do not exceed 0.95.
+#
+GPU_MEMORY_UTILIZATION=0.90
+
+# GUIDED_DECODING_BACKEND
+#   xgrammar  — fastest, grammar-based, recommended (default)
+#   outlines  — alternative, slightly slower
+#
+GUIDED_DECODING_BACKEND=xgrammar
+
+# ENABLE_PREFIX_CACHING
+#   true  — Automatic Prefix Caching (APC). The system prompt (which embeds
+#            the full TEATER vocabulary) is computed once and its KV-cache is
+#            reused for every line in the document. This is the main
+#            throughput multiplier for this pipeline. Recommended for all runs.
+#   false — Disable APC. Only useful for debugging or very short documents
+#            where cache overhead outweighs the benefit.
+#
+ENABLE_PREFIX_CACHING=true
+
+# VLLM_BATCH_SIZE
+#   Number of document lines submitted to vLLM in a single generate() call.
+#   Larger batches = higher GPU utilisation but more memory pressure.
+#   16 is a safe default; increase to 32–64 on nodes with ≥ 160 GB VRAM.
+#   Consecutive-error abort logic is evaluated after each mini-batch.
+#
+VLLM_BATCH_SIZE=16
+
+# MAX_MODEL_LEN (optional override)
+#   Override the model's default maximum sequence length.
+#   Leave commented to use the model's native context window.
+#   Set lower (e.g. 65536) to reduce KV-cache memory on long-context models.
+#
+# MAX_MODEL_LEN=65536

@@ -1,17 +1,32 @@
 """
 llm_utils.py — Reusable components for the LLM Semantic Enrichment Pipeline.
 
-Contains: compatibility shims, model registry, config loader, line-quality filter,
-dynamic Pydantic schema builder, vocabulary helpers, system-prompt builder,
-model/tokenizer loader, context-window helper, and core document processor.
+Contains:
+  • Compatibility shims for bitsandbytes and transformers 5.x.
+  • MODEL_REGISTRY — extended with large-scale models for multi-GPU runs.
+  • Configuration loader.
+  • Line-quality filter (_should_process_line) — bug-fixed empty-categ handling.
+  • Model/tokenizer loader for the transformers backend (BnB 4-bit, AWQ, GGUF).
+  • vLLM engine loader (load_vllm_engine) for high-throughput multi-GPU runs.
+  • Context-window builder (get_context_window).
+  • Single-document processor for the transformers backend (process_document).
+  • Batched single-document processor for the vLLM backend (process_document_vllm).
 
-Import this module before any other CUDA-touching library — the PYTORCH_CUDA_ALLOC_CONF
-guard at the top of this file must be the very first thing that runs.
+Backend dispatch:
+  • BACKEND=transformers  — uses HuggingFace Transformers + lmformatenforcer for
+                            constrained JSON decoding. Good for single-GPU / ≤31B.
+  • BACKEND=vllm          — uses vLLM + xgrammar for native guided JSON decoding,
+                            Automatic Prefix Caching (APC), and tensor parallelism.
+                            Required for models ≥70B or any multi-GPU node.
+
+Import order note:
+  Import this module before any other CUDA-touching library. The
+  PYTORCH_CUDA_ALLOC_CONF guard at the top fires at module-load time and must
+  precede any library that initialises the CUDA allocator (e.g. bitsandbytes).
 """
 
-# Must be set before ANY import that can touch CUDA (bitsandbytes initialises the
-# CUDA context on import via its C extension). Setting this inside __main__ is too
-# late — the allocator config is locked in when the context is first created.
+# PYTORCH_CUDA_ALLOC_CONF must be set before ANY import that can touch the CUDA
+# context — bitsandbytes initialises it via a C extension on import.
 import os
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
@@ -24,97 +39,102 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import torch
 
+
 # ---------------------------------------------------------------------------
 # Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
 # ---------------------------------------------------------------------------
+
 import transformers.tokenization_utils as _tu
 import transformers.tokenization_utils_base as _tub
+
 if not hasattr(_tu, "PreTrainedTokenizerBase"):
     _tu.PreTrainedTokenizerBase = _tub.PreTrainedTokenizerBase
 
 
+# ---------------------------------------------------------------------------
+# Compatibility shim: bitsandbytes < 0.44 vs newer transformers / accelerate
+# ---------------------------------------------------------------------------
+
 def _patch_params4bit_compat() -> bool:
     """
-    Compatibility shim for bitsandbytes < 0.44 vs. newer transformers/accelerate.
+    Patch two known bitsandbytes breakage points against newer accelerate:
 
-    Patches two known breakage points:
-      1. Params4bit.__new__ / __init__ chokes on the _is_hf_initialized kwarg.
-      2. QuantState.as_dict raises when offset is a meta-device tensor.
+    1. ``Params4bit.__new__`` / ``__init__`` chokes on the ``_is_hf_initialized``
+       kwarg injected by accelerate.
+    2. ``QuantState.as_dict`` raises when ``offset`` is a meta-device tensor.
 
-    Permanent fix: pip install -U bitsandbytes inside your venv.
+    Permanent fix: ``pip install -U bitsandbytes`` inside your virtual env.
+    These patches are no-ops if the installed version is already fixed.
     """
     try:
         import bitsandbytes.nn as _bnb_nn
         import bitsandbytes.functional as _bnb_func
         import inspect
 
-        patched_anything = False
+        patched = False
 
-        # --- 1. Patch Params4bit __new__ / __init__ (stray kwarg fix) ---
+        # 1. Params4bit stray-kwarg fix
         new_sig = str(inspect.signature(_bnb_nn.Params4bit.__new__))
         if "_is_hf_initialized" not in new_sig and "**" not in new_sig:
-            _orig_p4b_new = _bnb_nn.Params4bit.__new__
+            _orig_new = _bnb_nn.Params4bit.__new__
 
             def _p4b_new(cls, *args, **kwargs):
                 kwargs.pop("_is_hf_initialized", None)
-                return _orig_p4b_new(cls, *args, **kwargs)
+                return _orig_new(cls, *args, **kwargs)
 
             _bnb_nn.Params4bit.__new__ = _p4b_new
 
             if "__init__" in _bnb_nn.Params4bit.__dict__:
-                _orig_p4b_init = _bnb_nn.Params4bit.__init__
+                _orig_init = _bnb_nn.Params4bit.__init__
 
                 def _p4b_init(self, *args, **kwargs):
                     kwargs.pop("_is_hf_initialized", None)
-                    return _orig_p4b_init(self, *args, **kwargs)
+                    return _orig_init(self, *args, **kwargs)
 
                 _bnb_nn.Params4bit.__init__ = _p4b_init
 
-            patched_anything = True
+            patched = True
 
-        # --- 2. Patch QuantState.as_dict (meta-tensor .item() fix) ---
+        # 2. QuantState meta-tensor fix
         if hasattr(_bnb_func, "QuantState"):
             _orig_as_dict = _bnb_func.QuantState.as_dict
 
             def _patched_as_dict(self, packed: bool = False):
                 orig_offset = getattr(self, "offset", None)
-                is_meta_offset = (
+                is_meta = (
                     isinstance(orig_offset, torch.Tensor)
                     and orig_offset.device.type == "meta"
                 )
-                if is_meta_offset:
+                if is_meta:
                     self.offset = torch.tensor(0.0)
                 try:
                     return _orig_as_dict(self, packed=packed)
                 finally:
-                    if is_meta_offset:
+                    if is_meta:
                         self.offset = orig_offset
 
             if _bnb_func.QuantState.as_dict.__name__ != "_patched_as_dict":
                 _bnb_func.QuantState.as_dict = _patched_as_dict
-                patched_anything = True
+                patched = True
 
-        if patched_anything:
+        if patched:
             print(
                 "[COMPAT] Patched bitsandbytes (Params4bit & QuantState) for "
                 "accelerate/meta-device compatibility. "
-                "Permanent fix: pip install -U bitsandbytes inside your venv."
+                "Permanent fix: pip install -U bitsandbytes"
             )
-        return patched_anything
+        return patched
 
     except Exception as exc:
-        print(f"[WARN] Could not apply compatibility patch: {exc}")
+        print(f"[WARN] Could not apply bitsandbytes compat patch: {exc}")
         return False
 
 
 _patch_params4bit_compat()
 
+
+# Transformers imports — deferred inside functions where only needed by one backend
 from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: E402
-from pydantic import BaseModel, Field, ValidationError         # noqa: E402
-from lmformatenforcer import JsonSchemaParser                  # noqa: E402
-from lmformatenforcer.integrations.transformers import (       # noqa: E402
-    build_transformers_prefix_allowed_tokens_fn,
-)
 
 from atrium_paradata import ParadataLogger   # noqa: E402
 from vocab_manager import VocabularyManager  # noqa: E402
@@ -123,56 +143,44 @@ from vocab_manager import VocabularyManager  # noqa: E402
 # ---------------------------------------------------------------------------
 # 1. Model Registry
 # ---------------------------------------------------------------------------
+#
+# Field reference:
+#   hf_id               — HuggingFace model ID (or local path for GGUF).
+#   context_window      — Maximum input tokens (prompt + output combined).
+#   trust_remote_code   — Pass to from_pretrained (needed for some models).
+#   torch_dtype         — Compute dtype for transformers backend.
+#   hf_token_required   — Whether a HF_TOKEN is needed to download the model.
+#   load_in_4bit        — Use BitsAndBytes 4-bit NF4 quantization (transformers).
+#   is_awq              — Model is pre-quantized AWQ; use autoawq loader.
+#   is_gguf             — GGUF file; use llama.cpp loader.
+#   is_moe              — Mixture-of-Experts architecture.
+#   bnb_experts_broken  — BnB 4-bit fails on this model's fused expert blocks;
+#                         use GGUF or vLLM instead.
+#   vllm_only           — Model cannot be used with the transformers backend
+#                         (too large, or requires vLLM-specific quantization).
+#   recommended_tp      — Recommended tensor_parallel_size for vLLM.
+#   max_quant_ratio     — Override for _verify_quantization_effective threshold.
+#   notes               — Human-readable deployment notes.
 
 MODEL_REGISTRY: Dict[str, Dict] = {
-    "qwen3-14b": {
-        "hf_id": "OpenPipe/Qwen3-14B-Instruct",
+
+    # ------------------------------------------------------------------
+    # Small / mid models — single GPU, transformers backend
+    # ------------------------------------------------------------------
+
+    "qwen3-8b": {
+        "hf_id": "Qwen/Qwen3-8B",
         "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
-        "load_in_4bit": True,
     },
-    "gemma-4-26b-moe-gguf": {
-        "hf_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
-        "filename": "*Q4_K_M.gguf",
-        "context_window": 8192,
-        "is_gguf": True,
-        "hf_token_required": False,
-    },
-    "gemma-4-31b-it": {
-        "hf_id": "google/gemma-4-31B-it",
-        "context_window": 256000,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-        "load_in_4bit": True,
-    },
-    "qwen-3.6-35b-moe": {
-        "hf_id": "Qwen/Qwen3.6-35B-A3B",
+    "qwen-3.5-9b-it": {
+        "hf_id": "Qwen/Qwen3.5-9B",
         "context_window": 262144,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
-        "is_moe": True,
-        "bnb_experts_broken": True,
-    },
-    "qwen-3.6-27b-it": {
-        "hf_id": "Qwen/Qwen3.6-27B",
-        "context_window": 262144,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-        "load_in_4bit": True,
-    },
-    "gemma-4-26b-moe": {
-        "hf_id": "google/gemma-4-26B-A4B-it",
-        "context_window": 256000,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-        "is_moe": True,
-        "bnb_experts_broken": True,
     },
     "qwen2.5-14b-awq": {
         "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
@@ -182,19 +190,101 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": False,
         "is_awq": True,
     },
-    "qwen-3.5-9b-it": {
-        "hf_id": "Qwen/Qwen3.5-9B",
-        "context_window": 262144,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "qwen3-8b": {
-        "hf_id": "Qwen/Qwen3-8B",
+    "qwen3-14b": {
+        "hf_id": "OpenPipe/Qwen3-14B-Instruct",
         "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "load_in_4bit": True,
+    },
+    "gemma-3-12b-it": {
+        "hf_id": "google/gemma-3-12b-it",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+    },
+    "qwen2.5-7b": {
+        "hf_id": "Qwen/Qwen2.5-7B-Instruct",
+        "context_window": 32768,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+    },
+
+    # ------------------------------------------------------------------
+    # Mid / large — single 80 GB GPU with BnB 4-bit, or vLLM
+    # ------------------------------------------------------------------
+
+    "qwen-3.6-27b-it": {
+        "hf_id": "Qwen/Qwen3.6-27B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "load_in_4bit": True,
+        "notes": "Best accuracy/VRAM ratio for single-GPU runs.",
+    },
+    "gemma-4-31b-it": {
+        "hf_id": "google/gemma-4-31B-it",
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "load_in_4bit": True,
+        "notes": "Highest accuracy on single GPU (4-bit). Gated model.",
+    },
+    "llama3.1-70b": {
+        "hf_id": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "load_in_4bit": True,
+        "recommended_tp": 2,
+        "notes": "Works with transformers+4bit on 2×40 GB or 1×80 GB; "
+                 "or with vLLM tensor_parallel_size=2 for higher throughput.",
+    },
+
+    # ------------------------------------------------------------------
+    # MoE models — GGUF fallback (llama.cpp, any single GPU)
+    # ------------------------------------------------------------------
+
+    "gemma-4-26b-moe-gguf": {
+        "hf_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
+        "filename": "*Q4_K_M.gguf",
+        "context_window": 8192,
+        "is_gguf": True,
+        "hf_token_required": False,
+        "notes": "MoE via llama.cpp. BnB 4-bit unsupported (fused experts).",
+    },
+
+    # ------------------------------------------------------------------
+    # MoE models — vLLM only (multi-GPU)
+    # ------------------------------------------------------------------
+
+    "qwen-3.6-35b-moe": {
+        "hf_id": "Qwen/Qwen3.6-35B-A3B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "recommended_tp": 1,
+        "notes": "35B MoE (3B active). vLLM single GPU usually fits.",
+    },
+    "gemma-4-26b-moe": {
+        "hf_id": "google/gemma-4-26B-A4B-it",
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "recommended_tp": 1,
+        "notes": "26B MoE (4B active). Use vLLM; BnB 4-bit unsupported.",
     },
     "gemma-4-26b-moe-awq": {
         "hf_id": "google/gemma-4-26B-A4B-it",
@@ -205,23 +295,85 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
         "is_awq": True,
+        "notes": "AWQ variant of gemma-4-26b-moe.",
     },
-    "qwen2.5-7b": {
-        "hf_id": "Qwen/Qwen2.5-7B-Instruct",
-        "context_window": 32768,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-    },
-    "gemma-3-12b-it": {
-        "hf_id": "google/gemma-3-12b-it",
+
+    # ------------------------------------------------------------------
+    # Large models — vLLM only, multi-GPU (BACKEND=vllm required)
+    # ------------------------------------------------------------------
+
+    "qwen3-235b-a22b": {
+        "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
         "context_window": 131072,
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "vllm_only": True,
+        "recommended_tp": 2,
+        "notes": (
+            "235B MoE (22B active params at inference). "
+            "BF16 ~470 GB total weights, but only 22B active per forward pass. "
+            "vLLM with tensor_parallel_size=2 fits on 2×80 GB GPUs. "
+            "Use FP8 variant (qwen3-235b-a22b-fp8) for best throughput."
+        ),
+    },
+    "qwen3-235b-a22b-fp8": {
+        "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,   # compute dtype; FP8 storage handled by vLLM
+        "hf_token_required": False,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "vllm_only": True,
+        "recommended_tp": 2,
+        "notes": (
+            "Native FP8 quantized version. ~117 GB loaded weight. "
+            "Recommended for the 144 GB / 200 GB GPU node. "
+            "Set tensor_parallel_size=2 for 2×80 GB, or 1 for a single 144 GB GPU."
+        ),
+    },
+    "deepseek-v3": {
+        "hf_id": "deepseek-ai/DeepSeek-V3",
+        "context_window": 131072,
+        "trust_remote_code": True,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "vllm_only": True,
+        "recommended_tp": 4,
+        "notes": (
+            "671B MoE. Official FP8 checkpoint available at "
+            "deepseek-ai/DeepSeek-V3-0324 (March 2024 update). "
+            "Minimum 4×80 GB GPUs in FP8; 8×80 GB in BF16. "
+            "Best used with vLLM + tensor_parallel_size=4 + "
+            "gpu_memory_utilization=0.92."
+        ),
+    },
+    "llama4-maverick": {
+        "hf_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+        "context_window": 1048576,   # 1 M tokens
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
+        "is_moe": True,
+        "bnb_experts_broken": True,
+        "vllm_only": True,
+        "recommended_tp": 2,
+        "notes": (
+            "Llama 4 Maverick: 128 experts, 17B active params per token. "
+            "1 M token context window. Multimodal (text + image). "
+            "FP8 official checkpoint available. Gated model — HF_TOKEN required."
+        ),
     },
 
-    # --- Archived / Unsuccessful Models ---
+    # ------------------------------------------------------------------
+    # Archived / Unsuccessful models (kept for reference)
+    # ------------------------------------------------------------------
+
     "bielik-11b-v3.0": {
         "hf_id": "speakleash/Bielik-11B-v3.0-Instruct",
         "context_window": 131072,
@@ -268,8 +420,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     },
 }
 
-MAX_NEW_TOKENS = 2048
-CONTEXT_RESERVED = MAX_NEW_TOKENS + 512
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+MAX_NEW_TOKENS  = 2048
+CONTEXT_RESERVED = MAX_NEW_TOKENS + 512   # tokens reserved for output + formatting
 _ALWAYS_SKIP_CATEG = {"Empty", "Trash"}
 
 
@@ -278,7 +435,7 @@ _ALWAYS_SKIP_CATEG = {"Empty", "Trash"}
 # ---------------------------------------------------------------------------
 
 def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
-    """Parse a simple KEY=VALUE config file, ignoring blank lines and # comments."""
+    """Parse a KEY=VALUE config file, ignoring blank lines and # comments."""
     config: Dict[str, str] = {}
     path = Path(config_path)
     if not path.exists():
@@ -289,60 +446,55 @@ def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
             if not line or line.startswith("#"):
                 continue
             if "=" in line:
-                key, value = line.split("=", 1)
+                key, _, value = line.partition("=")
                 config[key.strip()] = value.strip()
     return config
 
 
 # ---------------------------------------------------------------------------
-# 3. Model + Tokenizer Loader
+# 3. Transformers backend — model loader helpers
 # ---------------------------------------------------------------------------
 
 def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> None:
     """
-    Sanity-check that 4-bit quantization actually reduced memory footprint.
-    Raises RuntimeError if the ratio vs. BF16 baseline is suspiciously high,
-    which usually means bitsandbytes silently fell back to full precision.
+    Sanity-check that BnB 4-bit quantization actually reduced memory footprint.
 
-    The default threshold is 0.65. For large dense models (≳20 B params) the
-    embedding table plus non-quantisable layernorm/lm-head weights are several
-    GB in BF16, pushing the legitimate quantised ratio well above the naive
-    theoretical 0.25. Empirically, correctly-quantised 27–31 B models land
-    around 0.54–0.60, so 0.65 gives comfortable headroom while still catching
-    genuine full-precision fallbacks (ratio ≈ 1.0). MoE models that cannot be
-    quantised at all should be flagged with ``bnb_experts_broken: True`` in the
-    registry rather than relying on this check.
+    Raises ``RuntimeError`` if the footprint ratio vs. BF16 baseline exceeds
+    ``spec.get("max_quant_ratio", 0.65)``.
 
-    Per-model override: add ``"max_quant_ratio": <float>`` to the registry
-    entry to use a different threshold for a specific model.
+    Background: correctly-quantised 27–31 B models land around 0.54–0.60 because
+    the embedding table and layernorm/lm-head weights are kept in BF16. The 0.65
+    threshold gives comfortable headroom while catching genuine full-precision
+    fallbacks (ratio ≈ 1.0). MoE models that cannot be quantised should be flagged
+    with ``bnb_experts_broken: True`` in the registry rather than relying on this
+    check.
     """
     if not spec.get("load_in_4bit"):
         return
 
     footprint_bytes = model.get_memory_footprint()
-    footprint_gb = footprint_bytes / 1024 ** 3
-
-    total_params = sum(p.numel() for p in model.parameters())
-    bf16_estimate_gb = total_params * 2 / 1024 ** 3
-    ratio = footprint_gb / bf16_estimate_gb if bf16_estimate_gb > 0 else 0.0
+    footprint_gb    = footprint_bytes / 1024 ** 3
+    total_params    = sum(p.numel() for p in model.parameters())
+    bf16_est_gb     = total_params * 2 / 1024 ** 3
+    ratio           = footprint_gb / bf16_est_gb if bf16_est_gb > 0 else 0.0
 
     print(
         f"[INFO] Model footprint: {footprint_gb:.1f} GB "
-        f"(BF16 estimate: {bf16_estimate_gb:.1f} GB, ratio: {ratio:.2f})"
+        f"(BF16 estimate: {bf16_est_gb:.1f} GB, ratio: {ratio:.2f})"
     )
 
     threshold = spec.get("max_quant_ratio", 0.65)
     if ratio > threshold:
         raise RuntimeError(
-            f"Quantization ineffective for {model_key}: footprint ratio {ratio:.2f} "
-            f"exceeds threshold {threshold:.2f} (expected ≲0.35 for clean 4-bit, "
-            f"≲0.65 for large dense models). "
-            f"If this is a MoE model, set bnb_experts_broken=True and use GGUF instead."
+            f"Quantization ineffective for {model_key}: ratio {ratio:.2f} "
+            f"exceeds threshold {threshold:.2f}. "
+            f"Expected ≲0.35 for clean 4-bit, ≲0.65 for large dense models. "
+            f"If this is a MoE model, set bnb_experts_broken=True and use vLLM."
         )
 
 
 def count_tokens(text: str, tokenizer: Any) -> int:
-    """Count tokens uniformly for both transformers tokenizers and llama.cpp models."""
+    """Count tokens for both HuggingFace tokenizers and llama.cpp models."""
     if hasattr(tokenizer, "tokenize") and not isinstance(
         tokenizer, _tu.PreTrainedTokenizerBase
     ):
@@ -352,14 +504,21 @@ def count_tokens(text: str, tokenizer: Any) -> int:
 
 
 def load_model_and_tokenizer(
-    model_key: str, hf_token: Optional[str] = None
+    model_key: str,
+    hf_token: Optional[str] = None,
 ) -> Tuple[Any, Any, dict]:
     """
-    Load model and tokenizer for the given registry key.
+    Load model and tokenizer via HuggingFace Transformers (or llama.cpp for GGUF).
 
     Returns:
-        (model, tokenizer, spec)  — for GGUF models the same llama_cpp.Llama
-        object is returned for both model and tokenizer positions.
+        (model, tokenizer, spec)
+        For GGUF models the same ``llama_cpp.Llama`` object fills both slots.
+
+    Raises:
+        ValueError  — unknown model key or vllm_only model requested with
+                      the transformers backend.
+        RuntimeError — quantization check failed.
+        ImportError  — missing optional dependency (llama-cpp-python, autoawq).
     """
     if model_key not in MODEL_REGISTRY:
         raise ValueError(
@@ -368,6 +527,14 @@ def load_model_and_tokenizer(
         )
 
     spec = MODEL_REGISTRY[model_key]
+
+    if spec.get("vllm_only"):
+        raise ValueError(
+            f"Model '{model_key}' is flagged vllm_only — it cannot be loaded via "
+            f"the transformers backend. Set BACKEND=vllm in llm_config.txt.\n"
+            f"Note: {spec.get('notes', '')}"
+        )
+
     hf_id = spec["hf_id"]
 
     # --- GGUF path (llama.cpp) ---
@@ -376,10 +543,9 @@ def load_model_and_tokenizer(
             from llama_cpp import Llama
         except ImportError:
             raise ImportError(
-                "Please install llama-cpp-python to use GGUF models: "
-                "pip install llama-cpp-python"
+                "llama-cpp-python is required for GGUF models:\n"
+                "  pip install llama-cpp-python"
             )
-
         print(f"=== Loading GGUF via llama.cpp: {hf_id} ===")
         model = Llama.from_pretrained(
             repo_id=hf_id,
@@ -389,15 +555,16 @@ def load_model_and_tokenizer(
             flash_attn=True,
             verbose=False,
         )
-        return model, model, spec  # llama.cpp object acts as both model & tokenizer
+        return model, model, spec   # llama.cpp object serves as both
 
-    # --- Transformers path ---
+    # --- Guard: BnB 4-bit on broken MoE experts ---
     if spec.get("bnb_experts_broken") and spec.get("load_in_4bit"):
         raise RuntimeError(
-            "BnB 4-bit requested for MoE model with fused experts. Use GGUF instead."
+            f"BnB 4-bit quantization is unsupported for '{model_key}' "
+            f"(fused MoE expert blocks). Use BACKEND=vllm or a GGUF variant."
         )
 
-    print(f"=== Loading: {hf_id} ===")
+    print(f"=== Loading (transformers): {hf_id} ===")
 
     from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
@@ -406,15 +573,35 @@ def load_model_and_tokenizer(
         trust_remote_code=spec.get("trust_remote_code", False),
         token=hf_token or None,
     )
-
     if getattr(tokenizer, "pad_token", None) is None:
         tokenizer.pad_token = getattr(tokenizer, "eos_token", None)
 
-    # --- Detect quantization method ---
     is_awq = spec.get("is_awq", False)
 
+    # --- AWQ path ---
+    if is_awq:
+        try:
+            from awq import AutoAWQForCausalLM
+        except ImportError:
+            raise ImportError(
+                f"Model '{model_key}' requires autoawq:\n  pip install autoawq"
+            )
+        model = AutoAWQForCausalLM.from_quantized(
+            hf_id,
+            fuse_layers=False,
+            device_map="auto",
+            token=hf_token or None,
+        )
+        if not hasattr(model, "device"):
+            model.device = next(model.parameters()).device
+        import warnings
+        warnings.filterwarnings("ignore", category=DeprecationWarning, module="awq")
+        model.eval()
+        return model, tokenizer, spec
+
+    # --- Standard transformers path (BnB / plain fp16/bf16) ---
     bnb_config = None
-    if spec.get("load_in_4bit") and not is_awq:
+    if spec.get("load_in_4bit"):
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=spec["torch_dtype"],
@@ -423,34 +610,6 @@ def load_model_and_tokenizer(
             llm_int8_enable_fp32_cpu_offload=True,
         )
 
-    # AWQ: bypass transformers' quantizer detection (broken in 4.51+ without gptqmodel)
-    # and load directly via autoawq, which is already installed and compatible.
-    if is_awq:
-        try:
-            from awq import AutoAWQForCausalLM
-        except ImportError:
-            raise ImportError(
-                f"Model '{model_key}' is AWQ-quantized. Install autoawq:\n"
-                "  pip install autoawq"
-            )
-        model = AutoAWQForCausalLM.from_quantized(
-            hf_id,
-            fuse_layers=False,  # True can conflict with newer transformers internals
-            device_map="auto",
-            token=hf_token or None,
-        )
-        # Patch missing .device attribute — autoawq doesn't expose it but
-        # process_document uses model.device to move tokenizer tensors onto the GPU.
-        if not hasattr(model, "device"):
-            model.device = next(model.parameters()).device
-
-
-        import warnings
-        warnings.filterwarnings("ignore", category=DeprecationWarning, module="awq")
-        model.eval()
-        return model, tokenizer, spec
-
-    # --- Standard transformers path (BnB / plain fp16/bf16) ---
     load_kwargs: Dict[str, Any] = dict(
         device_map="auto",
         dtype=spec["torch_dtype"],
@@ -468,29 +627,156 @@ def load_model_and_tokenizer(
 
 
 # ---------------------------------------------------------------------------
-# 4. Core Document Processor
+# 4. vLLM backend — engine loader
+# ---------------------------------------------------------------------------
+
+def load_vllm_engine(
+    model_key: str,
+    hf_token: Optional[str] = None,
+    tensor_parallel_size: int = 1,
+    gpu_memory_utilization: float = 0.90,
+    guided_decoding_backend: str = "xgrammar",
+    enable_prefix_caching: bool = True,
+    max_model_len: Optional[int] = None,
+) -> Tuple[Any, Any, dict]:
+    """
+    Load a model via vLLM for high-throughput, multi-GPU inference.
+
+    Key features enabled:
+      • Tensor parallelism (``tensor_parallel_size``) — shard the model across
+        multiple GPUs without manual pipeline cuts.
+      • Automatic Prefix Caching (``enable_prefix_caching=True``) — the system
+        prompt (which embeds the full TEATER vocabulary) is computed once per
+        run; its KV-cache is reused for every line in the document. This is the
+        primary throughput multiplier for this pipeline.
+      • Native guided JSON decoding via xgrammar — no lmformatenforcer needed.
+
+    Returns:
+        (llm_engine, tokenizer, spec)
+        ``tokenizer`` is the HuggingFace tokenizer obtained from
+        ``llm_engine.get_tokenizer()``.
+
+    Raises:
+        ImportError  — vLLM is not installed.
+        ValueError   — unknown model key or GGUF model requested.
+        RuntimeWarning — tensor_parallel_size below model's recommended_tp.
+    """
+    try:
+        from vllm import LLM
+    except ImportError:
+        raise ImportError(
+            "vLLM is not installed. Install it with:\n"
+            "  pip install vllm\n"
+            "Or switch to BACKEND=transformers in llm_config.txt."
+        )
+
+    if model_key not in MODEL_REGISTRY:
+        raise ValueError(
+            f"Unknown MODEL_KEY '{model_key}'. "
+            f"Available: {', '.join(MODEL_REGISTRY.keys())}"
+        )
+
+    spec = MODEL_REGISTRY[model_key]
+
+    if spec.get("is_gguf"):
+        raise ValueError(
+            f"Model '{model_key}' is a GGUF file. "
+            "vLLM requires a HuggingFace model ID or a local directory "
+            "(not a GGUF filename). Use BACKEND=transformers for llama.cpp."
+        )
+
+    hf_id = spec["hf_id"]
+    recommended_tp = spec.get("recommended_tp", 1)
+    if tensor_parallel_size < recommended_tp:
+        print(
+            f"[WARN] {model_key} recommends tensor_parallel_size={recommended_tp} "
+            f"but got {tensor_parallel_size}. "
+            f"You may encounter out-of-memory errors."
+        )
+
+    # Resolve dtype string for vLLM
+    dtype_map = {
+        torch.float16: "float16",
+        torch.bfloat16: "bfloat16",
+        torch.float32: "float32",
+    }
+    dtype_str = dtype_map.get(spec.get("torch_dtype", torch.bfloat16), "bfloat16")
+    if "fp8" in model_key.lower():
+        dtype_str = "auto"   # Let vLLM detect native FP8
+
+    print(
+        f"=== Loading via vLLM: {hf_id} ===\n"
+        f"    dtype={dtype_str}, "
+        f"tensor_parallel_size={tensor_parallel_size}, "
+        f"gpu_memory_utilization={gpu_memory_utilization:.2f}, "
+        f"enable_prefix_caching={enable_prefix_caching}, "
+        f"guided_decoding_backend={guided_decoding_backend}"
+    )
+    if max_model_len:
+        print(f"    max_model_len={max_model_len} (overriding model default)")
+
+    engine_kwargs: Dict[str, Any] = dict(
+        model=hf_id,
+        tokenizer=hf_id,
+        tensor_parallel_size=tensor_parallel_size,
+        gpu_memory_utilization=gpu_memory_utilization,
+        enable_prefix_caching=enable_prefix_caching,
+        guided_decoding_backend=guided_decoding_backend,
+        dtype=dtype_str,
+        trust_remote_code=spec.get("trust_remote_code", False),
+        # Separate tokenizer threads speed up batched prompt formatting
+        tokenizer_pool_size=max(1, tensor_parallel_size),
+    )
+
+    if max_model_len:
+        engine_kwargs["max_model_len"] = max_model_len
+
+    if hf_token:
+        os.environ.setdefault("HF_TOKEN", hf_token)
+        os.environ.setdefault("HUGGING_FACE_HUB_TOKEN", hf_token)
+
+    llm_engine = LLM(**engine_kwargs)
+
+    # Obtain a HuggingFace-compatible tokenizer for chat-template formatting
+    # and token counting (used in build_system_prompt).
+    tokenizer = llm_engine.get_tokenizer()
+
+    return llm_engine, tokenizer, spec
+
+
+# ---------------------------------------------------------------------------
+# 5. Line-quality filter
 # ---------------------------------------------------------------------------
 
 def _should_process_line(
-        text: str,
-        categ: str,
-        include_non_text: bool,
-        min_char_count: int,
-        min_char_non_text: int,
-        min_alpha_ratio_non_text: float,
+    text: str,
+    categ: str,
+    include_non_text: bool,
+    min_char_count: int,
+    min_char_non_text: int,
+    min_alpha_ratio_non_text: float,
 ) -> Tuple[bool, str]:
     """
-    Return (should_process, skip_reason).
+    Return ``(should_process, skip_reason)``.
 
     Applies category-level and character-level filters before sending a line
     to the LLM, avoiding wasted inference on noise rows.
+
+    Bug fix (v0.10.1): empty ``categ`` string previously fell through all
+    category guards silently. It is now handled explicitly as an unknown
+    category, treated identically to plain text (apply only the
+    ``min_char_count`` filter). This makes the intent explicit and prevents
+    future additions to ``_ALWAYS_SKIP_CATEG`` from accidentally matching
+    the empty-string case.
     """
     if not text:
         return False, "empty text"
 
+    # Hard skip — noise or trash OCR output
     if categ in _ALWAYS_SKIP_CATEG:
-        return False, f"categ={categ}"
+        return False, f"categ={categ!r}"
 
+    # Non-text (figures, tables, decorative elements) — apply stricter filters
     if categ == "Non-text":
         if not include_non_text:
             return False, "Non-text excluded by config"
@@ -503,42 +789,59 @@ def _should_process_line(
             return False, f"Non-text alpha ratio too low ({alpha_ratio:.2f})"
         return True, ""
 
+    # Empty categ — treat as regular text (explicit, not fallthrough)
+    # This covers rows where the OCR classifier produced no category label.
+    if not categ:
+        if len(text) < min_char_count:
+            return False, (
+                f"text too short ({len(text)} < {min_char_count} chars) "
+                "[unknown categ]"
+            )
+        return True, ""
+
+    # Regular text (and any other unlisted category)
     if len(text) < min_char_count:
         return False, f"text too short ({len(text)} < {min_char_count} chars)"
 
     return True, ""
 
+
+# ---------------------------------------------------------------------------
+# 6. Context-window builder
+# ---------------------------------------------------------------------------
+
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
     """
-    Build a text snippet around rows[center_idx] for use as the LLM user prompt.
+    Build a text snippet around ``rows[center_idx]`` for the LLM user prompt.
 
-    The target line is wrapped in <target_line> tags. Surrounding lines on the
-    same page (within ±window) are included as plain context. For non-leading
-    rows, the first two non-noise lines of the document are prepended as a
+    The target line is wrapped in ``<target_line>`` tags. Surrounding lines on
+    the same page (within ±``window``) are included as plain context. For
+    non-leading rows the first two non-noise document lines are prepended as a
     global header so the model can anchor the archaeological context.
     """
     _NOISE_CATEG = {"Empty", "Trash", "Non-text"}
 
-    center_row = rows[center_idx]
+    center_row  = rows[center_idx]
     center_page = center_row.get("page_num", center_row.get("page", None))
-
     start = max(0, center_idx - window)
-    end = min(len(rows), center_idx + window + 1)
+    end   = min(len(rows), center_idx + window + 1)
 
     parts: List[str] = []
 
+    # Global document header (prepended for non-leading lines)
     if center_idx > window + 2:
         parts.append("--- GLOBAL DOCUMENT HEADER ---")
-        header_lines_added = 0
+        added = 0
         for row in rows:
             if row.get("categ", "").strip() not in _NOISE_CATEG:
                 pg = row.get("page_num", row.get("page", 0))
                 ln = row.get("line_num", row.get("line", 0))
                 parts.append(f"    [P{pg} L{ln}] {row.get('text', '').strip()}")
-                header_lines_added += 1
-                if header_lines_added >= 2:
+                added += 1
+                if added >= 2:
                     break
 
+    # Most recent section heading before the target line
     current_section = "Unknown Section"
     for i in range(center_idx - 1, -1, -1):
         if rows[i].get("categ", "").strip() in {"Header", "Heading"}:
@@ -549,9 +852,9 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
     parts.append("--- LOCAL CONTEXT WINDOW ---")
 
     for i in range(start, end):
-        row = rows[i]
+        row      = rows[i]
         row_page = row.get("page_num", row.get("page", None))
-        categ = row.get("categ", "").strip()
+        categ    = row.get("categ", "").strip()
 
         if row_page != center_page and i != center_idx:
             continue
@@ -559,8 +862,8 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
             continue
 
         text = row.get("text", "").strip()
-        pg = row_page
-        ln = row.get("line_num", row.get("line", 0))
+        pg   = row_page
+        ln   = row.get("line_num", row.get("line", 0))
 
         if i == center_idx:
             parts.append(f"<target_line> >>> [P{pg} L{ln}] {text} </target_line>")
@@ -570,12 +873,61 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
     return "\n".join(parts)
 
 
+# ---------------------------------------------------------------------------
+# 7. Chat-message formatting helper (shared by both backends)
+# ---------------------------------------------------------------------------
+
+def _format_chat_prompt(
+    messages: List[dict],
+    tokenizer: Any,
+    model_key: str,
+) -> str:
+    """
+    Apply the model's chat template to a list of messages and return the
+    formatted prompt string.
+
+    For Qwen3 / Qwen3.5 / Qwen3.6 models, thinking mode is suppressed via
+    ``/no_think`` in the user message and ``enable_thinking=False`` in the
+    template call (falls back gracefully if the tokenizer does not support
+    the kwarg).
+    """
+    is_qwen3 = any(
+        k in model_key.lower()
+        for k in ("qwen3", "qwen-3.5", "qwen-3.6", "qwen3-235b")
+    )
+
+    if is_qwen3:
+        # Work on copies to avoid mutating the caller's list
+        messages = [m.copy() for m in messages]
+        if messages and messages[-1].get("role") == "user":
+            messages[-1]["content"] += "\n/no_think"
+
+    try:
+        return tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            **({"enable_thinking": False} if is_qwen3 else {}),
+        )
+    except TypeError:
+        # Older tokenizer — does not accept enable_thinking
+        return tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+
+
+# ---------------------------------------------------------------------------
+# 8. Transformers backend — document processor
+# ---------------------------------------------------------------------------
+
 def process_document(
     csv_path: Path,
     model: Any,
     tokenizer: Any,
-    parser: JsonSchemaParser,
-    prefix_function: Any,
+    parser: Any,           # lmformatenforcer.JsonSchemaParser
+    prefix_function: Any,  # build_transformers_prefix_allowed_tokens_fn result
     system_prompt: str,
     EnrichmentModel: type,
     max_input_tokens: int,
@@ -587,28 +939,44 @@ def process_document(
     min_alpha_ratio_non_text: float = 0.40,
 ) -> Tuple[List[dict], Dict[str, int]]:
     """
-    Run LLM inference over every qualifying line in a single CSV document.
+    Run LLM inference over every qualifying line in a single CSV document
+    using the HuggingFace Transformers backend.
 
     Returns:
-        (enriched_lines, stats)  where stats keys are
-        'processed', 'skipped_filter', 'skipped_error'.
+        (enriched_lines, stats)
+
+    ``stats`` keys:
+        processed       — lines successfully enriched.
+        skipped_filter  — lines dropped by _should_process_line.
+        skipped_error   — lines that raised inference or validation errors.
+        aborted         — True if the document was aborted after 10 consecutive
+                          inference errors (the abort marker is written by the
+                          caller, not here).
     """
+    from pydantic import ValidationError
 
     file_id = csv_path.stem
     enriched_lines: List[dict] = []
-    stats: Dict[str, int] = {"processed": 0, "skipped_filter": 0, "skipped_error": 0}
+    stats: Dict[str, int] = {
+        "processed": 0,
+        "skipped_filter": 0,
+        "skipped_error": 0,
+        "aborted": 0,
+    }
     consecutive_errors = 0
+    page_num = line_num = 0   # ensure defined for error messages
 
     with open(csv_path, "r", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 
     if is_gguf:
-        from lmformatenforcer.integrations.llamacpp import build_llamacpp_logits_processor
+        from lmformatenforcer.integrations.llamacpp import (
+            build_llamacpp_logits_processor,
+        )
         from llama_cpp import LogitsProcessorList
 
     for i, row in enumerate(rows):
-        inputs = None
-        output = None
+        inputs = output = None
         try:
             try:
                 page_num = int(row.get("page_num", row.get("page", 0)))
@@ -618,7 +986,7 @@ def process_document(
                 continue
 
             text_chunk = row.get("text", "").strip()
-            categ = row.get("categ", "").strip()
+            categ      = row.get("categ", "").strip()
 
             should_process, _ = _should_process_line(
                 text_chunk, categ,
@@ -630,7 +998,6 @@ def process_document(
                 continue
 
             context_chunk = get_context_window(rows, i, window=2)
-
             messages = [
                 {"role": "system", "content": system_prompt},
                 {
@@ -645,39 +1012,19 @@ def process_document(
 
             # --- Inference ---
             if is_gguf:
-                logits_processors = LogitsProcessorList(
+                lp = LogitsProcessorList(
                     [build_llamacpp_logits_processor(model, parser)]
                 )
                 output = model.create_chat_completion(
                     messages=messages,
                     max_tokens=MAX_NEW_TOKENS,
                     temperature=0.0,
-                    logits_processor=logits_processors,
+                    logits_processor=lp,
                 )
                 result_json = output["choices"][0]["message"]["content"]
 
             else:
-                is_qwen3 = any(
-                    k in model_key.lower()
-                    for k in ("qwen3", "qwen-3.5", "qwen-3.6")
-                )
-                if is_qwen3:
-                    messages[-1]["content"] += "\n/no_think"
-
-                try:
-                    prompt = tokenizer.apply_chat_template(
-                        messages,
-                        tokenize=False,
-                        add_generation_prompt=True,
-                        **({"enable_thinking": False} if is_qwen3 else {}),
-                    )
-                except TypeError:
-                    prompt = tokenizer.apply_chat_template(
-                        messages,
-                        tokenize=False,
-                        add_generation_prompt=True,
-                    )
-
+                prompt = _format_chat_prompt(messages, tokenizer, model_key)
                 inputs = tokenizer(
                     prompt,
                     return_tensors="pt",
@@ -705,6 +1052,7 @@ def process_document(
 
                 del inputs, output
                 torch.cuda.empty_cache()
+                inputs = output = None
 
             # --- Parse & validate ---
             try:
@@ -719,14 +1067,19 @@ def process_document(
                         except (ValueError, TypeError):
                             pass
                     semantic_data = EnrichmentModel.model_validate(raw_dict)
-                except (json.JSONDecodeError, ValidationError) as e:
+                except (json.JSONDecodeError, ValidationError) as exc:
                     print(
                         f"  [{file_id}] Persistent validation error "
-                        f"P{page_num} L{line_num}: {e}"
+                        f"P{page_num} L{line_num}: {exc}"
                     )
                     stats["skipped_error"] += 1
                     consecutive_errors += 1
                     if consecutive_errors >= 10:
+                        stats["aborted"] = 1
+                        print(
+                            f"  [{file_id}] Aborting after "
+                            f"{consecutive_errors} consecutive errors."
+                        )
                         break
                     continue
 
@@ -738,19 +1091,19 @@ def process_document(
                 dump_data["extracted_keywords_en"] = []
 
             enriched_lines.append({
-                "file_id": file_id,
-                "page": page_num,
-                "line": line_num,
-                "categ": categ,
+                "file_id":       file_id,
+                "page":          page_num,
+                "line":          line_num,
+                "categ":         categ,
                 "quality_score": float(row.get("quality_score") or 0.0),
                 "original_text": text_chunk,
-                "enrichment": dump_data,
+                "enrichment":    dump_data,
             })
             stats["processed"] += 1
             consecutive_errors = 0
 
-        except Exception as e:
-            print(f"  [{file_id}] Inference error P{page_num} L{line_num}: {e}")
+        except Exception as exc:
+            print(f"  [{file_id}] Inference error P{page_num} L{line_num}: {exc}")
             stats["skipped_error"] += 1
             consecutive_errors += 1
 
@@ -764,10 +1117,257 @@ def process_document(
                     torch.cuda.empty_cache()
 
             if consecutive_errors >= 10:
+                stats["aborted"] = 1
                 print(
-                    f"  [{file_id}] Aborting document after "
+                    f"  [{file_id}] Aborting after "
                     f"{consecutive_errors} consecutive errors."
                 )
                 break
+
+    return enriched_lines, stats
+
+
+# ---------------------------------------------------------------------------
+# 9. vLLM backend — batched document processor
+# ---------------------------------------------------------------------------
+
+def process_document_vllm(
+    csv_path: Path,
+    llm_engine: Any,        # vllm.LLM
+    tokenizer: Any,
+    system_prompt: str,
+    EnrichmentModel: type,  # Pydantic model; JSON schema derived internally
+    max_input_tokens: int,
+    model_key: str,
+    batch_size: int = 16,
+    include_non_text: bool = True,
+    min_char_count: int = 3,
+    min_char_non_text: int = 8,
+    min_alpha_ratio_non_text: float = 0.40,
+) -> Tuple[List[dict], Dict[str, int]]:
+    """
+    Run batched LLM inference over every qualifying line in a single CSV document
+    using the vLLM backend.
+
+    Differences from ``process_document`` (transformers backend):
+      • Lines are submitted in mini-batches (``batch_size``) for high throughput.
+      • Guided JSON decoding is handled natively by vLLM + xgrammar; no
+        lmformatenforcer is needed.
+      • With Automatic Prefix Caching (APC) enabled on the engine, the system
+        prompt's KV-cache is shared across all lines in the document — this is
+        the primary throughput multiplier.
+      • Consecutive-error detection is evaluated after each mini-batch rather
+        than after each line. If ≥10 errors accumulate across a batch, the
+        document is aborted and stats["aborted"] is set.
+
+    Returns:
+        (enriched_lines, stats)  — same schema as ``process_document``.
+    """
+    try:
+        from vllm import SamplingParams
+        from vllm.sampling_params import GuidedDecodingParams
+    except ImportError:
+        raise ImportError(
+            "vLLM is required for process_document_vllm. "
+            "Install with: pip install vllm"
+        )
+
+    from pydantic import ValidationError
+
+    file_id = csv_path.stem
+    enriched_lines: List[dict] = []
+    stats: Dict[str, int] = {
+        "processed": 0,
+        "skipped_filter": 0,
+        "skipped_error": 0,
+        "aborted": 0,
+    }
+    consecutive_errors = 0
+
+    with open(csv_path, "r", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+
+    # Build the guided-decoding sampling params once and reuse for all batches.
+    schema_dict = EnrichmentModel.model_json_schema()
+    guided      = GuidedDecodingParams(json_schema=schema_dict)
+    sampling_params = SamplingParams(
+        temperature=0.0,
+        max_tokens=MAX_NEW_TOKENS,
+        guided_decoding=guided,
+    )
+
+    # First pass: collect all qualifying lines with their row metadata.
+    # This keeps the batch-submission logic clean and makes it easy to
+    # correlate outputs back to rows.
+    qualifying: List[Dict[str, Any]] = []
+    for i, row in enumerate(rows):
+        try:
+            page_num = int(row.get("page_num", row.get("page", 0)))
+            line_num = int(row.get("line_num", row.get("line", 0)))
+        except (ValueError, TypeError):
+            stats["skipped_filter"] += 1
+            continue
+
+        text_chunk = row.get("text", "").strip()
+        categ      = row.get("categ", "").strip()
+
+        should_process, _ = _should_process_line(
+            text_chunk, categ,
+            include_non_text, min_char_count,
+            min_char_non_text, min_alpha_ratio_non_text,
+        )
+        if not should_process:
+            stats["skipped_filter"] += 1
+            continue
+
+        context_chunk = get_context_window(rows, i, window=2)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {
+                "role": "user",
+                "content": (
+                    f"DOCUMENT CONTEXT:\n{context_chunk}\n\n"
+                    "Task: Extract keywords and determine the TEATER category "
+                    "ONLY for the line marked inside <target_line>."
+                ),
+            },
+        ]
+
+        qualifying.append({
+            "row_index":     i,
+            "page_num":      page_num,
+            "line_num":      line_num,
+            "text_chunk":    text_chunk,
+            "categ":         categ,
+            "quality_score": float(row.get("quality_score") or 0.0),
+            "messages":      messages,
+        })
+
+    total_qualifying = len(qualifying)
+    print(
+        f"  [{file_id}] {total_qualifying} lines pass filter "
+        f"({stats['skipped_filter']} skipped). "
+        f"Submitting in batches of {batch_size}…"
+    )
+
+    # Second pass: submit mini-batches to vLLM.
+    aborted = False
+    for batch_start in range(0, total_qualifying, batch_size):
+        if aborted:
+            break
+
+        batch = qualifying[batch_start : batch_start + batch_size]
+        batch_num = batch_start // batch_size + 1
+        total_batches = (total_qualifying + batch_size - 1) // batch_size
+
+        # Format prompts using the model's chat template
+        prompts: List[str] = []
+        for item in batch:
+            try:
+                prompts.append(
+                    _format_chat_prompt(item["messages"], tokenizer, model_key)
+                )
+            except Exception as fmt_err:
+                print(
+                    f"  [{file_id}] Prompt-format error "
+                    f"P{item['page_num']} L{item['line_num']}: {fmt_err}"
+                )
+                prompts.append("")   # placeholder; will fail gracefully below
+
+        # Submit entire batch to vLLM in one call
+        try:
+            outputs = llm_engine.generate(prompts, sampling_params)
+        except Exception as batch_err:
+            # Batch-level failure (e.g. OOM, NCCL error) — count all lines as errors
+            print(
+                f"  [{file_id}] Batch {batch_num}/{total_batches} failed: {batch_err}"
+            )
+            stats["skipped_error"] += len(batch)
+            consecutive_errors += len(batch)
+            if consecutive_errors >= 10:
+                stats["aborted"] = 1
+                aborted = True
+                print(
+                    f"  [{file_id}] Aborting after batch failure "
+                    f"({consecutive_errors} consecutive errors)."
+                )
+            continue
+
+        print(
+            f"  [{file_id}] Batch {batch_num}/{total_batches} "
+            f"({len(batch)} lines) complete."
+        )
+
+        # Parse each output
+        for item, vllm_output in zip(batch, outputs):
+            page_num = item["page_num"]
+            line_num = item["line_num"]
+
+            try:
+                result_json = vllm_output.outputs[0].text
+            except (IndexError, AttributeError) as exc:
+                print(
+                    f"  [{file_id}] Empty output P{page_num} L{line_num}: {exc}"
+                )
+                stats["skipped_error"] += 1
+                consecutive_errors += 1
+                if consecutive_errors >= 10:
+                    stats["aborted"] = 1
+                    aborted = True
+                    print(
+                        f"  [{file_id}] Aborting after "
+                        f"{consecutive_errors} consecutive errors."
+                    )
+                    break
+                continue
+
+            # Validate against Pydantic model
+            try:
+                semantic_data = EnrichmentModel.model_validate_json(result_json)
+            except ValidationError:
+                try:
+                    raw_dict = json.loads(result_json, strict=False)
+                    if "confidence_score" in raw_dict:
+                        try:
+                            val = float(raw_dict["confidence_score"])
+                            raw_dict["confidence_score"] = min(1.0, max(0.0, val))
+                        except (ValueError, TypeError):
+                            pass
+                    semantic_data = EnrichmentModel.model_validate(raw_dict)
+                except (json.JSONDecodeError, ValidationError) as exc:
+                    print(
+                        f"  [{file_id}] Persistent validation error "
+                        f"P{page_num} L{line_num}: {exc}"
+                    )
+                    stats["skipped_error"] += 1
+                    consecutive_errors += 1
+                    if consecutive_errors >= 10:
+                        stats["aborted"] = 1
+                        aborted = True
+                        print(
+                            f"  [{file_id}] Aborting after "
+                            f"{consecutive_errors} consecutive errors."
+                        )
+                        break
+                    continue
+
+            dump_data = semantic_data.model_dump()
+            dump_data["teater_category"] = semantic_data.category_name()
+
+            if dump_data.get("teater_category") == "Nerelevantní (meta-text)":
+                dump_data["extracted_keywords_cs"] = []
+                dump_data["extracted_keywords_en"] = []
+
+            enriched_lines.append({
+                "file_id":       file_id,
+                "page":          page_num,
+                "line":          line_num,
+                "categ":         item["categ"],
+                "quality_score": item["quality_score"],
+                "original_text": item["text_chunk"],
+                "enrichment":    dump_data,
+            })
+            stats["processed"] += 1
+            consecutive_errors = 0
 
     return enriched_lines, stats

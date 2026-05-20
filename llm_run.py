@@ -9,45 +9,65 @@ Usage:
     python llm_run.py               # uses llm_config.txt in the current directory
     python llm_run.py my_config.txt # uses a custom config file
 
+Backend selection (set BACKEND= in llm_config.txt):
+    transformers  — HuggingFace Transformers + BnB 4-bit + lmformatenforcer.
+                    Best for single-GPU runs on models ≤ 31 B.
+    vllm          — vLLM + xgrammar guided decoding + Automatic Prefix Caching.
+                    Required for models ≥ 70 B or any multi-GPU node.
+                    Set TENSOR_PARALLEL_SIZE, GPU_MEMORY_UTILIZATION, etc.
+
+Abort-marker behaviour (bug fix v0.10.1):
+    When a document is aborted after 10 consecutive inference errors:
+      • Partial results (if any) are written to the normal output JSON.
+      • A sidecar ``<stem>_enriched.abort.json`` file is written alongside the
+        output, containing abort metadata (reason, processed count, timestamp).
+    Previously, aborted documents with partial results were written silently
+    with no indication that the output was incomplete.
+
 NOTE: llm_utils is imported first so its PYTORCH_CUDA_ALLOC_CONF guard fires
 before any other CUDA-touching library is loaded.
 """
 
-# llm_utils sets PYTORCH_CUDA_ALLOC_CONF at module level, so this import
-# must come before any other library that might touch the CUDA context.
-import llm_utils  # noqa: F401  (side-effect: env-var + compat patches)
+# llm_utils sets PYTORCH_CUDA_ALLOC_CONF at module level — this import
+# MUST come before any other library that might touch the CUDA context.
+import llm_utils  # noqa: F401  (side-effect: env-var guard + compat patches)
 
+import datetime
+import enum
 import json
 import os
 import sys
 from pathlib import Path
-from pydantic import BaseModel, Field, ValidationError         # noqa: E402
-from typing import Any, Dict, List, Tuple
-import enum
+from typing import Any, Dict, List, Optional, Tuple
 
 import torch
-from lmformatenforcer import JsonSchemaParser
-from lmformatenforcer.integrations.transformers import (
-    build_transformers_prefix_allowed_tokens_fn,
-)
+from pydantic import BaseModel, Field, ValidationError
 
 from atrium_paradata import ParadataLogger
 from vocab_manager import VocabularyManager
 
-from llm_utils import count_tokens, load_config, load_model_and_tokenizer, process_document
-from llm_utils import CONTEXT_RESERVED
+from llm_utils import (
+    count_tokens,
+    load_config,
+    load_model_and_tokenizer,
+    load_vllm_engine,
+    process_document,
+    process_document_vllm,
+    CONTEXT_RESERVED,
+)
+
 
 # ---------------------------------------------------------------------------
-# Vocabulary Helpers
+# Vocabulary helpers
 # ---------------------------------------------------------------------------
 
 def _term_priority(cs: str, en: str) -> int:
     """
     Return a sort key (lower = higher priority) for vocabulary term ordering.
 
-    Priority 2 (lowest / sorted last): ambiguous or proper-noun-only terms.
-    Priority 1: multi-word proper-noun pairs that are likely named entities.
-    Priority 0 (default): ordinary archaeological terms kept at front.
+    Priority 2 (sorted last):  ambiguous or proper-noun-only terms.
+    Priority 1:                multi-word proper-noun pairs (likely named entities).
+    Priority 0 (default):      ordinary archaeological terms — kept at front.
     """
     if en.rstrip().endswith("(the)"):
         return 2
@@ -81,16 +101,20 @@ def _term_priority(cs: str, en: str) -> int:
 
     return 0
 
+
 # ---------------------------------------------------------------------------
-# Dynamic Pydantic Schema Builder
+# Dynamic Pydantic schema builder
 # ---------------------------------------------------------------------------
 
 def build_schema(term_names: List[str]) -> type:
     """
-    Dynamically construct a Pydantic model whose teater_category field is an
-    Enum constrained to exactly the vocabulary terms that survived the token
-    budget.  This drives the lm-format-enforcer JSON schema state machine so
-    the model can only ever output a valid category.
+    Dynamically construct a Pydantic model whose ``teater_category`` field is
+    constrained to exactly the vocabulary terms that survived the token budget.
+
+    For the transformers backend this schema drives the lm-format-enforcer
+    JSON-schema state machine so the model can only ever emit a valid category.
+    For the vLLM backend the JSON schema dict (``model.model_json_schema()``)
+    is passed directly to ``GuidedDecodingParams``.
     """
     if not term_names:
         raise ValueError(
@@ -105,22 +129,21 @@ def build_schema(term_names: List[str]) -> type:
         extracted_keywords_cs: List[str] = Field(
             ...,
             description=(
-                "Key Czech archaeological terms, methods, or objects found ONLY in the text "
-                "marked with (>>>). "
-                "DO NOT copy terms from the THEMATIC VOCABULARY list into this array. "
-                "If no relevant archaeological terms are present in the target line, return []. "
-                "If teater_category is 'Nerelevantní (meta-text)', this array MUST be empty []. "
-                "Do not extract any terms from administrative lines. "
-                "Extract meaningful multi-word phrases when the archaeological entity is "
-                "a compound concept (e.g., 'zásobní jáma', 'kamenná konstrukce', "
-                "'kostrový pohřeb') rather than isolated single words."
+                "Key Czech archaeological terms, methods, or objects found ONLY in "
+                "the text marked with (>>>). "
+                "DO NOT copy terms from the THEMATIC VOCABULARY list. "
+                "If no relevant archaeological terms appear in the target line, "
+                "return []. "
+                "If teater_category is 'Nerelevantní (meta-text)', MUST be []. "
+                "Do not extract names of researchers or administrative words. "
+                "Prefer normalised multi-word phrases over isolated single words."
             ),
         )
         extracted_keywords_en: List[str] = Field(
             ...,
             description=(
                 "Accurate English translations of extracted_keywords_cs. "
-                "Do not copy the Czech words unchanged."
+                "Do not copy Czech words unchanged."
             ),
         )
         teater_category: TermEnum = Field(
@@ -132,13 +155,12 @@ def build_schema(term_names: List[str]) -> type:
             ge=0.0,
             le=1.0,
             description=(
-                "Your confidence that the selected teater_category is correct. "
-                "Use 1.0 only when the line unambiguously matches the category with no "
-                "interpretation required. "
-                "Use 0.7–0.9 for reasonable but non-obvious matches. "
-                "Use 0.5–0.7 when multiple categories could apply. "
-                "Use below 0.5 when forced to guess. "
-                "Do NOT output 1.0 uniformly — this field is used for quality filtering."
+                "Confidence that the selected teater_category is correct. "
+                "1.0 — unambiguous match, no interpretation required. "
+                "0.7–0.9 — reasonable but non-obvious match. "
+                "0.5–0.7 — multiple categories could apply. "
+                "< 0.5 — forced guess. "
+                "Do NOT output 1.0 uniformly — this field is used for filtering."
             ),
         )
 
@@ -147,18 +169,28 @@ def build_schema(term_names: List[str]) -> type:
 
     return ConstrainedEnrichment
 
+
 # ---------------------------------------------------------------------------
-# Thematic System Prompt Builder
+# System prompt builder
 # ---------------------------------------------------------------------------
 
 def build_system_prompt(
-    vocab_data: dict, tokenizer: Any, max_tokens: int
+    vocab_data: dict,
+    tokenizer: Any,
+    max_tokens: int,
+    skip_truncation: bool = False,
 ) -> Tuple[str, List[str]]:
     """
     Build the system prompt that embeds the thematic vocabulary.
 
-    If the full vocabulary exceeds the token budget (max_tokens), binary-search
-    for the largest prefix that still fits, preserving the highest-priority terms.
+    If the full vocabulary exceeds ``max_tokens``, binary-search for the
+    largest prefix that still fits, preserving the highest-priority terms.
+
+    When ``skip_truncation=True`` (used with vLLM + Automatic Prefix Caching),
+    truncation is still attempted but the budget is set to the full model
+    context window rather than the conservative CONTEXT_RESERVED limit.
+    With APC the system prompt is computed once, so injecting the full
+    vocabulary costs nothing extra per line.
 
     Returns:
         (system_prompt_text, surviving_term_names_cs)
@@ -169,26 +201,31 @@ def build_system_prompt(
         "within its surrounding document context.\n"
         "1. Extract ONLY archaeological entities, features, periods, or materials "
         "from the marked line. "
-        "Do NOT extract names of researchers, dates, conjunctions, or administrative words.\n"
-        "2. Select the SINGLE most relevant category from the thematic vocabulary list below.\n"
-        "CRITICAL: If the marked line is purely administrative, a table of contents, a generic heading "
-        "(e.g., page numbers, titles, author names, 'Práce:', 'Obsah:', literature references) or lacks direct archaeological context, "
+        "Do NOT extract names of researchers, dates, conjunctions, or "
+        "administrative words.\n"
+        "2. Select the SINGLE most relevant category from the thematic vocabulary "
+        "list below.\n"
+        "CRITICAL: If the marked line is purely administrative, a table of contents, "
+        "a generic heading (e.g. page numbers, titles, author names, 'Práce:', "
+        "'Obsah:', literature references) or lacks direct archaeological context, "
         "you MUST select 'Nerelevantní (meta-text)'.\n"
         "NEVER select a country name, language name, or geographic region name "
         "as the teater_category for any line — including administrative lines. "
         "For any line that lacks direct archaeological significance, "
         "you MUST use 'Nerelevantní (meta-text)'.\n"
-        "When extracting keywords, normalize obvious OCR artifacts and typos to their "
-        "correct Czech forms. "
+        "When extracting keywords, normalize obvious OCR artifacts and typos to "
+        "their correct Czech forms. "
         "Do NOT include garbled tokens or split words as keywords. "
         "Prefer the normalized phrase over the raw OCR text.\n"
-        "You MUST use the exact Czech term as written.\n"
-        "You MUST respond ONLY with a valid JSON object matching the requested schema.\n\n"
+        "You MUST use the exact Czech term as written in the vocabulary.\n"
+        "You MUST respond ONLY with a valid JSON object matching the requested "
+        "schema.\n\n"
         "THEMATIC VOCABULARY:\n"
     )
 
     # Collect and prioritise all vocabulary terms
     raw_terms: List[dict] = []
+    # Always-present meta-text sentinel — must survive any truncation
     raw_terms.append({
         "theme": "Administrative / Meta",
         "cs": "Nerelevantní (meta-text)",
@@ -210,6 +247,7 @@ def build_system_prompt(
                     en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
                     raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
+    # Sentinel always first; remaining terms sorted by priority
     prioritised = [raw_terms[0]] + sorted(
         raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"])
     )
@@ -231,13 +269,17 @@ def build_system_prompt(
 
         if other_terms:
             prompt += "\n--- Other (Misc) ---\n"
-            prompt += "\n".join(
-                f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
-            ) + "\n"
+            prompt += (
+                "\n".join(
+                    f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
+                )
+                + "\n"
+            )
 
         prompt += (
             "\nEXAMPLES:\n\n"
-            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. století.\"\n"
+            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. "
+            "století.\"\n"
             "Correct output:\n"
             "{\n"
             "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
@@ -256,39 +298,83 @@ def build_system_prompt(
         )
         return prompt
 
-    full_prompt = _build_candidate_prompt(prioritised)
-    token_count = count_tokens(full_prompt, tokenizer)
+    full_prompt  = _build_candidate_prompt(prioritised)
+    token_count  = count_tokens(full_prompt, tokenizer)
     print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
 
-    if token_count <= max_tokens:
-        print("[vocab] Full vocabulary fits in context window.")
+    if skip_truncation:
+        print(
+            "[vocab] Prefix caching enabled — skipping truncation, "
+            f"injecting full vocabulary ({token_count} tokens)."
+        )
         return full_prompt, [t["cs"] for t in prioritised]
 
-    print(f"[WARN] Vocabulary ({token_count} tokens) exceeds budget ({max_tokens}). Truncating.")
+    if token_count <= max_tokens:
+        print("[vocab] Full vocabulary fits within token budget.")
+        return full_prompt, [t["cs"] for t in prioritised]
+
+    print(
+        f"[WARN] Vocabulary ({token_count} tokens) exceeds budget "
+        f"({max_tokens}). Binary-searching for largest fitting prefix…"
+    )
 
     lo, hi = 0, len(prioritised)
     while lo < hi - 1:
-        mid = (lo + hi) // 2
+        mid       = (lo + hi) // 2
         candidate = _build_candidate_prompt(prioritised[:mid])
         if count_tokens(candidate, tokenizer) <= max_tokens:
             lo = mid
         else:
             hi = mid
 
-    surviving_terms = prioritised[:lo]
+    surviving_terms  = prioritised[:lo]
     surviving_prompt = _build_candidate_prompt(surviving_terms)
-    surviving_cs = [t["cs"] for t in surviving_terms]
+    surviving_cs     = [t["cs"] for t in surviving_terms]
+
+    print(
+        f"[vocab] Truncated to {len(surviving_cs)} terms "
+        f"({count_tokens(surviving_prompt, tokenizer)} tokens)."
+    )
     return surviving_prompt, surviving_cs
 
+
 # ---------------------------------------------------------------------------
-# Entry Point
+# Abort-marker writer
 # ---------------------------------------------------------------------------
 
-def main(config_path: str = "llm_config.txt") -> None:
+def _write_abort_marker(
+    out_file: Path,
+    stats: Dict[str, int],
+    reason: str = "10 consecutive inference errors",
+) -> None:
+    """
+    Write a sidecar ``<stem>_enriched.abort.json`` file next to *out_file*.
+
+    This file is the canonical signal that the corresponding output JSON
+    (if it exists) contains only partial results. Downstream consumers should
+    check for the presence of this sidecar before treating the output as
+    complete.
+    """
+    abort_file = out_file.with_suffix("").with_suffix(".abort.json")
+    payload = {
+        "aborted":                True,
+        "abort_reason":           reason,
+        "processed_before_abort": stats.get("processed", 0),
+        "errors_before_abort":    stats.get("skipped_error", 0),
+        "timestamp_utc":          datetime.datetime.utcnow().isoformat(timespec="seconds"),
+    }
+    with open(abort_file, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    print(f"  -> Abort marker written: {abort_file.name}")
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity OK)
     # ------------------------------------------------------------------
     # 1. Load configuration
-    # These steps happen before the logger is created; any error here is
-    # a hard misconfiguration that should surface immediately.
     # ------------------------------------------------------------------
     config = load_config(config_path)
 
@@ -298,36 +384,56 @@ def main(config_path: str = "llm_config.txt") -> None:
     VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
     PARADATA_DIR = config.get("PARADATA_DIR", "paradata")
 
-    # Append model name suffix so results from different models never
-    # overwrite each other.
+    # Append model-name suffix so outputs from different models never collide.
     _base_out     = Path(config.get("OUTPUT_DIR", "data_samples/KW_PER_DOC_LLM"))
     _model_suffix = MODEL_KEY.replace(".", "").replace("-", "_")
     OUTPUT_DIR    = _base_out.parent / f"{_base_out.name}_{_model_suffix}"
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"=== Output directory: {OUTPUT_DIR} ===")
 
     INCLUDE_NON_TEXT         = config.get("INCLUDE_NON_TEXT", "true").lower() == "true"
     MIN_CHAR_COUNT           = int(config.get("MIN_CHAR_COUNT",           "3"))
     MIN_CHAR_NON_TEXT        = int(config.get("MIN_CHAR_NON_TEXT",        "8"))
     MIN_ALPHA_RATIO_NON_TEXT = float(config.get("MIN_ALPHA_RATIO_NON_TEXT", "0.40"))
 
+    # Backend
+    BACKEND = config.get("BACKEND", "transformers").lower()
+    if BACKEND not in {"transformers", "vllm"}:
+        raise ValueError(
+            f"Unknown BACKEND='{BACKEND}'. Must be 'transformers' or 'vllm'."
+        )
+
+    # vLLM-specific parameters
+    TENSOR_PARALLEL_SIZE    = int(config.get("TENSOR_PARALLEL_SIZE",    "1"))
+    GPU_MEMORY_UTILIZATION  = float(config.get("GPU_MEMORY_UTILIZATION",  "0.90"))
+    GUIDED_DECODING_BACKEND = config.get("GUIDED_DECODING_BACKEND", "xgrammar")
+    ENABLE_PREFIX_CACHING   = config.get("ENABLE_PREFIX_CACHING", "true").lower() == "true"
+    VLLM_BATCH_SIZE         = int(config.get("VLLM_BATCH_SIZE", "16"))
+    MAX_MODEL_LEN_RAW       = config.get("MAX_MODEL_LEN", "").strip()
+    MAX_MODEL_LEN: Optional[int] = int(MAX_MODEL_LEN_RAW) if MAX_MODEL_LEN_RAW else None
+
+    print(
+        f"=== LLM Semantic Enrichment Pipeline ===\n"
+        f"    model:   {MODEL_KEY}\n"
+        f"    backend: {BACKEND}\n"
+        f"    output:  {OUTPUT_DIR}"
+    )
+    if BACKEND == "vllm":
+        print(
+            f"    tp_size: {TENSOR_PARALLEL_SIZE}, "
+            f"gpu_mem: {GPU_MEMORY_UTILIZATION:.2f}, "
+            f"apc: {ENABLE_PREFIX_CACHING}, "
+            f"batch: {VLLM_BATCH_SIZE}"
+        )
+
     # ------------------------------------------------------------------
-    # 2. Paradata logger
-    #
-    # Used as a context manager so that finalize() is ALWAYS called —
-    # even when steps 3-6 raise an unexpected exception.
-    #
-    # Normal path:  logger.finalize() is called explicitly at the end of
-    #               the `with` block (step 7), with the correct input_total.
-    # Exception path: __exit__ calls finalize() automatically with no
-    #               input_total (inferred as processed + skipped), then
-    #               re-raises the original exception.
+    # 2. Paradata logger (context manager — finalize() always called)
     # ------------------------------------------------------------------
     logger = ParadataLogger(
         program="nlp-enrich",
         config={
             **config,
             "output_dir_resolved":      str(OUTPUT_DIR),
+            "backend":                  BACKEND,
             "include_non_text":         INCLUDE_NON_TEXT,
             "min_char_count":           MIN_CHAR_COUNT,
             "min_char_non_text":        MIN_CHAR_NON_TEXT,
@@ -340,8 +446,6 @@ def main(config_path: str = "llm_config.txt") -> None:
     with logger:
         # --------------------------------------------------------------
         # 3. Vocabulary
-        # Inside the context manager so a vocab failure is logged before
-        # the exception propagates.
         # --------------------------------------------------------------
         vocab_mgr  = VocabularyManager(vocab_path=VOCAB_PATH)
         vocab_data = vocab_mgr.load()
@@ -356,31 +460,69 @@ def main(config_path: str = "llm_config.txt") -> None:
                 "Vocabulary is empty. "
                 "Run vocab_manager.py on a node with internet access first."
             )
-        print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
+        print(
+            f"=== Vocabulary: {total_terms} terms in "
+            f"{len(vocab_data)} broad categories ==="
+        )
 
         # --------------------------------------------------------------
-        # 4. Model + tokenizer
+        # 4. Model / engine loader
         # --------------------------------------------------------------
-        model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
-        is_gguf          = spec.get("is_gguf", False)
+        if BACKEND == "vllm":
+            llm_engine, tokenizer, spec = load_vllm_engine(
+                model_key=MODEL_KEY,
+                hf_token=HF_TOKEN,
+                tensor_parallel_size=TENSOR_PARALLEL_SIZE,
+                gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
+                guided_decoding_backend=GUIDED_DECODING_BACKEND,
+                enable_prefix_caching=ENABLE_PREFIX_CACHING,
+                max_model_len=MAX_MODEL_LEN,
+            )
+            model       = None      # not used in vLLM path
+            is_gguf     = False
+            prefix_function = None  # vLLM handles guided decoding natively
+            parser      = None
+
+        else:  # transformers
+            model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
+            llm_engine  = None
+            is_gguf     = spec.get("is_gguf", False)
+
         max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
 
         # --------------------------------------------------------------
         # 5. System prompt + constrained schema
         # --------------------------------------------------------------
+        # With vLLM + Automatic Prefix Caching, the system prompt KV-cache
+        # is shared across all lines in the document — injecting the full
+        # vocabulary is effectively free (computed once, reused N times).
+        skip_trunc = BACKEND == "vllm" and ENABLE_PREFIX_CACHING
+
         system_prompt, surviving_terms = build_system_prompt(
-            vocab_data, tokenizer, max_input_tokens
+            vocab_data,
+            tokenizer,
+            max_tokens=max_input_tokens,
+            skip_truncation=skip_trunc,
         )
         EnrichmentModel = build_schema(surviving_terms)
 
-        print("=== Compiling JSON Schema State Machine ===")
-        parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
+        if BACKEND == "vllm":
+            print("=== vLLM guided decoding: JSON schema registered ===")
+            # Schema dict is passed to GuidedDecodingParams inside
+            # process_document_vllm — no lmformatenforcer required.
 
-        prefix_function = (
-            None  # GGUF: handled inline inside process_document
-            if is_gguf
-            else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
-        )
+        else:
+            print("=== Compiling JSON Schema State Machine (lmformatenforcer) ===")
+            from lmformatenforcer import JsonSchemaParser
+            from lmformatenforcer.integrations.transformers import (
+                build_transformers_prefix_allowed_tokens_fn,
+            )
+            parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
+            prefix_function = (
+                None  # GGUF: handled inline inside process_document
+                if is_gguf
+                else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
+            )
 
         print("=== Pipeline ready ===")
 
@@ -390,6 +532,7 @@ def main(config_path: str = "llm_config.txt") -> None:
         csv_files       = sorted(INPUT_DIR.glob("*.csv"))
         total_processed = 0
         total_errors    = 0
+        total_aborted   = 0
 
         for csv_file in csv_files:
             out_file = OUTPUT_DIR / f"{csv_file.stem}_enriched.json"
@@ -399,37 +542,62 @@ def main(config_path: str = "llm_config.txt") -> None:
                 logger.log_skip(csv_file.name, "already_exists")
                 continue
 
-            print(f"Processing: {csv_file.name} ...")
-            try:
-                enriched_results, doc_stats = process_document(
-                    csv_path=csv_file,
-                    model=model,
-                    tokenizer=tokenizer,
-                    parser=parser,
-                    prefix_function=prefix_function,
-                    system_prompt=system_prompt,
-                    EnrichmentModel=EnrichmentModel,
-                    max_input_tokens=max_input_tokens,
-                    is_gguf=is_gguf,
-                    model_key=MODEL_KEY,
-                    include_non_text=INCLUDE_NON_TEXT,
-                    min_char_count=MIN_CHAR_COUNT,
-                    min_char_non_text=MIN_CHAR_NON_TEXT,
-                    min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
-                )
+            print(f"\nProcessing: {csv_file.name} …")
 
+            try:
+                if BACKEND == "vllm":
+                    enriched_results, doc_stats = process_document_vllm(
+                        csv_path=csv_file,
+                        llm_engine=llm_engine,
+                        tokenizer=tokenizer,
+                        system_prompt=system_prompt,
+                        EnrichmentModel=EnrichmentModel,
+                        max_input_tokens=max_input_tokens,
+                        model_key=MODEL_KEY,
+                        batch_size=VLLM_BATCH_SIZE,
+                        include_non_text=INCLUDE_NON_TEXT,
+                        min_char_count=MIN_CHAR_COUNT,
+                        min_char_non_text=MIN_CHAR_NON_TEXT,
+                        min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
+                    )
+                else:
+                    enriched_results, doc_stats = process_document(
+                        csv_path=csv_file,
+                        model=model,
+                        tokenizer=tokenizer,
+                        parser=parser,
+                        prefix_function=prefix_function,
+                        system_prompt=system_prompt,
+                        EnrichmentModel=EnrichmentModel,
+                        max_input_tokens=max_input_tokens,
+                        is_gguf=is_gguf,
+                        model_key=MODEL_KEY,
+                        include_non_text=INCLUDE_NON_TEXT,
+                        min_char_count=MIN_CHAR_COUNT,
+                        min_char_non_text=MIN_CHAR_NON_TEXT,
+                        min_alpha_ratio_non_text=MIN_ALPHA_RATIO_NON_TEXT,
+                    )
+
+                was_aborted = bool(doc_stats.get("aborted"))
                 total_processed += doc_stats["processed"]
                 total_errors    += doc_stats["skipped_error"]
+                if was_aborted:
+                    total_aborted += 1
+
                 print(
                     f"  processed={doc_stats['processed']}, "
                     f"skipped_filter={doc_stats['skipped_filter']}, "
                     f"errors={doc_stats['skipped_error']}"
+                    + (" [ABORTED]" if was_aborted else "")
                 )
 
+                # Write output if we have any results (partial or complete)
                 if enriched_results:
                     with open(out_file, "w", encoding="utf-8") as out_f:
                         json.dump(enriched_results, out_f, indent=4, ensure_ascii=False)
-                    print(f"  -> {len(enriched_results)} records → {out_file.name}")
+                    print(
+                        f"  -> {len(enriched_results)} records → {out_file.name}"
+                    )
                     logger.log_success("json", count=1)
                     logger.log_document_success()
                 else:
@@ -438,31 +606,42 @@ def main(config_path: str = "llm_config.txt") -> None:
                         "No lines passed quality filter or all inference calls failed.",
                     )
 
-            except Exception as e:
-                print(f"Critical error on {csv_file.name}: {e}")
-                logger.log_skip(csv_file.name, str(e))
+                # Write abort sidecar — regardless of whether results exist.
+                # The presence of this file is the canonical signal that the
+                # output is incomplete. Bug fix: previously no marker was written.
+                if was_aborted:
+                    _write_abort_marker(
+                        out_file=out_file,
+                        stats=doc_stats,
+                        reason="10 consecutive inference errors",
+                    )
+
+            except Exception as exc:
+                print(f"  Critical error on {csv_file.name}: {exc}")
+                logger.log_skip(csv_file.name, str(exc))
 
             finally:
-                if not is_gguf and torch.cuda.is_available():
-                    torch.cuda.empty_cache()
+                if BACKEND == "transformers" and not is_gguf:
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
 
         # --------------------------------------------------------------
-        # 7. Summary + explicit finalize (normal-path only)
-        #
-        # logger._skipped is a private attribute; access it here, before
-        # finalize() is called, because finalize() marks the logger as
-        # done. The attribute itself is not cleared by finalize(), but
-        # reading it before makes the ordering dependency explicit.
+        # 7. Summary + finalize
         # --------------------------------------------------------------
-        already_done  = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
-        true_failures = sum(1 for s in logger._skipped if s.get("reason") != "already_exists")
-        print(
-            f"\n=== Paradata note: {already_done} files skipped (already done), "
-            f"{true_failures} files skipped (errors) ==="
+        already_done  = sum(
+            1 for s in logger._skipped if s.get("reason") == "already_exists"
+        )
+        true_failures = sum(
+            1 for s in logger._skipped if s.get("reason") != "already_exists"
         )
         print(
-            f"=== Run complete: {total_processed} lines enriched, "
-            f"{total_errors} inference errors across {len(csv_files)} files ==="
+            f"\n=== Run complete ===\n"
+            f"    lines enriched: {total_processed}\n"
+            f"    inference errors: {total_errors}\n"
+            f"    aborted documents: {total_aborted}\n"
+            f"    files processed: {len(csv_files)}\n"
+            f"    skipped (already done): {already_done}\n"
+            f"    skipped (errors): {true_failures}"
         )
         logger.finalize(input_total=len(csv_files))
         # __exit__ checks _finalised and will not double-call finalize()
