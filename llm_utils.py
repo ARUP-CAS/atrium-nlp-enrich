@@ -693,6 +693,7 @@ def load_vllm_engine(
     guided_decoding_backend: str = "xgrammar",
     enable_prefix_caching: bool = True,
     max_model_len: Optional[int] = None,
+    cpu_offload_gb: int = 0,
 ) -> Tuple[Any, Any, dict]:
     """
     Load a model via vLLM for high-throughput, multi-GPU inference.
@@ -705,6 +706,12 @@ def load_vllm_engine(
         run; its KV-cache is reused for every line in the document. This is the
         primary throughput multiplier for this pipeline.
       • Native guided JSON decoding via xgrammar — no lmformatenforcer needed.
+      • CPU weight offloading (``cpu_offload_gb > 0``) — keeps
+        ``cpu_offload_gb`` GB of model weights in CPU RAM and transfers them
+        to GPU on demand. Use on nodes whose GPU VRAM is insufficient for the
+        model weights but whose CPU RAM is large enough (e.g. dll-4gpu3 or
+        dll-8gpu both have 515 GB RAM). Reduces throughput by 3–6×; acceptable
+        for overnight batch runs.
 
     Returns:
         (llm_engine, tokenizer, spec)
@@ -769,6 +776,12 @@ def load_vllm_engine(
     )
     if max_model_len:
         print(f"    max_model_len={max_model_len} (overriding model default)")
+    if cpu_offload_gb > 0:
+        print(
+            f"    cpu_offload_gb={cpu_offload_gb} "
+            f"(offloading {cpu_offload_gb} GB of weights to CPU RAM; "
+            f"throughput will be reduced)"
+        )
 
     engine_kwargs: Dict[str, Any] = dict(
         model=hf_id,
@@ -785,6 +798,9 @@ def load_vllm_engine(
 
     if max_model_len:
         engine_kwargs["max_model_len"] = max_model_len
+
+    if cpu_offload_gb > 0:
+        engine_kwargs["cpu_offload_gb"] = cpu_offload_gb
 
     if hf_token:
         os.environ.setdefault("HF_TOKEN", hf_token)

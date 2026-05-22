@@ -410,6 +410,9 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     VLLM_BATCH_SIZE         = int(config.get("VLLM_BATCH_SIZE", "16"))
     MAX_MODEL_LEN_RAW       = config.get("MAX_MODEL_LEN", "").strip()
     MAX_MODEL_LEN: Optional[int] = int(MAX_MODEL_LEN_RAW) if MAX_MODEL_LEN_RAW else None
+    # CPU weight offloading — for nodes where GPU VRAM < model weights but
+    # CPU RAM is large enough (dll-4gpu3 / dll-8gpu both have 515 GB RAM).
+    CPU_OFFLOAD_GB          = int(config.get("CPU_OFFLOAD_GB", "0"))
 
     print(
         f"=== LLM Semantic Enrichment Pipeline ===\n"
@@ -477,6 +480,7 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
                 guided_decoding_backend=GUIDED_DECODING_BACKEND,
                 enable_prefix_caching=ENABLE_PREFIX_CACHING,
                 max_model_len=MAX_MODEL_LEN,
+                cpu_offload_gb=CPU_OFFLOAD_GB,
             )
             model       = None      # not used in vLLM path
             is_gguf     = False
