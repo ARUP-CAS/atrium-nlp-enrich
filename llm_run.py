@@ -513,6 +513,11 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
 
         else:
             print("=== Compiling JSON Schema State Machine (lmformatenforcer) ===")
+            # Re-apply the tokenizer compat shim one final time.
+            # llm_utils already applied it twice (stub + real-module passes),
+            # but if any intervening import replaced sys.modules again this
+            # guarantees lmformatenforcer.integrations.transformers sees the patch.
+            llm_utils._patch_tokenizer_compat()
             from lmformatenforcer import JsonSchemaParser
             from lmformatenforcer.integrations.transformers import (
                 build_transformers_prefix_allowed_tokens_fn,

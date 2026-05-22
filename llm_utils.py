@@ -43,12 +43,64 @@ import torch
 # ---------------------------------------------------------------------------
 # Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
 # ---------------------------------------------------------------------------
+#
+# Root-cause (observed with transformers 5.7.0.dev0 + lm-format-enforcer 0.11.3):
+#
+#   transformers 5.x uses lazy module stubs for sub-modules.  When Python first
+#   executes `import transformers.tokenization_utils`, it returns a lightweight
+#   stub object (whose __file__ is None — hence "(unknown location)" in tracebacks).
+#   That stub is stored in sys.modules['transformers.tokenization_utils'].
+#
+#   When `from transformers import AutoModelForCausalLM, AutoTokenizer` runs
+#   (line ~137 of this file), transformers finishes its internal initialisation
+#   and REPLACES every lazy stub in sys.modules with the corresponding real module
+#   object.  The real transformers.tokenization_utils no longer re-exports
+#   PreTrainedTokenizerBase (it was cleaned up in v5.x — the class lives only in
+#   tokenization_utils_base).
+#
+#   lmformatenforcer.integrations.transformers is imported lazily inside main()
+#   (after the AutoModelForCausalLM import).  At that point it sees the REAL
+#   module and raises:
+#       ImportError: cannot import name 'PreTrainedTokenizerBase'
+#                    from 'transformers.tokenization_utils' (unknown location)
+#   lmformatenforcer then wraps this as "transformers is not installed" — which
+#   is a misleading message.
+#
+# Fix: apply the patch twice —
+#   Pass 1 (below):  patches the lazy stub so early imports of lmformatenforcer
+#                    would also work.
+#   Pass 2 (line ~137): re-applies to the REAL resolved module after
+#                    `from transformers import ...` fires.
 
+import sys as _sys_tc
 import transformers.tokenization_utils as _tu
 import transformers.tokenization_utils_base as _tub
 
-if not hasattr(_tu, "PreTrainedTokenizerBase"):
-    _tu.PreTrainedTokenizerBase = _tub.PreTrainedTokenizerBase
+
+def _patch_tokenizer_compat() -> bool:
+    """
+    Inject PreTrainedTokenizerBase into the live transformers.tokenization_utils
+    module if it is missing.
+
+    Must be called TWICE:
+      1. At module load time (Pass 1, below) — patches the lazy stub.
+      2. After ``from transformers import AutoModelForCausalLM, AutoTokenizer``
+         (Pass 2, below) — patches the real module that replaces the lazy stub.
+
+    Safe to call any number of times; subsequent calls are no-ops once the
+    attribute is present.
+    """
+    # Always operate on the *live* sys.modules entry, not the stub captured
+    # at import time — they may be different objects after lazy resolution.
+    live = _sys_tc.modules.get("transformers.tokenization_utils", _tu)
+    if not hasattr(live, "PreTrainedTokenizerBase"):
+        if hasattr(_tub, "PreTrainedTokenizerBase"):
+            live.PreTrainedTokenizerBase = _tub.PreTrainedTokenizerBase
+            return True
+    return False
+
+
+_patch_tokenizer_compat()   # Pass 1 — lazy stub
 
 
 # ---------------------------------------------------------------------------
@@ -135,6 +187,9 @@ _patch_params4bit_compat()
 
 # Transformers imports — deferred inside functions where only needed by one backend
 from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: E402
+
+# Pass 2 — real module (lazy stubs resolved by the import above)
+_patch_tokenizer_compat()
 
 from atrium_paradata import ParadataLogger   # noqa: E402
 from vocab_manager import VocabularyManager  # noqa: E402
