@@ -21,14 +21,10 @@
         "quality_score": 0.0,
         "original_text": "Osada",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "osada"
-            ],
-            "extracted_keywords_en": [
-                "hamlet"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -197,14 +193,10 @@
         "quality_score": 0.0,
         "original_text": "V tomto období jsme v zadním traktu domu čp. 36 na Gottwaldově",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "domu"
-            ],
-            "extracted_keywords_en": [
-                "house"
-            ],
-            "teater_category": "budova obytná",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -297,8 +289,8 @@
                 "gravel",
                 "brick-colored ceramics"
             ],
-            "teater_category": "cihla",
-            "confidence_score": 0.85
+            "teater_category": "keramika",
+            "confidence_score": 0.95
         }
     },
     {
@@ -315,7 +307,7 @@
                 "jímka"
             ],
             "extracted_keywords_en": [
-                "fired pottery",
+                "red ware",
                 "16th century",
                 "cesspit"
             ],
@@ -398,8 +390,8 @@
                 "pískový zásyp"
             ],
             "extracted_keywords_en": [
-                "brown clayey layer",
-                "sandy backfill"
+                "brown loamy layer",
+                "sand backfill"
             ],
             "teater_category": "navážka",
             "confidence_score": 0.95
@@ -420,7 +412,7 @@
                 "upper grey-brown clayey layer"
             ],
             "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -488,15 +480,15 @@
         "original_text": "vyloučit, že v nějaké souvislosti s jímkou je též nasucho",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zídka",
-                "nasucho kladená"
+                "jíma",
+                "zídka"
             ],
             "extracted_keywords_en": [
-                "wall",
-                "dry-stone"
+                "pit",
+                "wall"
             ],
-            "teater_category": "konstrukce kamenná",
-            "confidence_score": 0.95
+            "teater_category": "jáma",
+            "confidence_score": 0.85
         }
     },
     {
@@ -529,17 +521,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "domu",
-                "čp. 36",
                 "jímkou",
                 "šedohnědou hlinitou vrstvou"
             ],
             "extracted_keywords_en": [
                 "house",
-                "no. 36",
                 "cesspit",
                 "grey-brown earthy layer"
             ],
-            "teater_category": "jáma odpadní/jímka",
+            "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.95
         }
     },
@@ -553,15 +543,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "popelovité konsistence",
-                "vrstva",
                 "jímka"
             ],
             "extracted_keywords_en": [
                 "ashy consistency",
-                "layer",
                 "cesspit"
             ],
-            "teater_category": "kulturní vrstva/objekt",
+            "teater_category": "jáma odpadní/jímka",
             "confidence_score": 0.95
         }
     },
@@ -581,7 +569,7 @@
             "extracted_keywords_en": [
                 "late Beroun ware",
                 "red ware",
-                "pre-firing"
+                "pre-glaze"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -665,7 +653,7 @@
             ],
             "extracted_keywords_en": [
                 "grey clay-loam layer",
-                "charcoal fragments"
+                "charcoal pieces"
             ],
             "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.95
@@ -682,12 +670,14 @@
             "extracted_keywords_cs": [
                 "spálená konstrukce",
                 "střepy",
-                "berounské zboží"
+                "berounské zboží",
+                "keramika"
             ],
             "extracted_keywords_en": [
                 "burnt structure",
                 "potsherds",
-                "Beroun ware"
+                "Beroun ware",
+                "ceramics"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -780,7 +770,7 @@
                 "fire"
             ],
             "teater_category": "sídlištní vrstva/souvrství",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -791,16 +781,10 @@
         "quality_score": 0.0,
         "original_text": "r. 1599, následující pískový pokryv s úpravou celého prostoru",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískový pokryv",
-                "úprava prostoru"
-            ],
-            "extracted_keywords_en": [
-                "sandy cover",
-                "space modification"
-            ],
-            "teater_category": "sídlištní vrstva/souvrství",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -822,7 +806,7 @@
                 "ashy layer"
             ],
             "teater_category": "sídlištní vrstva/souvrství",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -861,15 +845,9 @@
         "quality_score": 0.0,
         "original_text": "oblasti pracovních sil rozhodli jsme se prozkoumat terén domovních",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "terén",
-                "domovních parcel"
-            ],
-            "extracted_keywords_en": [
-                "terrain",
-                "household plots"
-            ],
-            "teater_category": "lokalita pod zástavbou",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -887,7 +865,7 @@
             ],
             "extracted_keywords_en": [
                 "trench",
-                "bulldozering"
+                "mechanical excavation"
             ],
             "teater_category": "sonda",
             "confidence_score": 0.95
@@ -901,16 +879,10 @@
         "quality_score": 0.0,
         "original_text": "stratigrafickou situaci a případně odkryli nejstarší dosažitelné",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "stratigrafická situace",
-                "nejstarší dosažitelné pozůstatky"
-            ],
-            "extracted_keywords_en": [
-                "stratigraphic situation",
-                "oldest accessible remains"
-            ],
-            "teater_category": "sídlištní vrstva/souvrství",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -956,14 +928,12 @@
         "original_text": "na spodní vodu. Směrem k S se terén zvyšuje a sonda zde dosáhla",
         "enrichment": {
             "extracted_keywords_cs": [
-                "spodní voda",
-                "terén",
-                "sonda"
+                "sonda",
+                "terén"
             ],
             "extracted_keywords_en": [
-                "groundwater",
-                "terrain",
-                "trench"
+                "trench",
+                "terrain"
             ],
             "teater_category": "sonda",
             "confidence_score": 0.95
@@ -1008,12 +978,12 @@
             "extracted_keywords_cs": [
                 "bagrovaná sonda",
                 "výzkum",
-                "zadní trakt domu"
+                "domu"
             ],
             "extracted_keywords_en": [
                 "mechanically excavated trench",
                 "research",
-                "rear part of the house"
+                "house"
             ],
             "teater_category": "sonda",
             "confidence_score": 0.95

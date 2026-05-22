@@ -220,17 +220,15 @@
         "original_text": "tělesa.Pozůstatky dřevěné konstrukce místy i positivně nachovány.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "tělesa",
-                "Pozůstatky",
-                "dřevěné konstrukce"
+                "pozůstatky",
+                "dřevěná konstrukce"
             ],
             "extracted_keywords_en": [
-                "body",
                 "remains",
                 "wooden structure"
             ],
-            "teater_category": "val",
-            "confidence_score": 0.95
+            "teater_category": "konstrukce kůlová/sloupová",
+            "confidence_score": 0.85
         }
     },
     {
@@ -264,7 +262,7 @@
             "extracted_keywords_cs": [
                 "hradba",
                 "hradisko",
-                "kámen"
+                "kamená"
             ],
             "extracted_keywords_en": [
                 "defensive wall",
@@ -322,16 +320,14 @@
         "original_text": "a nálezy , příčně členěný zídkou a řadou kůlů.e nutno zde rozlišit",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nálezy",
-                "zídka",
-                "kůly"
+                "zídkou",
+                "kůlů"
             ],
             "extracted_keywords_en": [
-                "finds",
                 "wall",
-                "posts"
+                "stakes"
             ],
-            "teater_category": "sídlištní vrstva/souvrství",
+            "teater_category": "kůl/sloup",
             "confidence_score": 0.85
         }
     },
@@ -351,7 +347,7 @@
                 "Slavic settlement phases",
                 "construction modifications"
             ],
-            "teater_category": "sídlištní vrstva/souvrství",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -504,15 +500,13 @@
         "original_text": "věci osobní potřeby.\"atím byl nejpříznačněxjší pohřeb muže",
         "enrichment": {
             "extracted_keywords_cs": [
-                "věci osobní potřeby",
                 "pohřeb muže"
             ],
             "extracted_keywords_en": [
-                "personal items",
                 "burial of a man"
             ],
-            "teater_category": "pohřební areál",
-            "confidence_score": 0.95
+            "teater_category": "pohřeb v sídlištním objektu",
+            "confidence_score": 0.85
         }
     },
     {
@@ -557,7 +551,7 @@
                 "pearl necklace",
                 "textile"
             ],
-            "teater_category": "záušnice",
+            "teater_category": "náušnice",
             "confidence_score": 0.95
         }
     },
@@ -701,9 +695,13 @@
         "quality_score": 0.0,
         "original_text": "fosfátové metody.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
+            "extracted_keywords_cs": [
+                "fosfátové metody"
+            ],
+            "extracted_keywords_en": [
+                "phosphate methods"
+            ],
+            "teater_category": "geochemický průzkum",
             "confidence_score": 0.95
         }
     },

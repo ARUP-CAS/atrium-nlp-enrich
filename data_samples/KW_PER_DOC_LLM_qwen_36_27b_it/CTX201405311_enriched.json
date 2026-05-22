@@ -217,16 +217,10 @@
         "quality_score": 0.0,
         "original_text": "proveden archeologický dohled při akci: Čáslav - novostavba rodinného domu na ppč. 1642/17, 18 v k.ú.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologický dohled",
-                "novostavba rodinného domu"
-            ],
-            "extracted_keywords_en": [
-                "archaeological supervision",
-                "new construction of a family house"
-            ],
-            "teater_category": "terénní zásah",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -251,15 +245,9 @@
         "quality_score": 0.0,
         "original_text": "Akce probíhala na západním okraji města v poloze „Vodranty“. V těsném sousedství stavby došlo v minulosti",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "západní okraj města",
-                "poloha Vodranty"
-            ],
-            "extracted_keywords_en": [
-                "western edge of the town",
-                "location Vodranty"
-            ],
-            "teater_category": "lokalita",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -316,10 +304,10 @@
             "extracted_keywords_en": [
                 "archaeological supervision",
                 "review",
-                "topsoil removal",
+                "soil samples",
                 "foundation excavations"
             ],
-            "teater_category": "výkop",
+            "teater_category": "terénní zásah",
             "confidence_score": 0.95
         }
     },
@@ -333,21 +321,25 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výkopy",
+                "základové pasy",
+                "rodinný dům",
                 "souvrství",
                 "ornice",
                 "podorničí",
-                "podloží",
+                "intaktní podloží",
                 "spraš"
             ],
             "extracted_keywords_en": [
                 "excavations",
-                "sequence",
+                "foundation trenches",
+                "detached house",
+                "stratigraphy",
                 "topsoil",
                 "subsoil",
-                "substratum",
+                "intact substrate",
                 "loess"
             ],
-            "teater_category": "sídlištní vrstva/souvrství",
+            "teater_category": "výkop",
             "confidence_score": 0.95
         }
     },
@@ -460,7 +452,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {

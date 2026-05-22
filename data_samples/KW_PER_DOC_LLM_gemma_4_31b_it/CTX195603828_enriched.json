@@ -42,7 +42,7 @@
                 "Slavic hillfort"
             ],
             "teater_category": "hradiště",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -196,12 +196,12 @@
             "extracted_keywords_cs": [
                 "kamenná konstrukce",
                 "roštová dřevěná konstrukce",
-                "valové těleso"
+                "val"
             ],
             "extracted_keywords_en": [
                 "stone construction",
                 "grated wooden construction",
-                "rampart body"
+                "rampart"
             ],
             "teater_category": "val",
             "confidence_score": 0.95
@@ -216,7 +216,7 @@
         "original_text": "tělesa.Pozůstatky dřevěné konstrukce místy i positivně nachovány.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pozůstatky dřevěné konstrukce"
+                "pozůstatky dřevěné konstrukce"
             ],
             "extracted_keywords_en": [
                 "remains of wooden structure"
@@ -234,10 +234,10 @@
         "original_text": "Pracoviště 2/56: Na tomto úseku pare 826 zachyceny stopy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pracoviště 2/56"
+                "pracoviště"
             ],
             "extracted_keywords_en": [
-                "Fieldwork unit 2/56"
+                "fieldwork unit"
             ],
             "teater_category": "terénní pracoviště",
             "confidence_score": 0.95
@@ -253,13 +253,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "jižní hradba",
-                "hradisko",
-                "kamenná patka"
+                "hradisko"
             ],
             "extracted_keywords_en": [
-                "southern wall",
-                "hillfort",
-                "stone base"
+                "southern defensive wall",
+                "hillfort"
             ],
             "teater_category": "hradba",
             "confidence_score": 0.95
@@ -301,7 +299,7 @@
                 "settlement area",
                 "ashy layers"
             ],
-            "teater_category": "sídliště",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 0.95
         }
     },
@@ -314,12 +312,12 @@
         "original_text": "a nálezy , příčně členěný zídkou a řadou kůlů.e nutno zde rozlišit",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zídkou",
-                "kůlů"
+                "zídek",
+                "kůl"
             ],
             "extracted_keywords_en": [
-                "low walls",
-                "stakes"
+                "wall",
+                "stake"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.85
@@ -340,7 +338,7 @@
                 "Slavic settlement phases"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -370,12 +368,12 @@
         "original_text": "j ámy .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zásobní jámy"
+                "jámy"
             ],
             "extracted_keywords_en": [
-                "storage pits"
+                "pits"
             ],
-            "teater_category": "jáma zásobní",
+            "teater_category": "jáma",
             "confidence_score": 0.95
         }
     },
@@ -428,14 +426,14 @@
         "original_text": "pohřby.Hroby byly obloženy kameny,kostry v natažené poloze",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Hroby",
-                "kameny",
-                "kostry"
+                "hrob",
+                "kámen",
+                "kostra"
             ],
             "extracted_keywords_en": [
-                "graves",
-                "stones",
-                "skeletons"
+                "grave",
+                "stone",
+                "skeleton"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -506,14 +504,14 @@
         "original_text": "s 2 železnými nožíky a brouskem, a pohřeb dítěte s esovitou",
         "enrichment": {
             "extracted_keywords_cs": [
-                "železnými nožíky",
-                "brouskem",
-                "pohřeb dítěte"
+                "železný nožík",
+                "brousek",
+                "pohřeb"
             ],
             "extracted_keywords_en": [
-                "iron knives",
+                "iron knife",
                 "whetstone",
-                "child burial"
+                "burial"
             ],
             "teater_category": "pohřební objekt",
             "confidence_score": 0.95
@@ -528,7 +526,7 @@
         "original_text": "bronzovou záušničkou ,perlovým náhrdelníkem a částí textilie.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bronzová záušnička",
+                "bronzová záušnice",
                 "perlový náhrdelník",
                 "textilie"
             ],
@@ -550,7 +548,7 @@
         "original_text": "Pohřebiště lze předběžně datovat do mladší hradištní periody,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pohřebiště",
+                "pohřebiště",
                 "mladší hradištní perioda"
             ],
             "extracted_keywords_en": [
@@ -558,7 +556,7 @@
                 "Advanced Middle Hillfort Period"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -606,13 +604,13 @@
         "original_text": "u Libuše.Pohřebiště není celé prokopáno,v příštím roce bude nutno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Pohřebiště"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
                 "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -668,7 +666,7 @@
                 "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {

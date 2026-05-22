@@ -92,7 +92,7 @@
         "original_text": "Lužické sídliště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lužické sídliště"
+                "Lužické sídliště"
             ],
             "extracted_keywords_en": [
                 "Lusatian settlement"
@@ -193,13 +193,9 @@
         "quality_score": 0.0,
         "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna"
-            ],
-            "extracted_keywords_en": [
-                "sand pit"
-            ],
-            "teater_category": "areál těžby",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -396,12 +392,10 @@
         "original_text": "získali lžickou kera-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lžička",
-                "keramika"
+                "lžičková keramika"
             ],
             "extracted_keywords_en": [
-                "spoon",
-                "ceramic"
+                "Luzhnytsia ceramics"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -416,11 +410,9 @@
         "original_text": "miku. Další střepy jsme našli na parc.č. 1510, scvernt od pískovny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramika",
                 "střepy"
             ],
             "extracted_keywords_en": [
-                "ceramics",
                 "potsherds"
             ],
             "teater_category": "zlomek keramiky",
@@ -468,11 +460,9 @@
         "original_text": "Výzkum tohoto důležitého lužického sídliště, aby tak byl ukázán",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "lužické sídliště"
             ],
             "extracted_keywords_en": [
-                "research",
                 "Lusatian settlement"
             ],
             "teater_category": "sídliště",
@@ -540,7 +530,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -552,11 +542,9 @@
         "original_text": "Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "sídliště"
             ],
             "extracted_keywords_en": [
-                "research",
                 "settlement"
             ],
             "teater_category": "sídliště",
@@ -587,7 +575,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "sídliště"
+                "sídlišti"
             ],
             "extracted_keywords_en": [
                 "research",

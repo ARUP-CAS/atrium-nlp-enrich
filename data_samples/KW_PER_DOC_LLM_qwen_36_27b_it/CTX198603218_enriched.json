@@ -22,12 +22,10 @@
         "original_text": "1980-81 - KULT: Středověk. LOK: ZSV Kravín, ca 6,5km JV od Tábora; Ikm sev. od silnice",
         "enrichment": {
             "extracted_keywords_cs": [
-                "středověk",
-                "zaniklá středověká vesnice"
+                "Středověk"
             ],
             "extracted_keywords_en": [
-                "Middle Ages",
-                "deserted medieval village"
+                "Middle Ages"
             ],
             "teater_category": "středověk",
             "confidence_score": 0.95
@@ -56,12 +54,10 @@
         "original_text": "217 od Z a 65 mm od J s.č. OKOL: Systematický výzkum zaniklé středověké vesnice Kravín. NÁLEZ:",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Systematický výzkum",
                 "zaniklá středověká vesnice",
                 "Kravín"
             ],
             "extracted_keywords_en": [
-                "systematic survey",
                 "deserted medieval village",
                 "Kravín"
             ],
@@ -85,7 +81,7 @@
                 "feature",
                 "deserted medieval village"
             ],
-            "teater_category": "zaniklý/historický areál",
+            "teater_category": "objekt",
             "confidence_score": 0.95
         }
     },
@@ -98,10 +94,12 @@
         "original_text": "jako součást \"Experimentu na středověkém objektu\", prováděném ve spolupráci AÚ ČSAV Praha a MHRH",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Experiment na středověkém objektu"
+                "experiment",
+                "středověký objekt"
             ],
             "extracted_keywords_en": [
-                "Experiment on a medieval feature"
+                "experiment",
+                "medieval feature"
             ],
             "teater_category": "experimentální archeologie",
             "confidence_score": 0.95
@@ -134,16 +132,10 @@
         "original_text": "situaci jednoho z objektů. Archeologický výzkum byl zařazen do výzkumného úkolu systematického zkoumání",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekt",
-                "archeologický výzkum",
-                "výzkumný úkol",
-                "systematické zkoumání"
+                "objekt"
             ],
             "extracted_keywords_en": [
-                "feature",
-                "archaeological research",
-                "research task",
-                "systematic study"
+                "feature"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.85
@@ -244,12 +236,12 @@
         "original_text": "Rozkládala se na ploše cca 500 x 500 cm a její stěny byly shodně orientovány s obytným objektem. Získaný",
         "enrichment": {
             "extracted_keywords_cs": [
-                "plocha",
+                "povrchová stavba",
                 "stěny",
                 "obytný objekt"
             ],
             "extracted_keywords_en": [
-                "area",
+                "surface building",
                 "walls",
                 "residential building"
             ],
@@ -268,17 +260,15 @@
             "extracted_keywords_cs": [
                 "sídelní jednotka",
                 "dům",
-                "hospodářská stavba",
-                "první polovina 15. století"
+                "hospodářská stavba"
             ],
             "extracted_keywords_en": [
                 "settlement unit",
                 "house",
-                "non-residential building",
-                "first half of the 15th century"
+                "non-residential building"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "budova hospodářská",
+            "confidence_score": 0.85
         }
     },
     {
@@ -333,15 +323,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zahloubení",
-                "odkalovač",
-                "konec 13. století"
+                "odkalovač"
             ],
             "extracted_keywords_en": [
                 "sunken feature",
-                "silt trap",
-                "end of the 13th century"
+                "silt trap"
             ],
-            "teater_category": "zahloubený objekt",
+            "teater_category": "studna",
             "confidence_score": 0.95
         }
     },
@@ -353,16 +341,10 @@
         "quality_score": 0.0,
         "original_text": "či na přelom 13.-14. stol. V roce 1981 byla dále provedena preparace částí objektů z let 1973-1974a u jednoho",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "preparace",
-                "objekty"
-            ],
-            "extracted_keywords_en": [
-                "preparation",
-                "features"
-            ],
-            "teater_category": "objekt",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -394,15 +376,11 @@
         "original_text": "průměru 80-90cm. Materiál datuje objekt do první poloviny 15. stol. ULOŽ: MHRH Tábor. LIT: Shrnuta",
         "enrichment": {
             "extracted_keywords_cs": [
-                "průměr",
-                "materiál",
-                "objekt",
-                "první polovina 15. století"
+                "studna",
+                "první polovina 15. stol."
             ],
             "extracted_keywords_en": [
-                "diameter",
-                "material",
-                "feature",
+                "water well",
                 "first half of the 15th century"
             ],
             "teater_category": "studna",

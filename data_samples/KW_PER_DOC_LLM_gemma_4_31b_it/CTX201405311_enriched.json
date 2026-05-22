@@ -270,7 +270,7 @@
             ],
             "extracted_keywords_en": [
                 "prehistory",
-                "Middle Ages",
+                "medieval",
                 "settlement"
             ],
             "teater_category": "sídliště",
@@ -300,16 +300,12 @@
         "original_text": "Archeologický dohled při stavbě proběhl formou revize (20.6.2014) skrývky ornice a výkopů základových",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Archeologický dohled",
-                "revize",
-                "skrývka ornice",
-                "výkop základů"
+                "archeologický dohled",
+                "výkopy základových pasů"
             ],
             "extracted_keywords_en": [
                 "archaeological supervision",
-                "revision",
-                "ploughsoil stripping",
-                "foundation trenches"
+                "foundation trench excavations"
             ],
             "teater_category": "terénní zásah",
             "confidence_score": 0.85
@@ -325,7 +321,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "souvrství hnědé ornice",
-                "podorničí"
+                "podornice"
             ],
             "extracted_keywords_en": [
                 "brown ploughsoil sequence",
@@ -343,14 +339,10 @@
         "quality_score": 0.0,
         "original_text": "podloží, které tvořila intaktní spraš.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "spraš"
-            ],
-            "extracted_keywords_en": [
-                "loess"
-            ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -445,14 +437,10 @@
         "quality_score": 0.0,
         "original_text": "archeologických památek.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologické památky"
-            ],
-            "extracted_keywords_en": [
-                "archaeological monuments"
-            ],
-            "teater_category": "nemovitá památka",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {

@@ -21,14 +21,10 @@
         "quality_score": 0.0,
         "original_text": "Osada:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Osada"
-            ],
-            "extracted_keywords_en": [
-                "settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -39,14 +35,10 @@
         "quality_score": 0.0,
         "original_text": "Trať: Čmejlova pískovna",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna"
-            ],
-            "extracted_keywords_en": [
-                "sand quarry"
-            ],
-            "teater_category": "areál těžby",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -87,14 +79,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
-                "lužická"
+                "lužická kultura"
             ],
             "extracted_keywords_en": [
                 "cemetery",
-                "Lusatian"
+                "Lusatian Culture"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -305,7 +297,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "okřín",
-                "nádob"
+                "nádoby"
             ],
             "extracted_keywords_en": [
                 "bowl",
@@ -348,7 +340,7 @@
                 "extracting area"
             ],
             "teater_category": "areál těžby",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -385,7 +377,7 @@
                 "marlstone slabs",
                 "fragments"
             ],
-            "teater_category": "součást hrobu",
+            "teater_category": "konstrukce kamenná",
             "confidence_score": 0.85
         }
     },
@@ -408,7 +400,7 @@
                 "bowl"
             ],
             "teater_category": "nádoba",
-            "confidence_score": 0.98
+            "confidence_score": 0.95
         }
     },
     {
@@ -420,11 +412,9 @@
         "original_text": "citelného tvaru s mřížkovým rýhováním). Poloha všech tří hrobů ukazuje",
         "enrichment": {
             "extracted_keywords_cs": [
-                "nádoba",
                 "hrob"
             ],
             "extracted_keywords_en": [
-                "vessel",
                 "grave"
             ],
             "teater_category": "hrob",
@@ -446,7 +436,7 @@
                 "graves"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -458,15 +448,13 @@
         "original_text": "vyvýšeninu, zasahující z části již do pole. Při povrchovém sběru",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pole",
                 "povrchový sběr"
             ],
             "extracted_keywords_en": [
-                "cropland",
                 "surface collection survey"
             ],
             "teater_category": "povrchový sběr",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -479,11 +467,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "kamenný mlat",
-                "únětický mlat"
+                "únětická kultura"
             ],
             "extracted_keywords_en": [
                 "stone hammer axe",
-                "Únětice hammer axe"
+                "Únětice Culture"
             ],
             "teater_category": "sekeromlat/mlat",
             "confidence_score": 0.98
@@ -512,7 +500,7 @@
         "original_text": "příčnými sondami, jimiž by byl praeoex zachycen rozsah pohřebiště,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "příčnými sondami",
+                "příčné sondy",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
@@ -532,7 +520,7 @@
         "original_text": "zejména pak prozkoumat nej bližší okolí pískovny v těch místech, kde",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovny"
+                "pískovna"
             ],
             "extracted_keywords_en": [
                 "sand pit"
@@ -564,12 +552,10 @@
         "original_text": "nice na nalezišti a poměrně malé ploše návršíčka (cca 300 m ), kde",
         "enrichment": {
             "extracted_keywords_cs": [
-                "naleziště",
-                "návršíčko"
+                "naleziště"
             ],
             "extracted_keywords_en": [
-                "site",
-                "small hill"
+                "site"
             ],
             "teater_category": "lokalita",
             "confidence_score": 0.85

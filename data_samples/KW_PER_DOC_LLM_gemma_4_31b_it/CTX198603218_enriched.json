@@ -72,13 +72,13 @@
         "original_text": "Po předchozích výzkumech v letech 1965-1967 a 1973-1974 odkryt jeden z dalších objektů ZSV, tentokrát",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objektů ZSV"
+                "objekt"
             ],
             "extracted_keywords_en": [
-                "ZSV features"
+                "feature"
             ],
             "teater_category": "objekt",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -113,7 +113,7 @@
             "extracted_keywords_en": [
                 "geodetic-topographic survey"
             ],
-            "teater_category": "vizuální/geodetický průzkum",
+            "teater_category": "geodetický průzkum",
             "confidence_score": 0.95
         }
     },
@@ -125,14 +125,10 @@
         "quality_score": 0.0,
         "original_text": "situaci jednoho z objektů. Archeologický výzkum byl zařazen do výzkumného úkolu systematického zkoumání",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Archeologický výzkum"
-            ],
-            "extracted_keywords_en": [
-                "archaeological research"
-            ],
-            "teater_category": "terénní odkryv",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -151,7 +147,7 @@
                 "residential building",
                 "pit house"
             ],
-            "teater_category": "budova obytná",
+            "teater_category": "(polo)zemnice",
             "confidence_score": 0.95
         }
     },
@@ -173,8 +169,8 @@
                 "storage pit",
                 "stone lining"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "ohrazení/fortifikace",
+            "confidence_score": 0.85
         }
     },
     {
@@ -186,11 +182,9 @@
         "original_text": "podpovrchových částí stěn. Objekt dosahoval rozměrů 500-540 x 220-270 cm s delší osou V - Z. Jihovýchodně",
         "enrichment": {
             "extracted_keywords_cs": [
-                "stěny",
                 "objekt"
             ],
             "extracted_keywords_en": [
-                "walls",
                 "feature"
             ],
             "teater_category": "objekt",
@@ -291,7 +285,7 @@
                 "studna"
             ],
             "extracted_keywords_en": [
-                "well"
+                "water well"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -311,10 +305,10 @@
             ],
             "extracted_keywords_en": [
                 "sunken feature",
-                "settling tank"
+                "settling pit"
             ],
-            "teater_category": "studna",
-            "confidence_score": 0.85
+            "teater_category": "zahloubený objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -326,10 +320,10 @@
         "original_text": "či na přelom 13.-14. stol. V roce 1981 byla dále provedena preparace částí objektů z let 1973-1974a u jednoho",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objektů"
+                "objekt"
             ],
             "extracted_keywords_en": [
-                "features"
+                "feature"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.85
@@ -345,11 +339,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "studna",
-                "loženým kamením"
+                "roubená na sucho loženým kamením"
             ],
             "extracted_keywords_en": [
                 "well",
-                "stone lining"
+                "dry-stone lined"
             ],
             "teater_category": "studna",
             "confidence_score": 1.0

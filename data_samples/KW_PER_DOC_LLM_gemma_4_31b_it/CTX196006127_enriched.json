@@ -351,14 +351,10 @@
         "quality_score": 0.0,
         "original_text": "o straně 40 - 50 m s vehodem ve výchoní stně. V zemině ol hozené při",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "zdivo"
-            ],
-            "extracted_keywords_en": [
-                "masonry"
-            ],
-            "teater_category": "konstrukce kamenná",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -391,11 +387,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "keramika",
-                "zvířecí kosti"
+                "pozdní hradištní",
+                "středověký",
+                "kost zvířecí"
             ],
             "extracted_keywords_en": [
                 "ceramic",
-                "animal bones"
+                "Final Hillfort Period",
+                "Medieval",
+                "animal bone"
             ],
             "teater_category": "kulturní vrstva/objekt",
             "confidence_score": 0.85
@@ -413,7 +413,7 @@
                 "ostrožna"
             ],
             "extracted_keywords_en": [
-                "promontory"
+                "spur"
             ],
             "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.85
@@ -500,13 +500,11 @@
         "original_text": "pravpodobně kryje zíeeniny njakých dalších stavb. Val, který",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zíeeniny",
-                "stavb",
-                "Val"
+                "zíeeniny stavb",
+                "val"
             ],
             "extracted_keywords_en": [
-                "ruins",
-                "buildings",
+                "ruins of buildings",
                 "rampart"
             ],
             "teater_category": "val",
@@ -522,7 +520,7 @@
         "original_text": "obepíná celý vrebol kopoc, je zde trojnásobný, přičemš nejméně snatel",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Val"
+                "val"
             ],
             "extracted_keywords_en": [
                 "rampart"
@@ -558,13 +556,13 @@
         "original_text": "fálezy ze sběru byly předány Ol v Blovicích.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sběru"
+                "sběr"
             ],
             "extracted_keywords_en": [
-                "collection"
+                "surface collection survey"
             ],
             "teater_category": "povrchový sběr",
-            "confidence_score": 0.75
+            "confidence_score": 0.85
         }
     },
     {
@@ -575,14 +573,10 @@
         "quality_score": 0.0,
         "original_text": "Hrúdek byl posteven v !• 12521259 Ptou z Křimic, trval v eúbělm",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Hrúdek"
-            ],
-            "extracted_keywords_en": [
-                "Hrúdek"
-            ],
-            "teater_category": "tvrz/hrádek",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {

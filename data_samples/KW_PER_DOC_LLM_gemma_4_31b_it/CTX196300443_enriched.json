@@ -120,7 +120,7 @@
         "original_text": "eneolitických výšinných sídlištích na Blovicku v poříčí Úslavy.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneolitická",
+                "eneolit",
                 "výšinná sídliště"
             ],
             "extracted_keywords_en": [
@@ -143,7 +143,7 @@
                 "depositem"
             ],
             "extracted_keywords_en": [
-                "deposit"
+                "hoard"
             ],
             "teater_category": "depot",
             "confidence_score": 0.95
@@ -166,7 +166,7 @@
                 "Bronze Age"
             ],
             "teater_category": "doba bronzová",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -197,16 +197,10 @@
         "quality_score": 0.0,
         "original_text": "Mladší pravěké kultury nejsou zastoupeny, středověk jen drobnými",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pravěké kultury",
-                "středověk"
-            ],
-            "extracted_keywords_en": [
-                "prehistoric cultures",
-                "Middle Ages"
-            ],
-            "teater_category": "pravěk",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -220,7 +214,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -248,7 +242,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 1.0
         }
     },
     {
@@ -277,14 +271,10 @@
         "quality_score": 0.0,
         "original_text": "kv zavádí k nežádoucím drobným výkopům. Ústavní depositum /Srby/ shledáno",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výkopům"
-            ],
-            "extracted_keywords_en": [
-                "excavations"
-            ],
-            "teater_category": "výkop",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -384,10 +374,12 @@
         "original_text": "Polanka u Blovic - sběry z eneol.výs.sídliste",
         "enrichment": {
             "extracted_keywords_cs": [
-                "eneolické výšinné sídliště"
+                "eneolit",
+                "výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "Eneolithic hill settlement"
+                "Eneolithic",
+                "hill settlement"
             ],
             "teater_category": "výšinné sídliště",
             "confidence_score": 0.95
@@ -438,7 +430,7 @@
                 "terčoví",
                 "jehlice",
                 "pečetítkové jehlice",
-                "tyčinkový nátěm"
+                "tyčinkový nátěmek"
             ],
             "extracted_keywords_en": [
                 "bronze",
@@ -460,8 +452,8 @@
         "original_text": "z rozrušené mohyly v Cábuzí /střední d.bronz/",
         "enrichment": {
             "extracted_keywords_cs": [
-                "mohyly",
-                "střední d.bronz"
+                "mohyla",
+                "střední doba bronzová"
             ],
             "extracted_keywords_en": [
                 "burial mound",
@@ -525,7 +517,7 @@
                 "single find",
                 "bronze javelin"
             ],
-            "teater_category": "ojedinělý nález",
+            "teater_category": "oštěp/hrot oštěpu",
             "confidence_score": 0.95
         }
     },
@@ -583,7 +575,7 @@
             "extracted_keywords_en": [
                 "burial mounds"
             ],
-            "teater_category": "mohyla",
+            "teater_category": "pozůstatek mohylníku",
             "confidence_score": 0.85
         }
     }

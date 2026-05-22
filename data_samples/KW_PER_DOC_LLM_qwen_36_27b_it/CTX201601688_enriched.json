@@ -7,26 +7,10 @@
         "quality_score": 0.0,
         "original_text": "SKU H R O V N A D B Ě L O U",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "skrovna",
-                "d",
-                "b",
-                "ě",
-                "l",
-                "o",
-                "u"
-            ],
-            "extracted_keywords_en": [
-                "cellar",
-                "d",
-                "b",
-                "e",
-                "l",
-                "o",
-                "u"
-            ],
-            "teater_category": "sklep",
-            "confidence_score": 0.65
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -132,12 +116,12 @@
             "extracted_keywords_cs": [
                 "hrad",
                 "ostrožna",
-                "řeka Bělou"
+                "řeka Bělá"
             ],
             "extracted_keywords_en": [
                 "castle",
                 "spur",
-                "Bělá river"
+                "Bělá River"
             ],
             "teater_category": "hrad",
             "confidence_score": 0.95
@@ -196,7 +180,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -261,14 +245,10 @@
         "quality_score": 0.0,
         "original_text": "Tasem ze Skuhrova kolem r. 1320, za Jiřího z Poděbrad pustne, v roce 1558 jmenován jako",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "hrad"
-            ],
-            "extracted_keywords_en": [
-                "castle"
-            ],
-            "teater_category": "hrad",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -307,14 +287,10 @@
         "quality_score": 0.0,
         "original_text": "Sběr.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sběr"
-            ],
-            "extracted_keywords_en": [
-                "collection"
-            ],
-            "teater_category": "povrchový sběr",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -514,14 +490,14 @@
             "extracted_keywords_cs": [
                 "fragmenty",
                 "okraje",
-                "zlomek zásobnice"
+                "zlomek"
             ],
             "extracted_keywords_en": [
                 "fragments",
                 "rims",
-                "fragment of storage vessel"
+                "fragment"
             ],
-            "teater_category": "keramika",
+            "teater_category": "zlomek keramiky",
             "confidence_score": 0.95
         }
     },
@@ -534,12 +510,10 @@
         "original_text": "zásobnice, vše 14. -15. stol.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zásobnice",
-                "14. -15. stol."
+                "zásobnice"
             ],
             "extracted_keywords_en": [
-                "storage vessel",
-                "14th-15th century"
+                "storage vessel"
             ],
             "teater_category": "zásobnice",
             "confidence_score": 0.95
@@ -809,14 +783,10 @@
         "quality_score": 0.0,
         "original_text": "sběr Slavík J.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sběr"
-            ],
-            "extracted_keywords_en": [
-                "collection"
-            ],
-            "teater_category": "povrchový sběr",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -912,13 +882,15 @@
         "original_text": "zboží, 2. pol. 15. stol. + zlomek",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zlomek"
+                "zlomek",
+                "keramika"
             ],
             "extracted_keywords_en": [
-                "fragment"
+                "fragment",
+                "ceramic"
             ],
             "teater_category": "zlomek keramiky",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -1028,10 +1000,10 @@
         "original_text": "sběr arch.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sběr archeologický"
+                "sběr"
             ],
             "extracted_keywords_en": [
-                "archaeological collection"
+                "collection"
             ],
             "teater_category": "povrchový sběr",
             "confidence_score": 0.95
@@ -1106,12 +1078,12 @@
         "original_text": "14./15. st. + 1 zl. masivnější",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zlomek",
-                "masivnější"
+                "zlomek keramiky",
+                "masivní keramika"
             ],
             "extracted_keywords_en": [
-                "fragment",
-                "massive"
+                "potsherd",
+                "massive ceramic"
             ],
             "teater_category": "zlomek keramiky",
             "confidence_score": 0.95
@@ -1172,10 +1144,10 @@
                 "výdutě"
             ],
             "extracted_keywords_en": [
-                "handle fragment",
-                "mold fragments"
+                "fragment of handle",
+                "bulges"
             ],
-            "teater_category": "zlomek keramiky",
+            "teater_category": "nádoba",
             "confidence_score": 0.95
         }
     },
@@ -1320,7 +1292,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -1357,7 +1329,7 @@
                 "base fragment",
                 "white ware"
             ],
-            "teater_category": "keramika fajáns/majolika",
+            "teater_category": "keramika",
             "confidence_score": 0.95
         }
     },
@@ -1449,12 +1421,10 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrad",
-                "sběry",
                 "nálezy"
             ],
             "extracted_keywords_en": [
                 "castle",
-                "collections",
                 "finds"
             ],
             "teater_category": "hrad",
@@ -1556,7 +1526,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -1608,10 +1578,10 @@
         "original_text": "Skulrov nD-lou,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Skuhrov nad Bělou"
+                "Skalní hrad"
             ],
             "extracted_keywords_en": [
-                "Skuhrov nad Bělou"
+                "rock castle"
             ],
             "teater_category": "hrad",
             "confidence_score": 0.95

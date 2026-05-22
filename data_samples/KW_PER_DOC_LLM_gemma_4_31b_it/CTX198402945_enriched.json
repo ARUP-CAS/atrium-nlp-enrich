@@ -123,13 +123,9 @@
         "quality_score": 0.0,
         "original_text": "Zpráva",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Zpráva"
-            ],
-            "extracted_keywords_en": [
-                "report"
-            ],
-            "teater_category": "zprávy a hlášení",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -218,7 +214,7 @@
                 "cesspit"
             ],
             "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 1.0
+            "confidence_score": 0.98
         }
     },
     {
@@ -230,11 +226,11 @@
         "original_text": "z lomového zdivá nasucho a jen místy na maltu, ve spodní části",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lomové zdivo",
+                "zdivo",
                 "malta"
             ],
             "extracted_keywords_en": [
-                "quarry stone masonry",
+                "masonry",
                 "mortar"
             ],
             "teater_category": "jáma odpadní/jímka",
@@ -268,12 +264,10 @@
         "original_text": "byla až do výše c. 100 cm zavezena šedým říčním pískem s",
         "enrichment": {
             "extracted_keywords_cs": [
-                "jímka",
-                "římský písek"
+                "jímka"
             ],
             "extracted_keywords_en": [
-                "cesspit",
-                "river sand"
+                "cesspit"
             ],
             "teater_category": "jáma odpadní/jímka",
             "confidence_score": 0.95
@@ -288,12 +282,10 @@
         "original_text": "hrubým štěrkem, v němž se vyskytl jediný střípek cihlově zbarvené",
         "enrichment": {
             "extracted_keywords_cs": [
-                "štěrkem",
                 "střípek",
-                "cihlově zbarvené režné keramiky"
+                "cihlově zbarvená režná keramika"
             ],
             "extracted_keywords_en": [
-                "gravel",
                 "potsherd",
                 "brick-colored incised ceramic"
             ],
@@ -368,11 +360,9 @@
         "original_text": "berounského zboží. Nad touto vrstvou byla horní část jímky",
         "enrichment": {
             "extracted_keywords_cs": [
-                "berounské zboží",
                 "jímka"
             ],
             "extracted_keywords_en": [
-                "Beroun goods",
                 "cesspit"
             ],
             "teater_category": "jáma odpadní/jímka",
@@ -408,7 +398,7 @@
         "original_text": "svrchní šedohnědou hlinitou vrstvou, která sahala až k povrchu.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hlinitou vrstvou"
+                "hlinitá vrstva"
             ],
             "extracted_keywords_en": [
                 "clay layer"
@@ -500,17 +490,15 @@
         "original_text": "kladená zídka J jímky, běžící S-J směrem. S zed zadního traktu",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zídka",
-                "jímka",
-                "zed"
+                "zídka jímky",
+                "zeď"
             ],
             "extracted_keywords_en": [
-                "small wall",
-                "cesspit",
+                "cesspit wall",
                 "wall"
             ],
             "teater_category": "jáma odpadní/jímka",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -666,7 +654,7 @@
                 "potsherds"
             ],
             "teater_category": "konstrukce kůlová/sloupová",
-            "confidence_score": 0.85
+            "confidence_score": 0.75
         }
     },
     {
@@ -731,7 +719,7 @@
                 "pozdně renesanční kachle"
             ],
             "extracted_keywords_en": [
-                "late Renaissance tiles"
+                "late Renaissance stove tiles"
             ],
             "teater_category": "kachel",
             "confidence_score": 0.98
@@ -787,7 +775,7 @@
             "extracted_keywords_en": [
                 "dwellings"
             ],
-            "teater_category": "obývání",
+            "teater_category": "budova obytná",
             "confidence_score": 0.85
         }
     },
@@ -802,7 +790,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -862,7 +850,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -874,11 +862,9 @@
         "original_text": "pozůstatky. Sonda, kterou provedl bagrista. CSP Peroun,",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pozůstatky",
                 "sonda"
             ],
             "extracted_keywords_en": [
-                "remains",
                 "trench"
             ],
             "teater_category": "sonda",
@@ -925,14 +911,10 @@
         "quality_score": 0.0,
         "original_text": "hloubky téměř 4 m.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sonda"
-            ],
-            "extracted_keywords_en": [
-                "trench"
-            ],
-            "teater_category": "sonda",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -959,14 +941,14 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "bagrovaná sonda",
-                "výzkum zadního traktu domu"
+                "výzkum"
             ],
             "extracted_keywords_en": [
                 "excavated trench",
-                "research of the rear wing of the house"
+                "research"
             ],
             "teater_category": "sonda",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {

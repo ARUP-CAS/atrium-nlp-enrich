@@ -358,16 +358,12 @@
             "extracted_keywords_cs": [
                 "zřícenina",
                 "hradu",
-                "čtverec",
-                "strana",
-                "vechod",
+                "vchod",
                 "východní stěna"
             ],
             "extracted_keywords_en": [
                 "ruins",
                 "castle",
-                "square",
-                "side",
                 "entrance",
                 "eastern wall"
             ],
@@ -423,13 +419,9 @@
         "quality_score": 0.0,
         "original_text": "umístn na ostrožnu. Která vybíhá smžrem k západu o epadá ostře dolů",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ostrožna"
-            ],
-            "extracted_keywords_en": [
-                "spur"
-            ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -596,12 +588,10 @@
         "original_text": "Hrúdek byl posteven v !• 12521259 Ptou z Křimic, trval v eúbělm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradek",
-                "postaven"
+                "hrádek"
             ],
             "extracted_keywords_en": [
-                "fortified manor",
-                "built"
+                "fortified manor"
             ],
             "teater_category": "tvrz/hrádek",
             "confidence_score": 0.95
@@ -616,12 +606,14 @@
         "original_text": "13. a 1. stol* , počátkem 16. stole byl již zpustlý a vrch zarost-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "zpustlý vrch"
+                "hradek",
+                "zpustlý"
             ],
             "extracted_keywords_en": [
-                "deserted hill"
+                "fortified manor",
+                "deserted"
             ],
-            "teater_category": "zaniklý/historický areál",
+            "teater_category": "tvrz/hrádek",
             "confidence_score": 0.95
         }
     },
@@ -648,12 +640,10 @@
         "original_text": "Pokud nálezy hradištní keranikry souvisí se hrdkem, nebo pokud by",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hradištní keramika",
-                "hradek"
+                "hradištní keramika"
             ],
             "extracted_keywords_en": [
-                "hillfort ceramics",
-                "fortified manor"
+                "hillfort ceramics"
             ],
             "teater_category": "hradiště",
             "confidence_score": 0.95
@@ -667,20 +657,10 @@
         "quality_score": 0.0,
         "original_text": "patrily otarším ocí^Q-nl slovonskému, nebylo při zbžné pronlídce",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "hradištní keramika",
-                "hradek",
-                "starší období slovanské",
-                "záchranný průzkum"
-            ],
-            "extracted_keywords_en": [
-                "hillfort ceramics",
-                "fortified manor",
-                "Early Slavic period",
-                "rescue excavation"
-            ],
-            "teater_category": "hradiště",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {

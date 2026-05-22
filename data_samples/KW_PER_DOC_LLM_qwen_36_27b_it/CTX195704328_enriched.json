@@ -154,14 +154,12 @@
         "original_text": "výzkumu lužického žárového pohřebiště, plánovaného na srpen 1958# Naleziště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "lužické",
-                "žárové pohřebiště"
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "survey",
                 "Lusatian",
-                "cremation cemetery"
+                "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -192,7 +190,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -439,7 +437,7 @@
             "extracted_keywords_en": [
                 "graves"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "hrob",
             "confidence_score": 0.95
         }
     },
@@ -459,7 +457,7 @@
             "extracted_keywords_en": [
                 "mound",
                 "field",
-                "surface collection survey"
+                "surface collection"
             ],
             "teater_category": "povrchový sběr",
             "confidence_score": 0.95
@@ -495,16 +493,10 @@
         "quality_score": 0.0,
         "original_text": "Navrhuji, aby výzkum v příštím roce byl proveden několika",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výzkum",
-                "sondy"
-            ],
-            "extracted_keywords_en": [
-                "research",
-                "trenches"
-            ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -535,13 +527,9 @@
         "quality_score": 0.0,
         "original_text": "zejména pak prozkoumat nej bližší okolí pískovny v těch místech, kde",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna"
-            ],
-            "extracted_keywords_en": [
-                "sand pit"
-            ],
-            "teater_category": "těžební jáma",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -556,7 +544,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {

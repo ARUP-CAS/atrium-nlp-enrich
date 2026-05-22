@@ -194,13 +194,13 @@
         "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pískovnu"
+                "pískovna"
             ],
             "extracted_keywords_en": [
                 "sand pit"
             ],
             "teater_category": "areál těžby",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -229,14 +229,10 @@
         "quality_score": 0.0,
         "original_text": "v Praze v letech 1956-1959. Tehdy práce v pískovně byla zastavena",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovně"
-            ],
-            "extracted_keywords_en": [
-                "sand pit"
-            ],
-            "teater_category": "areál těžby",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -247,14 +243,10 @@
         "quality_score": 0.0,
         "original_text": "a proto výzkum byl přerušen.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "výzkum"
-            ],
-            "extracted_keywords_en": [
-                "research"
-            ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -265,14 +257,10 @@
         "quality_score": 0.0,
         "original_text": "Zjistili jsme, že práce v pískovně byly obnoveny,",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovně"
-            ],
-            "extracted_keywords_en": [
-                "sand pit"
-            ],
-            "teater_category": "areál těžby",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -430,7 +418,7 @@
                 "střepy"
             ],
             "extracted_keywords_en": [
-                "ceramics",
+                "ceramic",
                 "potsherds"
             ],
             "teater_category": "zlomek keramiky",
@@ -449,7 +437,7 @@
                 "žárové hroby"
             ],
             "extracted_keywords_en": [
-                "cremation burials"
+                "cremation graves"
             ],
             "teater_category": "pohřeb žárový",
             "confidence_score": 0.95

@@ -143,18 +143,10 @@
         "quality_score": 0.0,
         "original_text": "Tyto sběry, doplněné ústavním depositem z výzkumu v Srbech 1960, podávají",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sběry",
-                "deposit",
-                "výzkum"
-            ],
-            "extracted_keywords_en": [
-                "collections",
-                "hoard",
-                "research"
-            ],
-            "teater_category": "depot",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -242,7 +234,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {
@@ -253,16 +245,10 @@
         "quality_score": 0.0,
         "original_text": "a ohlašuje nálezy exposituře / v r.1962 byl na základě jeho hlásení prOveden",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "nálezy",
-                "výzkum"
-            ],
-            "extracted_keywords_en": [
-                "finds",
-                "research"
-            ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -294,14 +280,14 @@
         "original_text": "kv zavádí k nežádoucím drobným výkopům. Ústavní depositum /Srby/ shledáno",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výkop",
+                "výkopům",
                 "depositum"
             ],
             "extracted_keywords_en": [
-                "excavation",
-                "hoard"
+                "excavations",
+                "deposit"
             ],
-            "teater_category": "depot",
+            "teater_category": "výkop",
             "confidence_score": 0.85
         }
     },
@@ -391,7 +377,7 @@
                 "výšinné sídliště"
             ],
             "extracted_keywords_en": [
-                "surface collections",
+                "surface collection",
                 "Eneolithic",
                 "hill settlement"
             ],
@@ -430,13 +416,13 @@
         "original_text": "ojedinělé kam. nástroje - Plo víc e-Hradiš tě. Spálené. Poříčí.,. Ralov, dí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "ojedinělé kamenné nástroje"
+                "kamenné nástroje"
             ],
             "extracted_keywords_en": [
-                "isolated stone tools"
+                "stone tools"
             ],
             "teater_category": "kámen štípaný",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -471,10 +457,10 @@
                 "bronze",
                 "pin",
                 "seal pins",
-                "wire bracelet"
+                "rod bracelet"
             ],
             "teater_category": "jehlice",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -569,7 +555,7 @@
                 "medieval ceramics",
                 "burial mounds"
             ],
-            "teater_category": "keramika",
+            "teater_category": "mohyla",
             "confidence_score": 0.95
         }
     },

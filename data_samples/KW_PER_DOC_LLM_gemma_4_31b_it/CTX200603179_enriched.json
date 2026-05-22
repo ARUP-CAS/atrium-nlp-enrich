@@ -183,13 +183,9 @@
         "quality_score": 0.0,
         "original_text": "Lokalizace v mapě 1:10 000:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "mapa"
-            ],
-            "extracted_keywords_en": [
-                "map"
-            ],
-            "teater_category": "mapa",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -292,10 +288,10 @@
         "original_text": "Byla provedena kontrola odkrytých výkopů.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výkopů"
+                "výkopy"
             ],
             "extracted_keywords_en": [
-                "cuts"
+                "excavations"
             ],
             "teater_category": "výkop",
             "confidence_score": 0.95
@@ -479,7 +475,7 @@
                 "záchranný výzkum"
             ],
             "extracted_keywords_en": [
-                "rescue excavation"
+                "rescue survey"
             ],
             "teater_category": "záchranný",
             "confidence_score": 0.95
@@ -507,13 +503,9 @@
         "quality_score": 0.0,
         "original_text": "KATASTRÁLNÍ UZEMÍ: BTOVU KONĚPRUS-A OKRES:",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "katastrální území"
-            ],
-            "extracted_keywords_en": [
-                "cadastral area"
-            ],
-            "teater_category": "katastrální území",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 1.0
         }
     },
@@ -595,16 +587,10 @@
         "quality_score": 0.0,
         "original_text": "FORMA ARCHEOLOGICKÉHO_VÝZKUMU: DOHLED",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "archeologický výzkum",
-                "dohled"
-            ],
-            "extracted_keywords_en": [
-                "archaeological research",
-                "supervision"
-            ],
-            "teater_category": "průzkum",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {

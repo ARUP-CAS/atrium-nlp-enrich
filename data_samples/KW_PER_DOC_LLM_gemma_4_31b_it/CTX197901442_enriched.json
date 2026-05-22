@@ -284,7 +284,7 @@
                 "storage pits"
             ],
             "teater_category": "jáma zásobní",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -296,10 +296,10 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramických střepu"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "ceramic shards"
+                "potsherds"
             ],
             "teater_category": "zlomek keramiky",
             "confidence_score": 0.95
@@ -314,10 +314,10 @@
         "original_text": "Keramický materiál nebyl zachován .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Keramický materiál"
+                "keramický materiál"
             ],
             "extracted_keywords_en": [
-                "Ceramic material"
+                "ceramic material"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
