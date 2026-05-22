@@ -50,6 +50,7 @@ from llm_utils import (
     count_tokens,
     load_config,
     get_inference_defaults,
+    _check_backend_deps,
     load_model_and_tokenizer,
     load_vllm_engine,
     process_document,
@@ -461,6 +462,14 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     )
 
     # ------------------------------------------------------------------
+    # Preflight: verify required libraries are installed BEFORE entering
+    # the logger context.  This ensures a missing dependency is printed
+    # as a clear, actionable message rather than being swallowed by the
+    # logger's __exit__ (which would write paradata before the traceback).
+    # ------------------------------------------------------------------
+    _check_backend_deps(BACKEND, MODEL_KEY)
+
+    # ------------------------------------------------------------------
     # 2. Paradata logger (context manager — finalize() always called)
     # ------------------------------------------------------------------
     logger = ParadataLogger(
@@ -503,26 +512,37 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
         # --------------------------------------------------------------
         # 4. Model / engine loader
         # --------------------------------------------------------------
-        if BACKEND == "vllm":
-            llm_engine, tokenizer, spec = load_vllm_engine(
-                model_key=MODEL_KEY,
-                hf_token=HF_TOKEN,
-                tensor_parallel_size=TENSOR_PARALLEL_SIZE,
-                gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
-                guided_decoding_backend=GUIDED_DECODING_BACKEND,
-                enable_prefix_caching=ENABLE_PREFIX_CACHING,
-                max_model_len=MAX_MODEL_LEN,
-                cpu_offload_gb=CPU_OFFLOAD_GB,
-            )
-            model       = None      # not used in vLLM path
-            is_gguf     = False
-            prefix_function = None  # vLLM handles guided decoding natively
-            parser      = None
+        try:
+            if BACKEND == "vllm":
+                llm_engine, tokenizer, spec = load_vllm_engine(
+                    model_key=MODEL_KEY,
+                    hf_token=HF_TOKEN,
+                    tensor_parallel_size=TENSOR_PARALLEL_SIZE,
+                    gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
+                    guided_decoding_backend=GUIDED_DECODING_BACKEND,
+                    enable_prefix_caching=ENABLE_PREFIX_CACHING,
+                    max_model_len=MAX_MODEL_LEN,
+                    cpu_offload_gb=CPU_OFFLOAD_GB,
+                )
+                model       = None      # not used in vLLM path
+                is_gguf     = False
+                prefix_function = None  # vLLM handles guided decoding natively
+                parser      = None
 
-        else:  # transformers
-            model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
-            llm_engine  = None
-            is_gguf     = spec.get("is_gguf", False)
+            else:  # transformers
+                model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
+                llm_engine  = None
+                is_gguf     = spec.get("is_gguf", False)
+
+        except Exception as exc:
+            # Print the error before the logger context exits and writes paradata
+            # so the cause is visible at the top of the SLURM log, not buried
+            # after "[paradata] Log written → ..."
+            print(
+                f"\n[ERROR] Model loading failed: {type(exc).__name__}: {exc}\n",
+                flush=True,
+            )
+            raise
 
         max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
 

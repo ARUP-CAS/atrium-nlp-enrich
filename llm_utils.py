@@ -364,12 +364,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "load_in_4bit": True,
         "recommended_tp": 2,
         "notes": (
-            "Works with transformers+4bit on 2×40 GB or 1×80 GB; "
-            "or with vLLM tensor_parallel_size=2 for higher throughput."
+            "Default: transformers backend + BnB 4-bit (~35 GB, single A40/A100). "
+            "For higher throughput on 2×A100 80 GB nodes override in config: "
+            "BACKEND=vllm + TENSOR_PARALLEL_SIZE=2."
         ),
         "inference_defaults": {
-            "backend": "vllm",         # vLLM + tp=2 gives better throughput than 4-bit
-            "tensor_parallel_size": 2,
+            "backend": "transformers",  # 4-bit BnB fits on any 48 GB+ GPU (single)
+            "tensor_parallel_size": 1,  # vLLM override needs 2×80 GB (TP=2) or 3×48 GB (TP=3)
             "gpu_memory_utilization": 0.90,
             "max_model_len": None,
             "vllm_batch_size": 8,
@@ -787,7 +788,65 @@ def get_inference_defaults(
 
 
 # ---------------------------------------------------------------------------
-# 4. Transformers backend — model loader helpers
+# 4. Backend dependency preflight check
+# ---------------------------------------------------------------------------
+
+def _check_backend_deps(backend: str, model_key: str) -> None:
+    """
+    Verify that the required runtime libraries for *backend* are importable.
+
+    Called in ``main()`` **before** the ``with logger:`` context so that a
+    missing dependency is reported immediately — not swallowed by the logger's
+    ``__exit__`` and silently printed only after "[paradata] Log written".
+
+    Raises ``ImportError`` with an actionable fix message if a required library
+    is absent.  Also warns (without raising) if the selected backend looks
+    suboptimal for the model (e.g. vLLM requested but ``load_in_4bit=True``
+    makes the transformers path cheaper).
+    """
+    spec = MODEL_REGISTRY.get(model_key, {})
+
+    if backend == "vllm":
+        try:
+            import vllm  # noqa: F401
+        except ModuleNotFoundError:
+            raise ImportError(
+                "\n"
+                "  BACKEND=vllm is set but vLLM is not installed.\n"
+                "\n"
+                "  Install it (keep existing PyTorch):\n"
+                "    pip install vllm --no-build-isolation\n"
+                "\n"
+                "  If pip tries to downgrade torch, pin the version:\n"
+                "    pip install 'vllm>=0.8.0' --no-build-isolation\n"
+                "\n"
+                "  Or switch to the 4-bit transformers path instead:\n"
+                "    Add  BACKEND=transformers  to llm_config.txt\n"
+            ) from None
+
+    elif backend == "transformers":
+        # Warn if the model would benefit from vLLM but won't get it
+        if spec.get("vllm_only"):
+            # Should have been caught by get_inference_defaults forced upgrade,
+            # but guard here too just in case.
+            raise ValueError(
+                f"{model_key} is vllm_only but BACKEND=transformers was forced. "
+                "Remove the BACKEND override from llm_config.txt or install vLLM."
+            )
+        # Soft warning: BnB availability
+        try:
+            import bitsandbytes  # noqa: F401
+        except ModuleNotFoundError:
+            if spec.get("load_in_4bit"):
+                print(
+                    f"[WARN] bitsandbytes not found — {model_key} uses load_in_4bit=True. "
+                    "Loading in full BF16 instead (requires more VRAM).\n"
+                    "  Fix: pip install bitsandbytes"
+                )
+
+
+# ---------------------------------------------------------------------------
+# 5. Transformers backend — model loader helpers
 # ---------------------------------------------------------------------------
 
 def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> None:
@@ -962,7 +1021,7 @@ def load_model_and_tokenizer(
 
 
 # ---------------------------------------------------------------------------
-# 5. vLLM backend — engine loader
+# 6. vLLM backend — engine loader
 # ---------------------------------------------------------------------------
 
 def load_vllm_engine(
@@ -1096,7 +1155,7 @@ def load_vllm_engine(
 
 
 # ---------------------------------------------------------------------------
-# 6. Line-quality filter
+# 7. Line-quality filter
 # ---------------------------------------------------------------------------
 
 def _should_process_line(
@@ -1158,7 +1217,7 @@ def _should_process_line(
 
 
 # ---------------------------------------------------------------------------
-# 7. Context-window builder
+# 8. Context-window builder
 # ---------------------------------------------------------------------------
 
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
@@ -1225,7 +1284,7 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
 
 
 # ---------------------------------------------------------------------------
-# 8. Chat-message formatting helper (shared by both backends)
+# 9. Chat-message formatting helper (shared by both backends)
 # ---------------------------------------------------------------------------
 
 def _format_chat_prompt(
@@ -1270,7 +1329,7 @@ def _format_chat_prompt(
 
 
 # ---------------------------------------------------------------------------
-# 9. Transformers backend — document processor
+# 10. Transformers backend — document processor
 # ---------------------------------------------------------------------------
 
 def process_document(
@@ -1479,7 +1538,7 @@ def process_document(
 
 
 # ---------------------------------------------------------------------------
-# 10. vLLM backend — batched document processor
+# 11. vLLM backend — batched document processor
 # ---------------------------------------------------------------------------
 
 def process_document_vllm(
