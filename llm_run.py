@@ -42,6 +42,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import torch
 from pydantic import BaseModel, Field, ValidationError
+from tqdm import tqdm
 
 from atrium_paradata import ParadataLogger
 from vocab_manager import VocabularyManager
@@ -56,6 +57,34 @@ from llm_utils import (
     process_document,
     process_document_vllm,
     CONTEXT_RESERVED,
+    log_gpu_info,
+    log_gpu_memory,
+)
+
+
+# ---------------------------------------------------------------------------
+# Examples footer (shared between _build_candidate_prompt and token reporting)
+# ---------------------------------------------------------------------------
+
+_EXAMPLES_FOOTER = (
+    "\nEXAMPLES:\n\n"
+    "Input line: \"Výzkum odhalil základy gotického kostela ze 14. "
+    "století.\"\n"
+    "Correct output:\n"
+    "{\n"
+    "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
+    "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
+    "  \"teater_category\": \"kostel\",\n"
+    "  \"confidence_score\": 0.92\n"
+    "}\n\n"
+    "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
+    "Correct output:\n"
+    "{\n"
+    "  \"extracted_keywords_cs\": [],\n"
+    "  \"extracted_keywords_en\": [],\n"
+    "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
+    "  \"confidence_score\": 1.0\n"
+    "}\n"
 )
 
 
@@ -278,31 +307,19 @@ def build_system_prompt(
                 + "\n"
             )
 
-        prompt += (
-            "\nEXAMPLES:\n\n"
-            "Input line: \"Výzkum odhalil základy gotického kostela ze 14. "
-            "století.\"\n"
-            "Correct output:\n"
-            "{\n"
-            "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
-            "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
-            "  \"teater_category\": \"kostel\",\n"
-            "  \"confidence_score\": 0.92\n"
-            "}\n\n"
-            "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
-            "Correct output:\n"
-            "{\n"
-            "  \"extracted_keywords_cs\": [],\n"
-            "  \"extracted_keywords_en\": [],\n"
-            "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
-            "  \"confidence_score\": 1.0\n"
-            "}\n"
-        )
+        prompt += _EXAMPLES_FOOTER
         return prompt
 
     full_prompt  = _build_candidate_prompt(prioritised)
     token_count  = count_tokens(full_prompt, tokenizer)
-    print(f"[vocab] {len(prioritised)} terms, {token_count} tokens (grouped by theme)")
+
+    _header_tok   = count_tokens(header, tokenizer)
+    _examples_tok = count_tokens(_EXAMPLES_FOOTER, tokenizer)
+    _vocab_tok    = token_count - _header_tok - _examples_tok
+    print(
+        f"[vocab] {len(prioritised)} terms, {token_count} tokens total "
+        f"(header: {_header_tok}, vocabulary: {_vocab_tok}, examples: {_examples_tok})"
+    )
 
     if skip_truncation:
         print(
@@ -469,6 +486,10 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     # ------------------------------------------------------------------
     _check_backend_deps(BACKEND, MODEL_KEY)
 
+    # Print GPU specs before any model weights are loaded so the baseline
+    # free VRAM is visible in the SLURM log.
+    log_gpu_info()
+
     # ------------------------------------------------------------------
     # 2. Paradata logger (context manager — finalize() always called)
     # ------------------------------------------------------------------
@@ -544,6 +565,7 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
             )
             raise
 
+        log_gpu_memory(label="after model load")
         max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
 
         # --------------------------------------------------------------
@@ -594,16 +616,19 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
         total_processed = 0
         total_errors    = 0
         total_aborted   = 0
+        total_input_tokens      = 0
+        total_output_tokens     = 0
+        total_inference_seconds = 0.0
 
-        for csv_file in csv_files:
+        for csv_file in tqdm(csv_files, desc="Documents", unit="doc", dynamic_ncols=True):
             out_file = OUTPUT_DIR / f"{csv_file.stem}_enriched.json"
 
             if out_file.exists():
-                print(f"[skip] {csv_file.name} — output already exists.")
+                tqdm.write(f"[skip] {csv_file.name} — output already exists.")
                 logger.log_skip(csv_file.name, "already_exists")
                 continue
 
-            print(f"\nProcessing: {csv_file.name} …")
+            tqdm.write(f"\nProcessing: {csv_file.name} …")
 
             try:
                 if BACKEND == "vllm":
@@ -644,6 +669,9 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
                 total_errors    += doc_stats["skipped_error"]
                 if was_aborted:
                     total_aborted += 1
+                total_input_tokens      += doc_stats.get("total_input_tokens", 0)
+                total_output_tokens     += doc_stats.get("total_output_tokens", 0)
+                total_inference_seconds += doc_stats.get("total_inference_seconds", 0.0)
 
                 print(
                     f"  processed={doc_stats['processed']}, "
@@ -695,14 +723,19 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
         true_failures = sum(
             1 for s in logger._skipped if s.get("reason") != "already_exists"
         )
+        _avg_in  = total_input_tokens  / total_inference_seconds if total_inference_seconds > 0 else 0
+        _avg_out = total_output_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
         print(
             f"\n=== Run complete ===\n"
-            f"    lines enriched: {total_processed}\n"
-            f"    inference errors: {total_errors}\n"
-            f"    aborted documents: {total_aborted}\n"
-            f"    files processed: {len(csv_files)}\n"
-            f"    skipped (already done): {already_done}\n"
-            f"    skipped (errors): {true_failures}"
+            f"    lines enriched:          {total_processed}\n"
+            f"    inference errors:        {total_errors}\n"
+            f"    aborted documents:       {total_aborted}\n"
+            f"    files processed:         {len(csv_files)}\n"
+            f"    skipped (already done):  {already_done}\n"
+            f"    skipped (errors):        {true_failures}\n"
+            f"    total input tokens:      {total_input_tokens:,}\n"
+            f"    total output tokens:     {total_output_tokens:,}\n"
+            f"    avg speed:               {_avg_in:.0f} in tok/s, {_avg_out:.0f} out tok/s"
         )
         logger.finalize(input_total=len(csv_files))
         # __exit__ checks _finalised and will not double-call finalize()

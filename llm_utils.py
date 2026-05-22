@@ -34,10 +34,12 @@ import csv
 import gc
 import json
 import re
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import torch
+from tqdm import tqdm
 
 
 # ---------------------------------------------------------------------------
@@ -101,6 +103,76 @@ def _patch_tokenizer_compat() -> bool:
 
 
 _patch_tokenizer_compat()   # Pass 1 — lazy stub
+
+
+# ---------------------------------------------------------------------------
+# Compatibility shim: transformers 5.x removed all_special_tokens_extended
+# ---------------------------------------------------------------------------
+#
+# Root-cause (observed with vLLM 0.7.3 + transformers 5.x):
+#
+#   vLLM's get_cached_tokenizer() calls tokenizer.all_special_tokens_extended
+#   to pre-populate a special-token cache.  This property existed on
+#   PreTrainedTokenizerBase in transformers 4.x but was removed in 5.x.
+#   The result is:
+#       AttributeError: Qwen2Tokenizer has no attribute all_special_tokens_extended
+#   This hits every model that goes through vLLM's tokenizer init path —
+#   hence all MoE models (vLLM backend) fail while transformers-backend models
+#   (which never call get_cached_tokenizer) work fine.
+#
+# Fix: inject a compatible property onto PreTrainedTokenizerBase once, before
+#   vLLM touches any tokenizer.  The reconstructed property mirrors the old
+#   4.x behaviour: returns a list of AddedToken objects (or plain strings as
+#   fallback) for every entry in all_special_tokens.
+
+def _patch_all_special_tokens_extended() -> bool:
+    """
+    Inject ``all_special_tokens_extended`` onto ``PreTrainedTokenizerBase`` if
+    the property is missing (transformers 5.x).
+
+    The reconstructed property returns a list of ``AddedToken`` / ``str``
+    objects for every special token — sufficient for vLLM 0.7.3's
+    ``get_cached_tokenizer()`` call.  Safe to call multiple times; subsequent
+    calls are no-ops once the attribute is present.
+    """
+    try:
+        import transformers.tokenization_utils_base as _tub2
+        _PTTB = getattr(_tub2, "PreTrainedTokenizerBase", None)
+        if _PTTB is None:
+            return False
+        if hasattr(_PTTB, "all_special_tokens_extended"):
+            return False   # already present — nothing to do
+
+        @property  # type: ignore[misc]
+        def _all_special_tokens_extended(self):  # type: ignore[return]
+            """Reconstructed shim for vLLM compatibility (transformers 5.x)."""
+            result = []
+            seen: set = set()
+            for tok_str in self.all_special_tokens:
+                if tok_str in seen:
+                    continue
+                seen.add(tok_str)
+                tok_id = self.added_tokens_encoder.get(tok_str)
+                if tok_id is not None:
+                    added_tok = self.added_tokens_decoder.get(tok_id)
+                    result.append(added_tok if added_tok is not None else tok_str)
+                else:
+                    result.append(tok_str)
+            return result
+
+        _PTTB.all_special_tokens_extended = _all_special_tokens_extended
+        print(
+            "[COMPAT] Patched PreTrainedTokenizerBase.all_special_tokens_extended "
+            "(removed in transformers 5.x; required by vLLM 0.7.3). "
+            "Permanent fix: pip install -U vllm"
+        )
+        return True
+    except Exception as exc:
+        print(f"[WARN] Could not apply all_special_tokens_extended shim: {exc}")
+        return False
+
+
+_patch_all_special_tokens_extended()
 
 
 # ---------------------------------------------------------------------------
@@ -183,6 +255,40 @@ def _patch_params4bit_compat() -> bool:
 
 
 _patch_params4bit_compat()
+
+
+# ---------------------------------------------------------------------------
+# GPU diagnostics helpers
+# ---------------------------------------------------------------------------
+
+def log_gpu_info() -> None:
+    """Print CUDA device names and total VRAM at startup; no-op if CUDA unavailable."""
+    if not torch.cuda.is_available():
+        print("[GPU] No CUDA devices — running on CPU.")
+        return
+    n = torch.cuda.device_count()
+    print(f"[GPU] {n} device(s) detected:")
+    for i in range(n):
+        props    = torch.cuda.get_device_properties(i)
+        total_gb = props.total_memory / 1024 ** 3
+        free_gb  = (props.total_memory - torch.cuda.memory_reserved(i)) / 1024 ** 3
+        print(f"  [{i}] {props.name}  total={total_gb:.1f} GB  free={free_gb:.1f} GB")
+
+
+def log_gpu_memory(label: str = "") -> None:
+    """Print allocated/reserved VRAM per device; no-op if CUDA unavailable."""
+    if not torch.cuda.is_available():
+        return
+    tag = f" ({label})" if label else ""
+    for i in range(torch.cuda.device_count()):
+        alloc  = torch.cuda.memory_allocated(i) / 1024 ** 3
+        reserv = torch.cuda.memory_reserved(i)  / 1024 ** 3
+        total  = torch.cuda.get_device_properties(i).total_memory / 1024 ** 3
+        pct    = reserv / total * 100 if total else 0
+        print(
+            f"[GPU:{i}]{tag} allocated={alloc:.2f} GB  "
+            f"reserved={reserv:.2f} GB  ({pct:.1f}% of {total:.1f} GB)"
+        )
 
 
 # Transformers imports — deferred inside functions where only needed by one backend
@@ -1372,6 +1478,9 @@ def process_document(
         "skipped_filter": 0,
         "skipped_error": 0,
         "aborted": 0,
+        "total_input_tokens": 0,
+        "total_output_tokens": 0,
+        "total_inference_seconds": 0.0,
     }
     consecutive_errors = 0
     page_num = line_num = 0   # ensure defined for error messages
@@ -1385,7 +1494,11 @@ def process_document(
         )
         from llama_cpp import LogitsProcessorList
 
-    for i, row in enumerate(rows):
+    pbar = tqdm(
+        enumerate(rows), total=len(rows),
+        desc=f"[{file_id}]", unit="row", leave=False, dynamic_ncols=True,
+    )
+    for i, row in pbar:
         inputs = output = None
         try:
             try:
@@ -1432,6 +1545,11 @@ def process_document(
                     logits_processor=lp,
                 )
                 result_json = output["choices"][0]["message"]["content"]
+                # Input prompt is opaque in llama.cpp; count only output tokens
+                stats["total_output_tokens"] += len(
+                    model.tokenize(result_json.encode("utf-8"))
+                )
+                # total_inference_seconds left at 0 for GGUF — llama.cpp has its own timing
 
             else:
                 prompt = _format_chat_prompt(messages, tokenizer, model_key)
@@ -1442,6 +1560,7 @@ def process_document(
                     max_length=max_input_tokens,
                 ).to(model.device)
 
+                _t0 = time.monotonic()
                 with torch.no_grad():
                     output = model.generate(
                         **inputs,
@@ -1454,11 +1573,18 @@ def process_document(
                         eos_token_id=tokenizer.eos_token_id,
                         prefix_allowed_tokens_fn=prefix_function,
                     )
+                _t1 = time.monotonic()
 
                 generated_tokens = output[0][inputs["input_ids"].shape[1]:]
                 result_json = tokenizer.decode(
                     generated_tokens, skip_special_tokens=True
                 )
+
+                input_tok  = inputs["input_ids"].shape[1]
+                output_tok = len(generated_tokens)
+                stats["total_input_tokens"]      += input_tok
+                stats["total_output_tokens"]     += output_tok
+                stats["total_inference_seconds"] += (_t1 - _t0)
 
                 del inputs, output
                 torch.cuda.empty_cache()
@@ -1511,6 +1637,9 @@ def process_document(
             })
             stats["processed"] += 1
             consecutive_errors = 0
+            pbar.set_postfix(
+                proc=stats["processed"], err=stats["skipped_error"], refresh=False
+            )
 
         except Exception as exc:
             print(f"  [{file_id}] Inference error P{page_num} L{line_num}: {exc}")
@@ -1534,6 +1663,14 @@ def process_document(
                 )
                 break
 
+    pbar.close()
+    if stats["total_inference_seconds"] > 0 and stats["processed"] > 0:
+        tps_in  = stats["total_input_tokens"]  / stats["total_inference_seconds"]
+        tps_out = stats["total_output_tokens"] / stats["total_inference_seconds"]
+        print(
+            f"  [{file_id}] Speed: {tps_in:.0f} in tok/s, {tps_out:.0f} out tok/s "
+            f"({stats['total_input_tokens']:,} in / {stats['total_output_tokens']:,} out tokens)"
+        )
     return enriched_lines, stats
 
 
@@ -1591,6 +1728,9 @@ def process_document_vllm(
         "skipped_filter": 0,
         "skipped_error": 0,
         "aborted": 0,
+        "total_input_tokens": 0,
+        "total_output_tokens": 0,
+        "total_inference_seconds": 0.0,
     }
     consecutive_errors = 0
 
@@ -1662,13 +1802,17 @@ def process_document_vllm(
 
     # Second pass: submit mini-batches to vLLM.
     aborted = False
-    for batch_start in range(0, total_qualifying, batch_size):
+    total_batches = (total_qualifying + batch_size - 1) // batch_size
+    batch_iter = tqdm(
+        range(0, total_qualifying, batch_size),
+        desc=f"[{file_id}]", unit="batch", leave=False, dynamic_ncols=True,
+    )
+    for batch_start in batch_iter:
         if aborted:
             break
 
         batch = qualifying[batch_start : batch_start + batch_size]
         batch_num = batch_start // batch_size + 1
-        total_batches = (total_qualifying + batch_size - 1) // batch_size
 
         # Format prompts using the model's chat template
         prompts: List[str] = []
@@ -1678,18 +1822,19 @@ def process_document_vllm(
                     _format_chat_prompt(item["messages"], tokenizer, model_key)
                 )
             except Exception as fmt_err:
-                print(
+                tqdm.write(
                     f"  [{file_id}] Prompt-format error "
                     f"P{item['page_num']} L{item['line_num']}: {fmt_err}"
                 )
                 prompts.append("")   # placeholder; will fail gracefully below
 
         # Submit entire batch to vLLM in one call
+        _t0 = time.monotonic()
         try:
             outputs = llm_engine.generate(prompts, sampling_params)
         except Exception as batch_err:
             # Batch-level failure (e.g. OOM, NCCL error) — count all lines as errors
-            print(
+            tqdm.write(
                 f"  [{file_id}] Batch {batch_num}/{total_batches} failed: {batch_err}"
             )
             stats["skipped_error"] += len(batch)
@@ -1697,15 +1842,25 @@ def process_document_vllm(
             if consecutive_errors >= 10:
                 stats["aborted"] = 1
                 aborted = True
-                print(
+                tqdm.write(
                     f"  [{file_id}] Aborting after batch failure "
                     f"({consecutive_errors} consecutive errors)."
                 )
             continue
+        _t1 = time.monotonic()
 
-        print(
+        batch_time = _t1 - _t0
+        batch_in  = sum(len(o.prompt_token_ids) for o in outputs)
+        batch_out = sum(len(o.outputs[0].token_ids) for o in outputs if o.outputs)
+        stats["total_input_tokens"]      += batch_in
+        stats["total_output_tokens"]     += batch_out
+        stats["total_inference_seconds"] += batch_time
+        tps_in  = batch_in  / batch_time if batch_time > 0 else 0
+        tps_out = batch_out / batch_time if batch_time > 0 else 0
+        tqdm.write(
             f"  [{file_id}] Batch {batch_num}/{total_batches} "
-            f"({len(batch)} lines) complete."
+            f"({len(batch)} lines, {batch_in:,}→{batch_out:,} tok) "
+            f"{tps_in:.0f} in tok/s  {tps_out:.0f} out tok/s"
         )
 
         # Parse each output
@@ -1716,7 +1871,7 @@ def process_document_vllm(
             try:
                 result_json = vllm_output.outputs[0].text
             except (IndexError, AttributeError) as exc:
-                print(
+                tqdm.write(
                     f"  [{file_id}] Empty output P{page_num} L{line_num}: {exc}"
                 )
                 stats["skipped_error"] += 1
@@ -1724,7 +1879,7 @@ def process_document_vllm(
                 if consecutive_errors >= 10:
                     stats["aborted"] = 1
                     aborted = True
-                    print(
+                    tqdm.write(
                         f"  [{file_id}] Aborting after "
                         f"{consecutive_errors} consecutive errors."
                     )
@@ -1745,7 +1900,7 @@ def process_document_vllm(
                             pass
                     semantic_data = EnrichmentModel.model_validate(raw_dict)
                 except (json.JSONDecodeError, ValidationError) as exc:
-                    print(
+                    tqdm.write(
                         f"  [{file_id}] Persistent validation error "
                         f"P{page_num} L{line_num}: {exc}"
                     )
@@ -1754,7 +1909,7 @@ def process_document_vllm(
                     if consecutive_errors >= 10:
                         stats["aborted"] = 1
                         aborted = True
-                        print(
+                        tqdm.write(
                             f"  [{file_id}] Aborting after "
                             f"{consecutive_errors} consecutive errors."
                         )
@@ -1780,4 +1935,12 @@ def process_document_vllm(
             stats["processed"] += 1
             consecutive_errors = 0
 
+    batch_iter.close()
+    if stats["total_inference_seconds"] > 0 and stats["processed"] > 0:
+        tps_in  = stats["total_input_tokens"]  / stats["total_inference_seconds"]
+        tps_out = stats["total_output_tokens"] / stats["total_inference_seconds"]
+        print(
+            f"  [{file_id}] Speed: {tps_in:.0f} in tok/s, {tps_out:.0f} out tok/s "
+            f"({stats['total_input_tokens']:,} in / {stats['total_output_tokens']:,} out tokens)"
+        )
     return enriched_lines, stats
