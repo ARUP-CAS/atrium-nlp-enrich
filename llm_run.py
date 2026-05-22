@@ -49,6 +49,7 @@ from vocab_manager import VocabularyManager
 from llm_utils import (
     count_tokens,
     load_config,
+    get_inference_defaults,
     load_model_and_tokenizer,
     load_vllm_engine,
     process_document,
@@ -395,38 +396,69 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     MIN_CHAR_NON_TEXT        = int(config.get("MIN_CHAR_NON_TEXT",        "8"))
     MIN_ALPHA_RATIO_NON_TEXT = float(config.get("MIN_ALPHA_RATIO_NON_TEXT", "0.40"))
 
-    # Backend
-    BACKEND = config.get("BACKEND", "transformers").lower()
+    # ------------------------------------------------------------------
+    # Resolve inference parameters
+    #
+    # Three-tier priority (highest → lowest):
+    #   1. Explicit value in llm_config.txt
+    #   2. Model's inference_defaults in MODEL_REGISTRY
+    #   3. Global fallback constants (_GLOBAL_INFERENCE_FALLBACKS)
+    #
+    # Sources are recorded so the startup summary can show exactly where
+    # each value came from — letting users know what they can override.
+    # ------------------------------------------------------------------
+    infer, sources = get_inference_defaults(MODEL_KEY, config)
+
+    BACKEND                 = infer["BACKEND"]
+    TENSOR_PARALLEL_SIZE    = infer["TENSOR_PARALLEL_SIZE"]
+    GPU_MEMORY_UTILIZATION  = infer["GPU_MEMORY_UTILIZATION"]
+    GUIDED_DECODING_BACKEND = infer["GUIDED_DECODING_BACKEND"]
+    ENABLE_PREFIX_CACHING   = infer["ENABLE_PREFIX_CACHING"]
+    VLLM_BATCH_SIZE         = infer["VLLM_BATCH_SIZE"]
+    MAX_MODEL_LEN           = infer["MAX_MODEL_LEN"]
+    CPU_OFFLOAD_GB          = infer["CPU_OFFLOAD_GB"]
+
     if BACKEND not in {"transformers", "vllm"}:
         raise ValueError(
             f"Unknown BACKEND='{BACKEND}'. Must be 'transformers' or 'vllm'."
         )
 
-    # vLLM-specific parameters
-    TENSOR_PARALLEL_SIZE    = int(config.get("TENSOR_PARALLEL_SIZE",    "1"))
-    GPU_MEMORY_UTILIZATION  = float(config.get("GPU_MEMORY_UTILIZATION",  "0.90"))
-    GUIDED_DECODING_BACKEND = config.get("GUIDED_DECODING_BACKEND", "xgrammar")
-    ENABLE_PREFIX_CACHING   = config.get("ENABLE_PREFIX_CACHING", "true").lower() == "true"
-    VLLM_BATCH_SIZE         = int(config.get("VLLM_BATCH_SIZE", "16"))
-    MAX_MODEL_LEN_RAW       = config.get("MAX_MODEL_LEN", "").strip()
-    MAX_MODEL_LEN: Optional[int] = int(MAX_MODEL_LEN_RAW) if MAX_MODEL_LEN_RAW else None
-    # CPU weight offloading — for nodes where GPU VRAM < model weights but
-    # CPU RAM is large enough (dll-4gpu3 / dll-8gpu both have 515 GB RAM).
-    CPU_OFFLOAD_GB          = int(config.get("CPU_OFFLOAD_GB", "0"))
+    # ------------------------------------------------------------------
+    # Startup summary — show every effective value and its source so users
+    # know what to add to llm_config.txt if they need a different value.
+    # ------------------------------------------------------------------
+    _SRC_LABEL = {
+        "config":  "← llm_config.txt",
+        "model":   "  (model default)",
+        "global":  "  (global default)",
+        "forced":  "  (enforced — model is vllm_only)",
+    }
 
     print(
-        f"=== LLM Semantic Enrichment Pipeline ===\n"
+        f"\n=== LLM Semantic Enrichment Pipeline ===\n"
         f"    model:   {MODEL_KEY}\n"
-        f"    backend: {BACKEND}\n"
-        f"    output:  {OUTPUT_DIR}"
+        f"    output:  {OUTPUT_DIR}\n"
     )
+    print("  Inference parameters:")
+    print(f"    {'BACKEND':<26} = {BACKEND:<12}  {_SRC_LABEL[sources['BACKEND']]}")
     if BACKEND == "vllm":
-        print(
-            f"    tp_size: {TENSOR_PARALLEL_SIZE}, "
-            f"gpu_mem: {GPU_MEMORY_UTILIZATION:.2f}, "
-            f"apc: {ENABLE_PREFIX_CACHING}, "
-            f"batch: {VLLM_BATCH_SIZE}"
-        )
+        for key, val in [
+            ("TENSOR_PARALLEL_SIZE",   TENSOR_PARALLEL_SIZE),
+            ("GPU_MEMORY_UTILIZATION", f"{GPU_MEMORY_UTILIZATION:.2f}"),
+            ("VLLM_BATCH_SIZE",        VLLM_BATCH_SIZE),
+            ("MAX_MODEL_LEN",          MAX_MODEL_LEN if MAX_MODEL_LEN else "(model native)"),
+            ("CPU_OFFLOAD_GB",         CPU_OFFLOAD_GB),
+            ("ENABLE_PREFIX_CACHING",  ENABLE_PREFIX_CACHING),
+            ("GUIDED_DECODING_BACKEND",GUIDED_DECODING_BACKEND),
+        ]:
+            print(
+                f"    {key:<26} = {str(val):<12}  "
+                f"{_SRC_LABEL[sources.get(key, 'global')]}"
+            )
+    print(
+        "\n  To override any value add it to llm_config.txt. "
+        "Values marked '← llm_config.txt' are already user-set.\n"
+    )
 
     # ------------------------------------------------------------------
     # 2. Paradata logger (context manager — finalize() always called)

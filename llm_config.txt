@@ -2,23 +2,38 @@
 # LLM Semantic Enrichment Pipeline — Configuration
 # =============================================================================
 #
-# MODEL_KEY  — Switch between any key listed in MODEL_REGISTRY inside llm_utils.py.
+# The ONLY required change is MODEL_KEY.  All inference parameters (backend,
+# GPU count, memory utilization, batch size, context-window cap, …) are loaded
+# automatically from the model registry in llm_utils.py.
 #
-# SMALL MODELS (single GPU, BnB 4-bit via transformers backend):
-#   qwen-3.5-9b-it | qwen3-8b | qwen2.5-14b-awq | gemma-3-12b-it | qwen3-14b
+# When the pipeline starts it prints every effective value next to a label that
+# shows where it came from:
+#   ← llm_config.txt   — you set this explicitly
+#   (model default)    — from inference_defaults in MODEL_REGISTRY
+#   (global default)   — pipeline-wide fallback
 #
-# MID MODELS (single 80 GB GPU, BnB 4-bit or FP8):
-#   qwen-3.6-27b-it | gemma-4-31b-it | llama3.1-70b
+# To change any value, uncomment the corresponding line in the
+# "Inference parameter overrides" section at the bottom of this file.
 #
-# LARGE MODELS (multi-GPU, vLLM only — set BACKEND=vllm):
-#   qwen3-235b-a22b        2× 80 GB recommended (tensor_parallel_size=2)
-#   qwen3-235b-a22b-fp8    2× 80 GB (native FP8, best quality/speed ratio)
-#   deepseek-v3            4× 80 GB minimum     (tensor_parallel_size=4)
-#   llama4-maverick        2× 80 GB             (gated — HF_TOKEN required)
+# =============================================================================
+# Model selection
+# =============================================================================
 #
-# MoE GGUF fallback (llama.cpp, single GPU, any VRAM via GGUF quant):
+# Small  (≤14 B, single GPU, transformers backend):
+#   qwen-3.5-9b-it  |  qwen3-8b  |  qwen2.5-14b-awq  |  qwen3-14b  |  gemma-3-12b-it
+#
+# Mid    (≤31 B, single GPU, transformers backend):
+#   qwen-3.6-27b-it  |  gemma-4-31b-it
+#
+# MoE / large  (vLLM backend, auto-selected):
+#   qwen-3.6-35b-moe  |  gemma-4-26b-moe    — single GPU, vLLM
+#   llama3.1-70b                            — tp=2, 2× GPU
+#   qwen3-235b-a22b-fp8                     — tp=8, tdll-8gpu (8× A100 40 GB)
+#   llama4-maverick                         — tp=8, gated (HF_TOKEN required)
+#   deepseek-v3                             — tp=8, exceeds available hardware
+#
+# GGUF fallback (llama.cpp, any single GPU):
 #   gemma-4-26b-moe-gguf
-#
 MODEL_KEY=qwen-3.6-27b-it
 
 # =============================================================================
@@ -44,68 +59,43 @@ MIN_CHAR_NON_TEXT=8
 MIN_ALPHA_RATIO_NON_TEXT=0.4
 
 # =============================================================================
-# Backend selection
+# Inference parameter overrides  (all auto-set from model registry by default)
 # =============================================================================
-# BACKEND=transformers
-#   Uses HuggingFace Transformers + bitsandbytes 4-bit quantization.
-#   Recommended for single-GPU runs on small/mid models (≤ 31 B).
-#   Requires: transformers, bitsandbytes, lmformatenforcer, accelerate.
 #
+# Uncomment and edit only when you need to deviate from the model's recommended
+# configuration — for example, to adapt to a different node or reduce memory.
+#
+# The startup log shows every active value and its source, so you can confirm
+# which parameters are already covered by model defaults before adding overrides.
+
+# Backend: transformers (4-bit BnB, single GPU) | vllm (multi-GPU, large models)
+# Large and MoE models auto-select "vllm"; small/mid models auto-select "transformers".
 # BACKEND=vllm
-#   Uses vLLM for high-throughput, multi-GPU inference.
-#   Enables: Automatic Prefix Caching (APC), tensor parallelism,
-#   native xgrammar-based guided JSON decoding (no lmformatenforcer needed),
-#   and batched document processing.
-#   Recommended for all models ≥ 70 B and any multi-GPU node.
-#   Requires: vllm (pip install vllm)
-#
-BACKEND=transformers
 
-# =============================================================================
-# vLLM-specific settings (ignored when BACKEND=transformers)
-# =============================================================================
-#
-# TENSOR_PARALLEL_SIZE
-#   Number of GPUs to shard the model across.
-#   Set to 1 for single-GPU, 2 for two 80-GB GPUs, 4 for four GPUs.
-#   Rule of thumb: use the model's "recommended_tp" value from the registry.
-#
-TENSOR_PARALLEL_SIZE=1
+# Number of GPUs to shard the model across (vLLM only).
+# TENSOR_PARALLEL_SIZE=8
 
-# GPU_MEMORY_UTILIZATION
-#   Fraction of each GPU's VRAM that vLLM may use for the KV cache.
-#   0.90 is the recommended default. Lower to 0.80 if you get OOM on very
-#   long documents. Do not exceed 0.95.
-#
-GPU_MEMORY_UTILIZATION=0.90
+# Fraction of each GPU's VRAM allocated to vLLM (0.0–0.95).
+# GPU_MEMORY_UTILIZATION=0.88
 
-# GUIDED_DECODING_BACKEND
-#   xgrammar  — fastest, grammar-based, recommended (default)
-#   outlines  — alternative, slightly slower
-#
-GUIDED_DECODING_BACKEND=xgrammar
+# Lines submitted per vLLM generate() call.
+# Larger = higher GPU utilisation; lower = less memory pressure.
+# VLLM_BATCH_SIZE=8
 
-# ENABLE_PREFIX_CACHING
-#   true  — Automatic Prefix Caching (APC). The system prompt (which embeds
-#            the full TEATER vocabulary) is computed once and its KV-cache is
-#            reused for every line in the document. This is the main
-#            throughput multiplier for this pipeline. Recommended for all runs.
-#   false — Disable APC. Only useful for debugging or very short documents
-#            where cache overhead outweighs the benefit.
-#
-ENABLE_PREFIX_CACHING=true
+# Override the model's native context window to reduce KV-cache memory.
+# Required for llama4-maverick (1 M token native window causes OOM otherwise).
+# Already set by the model default for all large models — only override if
+# you need a different value than the model default of 16 384.
+# MAX_MODEL_LEN=16384
 
-# VLLM_BATCH_SIZE
-#   Number of document lines submitted to vLLM in a single generate() call.
-#   Larger batches = higher GPU utilisation but more memory pressure.
-#   16 is a safe default; increase to 32–64 on nodes with ≥ 160 GB VRAM.
-#   Consecutive-error abort logic is evaluated after each mini-batch.
-#
-VLLM_BATCH_SIZE=16
+# GB of model weights to keep in CPU RAM when GPU VRAM is insufficient.
+# Useful on dll-4gpu3 / dll-8gpu (515 GB CPU RAM):
+#   qwen3-235b-a22b-fp8  on 4× L40 48 GB  → CPU_OFFLOAD_GB=70
+#   llama4-maverick      on 4× L40 48 GB  → CPU_OFFLOAD_GB=40
+# CPU_OFFLOAD_GB=0
 
-# MAX_MODEL_LEN (optional override)
-#   Override the model's default maximum sequence length.
-#   Leave commented to use the model's native context window.
-#   Set lower (e.g. 65536) to reduce KV-cache memory on long-context models.
-#
-# MAX_MODEL_LEN=65536
+# Guided-decoding engine (vLLM only): xgrammar (default, fastest) | outlines
+# GUIDED_DECODING_BACKEND=xgrammar
+
+# Disable Automatic Prefix Caching — not recommended; reduces throughput.
+# ENABLE_PREFIX_CACHING=false

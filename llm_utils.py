@@ -199,7 +199,7 @@ from vocab_manager import VocabularyManager  # noqa: E402
 # 1. Model Registry
 # ---------------------------------------------------------------------------
 #
-# Field reference:
+# Static fields (model identity / hardware requirements):
 #   hf_id               — HuggingFace model ID (or local path for GGUF).
 #   context_window      — Maximum input tokens (prompt + output combined).
 #   trust_remote_code   — Pass to from_pretrained (needed for some models).
@@ -209,13 +209,22 @@ from vocab_manager import VocabularyManager  # noqa: E402
 #   is_awq              — Model is pre-quantized AWQ; use autoawq loader.
 #   is_gguf             — GGUF file; use llama.cpp loader.
 #   is_moe              — Mixture-of-Experts architecture.
-#   bnb_experts_broken  — BnB 4-bit fails on this model's fused expert blocks;
-#                         use GGUF or vLLM instead.
-#   vllm_only           — Model cannot be used with the transformers backend
-#                         (too large, or requires vLLM-specific quantization).
-#   recommended_tp      — Recommended tensor_parallel_size for vLLM.
+#   bnb_experts_broken  — BnB 4-bit fails on fused expert blocks; use vLLM.
+#   vllm_only           — Cannot be used with the transformers backend.
+#   recommended_tp      — Suggested tensor_parallel_size for vLLM.
 #   max_quant_ratio     — Override for _verify_quantization_effective threshold.
 #   notes               — Human-readable deployment notes.
+#
+# inference_defaults:
+#   Per-model recommended values for all runtime parameters that are otherwise
+#   set in llm_config.txt.  These become the effective values unless the user
+#   explicitly overrides them in the config file.  See get_inference_defaults().
+#
+#   backend               — "transformers" | "vllm"
+#   tensor_parallel_size  — Number of GPUs (vLLM only; ignored for transformers)
+#   gpu_memory_utilization— Fraction of each GPU's VRAM for vLLM (0.0–0.95)
+#   max_model_len         — Override for model's native context window (int|None)
+#   vllm_batch_size       — Lines per vLLM generate() call
 
 MODEL_REGISTRY: Dict[str, Dict] = {
 
@@ -229,6 +238,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "qwen-3.5-9b-it": {
         "hf_id": "Qwen/Qwen3.5-9B",
@@ -236,6 +252,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "qwen2.5-14b-awq": {
         "hf_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
@@ -244,6 +267,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.float16,
         "hf_token_required": False,
         "is_awq": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "qwen3-14b": {
         "hf_id": "OpenPipe/Qwen3-14B-Instruct",
@@ -252,6 +282,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
         "load_in_4bit": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "gemma-3-12b-it": {
         "hf_id": "google/gemma-3-12b-it",
@@ -259,6 +296,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "qwen2.5-7b": {
         "hf_id": "Qwen/Qwen2.5-7B-Instruct",
@@ -266,6 +310,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
 
     # ------------------------------------------------------------------
@@ -280,6 +331,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": False,
         "load_in_4bit": True,
         "notes": "Best accuracy/VRAM ratio for single-GPU runs.",
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "gemma-4-31b-it": {
         "hf_id": "google/gemma-4-31B-it",
@@ -289,6 +347,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": True,
         "load_in_4bit": True,
         "notes": "Highest accuracy on single GPU (4-bit). Gated model.",
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "llama3.1-70b": {
         "hf_id": "meta-llama/Meta-Llama-3.1-70B-Instruct",
@@ -298,8 +363,17 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": True,
         "load_in_4bit": True,
         "recommended_tp": 2,
-        "notes": "Works with transformers+4bit on 2×40 GB or 1×80 GB; "
-                 "or with vLLM tensor_parallel_size=2 for higher throughput.",
+        "notes": (
+            "Works with transformers+4bit on 2×40 GB or 1×80 GB; "
+            "or with vLLM tensor_parallel_size=2 for higher throughput."
+        ),
+        "inference_defaults": {
+            "backend": "vllm",         # vLLM + tp=2 gives better throughput than 4-bit
+            "tensor_parallel_size": 2,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 8,
+        },
     },
 
     # ------------------------------------------------------------------
@@ -313,10 +387,17 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_gguf": True,
         "hf_token_required": False,
         "notes": "MoE via llama.cpp. BnB 4-bit unsupported (fused experts).",
+        "inference_defaults": {
+            "backend": "transformers",  # llama.cpp is reached via the transformers path
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
 
     # ------------------------------------------------------------------
-    # MoE models — vLLM only (multi-GPU)
+    # MoE models — vLLM only (single or multi-GPU)
     # ------------------------------------------------------------------
 
     "qwen-3.6-35b-moe": {
@@ -329,6 +410,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "bnb_experts_broken": True,
         "recommended_tp": 1,
         "notes": "35B MoE (3B active). vLLM single GPU usually fits.",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "gemma-4-26b-moe": {
         "hf_id": "google/gemma-4-26B-A4B-it",
@@ -340,6 +428,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "bnb_experts_broken": True,
         "recommended_tp": 1,
         "notes": "26B MoE (4B active). Use vLLM; BnB 4-bit unsupported.",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "gemma-4-26b-moe-awq": {
         "hf_id": "google/gemma-4-26B-A4B-it",
@@ -351,10 +446,17 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "bnb_experts_broken": True,
         "is_awq": True,
         "notes": "AWQ variant of gemma-4-26b-moe.",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
 
     # ------------------------------------------------------------------
-    # Large models — vLLM only, multi-GPU (BACKEND=vllm required)
+    # Large models — vLLM only, multi-GPU
     # ------------------------------------------------------------------
 
     "qwen3-235b-a22b": {
@@ -368,11 +470,17 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "vllm_only": True,
         "recommended_tp": 2,
         "notes": (
-            "235B MoE (22B active params at inference). "
-            "BF16 ~470 GB total weights, but only 22B active per forward pass. "
-            "vLLM with tensor_parallel_size=2 fits on 2×80 GB GPUs. "
-            "Use FP8 variant (qwen3-235b-a22b-fp8) for best throughput."
+            "235B MoE (22B active params at inference). BF16 ~470 GB weights. "
+            "Fitted on 8× A100 40 GB (tdll-8gpu) via TP+EP sharding. "
+            "Use the FP8 variant for better KV-cache headroom."
         ),
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,   # 8× A100 40 GB (tdll-8gpu)
+            "gpu_memory_utilization": 0.88,
+            "max_model_len": 16384,       # cap from 131 072; pipeline needs ~10k
+            "vllm_batch_size": 8,
+        },
     },
     "qwen3-235b-a22b-fp8": {
         "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
@@ -385,10 +493,17 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "vllm_only": True,
         "recommended_tp": 2,
         "notes": (
-            "Native FP8 quantized version. ~117 GB loaded weight. "
-            "Recommended for the 144 GB / 200 GB GPU node. "
-            "Set tensor_parallel_size=2 for 2×80 GB, or 1 for a single 144 GB GPU."
+            "Native FP8 quantized version. ~235 GB weights. "
+            "Best option for tdll-8gpu (8× A100 40 GB). "
+            "On dll-4gpu3 / dll-8gpu (4–8× 48/24 GB) set CPU_OFFLOAD_GB=70."
         ),
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,
+            "gpu_memory_utilization": 0.88,
+            "max_model_len": 16384,
+            "vllm_batch_size": 8,
+        },
     },
     "deepseek-v3": {
         "hf_id": "deepseek-ai/DeepSeek-V3",
@@ -401,12 +516,18 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "vllm_only": True,
         "recommended_tp": 4,
         "notes": (
-            "671B MoE. Official FP8 checkpoint available at "
-            "deepseek-ai/DeepSeek-V3-0324 (March 2024 update). "
-            "Minimum 4×80 GB GPUs in FP8; 8×80 GB in BF16. "
-            "Best used with vLLM + tensor_parallel_size=4 + "
+            "671B MoE. Official FP8 checkpoint: deepseek-ai/DeepSeek-V3-0324. "
+            "Requires 8× A100 40 GB minimum in FP8 (exceeds available hardware). "
+            "Best used with vLLM + tensor_parallel_size=8 + "
             "gpu_memory_utilization=0.92."
         ),
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,   # minimum viable on 8× A100 40 GB
+            "gpu_memory_utilization": 0.92,
+            "max_model_len": 16384,
+            "vllm_batch_size": 4,
+        },
     },
     "llama4-maverick": {
         "hf_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
@@ -420,9 +541,16 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "recommended_tp": 2,
         "notes": (
             "Llama 4 Maverick: 128 experts, 17B active params per token. "
-            "1 M token context window. Multimodal (text + image). "
-            "FP8 official checkpoint available. Gated model — HF_TOKEN required."
+            "1 M token context — max_model_len MUST be capped or vLLM OOMs "
+            "pre-allocating the KV table. Gated model — HF_TOKEN required."
         ),
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,
+            "gpu_memory_utilization": 0.88,
+            "max_model_len": 16384,      # CRITICAL — prevents 1M-token KV OOM
+            "vllm_batch_size": 4,
+        },
     },
 
     # ------------------------------------------------------------------
@@ -436,6 +564,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
         "load_in_4bit": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "ministral-3-14b": {
         "hf_id": "Aratako/Ministral-3-14B-Instruct-2512-BF16-TextOnly",
@@ -444,6 +579,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
         "load_in_4bit": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "mistral-nemo-12b": {
         "hf_id": "mistralai/Mistral-Nemo-Instruct-2407",
@@ -451,6 +593,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "aya-expanse-8b": {
         "hf_id": "CohereForAI/aya-expanse-8b",
@@ -458,6 +607,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "bielik-11b": {
         "hf_id": "speakleash/Bielik-11B-v2.3-Instruct",
@@ -465,6 +621,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": False,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
     "llama3.1-8b": {
         "hf_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
@@ -472,6 +635,13 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "trust_remote_code": False,
         "torch_dtype": torch.bfloat16,
         "hf_token_required": True,
+        "inference_defaults": {
+            "backend": "transformers",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
     },
 }
 
@@ -507,7 +677,117 @@ def load_config(config_path: str = "llm_config.txt") -> Dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# 3. Transformers backend — model loader helpers
+# 3. Inference-parameter resolver
+# ---------------------------------------------------------------------------
+
+# Lowest-priority fallbacks — used only when neither llm_config.txt nor the
+# model's inference_defaults specify a value.
+_GLOBAL_INFERENCE_FALLBACKS: Dict[str, Any] = {
+    "backend":                "transformers",
+    "tensor_parallel_size":   1,
+    "gpu_memory_utilization": 0.90,
+    "guided_decoding_backend":"xgrammar",
+    "enable_prefix_caching":  True,
+    "vllm_batch_size":        16,
+    "max_model_len":          None,   # None → use model's native context window
+    "cpu_offload_gb":         0,
+}
+
+# Map CONFIG_FILE_KEY → inference_defaults key (lower_snake_case)
+_PARAM_KEYS: Dict[str, str] = {
+    "BACKEND":                 "backend",
+    "TENSOR_PARALLEL_SIZE":    "tensor_parallel_size",
+    "GPU_MEMORY_UTILIZATION":  "gpu_memory_utilization",
+    "GUIDED_DECODING_BACKEND": "guided_decoding_backend",
+    "ENABLE_PREFIX_CACHING":   "enable_prefix_caching",
+    "VLLM_BATCH_SIZE":         "vllm_batch_size",
+    "MAX_MODEL_LEN":           "max_model_len",
+    "CPU_OFFLOAD_GB":          "cpu_offload_gb",
+}
+
+
+def get_inference_defaults(
+    model_key: str,
+    user_config: Dict[str, str],
+) -> Tuple[Dict[str, Any], Dict[str, str]]:
+    """
+    Resolve all inference parameters with three-tier priority:
+
+      1. llm_config.txt (``user_config``)                  — highest priority
+      2. ``MODEL_REGISTRY[model_key]["inference_defaults"]`` — model-specific
+      3. ``_GLOBAL_INFERENCE_FALLBACKS``                    — lowest priority
+
+    Additionally enforces:
+      • If the model is ``vllm_only=True`` and the resolved backend is
+        "transformers", the backend is silently upgraded to "vllm" (the
+        transformers loader would fail anyway, so this gives a clear message
+        at startup rather than a cryptic error later).
+
+    Returns:
+        resolved — fully typed dict ready for use in main():
+                   str, int, float, bool, or None per parameter.
+        sources  — dict mapping each CONFIG_KEY to its source string,
+                   one of "config" | "model" | "global" | "forced".
+                   Used by the startup summary to show where every value
+                   came from so users know what to override.
+    """
+    if model_key not in MODEL_REGISTRY:
+        raise ValueError(
+            f"Unknown MODEL_KEY '{model_key}'. "
+            f"Available: {', '.join(MODEL_REGISTRY.keys())}"
+        )
+
+    spec           = MODEL_REGISTRY[model_key]
+    model_defaults = spec.get("inference_defaults", {})
+    resolved: Dict[str, Any] = {}
+    sources:  Dict[str, str] = {}
+
+    for cfg_key, def_key in _PARAM_KEYS.items():
+        if cfg_key in user_config:
+            raw    = user_config[cfg_key]
+            source = "config"
+        elif def_key in model_defaults and model_defaults[def_key] is not None:
+            raw    = str(model_defaults[def_key])
+            source = "model"
+        elif def_key in model_defaults and model_defaults[def_key] is None:
+            # Explicit None in model_defaults (max_model_len = use native)
+            raw    = ""
+            source = "model"
+        else:
+            fb     = _GLOBAL_INFERENCE_FALLBACKS.get(def_key)
+            raw    = str(fb) if fb is not None else ""
+            source = "global"
+
+        # Type coercion
+        if def_key == "backend":
+            resolved[cfg_key] = raw.lower()
+        elif def_key in ("tensor_parallel_size", "vllm_batch_size", "cpu_offload_gb"):
+            resolved[cfg_key] = int(raw) if raw else 0
+        elif def_key == "gpu_memory_utilization":
+            resolved[cfg_key] = float(raw) if raw else 0.90
+        elif def_key == "enable_prefix_caching":
+            resolved[cfg_key] = raw.lower() == "true" if raw else True
+        elif def_key == "max_model_len":
+            resolved[cfg_key] = int(raw) if raw else None
+        else:
+            resolved[cfg_key] = raw
+
+        sources[cfg_key] = source
+
+    # Enforce vllm_only constraint — upgrade silently rather than failing later
+    if spec.get("vllm_only") and resolved["BACKEND"] != "vllm":
+        print(
+            f"[INFO] {model_key} is vllm_only — "
+            f"upgrading BACKEND={resolved['BACKEND']} → vllm automatically."
+        )
+        resolved["BACKEND"] = "vllm"
+        sources["BACKEND"]  = "forced"
+
+    return resolved, sources
+
+
+# ---------------------------------------------------------------------------
+# 4. Transformers backend — model loader helpers
 # ---------------------------------------------------------------------------
 
 def _verify_quantization_effective(model: Any, model_key: str, spec: dict) -> None:
@@ -682,7 +962,7 @@ def load_model_and_tokenizer(
 
 
 # ---------------------------------------------------------------------------
-# 4. vLLM backend — engine loader
+# 5. vLLM backend — engine loader
 # ---------------------------------------------------------------------------
 
 def load_vllm_engine(
@@ -816,7 +1096,7 @@ def load_vllm_engine(
 
 
 # ---------------------------------------------------------------------------
-# 5. Line-quality filter
+# 6. Line-quality filter
 # ---------------------------------------------------------------------------
 
 def _should_process_line(
@@ -878,7 +1158,7 @@ def _should_process_line(
 
 
 # ---------------------------------------------------------------------------
-# 6. Context-window builder
+# 7. Context-window builder
 # ---------------------------------------------------------------------------
 
 def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> str:
@@ -945,7 +1225,7 @@ def get_context_window(rows: List[dict], center_idx: int, window: int = 2) -> st
 
 
 # ---------------------------------------------------------------------------
-# 7. Chat-message formatting helper (shared by both backends)
+# 8. Chat-message formatting helper (shared by both backends)
 # ---------------------------------------------------------------------------
 
 def _format_chat_prompt(
@@ -990,7 +1270,7 @@ def _format_chat_prompt(
 
 
 # ---------------------------------------------------------------------------
-# 8. Transformers backend — document processor
+# 9. Transformers backend — document processor
 # ---------------------------------------------------------------------------
 
 def process_document(
@@ -1199,7 +1479,7 @@ def process_document(
 
 
 # ---------------------------------------------------------------------------
-# 9. vLLM backend — batched document processor
+# 10. vLLM backend — batched document processor
 # ---------------------------------------------------------------------------
 
 def process_document_vllm(
