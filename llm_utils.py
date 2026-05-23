@@ -291,6 +291,74 @@ def log_gpu_memory(label: str = "") -> None:
         )
 
 
+# ---------------------------------------------------------------------------
+# vLLM compatibility shim: rope_scaling 'type' → 'rope_type' rename
+# ---------------------------------------------------------------------------
+#
+# Root-cause (vLLM 0.7.3 + transformers 5.x model configs):
+#
+#   Newer HuggingFace model configs (Gemma 4, some Qwen variants) store their
+#   rope_scaling dict with a 'type' key, e.g. {"type": "linear", "factor": 8}.
+#   vLLM 0.7.3's patch_rope_scaling_dict was tightened to require the newer
+#   'rope_type' key and raises unconditionally if it is absent:
+#       ValueError: rope_scaling should have a 'rope_type' key
+#
+# Fix: monkey-patch patch_rope_scaling_dict to silently rename 'type' →
+#   'rope_type' before the strictness check fires.  Applied lazily inside
+#   load_vllm_engine() (vLLM may not be installed, so we can't apply at
+#   module load time).
+
+def _patch_vllm_rope_scaling_compat() -> bool:
+    """
+    Patch ``vllm.transformers_utils.config.patch_rope_scaling_dict`` to
+    accept rope_scaling dicts that use the legacy ``'type'`` key instead of
+    the newer ``'rope_type'`` key (vLLM 0.7.3 + Gemma-4 / newer model configs).
+
+    Safe to call multiple times; subsequent calls are no-ops once patched.
+    Applied inside ``load_vllm_engine()`` before ``LLM(**engine_kwargs)``.
+
+    Prints ``[COMPAT] vLLM rope_scaling shim installed`` at patch time so the
+    log unambiguously shows the shim is active — separate from the per-call
+    ``[COMPAT] rope_scaling: renamed`` message that only prints when a config
+    actually needs the fix.
+    """
+    try:
+        import vllm.transformers_utils.config as _vllm_cfg
+        _orig = getattr(_vllm_cfg, "patch_rope_scaling_dict", None)
+        if _orig is None:
+            return False   # vLLM version without this function — nothing to do
+        if getattr(_orig, "_atrium_patched", False):
+            return False   # already patched in a previous call
+
+        def _patched_rope_scaling_dict(rope_scaling: dict) -> None:
+            if isinstance(rope_scaling, dict) and "rope_type" not in rope_scaling:
+                if "type" in rope_scaling:
+                    # In-place rename so all downstream vLLM code sees rope_type.
+                    # The dict is owned by the HF config object — mutating it is safe.
+                    rope_scaling["rope_type"] = rope_scaling.pop("type")
+                    print(
+                        "[COMPAT] rope_scaling: renamed legacy 'type' → 'rope_type' "
+                        "(vLLM 0.7.x + newer model config). "
+                        "Permanent fix: pip install -U vllm"
+                    )
+                # If neither key is present let the original function raise naturally —
+                # that case requires a genuine vLLM upgrade, not just a rename.
+            return _orig(rope_scaling)
+
+        _patched_rope_scaling_dict._atrium_patched = True
+        _vllm_cfg.patch_rope_scaling_dict = _patched_rope_scaling_dict
+        print(
+            "[COMPAT] vLLM rope_scaling shim installed "
+            "('type'→'rope_type' auto-rename for older model configs). "
+            "Permanent fix: pip install -U vllm"
+        )
+        return True
+
+    except Exception as exc:
+        print(f"[WARN] Could not apply vLLM rope_scaling compat patch: {exc}")
+        return False
+
+
 # Transformers imports — deferred inside functions where only needed by one backend
 from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: E402
 
@@ -516,7 +584,12 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
         "recommended_tp": 1,
-        "notes": "35B MoE (3B active). vLLM single GPU usually fits.",
+        "min_vllm_version": "0.8.0",
+        "notes": (
+            "35B MoE (3B active). vLLM single GPU usually fits. "
+            "Requires vLLM ≥ 0.8.x — architecture Qwen3_5MoeForConditionalGeneration "
+            "is not registered in vLLM 0.7.3."
+        ),
         "inference_defaults": {
             "backend": "vllm",
             "tensor_parallel_size": 1,
@@ -533,11 +606,21 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "hf_token_required": True,
         "is_moe": True,
         "bnb_experts_broken": True,
-        "recommended_tp": 1,
-        "notes": "26B MoE (4B active). Use vLLM; BnB 4-bit unsupported.",
+        "recommended_tp": 2,
+        "notes": (
+            "26B MoE (4B active). BF16 weight footprint ≈ 52 GB — exceeds a single "
+            "A40 48 GB (43 GB usable at 0.90 util). Requires tensor_parallel_size=2 "
+            "on a 3-GPU node (2× A40 = 96 GB).  Use the GGUF variant for a single GPU. "
+            "rope_scaling 'type'→'rope_type' rename auto-patched for vLLM 0.7.x. "
+            "CAUTION: Gemma 4 was released April 2025 (after vLLM 0.7.3 Feb 2025). "
+            "The rope_scaling error fires before the architecture check, so it is "
+            "unknown whether vLLM 0.7.3 supports this architecture. A second "
+            "'no vLLM implementation' error may appear after the rope fix is deployed. "
+            "Upgrade vLLM if that happens."
+        ),
         "inference_defaults": {
             "backend": "vllm",
-            "tensor_parallel_size": 1,
+            "tensor_parallel_size": 2,   # BF16 52 GB needs 2× A40 48 GB
             "gpu_memory_utilization": 0.90,
             "max_model_len": None,
             "vllm_batch_size": 16,
@@ -575,15 +658,19 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
         "vllm_only": True,
-        "recommended_tp": 2,
+        "recommended_tp": 8,
+        "min_vllm_version": "0.8.0",
         "notes": (
-            "235B MoE (22B active params at inference). BF16 ~470 GB weights. "
-            "Fitted on 8× A100 40 GB (tdll-8gpu) via TP+EP sharding. "
-            "Use the FP8 variant for better KV-cache headroom."
+            "235B MoE (22B active params at inference). BF16 weight footprint ≈ 470 GB "
+            "(235B × 2 bytes). "
+            "8× A100 40 GB = 320 GB total — BF16 DOES NOT FIT on available hardware. "
+            "Use the FP8 variant (qwen3-235b-a22b-fp8) which fits at ~235 GB. "
+            "Also requires vLLM ≥ 0.8.x — Qwen3 MoE was released April 2025, "
+            "after vLLM 0.7.3 (Feb 2025)."
         ),
         "inference_defaults": {
             "backend": "vllm",
-            "tensor_parallel_size": 8,   # 8× A100 40 GB (tdll-8gpu)
+            "tensor_parallel_size": 8,   # 8× A100 40 GB (tdll-8gpu), FP8 only
             "gpu_memory_utilization": 0.88,
             "max_model_len": 16384,       # cap from 131 072; pipeline needs ~10k
             "vllm_batch_size": 8,
@@ -598,11 +685,19 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
         "vllm_only": True,
-        "recommended_tp": 2,
+        "recommended_tp": 8,
+        "min_vllm_version": "0.8.0",
         "notes": (
-            "Native FP8 quantized version. ~235 GB weights. "
-            "Best option for tdll-8gpu (8× A100 40 GB). "
-            "On dll-4gpu3 / dll-8gpu (4–8× 48/24 GB) set CPU_OFFLOAD_GB=70."
+            "FP8-quantised Qwen3 235B MoE. Weight footprint ≈ 235 GB — fits in "
+            "8× A100 40 GB = 320 GB total (85 GB headroom for KV cache). "
+            "Requires vLLM ≥ 0.8.x — Qwen3 MoE released April 2025, after "
+            "vLLM 0.7.3 (Feb 2025). "
+            "FP8 COMPUTE WARNING: hardware FP8 tensor-core acceleration requires "
+            "Compute Capability ≥ 8.9 (Ada Lovelace / Hopper). "
+            "The A100 on tdll-8gpu is CC 8.0 — weights are stored as FP8 "
+            "(memory benefit preserved) but all matmuls execute in BF16 "
+            "(same throughput as a hypothetical BF16 run, but that would not fit). "
+            "Full FP8 speed benefit requires H100 / L40S class hardware."
         ),
         "inference_defaults": {
             "backend": "vllm",
@@ -645,11 +740,19 @@ MODEL_REGISTRY: Dict[str, Dict] = {
         "is_moe": True,
         "bnb_experts_broken": True,
         "vllm_only": True,
-        "recommended_tp": 2,
+        "recommended_tp": 8,
+        "min_vllm_version": "0.8.0",
         "notes": (
             "Llama 4 Maverick: 128 experts, 17B active params per token. "
+            "Total parameter count ≈ 400 B. "
+            "BF16 footprint ≈ 800 GB — far exceeds available hardware. "
+            "FP8 footprint ≈ 400 GB — also exceeds 8× A100 40 GB = 320 GB. "
+            "HARDWARE VERDICT: current cluster (max 8× A100 40 GB) is INSUFFICIENT. "
+            "Requires 8× A100 80 GB or 8× H100 80 GB (not available). "
             "1 M token context — max_model_len MUST be capped or vLLM OOMs "
-            "pre-allocating the KV table. Gated model — HF_TOKEN required."
+            "pre-allocating the KV table. Gated model — HF_TOKEN required. "
+            "Also requires vLLM ≥ 0.8.x — Llama 4 released April 2025, "
+            "after vLLM 0.7.3 (Feb 2025)."
         ),
         "inference_defaults": {
             "backend": "vllm",
@@ -929,6 +1032,40 @@ def _check_backend_deps(backend: str, model_key: str) -> None:
                 "  Or switch to the 4-bit transformers path instead:\n"
                 "    Add  BACKEND=transformers  to llm_config.txt\n"
             ) from None
+
+        # Pre-flight: check minimum vLLM version declared in MODEL_REGISTRY.
+        # Catches known unsupported architectures *before* the engine load
+        # attempt so the error is printed immediately rather than buried in
+        # a 60-second startup sequence.
+        min_ver = spec.get("min_vllm_version")
+        if min_ver:
+            try:
+                import vllm as _vllm_mod
+                _installed = getattr(_vllm_mod, "__version__", "0.0.0")
+                # Simple tuple comparison — handles N.N.N and N.N.N.postM forms
+                def _ver_tuple(v: str):
+                    return tuple(
+                        int(x) for x in v.split(".")[:3]
+                        if x.split("post")[0].isdigit()
+                    )
+                if _ver_tuple(_installed) < _ver_tuple(min_ver):
+                    raise RuntimeError(
+                        f"\n"
+                        f"  '{model_key}' requires vLLM >= {min_ver}, "
+                        f"but {_installed!r} is installed.\n"
+                        f"\n"
+                        f"  The model's architecture is not registered in this vLLM version.\n"
+                        f"\n"
+                        f"  Fix:\n"
+                        f"    pip install -U vllm --no-build-isolation\n"
+                        f"\n"
+                        f"  Supported architectures per version:\n"
+                        f"    https://docs.vllm.ai/en/latest/models/supported_models.html\n"
+                    )
+            except RuntimeError:
+                raise
+            except Exception as _ver_exc:
+                print(f"[WARN] Could not verify vLLM version for {model_key}: {_ver_exc}")
 
     elif backend == "transformers":
         # Warn if the model would benefit from vLLM but won't get it
@@ -1211,6 +1348,26 @@ def load_vllm_engine(
     if "fp8" in model_key.lower():
         dtype_str = "auto"   # Let vLLM detect native FP8
 
+        # Warn if the current GPU lacks hardware FP8 tensor-core support.
+        # FP8 matmuls are hardware-accelerated only on CC ≥ 8.9 (Ada / Hopper).
+        # On older GPUs (A100 = CC 8.0, A40 = CC 8.6) vLLM falls back to BF16
+        # computation, so the MEMORY benefit of FP8 weights is preserved but
+        # there is NO throughput improvement over a native BF16 run.
+        if torch.cuda.is_available():
+            _cc_maj, _cc_min = torch.cuda.get_device_capability(0)
+            _cc = _cc_maj * 10 + _cc_min   # e.g. 80 for A100, 86 for A40, 89 for L40
+            if _cc < 89:
+                _gpu_name = torch.cuda.get_device_properties(0).name
+                print(
+                    f"[WARN] FP8 hardware acceleration requires Compute Capability "
+                    f"≥ 8.9 (Ada / Hopper). Current device: {_gpu_name} "
+                    f"(CC {_cc_maj}.{_cc_min}). "
+                    f"Weights will be stored as FP8 (memory budget preserved), "
+                    f"but all matmuls execute in BF16 — no throughput gain over "
+                    f"a BF16 model of the same size. "
+                    f"Full FP8 speed requires H100, L40S, or RTX 4090-class hardware."
+                )
+
     print(
         f"=== Loading via vLLM: {hf_id} ===\n"
         f"    dtype={dtype_str}, "
@@ -1251,7 +1408,41 @@ def load_vllm_engine(
         os.environ.setdefault("HF_TOKEN", hf_token)
         os.environ.setdefault("HUGGING_FACE_HUB_TOKEN", hf_token)
 
-    llm_engine = LLM(**engine_kwargs)
+    # Apply compat shims that must fire before LLM() touches the model config.
+    _patch_vllm_rope_scaling_compat()
+
+    try:
+        llm_engine = LLM(**engine_kwargs)
+    except ValueError as _exc:
+        _msg = str(_exc)
+        if "has no vLLM implementation" in _msg:
+            # Parse architecture name from "XxxForYyy has no vLLM implementation…"
+            _arch = _msg.split(" has no vLLM implementation")[0].strip()
+            raise ValueError(
+                f"\n"
+                f"  Model architecture '{_arch}' is not supported by the installed\n"
+                f"  vLLM version (v0.7.3 or earlier).\n"
+                f"\n"
+                f"  Fix — upgrade vLLM inside the virtual environment:\n"
+                f"    pip install -U vllm --no-build-isolation\n"
+                f"\n"
+                f"  Supported architectures per version:\n"
+                f"    https://docs.vllm.ai/en/latest/models/supported_models.html\n"
+                f"\n"
+                f"  Interim workaround for '{model_key}':\n"
+                f"    Use the GGUF variant (if available in MODEL_REGISTRY) or\n"
+                f"    switch to BACKEND=transformers with load_in_4bit=True.\n"
+            ) from _exc
+        if "rope_scaling should have a 'rope_type' key" in _msg:
+            raise ValueError(
+                f"\n"
+                f"  vLLM rope_scaling compat patch did not apply in time for '{model_key}'.\n"
+                f"  This is a known vLLM 0.7.x issue with newer model configs.\n"
+                f"\n"
+                f"  Fix:\n"
+                f"    pip install -U vllm --no-build-isolation\n"
+            ) from _exc
+        raise
 
     # Obtain a HuggingFace-compatible tokenizer for chat-template formatting
     # and token counting (used in build_system_prompt).

@@ -22,17 +22,35 @@
 # Small  (≤14 B, single GPU, transformers backend):
 #   qwen-3.5-9b-it  |  qwen3-8b  |  qwen2.5-14b-awq  |  qwen3-14b  |  gemma-3-12b-it
 #
-# Mid    (≤31 B, single GPU, transformers backend):
+# Mid    (≤31 B, single GPU, transformers backend, BnB 4-bit):
 #   qwen-3.6-27b-it  |  gemma-4-31b-it
 #
 # MoE / large  (vLLM backend, auto-selected):
-#   qwen-3.6-35b-moe  |  gemma-4-26b-moe    — single GPU, vLLM
-#   llama3.1-70b                            — tp=2, 2× GPU
-#   qwen3-235b-a22b-fp8                     — tp=8, tdll-8gpu (8× A100 40 GB)
-#   llama4-maverick                         — tp=8, gated (HF_TOKEN required)
-#   deepseek-v3                             — tp=8, exceeds available hardware
 #
-# GGUF fallback (llama.cpp, any single GPU):
+#   gemma-4-26b-moe          — tp=2, 2× A40 48 GB; rope_scaling auto-patched for
+#                               vLLM 0.7.x; arch support in 0.7.3 unconfirmed (Gemma 4
+#                               released April 2025); use gemma-4-26b-moe-gguf for
+#                               single-GPU fallback
+#
+#   qwen-3.6-35b-moe         — requires vLLM ≥ 0.8.x (Qwen3_5Moe arch not in 0.7.3)
+#
+#   llama3.1-70b             — single GPU, 4-bit BnB (~35 GB, any A40/A100 48 GB+)
+#
+#   qwen3-235b-a22b-fp8      — requires vLLM ≥ 0.8.x (Qwen3 MoE arch not in 0.7.3)
+#                               tp=8 on tdll-8gpu (8× A100 40 GB, 320 GB total);
+#                               weights ~235 GB fit, but A100 is CC 8.0 — FP8 compute
+#                               falls back to BF16 (no throughput gain, memory OK).
+#                               Alternatively: tp=4 on dll-4gpu3 (4× L40 48 GB, CC 8.9)
+#                               with CPU_OFFLOAD_GB=70 — full hardware FP8 acceleration.
+#
+#   llama4-maverick          — ⚠ INSUFFICIENT HARDWARE: ~400 B total params; FP8
+#                               footprint ~400 GB > 8× A100 40 GB (320 GB). Needs
+#                               8× A100 80 GB or H100 class (not available). Also
+#                               requires vLLM ≥ 0.8.x. HF_TOKEN required.
+#
+#   deepseek-v3              — tp=8, exceeds available hardware (671 B params)
+#
+# GGUF fallback (llama.cpp, any single GPU ≥ 16 GB):
 #   gemma-4-26b-moe-gguf
 MODEL_KEY=qwen-3.6-27b-it
 
@@ -89,9 +107,16 @@ MIN_ALPHA_RATIO_NON_TEXT=0.4
 # MAX_MODEL_LEN=16384
 
 # GB of model weights to keep in CPU RAM when GPU VRAM is insufficient.
-# Useful on dll-4gpu3 / dll-8gpu (515 GB CPU RAM):
-#   qwen3-235b-a22b-fp8  on 4× L40 48 GB  → CPU_OFFLOAD_GB=70
-#   llama4-maverick      on 4× L40 48 GB  → CPU_OFFLOAD_GB=40
+# Useful configurations (requires vLLM ≥ 0.8.x for Qwen3 MoE):
+#
+#   qwen3-235b-a22b-fp8  on 4× L40 48 GB (dll-4gpu3, CC 8.9 — hardware FP8!):
+#     TENSOR_PARALLEL_SIZE=4
+#     CPU_OFFLOAD_GB=70     ← moves ~70 GB of weights to CPU; 503 GB CPU RAM available
+#
+#   qwen3-235b-a22b-fp8  on 8× A100 40 GB (tdll-8gpu, CC 8.0 — BF16 fallback):
+#     TENSOR_PARALLEL_SIZE=8
+#     CPU_OFFLOAD_GB=0      ← 235 GB weights fit in 320 GB without offload
+#
 # CPU_OFFLOAD_GB=0
 
 # Guided-decoding engine (vLLM only): xgrammar (default, fastest) | outlines
