@@ -80,7 +80,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -101,7 +101,7 @@
                 "Eneolithic",
                 "hill settlements"
             ],
-            "teater_category": "výšinné sídliště",
+            "teater_category": "sídliště",
             "confidence_score": 0.95
         }
     },
@@ -115,14 +115,16 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "sběry",
-                "sídlištích"
+                "sídlištích",
+                "eneolitických"
             ],
             "extracted_keywords_en": [
                 "collections",
-                "settlements"
+                "settlements",
+                "Eneolithic"
             ],
-            "teater_category": "sídlištní vrstva/souvrství",
-            "confidence_score": 0.85
+            "teater_category": "sídliště",
+            "confidence_score": 0.95
         }
     },
     {
@@ -195,7 +197,7 @@
                 "depot",
                 "tumulus bronzes"
             ],
-            "teater_category": "depot",
+            "teater_category": "doba bronzová",
             "confidence_score": 0.95
         }
     },
@@ -209,13 +211,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "depot",
-                "bronzy"
+                "bronz",
+                "mohylové bronzy"
             ],
             "extracted_keywords_en": [
                 "hoard",
-                "bronzes"
+                "bronze",
+                "tumulus bronze"
             ],
-            "teater_category": "depot",
+            "teater_category": "doba bronzová",
             "confidence_score": 0.95
         }
     },
@@ -227,10 +231,16 @@
         "quality_score": 0.0,
         "original_text": "Mladší pravěké kultury nejsou zastoupeny, středověk jen drobnými",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [
+                "pravěké kultury",
+                "středověk"
+            ],
+            "extracted_keywords_en": [
+                "prehistoric cultures",
+                "Medieval"
+            ],
+            "teater_category": "pravěk",
+            "confidence_score": 0.95
         }
     },
     {
@@ -244,7 +254,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -258,7 +268,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -277,8 +287,8 @@
                 "finds",
                 "excavation"
             ],
-            "teater_category": "výzkum povrchové vrstvy",
-            "confidence_score": 0.85
+            "teater_category": "výzkumná instituce",
+            "confidence_score": 0.95
         }
     },
     {
@@ -294,10 +304,10 @@
                 "Netunicích"
             ],
             "extracted_keywords_en": [
-                "research",
+                "excavation",
                 "Netunic"
             ],
-            "teater_category": "terénní zásah",
+            "teater_category": "průzkum",
             "confidence_score": 0.95
         }
     },
@@ -359,11 +369,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "nálezy",
-                "eneol. výšinného sídliště"
+                "eneol",
+                "výšinný"
             ],
             "extracted_keywords_en": [
                 "finds",
-                "Eneolithic hill settlement"
+                "Eneolithic",
+                "hill settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -378,13 +390,14 @@
         "original_text": "větší soubor z eneol.výš.sídliště - publ. Masek,AR IV 1962",
         "enrichment": {
             "extracted_keywords_cs": [
+                "sídliště",
                 "eneol",
-                "výšinného sídliště",
-                "sídliště"
+                "výš"
             ],
             "extracted_keywords_en": [
+                "settlement",
                 "Eneolithic",
-                "hill settlement"
+                "hill"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -402,7 +415,7 @@
                 "sběry",
                 "eneol",
                 "výš",
-                "sídli ště"
+                "sídli"
             ],
             "extracted_keywords_en": [
                 "collections",
@@ -423,10 +436,12 @@
         "original_text": "Polanka u Blovic - sběry z eneol.výs.sídliste",
         "enrichment": {
             "extracted_keywords_cs": [
+                "sběry",
                 "eneol.výs.sídliste"
             ],
             "extracted_keywords_en": [
-                "Eneolithic settlement"
+                "collections",
+                "Eneolithic.high.settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -441,31 +456,43 @@
         "original_text": "ojedinělé kam. nástroje - Plo víc e-Hradiš tě. Spálené. Poříčí.,. Ralov, dí-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kam. nástroje",
-                "Plo víc e-Hradiš tě",
+                "kamenné nástroje",
+                "Pločice",
+                "Hradiště",
                 "Spálené",
                 "Poříčí",
                 "Ralov",
-                "dí-",
+                "dílce",
+                "Myt",
+                "Nezbavětice",
+                "Radochovy",
+                "Stolto",
+                "Jarov",
                 "bronz",
-                "terčoví tá jehlice",
+                "terčovitá jehlice",
                 "pečetítkové jehlice",
-                "tyčink. nátamek"
+                "tyčinkový nátamek"
             ],
             "extracted_keywords_en": [
                 "stone tools",
-                "Plo víc e-Hradiš tě",
+                "Pločice",
+                "Hillfort",
                 "Spálené",
                 "Poříčí",
                 "Ralov",
-                "dí-",
+                "pieces",
+                "Myt",
+                "Nezbavětice",
+                "Radochovy",
+                "Stolto",
+                "Jarov",
                 "bronze",
-                "terčoví tá jehlice",
+                "ring jehlice",
                 "seal jehlice",
-                "tyčink. nátamek"
+                "rod-shaped nátamek"
             ],
             "teater_category": "nález v druhotné poloze",
-            "confidence_score": 0.88
+            "confidence_score": 0.95
         }
     },
     {
@@ -477,17 +504,19 @@
         "original_text": "rec- Myt, Nezbavětice, Radochovy , Stl to. v .",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kam. nástroje",
                 "jehlice",
                 "pečetítkové jehlice",
-                "tyčinkový nátamek"
+                "tyčink. nátamek"
             ],
             "extracted_keywords_en": [
+                "stone tools",
                 "needle",
                 "stamp needle",
-                "rod shank"
+                "rod amulet"
             ],
-            "teater_category": "jehlice",
-            "confidence_score": 0.95
+            "teater_category": "nález v druhotné poloze",
+            "confidence_score": 0.85
         }
     },
     {
@@ -499,19 +528,23 @@
         "original_text": "Jarov - bronz, terčoví tá jehlice, 2 pečetítkové j ehlic e, tyčink. nátamek",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bronz",
-                "terčoví tá jehlice",
+                "bronze",
+                "terčovitá jehlice",
                 "pečetítkové jehlice",
-                "tyčink. nátamek"
+                "tyčinka",
+                "nátamek",
+                "mohyly"
             ],
             "extracted_keywords_en": [
                 "bronze",
-                "terčoví tá jehlice",
-                "pečetítkové jehlice",
-                "tyčink. nátamek"
+                "ringed needle",
+                "seal needle",
+                "rod",
+                "amulet",
+                "burial mound"
             ],
             "teater_category": "nález v druhotné poloze",
-            "confidence_score": 0.88
+            "confidence_score": 0.95
         }
     },
     {
@@ -543,14 +576,12 @@
         "original_text": "Libákovice_- bronz.depot z rozhraní střední a mladší d.bronz., publ.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "bronz",
-                "depot",
+                "bronzový depot",
                 "střední d.bronz",
                 "mladší d.bronz"
             ],
             "extracted_keywords_en": [
-                "bronze",
-                "deposit",
+                "bronze depot",
                 "Middle Bronze Age",
                 "Late Bronze Age"
             ],
@@ -588,8 +619,8 @@
                 "single find",
                 "bronze spearhead"
             ],
-            "teater_category": "nález v druhotné poloze",
-            "confidence_score": 0.95
+            "teater_category": "zahrada/sad",
+            "confidence_score": 0.85
         }
     },
     {
@@ -605,8 +636,8 @@
                 "mohyl"
             ],
             "extracted_keywords_en": [
-                "Medieval ceramic",
-                "tumulus"
+                "Medieval ceramics",
+                "burial mound"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -621,14 +652,12 @@
         "original_text": "v muzeu je uložen rukopis zprávy Jana Žáka z r.1881 o výkopech mohyl",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výkopech",
-                "mohyl"
+                "výkopech mohyl"
             ],
             "extracted_keywords_en": [
-                "excavations",
-                "burial mounds"
+                "excavations of barrows"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "mohyla",
             "confidence_score": 0.95
         }
     },

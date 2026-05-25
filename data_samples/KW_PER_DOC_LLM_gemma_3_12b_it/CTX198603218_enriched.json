@@ -7,10 +7,18 @@
         "quality_score": 0.0,
         "original_text": "479. TUROVEC, o. Nová Ves u Chýnova, okr. Tábor",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Turovec",
+                "Nová Ves u Chýnova",
+                "okr. Tábor"
+            ],
+            "extracted_keywords_en": [
+                "Turovec",
+                "Nová Ves u Chýnova",
+                "Tábor district"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -28,10 +36,12 @@
                 "Kravín"
             ],
             "extracted_keywords_en": [
+                "CULT",
                 "Medieval",
+                "LOK",
                 "Kravín"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "sídlo elity",
             "confidence_score": 0.85
         }
     },
@@ -44,12 +54,16 @@
         "original_text": "Planá n.Luž. - Turovec-Chýnov; v lese s pomístním názvem \"Stará ves\" /\"Pustá ves\"/. ZM 23-133 Tábor,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "Planá n.Luž",
+                "Turovec-Chýnov",
                 "Stará ves",
                 "Pustá ves"
             ],
             "extracted_keywords_en": [
-                "Old village",
-                "Deserted village"
+                "Planá n.Luž",
+                "Turovec-Chýnov",
+                "Stará ves",
+                "Pustá ves"
             ],
             "teater_category": "zaniklá lokalita",
             "confidence_score": 0.85
@@ -69,7 +83,7 @@
             "extracted_keywords_en": [
                 "vanished medieval village"
             ],
-            "teater_category": "zaniklá lokalita",
+            "teater_category": "sídlištní vrstva/souvrství",
             "confidence_score": 0.95
         }
     },
@@ -103,13 +117,17 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "výzkum",
-                "objekt"
+                "geodetický",
+                "topografický",
+                "průzkum"
             ],
             "extracted_keywords_en": [
                 "research",
-                "object"
+                "geodetic",
+                "topographic",
+                "survey"
             ],
-            "teater_category": "objekt",
+            "teater_category": "geodetický průzkum",
             "confidence_score": 0.95
         }
     },
@@ -133,8 +151,8 @@
                 "survey",
                 "feature"
             ],
-            "teater_category": "terénní odkryv",
-            "confidence_score": 0.85
+            "teater_category": "průzkum",
+            "confidence_score": 0.95
         }
     },
     {
@@ -157,7 +175,7 @@
                 "fireplace",
                 "storage pit"
             ],
-            "teater_category": "obývání",
+            "teater_category": "objekt",
             "confidence_score": 0.95
         }
     },
@@ -206,7 +224,7 @@
                 "wall"
             ],
             "teater_category": "obývání",
-            "confidence_score": 0.95
+            "confidence_score": 0.98
         }
     },
     {
@@ -219,11 +237,15 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "objekt",
-                "stěny"
+                "stěny",
+                "jihovýchodně",
+                "ploše"
             ],
             "extracted_keywords_en": [
                 "object",
-                "walls"
+                "walls",
+                "southeast",
+                "area"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -239,7 +261,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "zbytky",
-                "povrchová stavba",
+                "povrchové stavby",
                 "stěny",
                 "sídelní jednotky",
                 "hospodářská stavba"
@@ -251,7 +273,7 @@
                 "settlement unit",
                 "economic building"
             ],
-            "teater_category": "sídlo elity",
+            "teater_category": "budova hospodářská",
             "confidence_score": 0.85
         }
     },
@@ -266,19 +288,15 @@
             "extracted_keywords_cs": [
                 "ploše",
                 "stěny",
-                "objekt",
-                "hospodářská stavba",
-                "studna"
+                "obytný objekt"
             ],
             "extracted_keywords_en": [
                 "area",
                 "walls",
-                "object",
-                "outbuilding",
-                "well"
+                "residential object"
             ],
-            "teater_category": "sídlo elity",
-            "confidence_score": 0.85
+            "teater_category": "budova obytná",
+            "confidence_score": 0.95
         }
     },
     {
@@ -292,11 +310,13 @@
             "extracted_keywords_cs": [
                 "sídelní jednotky",
                 "hospodářská stavba",
+                "dům",
                 "studna"
             ],
             "extracted_keywords_en": [
                 "settlement unit",
                 "outbuilding",
+                "house",
                 "well"
             ],
             "teater_category": "sídlo elity",
@@ -318,7 +338,7 @@
                 "well"
             ],
             "teater_category": "studna",
-            "confidence_score": 0.95
+            "confidence_score": 0.98
         }
     },
     {
@@ -337,10 +357,10 @@
             "extracted_keywords_en": [
                 "well",
                 "silt trap",
-                "sunken feature"
+                "depression"
             ],
             "teater_category": "studna",
-            "confidence_score": 0.95
+            "confidence_score": 0.98
         }
     },
     {
@@ -359,7 +379,7 @@
             "extracted_keywords_en": [
                 "sunken feature",
                 "drain",
-                "well"
+                "water well"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -375,11 +395,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "objekt",
-                "studna"
+                "studna",
+                "kamením"
             ],
             "extracted_keywords_en": [
                 "object",
-                "water well"
+                "water well",
+                "stone"
             ],
             "teater_category": "studna",
             "confidence_score": 0.95
@@ -424,7 +446,7 @@
                 "diameter"
             ],
             "teater_category": "studna",
-            "confidence_score": 0.95
+            "confidence_score": 0.98
         }
     },
     {
@@ -438,7 +460,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.95
+            "confidence_score": 1.0
         }
     },
     {

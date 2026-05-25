@@ -7,14 +7,10 @@
         "quality_score": 0.0,
         "original_text": "Kat- obec: C H 0 D O UNY",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna"
-            ],
-            "extracted_keywords_en": [
-                "quarry"
-            ],
-            "teater_category": "areál jiné aktivity",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.95
         }
     },
     {
@@ -46,7 +42,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -74,7 +70,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.95
         }
     },
     {
@@ -84,6 +80,26 @@
         "categ": "Clear",
         "quality_score": 0.0,
         "original_text": "pohřebiště - lužická",
+        "enrichment": {
+            "extracted_keywords_cs": [
+                "pohřebiště",
+                "lužická"
+            ],
+            "extracted_keywords_en": [
+                "cemetery",
+                "Lusatian"
+            ],
+            "teater_category": "pohřebiště/hřbitov",
+            "confidence_score": 0.98
+        }
+    },
+    {
+        "file_id": "CTX195704328",
+        "page": 1,
+        "line": 12,
+        "categ": "Clear",
+        "quality_score": 0.0,
+        "original_text": "ved. výzkurnu",
         "enrichment": {
             "extracted_keywords_cs": [
                 "pohřebiště",
@@ -100,32 +116,14 @@
     {
         "file_id": "CTX195704328",
         "page": 1,
-        "line": 12,
-        "categ": "Clear",
-        "quality_score": 0.0,
-        "original_text": "ved. výzkurnu",
-        "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
-        }
-    },
-    {
-        "file_id": "CTX195704328",
-        "page": 1,
         "line": 13,
         "categ": "Clear",
         "quality_score": 0.0,
         "original_text": "Zdráva / za obdobi",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pohřebiště"
-            ],
-            "extracted_keywords_en": [
-                "burial site"
-            ],
-            "teater_category": "pohřebiště/hřbitov",
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
             "confidence_score": 0.95
         }
     },
@@ -140,7 +138,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 0.85
+            "confidence_score": 1.0
         }
     },
     {
@@ -152,10 +150,14 @@
         "original_text": "Dne 26.1X.1957 jsem zajel do Chodoun, abych zjistil možnosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště"
+                "pohřebiště",
+                "lužický",
+                "žárový"
             ],
             "extracted_keywords_en": [
-                "burial site"
+                "burial site",
+                "Lusatian",
+                "cremation"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -170,14 +172,14 @@
         "original_text": "výzkumu lužického žárového pohřebiště, plánovaného na srpen 1958# Naleziště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "pohřebiště",
-                "lužický",
-                "žárový"
+                "lužické",
+                "žárové",
+                "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "burial site",
                 "Lusatian",
-                "cremation"
+                "cremation",
+                "burial site"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95
@@ -219,8 +221,8 @@
                 "field",
                 "sweet clover"
             ],
-            "teater_category": "zemědělský objekt",
-            "confidence_score": 0.85
+            "teater_category": "pole",
+            "confidence_score": 0.95
         }
     },
     {
@@ -250,7 +252,7 @@
                 "keramika"
             ],
             "extracted_keywords_en": [
-                "cremation burial",
+                "cremation grave",
                 "ceramic"
             ],
             "teater_category": "pohřeb v sídlištním objektu",
@@ -266,15 +268,17 @@
         "original_text": "opukovými deskami a s keramikou s hladce vymezenými prsovitý-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrob",
-                "keramika"
+                "keramika",
+                "prsovitými vypnulinami",
+                "hrob"
             ],
             "extracted_keywords_en": [
-                "grave",
-                "ceramic"
+                "ceramics",
+                "breast-like bumps",
+                "grave"
             ],
             "teater_category": "pohřeb v sídlištním objektu",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -286,17 +290,15 @@
         "original_text": "mi vypnulinami (převzal tehdy referent v zastoupení KM Teplice).",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hrob",
                 "keramika",
                 "vypouklými",
-                "nádob"
+                "prsovitými"
             ],
             "extracted_keywords_en": [
-                "grave",
-                "ceramic",
+                "ceramics",
                 "convex"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "keramika",
             "confidence_score": 0.95
         }
     },
@@ -316,8 +318,8 @@
                 "grave",
                 "vessels"
             ],
-            "teater_category": "pohřeb v sídlištním objektu",
-            "confidence_score": 0.85
+            "teater_category": "hrob",
+            "confidence_score": 0.95
         }
     },
     {
@@ -330,7 +332,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "hrob",
-                "zomky",
+                "zázorky",
                 "nádob"
             ],
             "extracted_keywords_en": [
@@ -338,8 +340,8 @@
                 "fragments",
                 "vessels"
             ],
-            "teater_category": "pohřeb v sídlištním objektu",
-            "confidence_score": 0.85
+            "teater_category": "hrob",
+            "confidence_score": 0.95
         }
     },
     {
@@ -359,7 +361,7 @@
                 "grave"
             ],
             "teater_category": "areál těžby",
-            "confidence_score": 0.85
+            "confidence_score": 0.95
         }
     },
     {
@@ -372,6 +374,7 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "plocha",
+                "těžební",
                 "odkryvem",
                 "hrob",
                 "opukové desky",
@@ -379,13 +382,14 @@
             ],
             "extracted_keywords_en": [
                 "area",
+                "mining",
                 "excavation",
                 "grave",
                 "opuka slabs",
                 "material"
             ],
-            "teater_category": "pohřeb v sídlištním objektu",
-            "confidence_score": 0.85
+            "teater_category": "areál těžby",
+            "confidence_score": 0.95
         }
     },
     {
@@ -433,18 +437,14 @@
                 "zlomky",
                 "nádoby",
                 "osudí",
-                "miska",
-                "spodku nádoby",
-                "mřížkovým rýhováním"
+                "miska"
             ],
             "extracted_keywords_en": [
-                "opuka slabs",
+                "opukové desky",
                 "fragments",
                 "vessels",
-                "pitcher",
-                "bowl",
-                "bottom of vessel",
-                "mesh ribbing"
+                "osudí",
+                "bowl"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -461,7 +461,7 @@
             "extracted_keywords_cs": [
                 "nádoby",
                 "osudí",
-                "míska",
+                "miska",
                 "spodku nádoby"
             ],
             "extracted_keywords_en": [
@@ -492,7 +492,7 @@
                 "meshed ribbing",
                 "graves"
             ],
-            "teater_category": "keramika",
+            "teater_category": "hrob",
             "confidence_score": 0.95
         }
     },
@@ -527,19 +527,15 @@
         "original_text": "vyvýšeninu, zasahující z části již do pole. Při povrchovém sběru",
         "enrichment": {
             "extracted_keywords_cs": [
-                "vyvýšeninu",
-                "pole",
                 "povrchový sběr",
                 "kamenný mlat"
             ],
             "extracted_keywords_en": [
-                "elevation",
-                "field",
                 "surface collection",
-                "stone quern"
+                "stone mlat"
             ],
-            "teater_category": "areál jiné aktivity",
-            "confidence_score": 0.85
+            "teater_category": "povrchový sběr",
+            "confidence_score": 0.95
         }
     },
     {
@@ -551,13 +547,13 @@
         "original_text": "byl dále nalezen kamenný únětický mlat se žlábkovým sedlem (délka",
         "enrichment": {
             "extracted_keywords_cs": [
-                "kamenný",
-                "únětický mlat",
+                "kamenný mlat",
+                "únětický",
                 "žlábkovým sedlem"
             ],
             "extracted_keywords_en": [
-                "stone",
-                "Únětice mlat",
+                "stone mlat",
+                "Únětice",
                 "grooved saddle"
             ],
             "teater_category": "kámen drtidlo/žernov",
@@ -580,10 +576,10 @@
             "extracted_keywords_en": [
                 "research",
                 "transverse probes",
-                "burial site"
+                "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
-            "confidence_score": 0.95
+            "confidence_score": 0.85
         }
     },
     {
@@ -622,7 +618,7 @@
                 "sand pit",
                 "surroundings"
             ],
-            "teater_category": "pohřebiště/hřbitov",
+            "teater_category": "areál těžby",
             "confidence_score": 0.85
         }
     },
@@ -660,7 +656,7 @@
             ],
             "extracted_keywords_en": [
                 "hillock",
-                "burial site"
+                "cemetery"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.95

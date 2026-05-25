@@ -119,20 +119,10 @@
         "quality_score": 0.0,
         "original_text": "Homole - kopec SZ od Vysokí-",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "Homole",
-                "kopec",
-                "Vysokí",
-                "Újezda"
-            ],
-            "extracted_keywords_en": [
-                "Homole",
-                "hill",
-                "Vysokí",
-                "Újezda"
-            ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
-            "confidence_score": 0.75
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -157,10 +147,14 @@
         "quality_score": 0.0,
         "original_text": "Kultura Z.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Kultura Z."
+            ],
+            "extracted_keywords_en": [
+                "Culture Z."
+            ],
+            "teater_category": "kultura s moravskou malovanou keramikou 1",
+            "confidence_score": 0.75
         }
     },
     {
@@ -200,7 +194,7 @@
         "original_text": "keramcké střepy",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramické střepy"
+                "keramcké střepy"
             ],
             "extracted_keywords_en": [
                 "ceramic sherds"
@@ -293,13 +287,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "krechty",
-                "keramických střepu"
+                "keramické střepy"
             ],
             "extracted_keywords_en": [
                 "storage pits",
                 "ceramic sherds"
             ],
-            "teater_category": "jáma",
+            "teater_category": "jáma zásobní",
             "confidence_score": 0.85
         }
     },
@@ -312,12 +306,12 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramických střepu",
-                "keramický materiál"
+                "keramické střepy",
+                "keramika"
             ],
             "extracted_keywords_en": [
                 "ceramic sherds",
-                "ceramic material"
+                "ceramics"
             ],
             "teater_category": "zlomek keramiky",
             "confidence_score": 0.85

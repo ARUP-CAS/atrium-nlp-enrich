@@ -245,18 +245,10 @@
         "quality_score": 0.0,
         "original_text": "Akce probíhala na západním okraji města v poloze „Vodranty“. V těsném sousedství stavby došlo v minulosti",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "západním okraji města",
-                "Vodranty",
-                "polykulturní pravěké a středověké osídlení"
-            ],
-            "extracted_keywords_en": [
-                "western edge of the town",
-                "Vodranty",
-                "multicultural prehistoric and medieval settlement"
-            ],
-            "teater_category": "osídlený skalní prostor",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -268,8 +260,8 @@
         "original_text": "k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "polykulturní pravěké",
-                "středověké osídlení"
+                "polykulturní pravěkého",
+                "středověkého osídlení"
             ],
             "extracted_keywords_en": [
                 "multicultural prehistoric",
@@ -315,20 +307,10 @@
         "quality_score": 0.0,
         "original_text": "pasů pro rodinný dům. Na profilech výkopů bylo patrné souvrství hnědé ornice s podorničím na intaktním",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ornice",
-                "podorničí",
-                "intaktní podloží",
-                "spraš"
-            ],
-            "extracted_keywords_en": [
-                "topsoil",
-                "subsoil",
-                "intact base",
-                "spray"
-            ],
-            "teater_category": "přirozený půdní horizont",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {

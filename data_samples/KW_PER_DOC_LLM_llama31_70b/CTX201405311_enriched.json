@@ -175,10 +175,18 @@
         "quality_score": 0.0,
         "original_text": "VĚC: zpráva o provedení záchranného archeologického výzkumu při akci - Čáslav - novostavba",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "záchranný archeologický výzkum",
+                "novostavba",
+                "rodinný dům"
+            ],
+            "extracted_keywords_en": [
+                "rescue archaeological survey",
+                "new building",
+                "family house"
+            ],
+            "teater_category": "záchranný",
+            "confidence_score": 0.85
         }
     },
     {
@@ -190,17 +198,17 @@
         "original_text": "rodinného domu na ppč. 1642/17,18 v k.ú. Čáslav.",
         "enrichment": {
             "extracted_keywords_cs": [
-                "rodinného domu",
+                "rodinný dům",
                 "ppč. 1642/17,18",
                 "k.ú. Čáslav"
             ],
             "extracted_keywords_en": [
                 "family house",
-                "plot number 1642/17,18",
-                "municipal area Čáslav"
+                "ppč. 1642/17,18",
+                "k.ú. Čáslav"
             ],
-            "teater_category": "objekt",
-            "confidence_score": 0.95
+            "teater_category": "budova obytná",
+            "confidence_score": 0.85
         }
     },
     {
@@ -225,10 +233,14 @@
         "quality_score": 0.0,
         "original_text": "proveden archeologický dohled při akci: Čáslav - novostavba rodinného domu na ppč. 1642/17, 18 v k.ú.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "dům"
+            ],
+            "extracted_keywords_en": [
+                "house"
+            ],
+            "teater_category": "budova obytná",
+            "confidence_score": 0.8
         }
     },
     {
@@ -254,13 +266,13 @@
         "original_text": "Akce probíhala na západním okraji města v poloze „Vodranty“. V těsném sousedství stavby došlo v minulosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "polykulturního pravěkého a středověkého osídlení"
+                "osídlení"
             ],
             "extracted_keywords_en": [
-                "multicultural prehistoric and medieval settlement"
+                "settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "confidence_score": 0.8
         }
     },
     {
@@ -272,12 +284,10 @@
         "original_text": "k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "polykulturního pravěkého",
-                "středověkého osídlení"
+                "osídlení"
             ],
             "extracted_keywords_en": [
-                "multicultural prehistoric",
-                "medieval settlement"
+                "settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -294,7 +304,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.8
         }
     },
     {
@@ -306,23 +316,23 @@
         "original_text": "Archeologický dohled při stavbě proběhl formou revize (20.6.2014) skrývky ornice a výkopů základových",
         "enrichment": {
             "extracted_keywords_cs": [
-                "skrývky ornice",
-                "výkopů základových",
-                "souvrství hnědé ornice",
-                "podorničí",
-                "podloží",
-                "spraš"
+                "skrývka ornice",
+                "výkopy",
+                "základové pasy",
+                "rodinný dům",
+                "hnědá ornice",
+                "podloží"
             ],
             "extracted_keywords_en": [
-                "reveals of soil",
-                "foundations trenches",
-                "stratigraphy brown soil",
-                "subsoil",
-                "base",
-                "spray"
+                "excavation of floor",
+                "excavations",
+                "foundation strips",
+                "family house",
+                "clay floor",
+                "floor"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "teater_category": "budova obytná",
+            "confidence_score": 0.85
         }
     },
     {
@@ -334,19 +344,19 @@
         "original_text": "pasů pro rodinný dům. Na profilech výkopů bylo patrné souvrství hnědé ornice s podorničím na intaktním",
         "enrichment": {
             "extracted_keywords_cs": [
-                "hnědé ornice",
+                "souvrství hnědé ornice",
                 "podorničí",
                 "intaktní podloží",
-                "spraš"
+                "intaktní spraš"
             ],
             "extracted_keywords_en": [
-                "brown soil",
+                "layer of burnt clay",
                 "subsoil",
-                "intact subsoil",
-                "spraš"
+                "intact floor",
+                "intact plaster"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.95
+            "teater_category": "sídliště",
+            "confidence_score": 0.85
         }
     },
     {
@@ -357,20 +367,10 @@
         "quality_score": 0.0,
         "original_text": "podloží, které tvořila intaktní spraš.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "ornice",
-                "podornič",
-                "podloží",
-                "spraš"
-            ],
-            "extracted_keywords_en": [
-                "ornice",
-                "podornič",
-                "podloží",
-                "spraš"
-            ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 0.8
         }
     },
     {
@@ -412,7 +412,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.8
         }
     },
     {
@@ -426,7 +426,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.8
         }
     },
     {
@@ -468,7 +468,7 @@
             "extracted_keywords_cs": [],
             "extracted_keywords_en": [],
             "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "confidence_score": 0.8
         }
     },
     {
@@ -493,9 +493,13 @@
         "quality_score": 0.0,
         "original_text": "Vedoucí pracoviště Kutná Hora",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
+            "extracted_keywords_cs": [
+                "pracoviště"
+            ],
+            "extracted_keywords_en": [
+                "fieldwork unit"
+            ],
+            "teater_category": "terénní pracoviště",
             "confidence_score": 1.0
         }
     },

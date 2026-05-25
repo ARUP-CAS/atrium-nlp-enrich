@@ -144,12 +144,14 @@
         "original_text": "Újezda pokryt lesem.",
         "enrichment": {
             "extracted_keywords_cs": [
+                "kopec",
                 "les"
             ],
             "extracted_keywords_en": [
+                "hill",
                 "forest"
             ],
-            "teater_category": "krajina",
+            "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.95
         }
     },
@@ -195,7 +197,7 @@
             "extracted_keywords_en": [
                 "potsherds"
             ],
-            "teater_category": "zlomek keramiky",
+            "teater_category": "keramika",
             "confidence_score": 0.95
         }
     },
@@ -214,7 +216,7 @@
                 "potsherds"
             ],
             "teater_category": "keramika",
-            "confidence_score": 0.9
+            "confidence_score": 0.95
         }
     },
     {
@@ -293,8 +295,8 @@
                 "beets",
                 "pottery shards"
             ],
-            "teater_category": "zásobnice",
-            "confidence_score": 0.85
+            "teater_category": "kultovní/sakrální objekt",
+            "confidence_score": 0.75
         }
     },
     {
@@ -339,14 +341,14 @@
                 "keramický materiál"
             ],
             "extracted_keywords_en": [
-                "trenches",
+                "storage pits",
                 "potatoes",
                 "beets",
                 "potsherds",
                 "ceramic material"
             ],
-            "teater_category": "kultovní/sakrální objekt",
-            "confidence_score": 0.85
+            "teater_category": "jáma zásobní",
+            "confidence_score": 0.95
         }
     },
     {

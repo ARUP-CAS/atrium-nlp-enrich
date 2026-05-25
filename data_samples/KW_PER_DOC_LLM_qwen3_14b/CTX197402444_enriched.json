@@ -197,14 +197,10 @@
         "quality_score": 0.0,
         "original_text": "Dne 19.III.1974 jsije navštívili pískovnu JZD",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna"
-            ],
-            "extracted_keywords_en": [
-                "sandpit"
-            ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -257,18 +253,10 @@
         "quality_score": 0.0,
         "original_text": "Zjistili jsme, že práce v pískovně byly obnoveny,",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna",
-                "objekty",
-                "skrývka"
-            ],
-            "extracted_keywords_en": [
-                "quarry",
-                "objects",
-                "concealed area"
-            ],
-            "teater_category": "těžební objekt",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -279,20 +267,10 @@
         "quality_score": 0.0,
         "original_text": "rozsah pískovny se zvětšil i za hranice záchranného výzkumu. Na",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "pískovna",
-                "záchranný výzkum",
-                "objekty",
-                "skrývka"
-            ],
-            "extracted_keywords_en": [
-                "quarry",
-                "rescue excavation",
-                "objects",
-                "cover"
-            ],
-            "teater_category": "areál nezemědělské výroby",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -305,15 +283,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "bagrem",
-                "skryté ploše",
-                "hlubší objekty",
-                "skrývka"
+                "skrývka",
+                "objekty"
             ],
             "extracted_keywords_en": [
                 "backhoe",
-                "hidden area",
-                "deeper objects",
-                "cover"
+                "shelter",
+                "objects"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.85
@@ -370,10 +346,10 @@
         "original_text": "je ještě část sídliště",
         "enrichment": {
             "extracted_keywords_cs": [
-                "část sídliště"
+                "sídliště"
             ],
             "extracted_keywords_en": [
-                "part of settlement"
+                "settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -388,12 +364,10 @@
         "original_text": "zachována na parc.č. 1503, kde jsme sběrem",
         "enrichment": {
             "extracted_keywords_cs": [
-                "sídliště",
-                "sběrem"
+                "sídliště"
             ],
             "extracted_keywords_en": [
-                "settlement",
-                "collection"
+                "settlement"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.85
@@ -408,10 +382,10 @@
         "original_text": "získali lžickou kera-",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lžická keramika"
+                "lžickou keramiku"
             ],
             "extracted_keywords_en": [
-                "spoonware"
+                "lithic pottery"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.85
@@ -426,18 +400,14 @@
         "original_text": "miku. Další střepy jsme našli na parc.č. 1510, scvernt od pískovny",
         "enrichment": {
             "extracted_keywords_cs": [
-                "lžickou keramiku",
                 "střepy",
-                "parc.č. 1510",
-                "pískovna",
+                "keramika",
                 "žárových hrobů"
             ],
             "extracted_keywords_en": [
-                "ladleware",
                 "sherds",
-                "parc.č. 1510",
-                "sandpit",
-                "cremation graves"
+                "ceramics",
+                "cremation burials"
             ],
             "teater_category": "pohřebiště/hřbitov",
             "confidence_score": 0.85
@@ -484,16 +454,12 @@
         "original_text": "Výzkum tohoto důležitého lužického sídliště, aby tak byl ukázán",
         "enrichment": {
             "extracted_keywords_cs": [
-                "výzkum",
                 "lužické sídliště",
-                "půdorys",
                 "pravěké vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "research",
                 "Lusatian settlement",
-                "floor plan",
                 "prehistoric village",
                 "cemetery"
             ],
@@ -510,12 +476,10 @@
         "original_text": "poprvé celý půdorys pravěké vesnice i s pohřebištěm",
         "enrichment": {
             "extracted_keywords_cs": [
-                "půdorys",
                 "pravěké vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
-                "plan",
                 "prehistoric village",
                 "cemetery"
             ],

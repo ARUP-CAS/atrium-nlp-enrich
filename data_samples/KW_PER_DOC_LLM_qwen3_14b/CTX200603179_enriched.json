@@ -119,9 +119,15 @@
         "quality_score": 0.0,
         "original_text": "Katastrální území: Bítov u Koněprus",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
+            "extracted_keywords_cs": [
+                "katastrální území",
+                "Bítov u Koněprus"
+            ],
+            "extracted_keywords_en": [
+                "cadastral area",
+                "Bítov u Koněprus"
+            ],
+            "teater_category": "katastrální území",
             "confidence_score": 1.0
         }
     },

@@ -237,8 +237,8 @@
                 "sandpit",
                 "work in sandpit"
             ],
-            "teater_category": "zahrada/sad",
-            "confidence_score": 0.85
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -265,13 +265,13 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "práce v pískovně",
-                "obnoveny"
+                "objekty"
             ],
             "extracted_keywords_en": [
                 "sandpit work",
-                "restored"
+                "objects"
             ],
-            "teater_category": "nespecifikovaný reliéfní útvar",
+            "teater_category": "zahraniční výzkum",
             "confidence_score": 0.85
         }
     },
@@ -285,13 +285,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "pískovna",
-                "záchranného výzkumu",
                 "objekty"
             ],
             "extracted_keywords_en": [
                 "sandpit",
-                "rescue excavation",
-                "features"
+                "objects"
             ],
             "teater_category": "nespecifikovaný reliéfní útvar",
             "confidence_score": 0.85
@@ -307,13 +305,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "bagrem skryté ploše",
-                "objekty",
-                "hlubší objekty"
+                "objekty"
             ],
             "extracted_keywords_en": [
-                "bagrem skryté ploše",
-                "objects",
-                "deeper objects"
+                "bagrem covered surface",
+                "objects"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -328,10 +324,12 @@
         "original_text": "však šla velmi hluboko, takže mad± mělčí objekty byly zcela",
         "enrichment": {
             "extracted_keywords_cs": [
-                "objekty"
+                "hlubší objekty",
+                "mělčí objekty"
             ],
             "extracted_keywords_en": [
-                "features"
+                "deeper objects",
+                "shallower objects"
             ],
             "teater_category": "objekt",
             "confidence_score": 0.95
@@ -384,7 +382,7 @@
                 "part of settlement"
             ],
             "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "confidence_score": 0.98
         }
     },
     {
@@ -397,13 +395,11 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "část sídliště",
-                "parc.č. 1503",
-                "sběrem"
+                "parc.č. 1503"
             ],
             "extracted_keywords_en": [
                 "part of settlement",
-                "plot number 1503",
-                "surface collection"
+                "plot number 1503"
             ],
             "teater_category": "sídliště",
             "confidence_score": 0.95
@@ -422,8 +418,8 @@
                 "střepy"
             ],
             "extracted_keywords_en": [
-                "lidded ceramic",
-                "fragments"
+                "lithic pottery",
+                "shards"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -491,12 +487,12 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "lužické sídliště",
-                "pravěké vesnice",
+                "půdorys pravěké vesnice",
                 "pohřebiště"
             ],
             "extracted_keywords_en": [
                 "Lusatian settlement",
-                "Neolithic village",
+                "layout of prehistoric village",
                 "cemetery"
             ],
             "teater_category": "sídliště",
@@ -576,8 +572,8 @@
         "original_text": "Domnívám se, že druhý vedoucfvýzkumu v Opatovicích na sídlišti,Dr",
         "enrichment": {
             "extracted_keywords_cs": [
-                "druhý výzkumu",
-                "sídlišti"
+                "druhý výzkum",
+                "sídliště"
             ],
             "extracted_keywords_en": [
                 "second research",
@@ -595,14 +591,10 @@
         "quality_score": 0.0,
         "original_text": "V.Vokolek by mohl-vzhledem k blízkosti svého pracoviště zahájit jednání",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sídliště"
-            ],
-            "extracted_keywords_en": [
-                "settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -613,14 +605,10 @@
         "quality_score": 0.0,
         "original_text": "s ústavem o další výzkum na sídlišti . Doporučuji, aby tento výzkum",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "sídlišti"
-            ],
-            "extracted_keywords_en": [
-                "settlement"
-            ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.95
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
