@@ -35,10 +35,16 @@
         "quality_score": 0.0,
         "original_text": "118 01 Praha 1 - Malá Strana, Letenská 4",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Praha 1 - Malá Strana",
+                "Letenská 4"
+            ],
+            "extracted_keywords_en": [
+                "Praha 1 - Malá Strana",
+                "Letenská 4"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.95
         }
     },
     {
@@ -133,10 +139,14 @@
         "quality_score": 0.0,
         "original_text": "Spodní 682",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Spodní 682"
+            ],
+            "extracted_keywords_en": [
+                "Lower 682"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -147,10 +157,14 @@
         "quality_score": 0.0,
         "original_text": "625 00 Brno",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Brno"
+            ],
+            "extracted_keywords_en": [
+                "Brno"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -175,10 +189,24 @@
         "quality_score": 0.0,
         "original_text": "VĚC: zpráva o provedení záchranného archeologického výzkumu při akci - Čáslav - novostavba",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "zpráva",
+                "záchranný archeologický výzkum",
+                "akce",
+                "novostavba",
+                "rodinný dům",
+                "katastrální území"
+            ],
+            "extracted_keywords_en": [
+                "report",
+                "rescue archaeological research",
+                "action",
+                "new construction",
+                "family house",
+                "cadastral area"
+            ],
+            "teater_category": "záchranný",
+            "confidence_score": 0.95
         }
     },
     {
@@ -189,10 +217,18 @@
         "quality_score": 0.0,
         "original_text": "rodinného domu na ppč. 1642/17,18 v k.ú. Čáslav.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "rodinný dům",
+                "ppč",
+                "k.ú."
+            ],
+            "extracted_keywords_en": [
+                "family house",
+                "plot number",
+                "cadastral area"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.85
         }
     },
     {
@@ -203,10 +239,16 @@
         "quality_score": 0.0,
         "original_text": "V souladu se zněním zákona č.20/87 Sb. v platném znění byl na základě ohlášení zahájení výkopových prací",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "výkopové prací",
+                "archeologický dohled"
+            ],
+            "extracted_keywords_en": [
+                "excavation work",
+                "archaeological survey"
+            ],
+            "teater_category": "terénní odkryv",
+            "confidence_score": 0.95
         }
     },
     {
@@ -217,10 +259,22 @@
         "quality_score": 0.0,
         "original_text": "proveden archeologický dohled při akci: Čáslav - novostavba rodinného domu na ppč. 1642/17, 18 v k.ú.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "archeologický dohled",
+                "akce",
+                "novostavba",
+                "rodinný dům",
+                "k.ú."
+            ],
+            "extracted_keywords_en": [
+                "archaeological survey",
+                "action",
+                "new construction",
+                "family house",
+                "cadastral area"
+            ],
+            "teater_category": "terénní zásah",
+            "confidence_score": 0.95
         }
     },
     {
@@ -231,10 +285,14 @@
         "quality_score": 0.0,
         "original_text": "Čáslav.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Čáslav"
+            ],
+            "extracted_keywords_en": [
+                "Chaslav"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -246,15 +304,17 @@
         "original_text": "Akce probíhala na západním okraji města v poloze „Vodranty“. V těsném sousedství stavby došlo v minulosti",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Vodranty",
-                "osídlení"
+                "osídlení",
+                "pravěké",
+                "středověké"
             ],
             "extracted_keywords_en": [
-                "Vodranty",
-                "settlement"
+                "settlement",
+                "palaeolithic",
+                "medieval"
             ],
-            "teater_category": "sídliště",
-            "confidence_score": 0.85
+            "teater_category": "osídlený skalní prostor",
+            "confidence_score": 0.95
         }
     },
     {
@@ -266,15 +326,17 @@
         "original_text": "k zachycení polykulturního pravěkého a středověkého osídlení, proto nešlo dopředu vyloučit možnost, že",
         "enrichment": {
             "extracted_keywords_cs": [
-                "polykulturní pravěké osídlení",
-                "středověké osídlení"
+                "osídlení",
+                "pravěké",
+                "středověké"
             ],
             "extracted_keywords_en": [
-                "poly-cultural prehistoric settlement",
-                "medieval settlement"
+                "settlement",
+                "palaeolithic",
+                "medieval"
             ],
             "teater_category": "osídlený skalní prostor",
-            "confidence_score": 0.65
+            "confidence_score": 0.95
         }
     },
     {
@@ -285,10 +347,14 @@
         "quality_score": 0.0,
         "original_text": "v průběhu akce dojde k poškození důležitých archeologických situací.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "archeologické situace"
+            ],
+            "extracted_keywords_en": [
+                "archaeological contexts"
+            ],
+            "teater_category": "pohřební areál",
+            "confidence_score": 0.85
         }
     },
     {
@@ -299,10 +365,22 @@
         "quality_score": 0.0,
         "original_text": "Archeologický dohled při stavbě proběhl formou revize (20.6.2014) skrývky ornice a výkopů základových",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "skrývka ornice",
+                "výkopy základové",
+                "souvrství hnědé ornice",
+                "intaktní podloží",
+                "intaktní spraš"
+            ],
+            "extracted_keywords_en": [
+                "ornice shelter",
+                "foundation trenches",
+                "layer of brown soil",
+                "intact subsoil",
+                "intact spraš"
+            ],
+            "teater_category": "sídliště specializované komunity",
+            "confidence_score": 0.95
         }
     },
     {
@@ -315,18 +393,19 @@
         "enrichment": {
             "extracted_keywords_cs": [
                 "souvrství",
-                "hnědá ornice",
-                "podorničí",
-                "intaktní spraš"
+                "ornice",
+                "podorničím",
+                "intaktním",
+                "spraš"
             ],
             "extracted_keywords_en": [
-                "sequence",
-                "brown topsoil",
-                "subsoil",
-                "intact loess"
+                "stratum",
+                "soil",
+                "intact",
+                "sprat"
             ],
-            "teater_category": "kulturní vrstva/objekt",
-            "confidence_score": 0.95
+            "teater_category": "sídliště specializované komunity",
+            "confidence_score": 0.85
         }
     },
     {
@@ -337,10 +416,14 @@
         "quality_score": 0.0,
         "original_text": "podloží, které tvořila intaktní spraš.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "spraš"
+            ],
+            "extracted_keywords_en": [
+                "sprash"
+            ],
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.85
         }
     },
     {
@@ -393,10 +476,16 @@
         "quality_score": 0.0,
         "original_text": "Kutná Hora). Terénní dokumentace je uložena v Archeologickém ústavu AV ČR, Praha, v.v.i., pracoviště",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Archeologický ústav AV ČR",
+                "pracoviště Kutná Hora"
+            ],
+            "extracted_keywords_en": [
+                "Archaeological Institute of the Czech Academy of Sciences",
+                "workshop Kutná Hora"
+            ],
+            "teater_category": "průzkum detektorem kovu",
+            "confidence_score": 0.95
         }
     },
     {
@@ -407,10 +496,14 @@
         "quality_score": 0.0,
         "original_text": "Kutná Hora.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Kutná Hora"
+            ],
+            "extracted_keywords_en": [
+                "Kutná Hora"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -435,10 +528,14 @@
         "quality_score": 0.0,
         "original_text": "archeologických památek.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "archeologických památek"
+            ],
+            "extracted_keywords_en": [
+                "archaeological monuments"
+            ],
+            "teater_category": "památková zóna",
+            "confidence_score": 0.95
         }
     },
     {

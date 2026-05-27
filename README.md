@@ -39,10 +39,10 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 - [EXTRA: Extract Keywords (KER / YAKE / KeyBERT)](#extra-extract-keywords-ker--yake--keybert)
 - [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv)
 - [EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)](#extra-llm-semantic-enrichment-vocabulary-mapping)
-  - [Configuration ⚙️](#️-configuration-llm_configtxt-)
+  - [Configuration ⚙️](#-configuration-llm_configtxt-)
   - [Workflow](#-workflow)
   - [Model Registry](#-model-registry)
-  - [Inputs and Outputs](#-inputs-and-outputs-1)
+  - [Inputs and Outputs](#-inputs-and-outputs)
   - [Paradata Integration](#-paradata-integration)
 - [Paradata Logs](#paradata-logs)
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
@@ -159,7 +159,7 @@ Before you begin, set up your environment.
     # Replaces lmformatenforcer; uses xgrammar for native guided JSON decoding
     pip install vllm
     ```
-3. Review and update the [config_api.env](config_api.env) 📎 file with your specific paths and API configurations.
+3. Review and update the [config_api.txt](config_api.txt) 📎 file with your specific paths and API configurations.
 You are now ready to start the workflow.
 
 ---
@@ -250,9 +250,15 @@ SAVE_TEITOK=true               # write TEITOK-style TEI XML (flexiconv-compatibl
 
 #### Execution Pipeline
 
-Run the following scripts in sequence. Each script utilizes [api_common.sh](api_util/api_common.sh) 📎 for logging, 
-retry logic, and error handling for API calls. Additionally, [api_util/](api_util/) 📁 contains 
-helper Python scripts for chunking and analysis.
+Run the following scripts in sequence. Each script sources [config_api.txt](config_api.txt) 📎
+directly for configuration. Retry logic and per-attempt error handling are implemented inside
+the Python helper scripts ([call_udpipe.py](api_util/call_udpipe.py),
+[call_nametag.py](api_util/call_nametag.py)) using exponential back-off controlled by the
+`MAX_RETRIES` and `BACKOFF_FACTOR` variables. [api_util/api_common.sh](api_util/api_common.sh) 📎
+is a standalone utility module that exposes a `log()` helper and an `api_call_with_retry()`
+shell function for any custom scripts that choose to source it; the four main pipeline scripts
+(`api_1_manifest.sh` … `api_4_stats.sh`) do not source it. Additionally, [api_util/](api_util/) 📁
+contains helper Python scripts for chunking and analysis.
 
 ##### 1. Generate Manifest
 
@@ -332,7 +338,8 @@ ls -l OUTPUT_DIR/NE | wc -l
 ```
 which returns the total number of directories created (each subfolder corresponds to a document).
 
-Example output directory [NE](data_samples%2FNE) 📁 contains per-page TSV files with NE annotations, where the NE tags follow the CNEC 2.0 standard [^3] which is used in the Czech Nametag model.
+Example output directory [NE](data_samples%2FNE) 📁 contains per-page TSV files with NE annotations, where the NE tags 
+follow the CNEC 2.0 standard [^3] which is used in the Czech Nametag model.
 
 
 ##### 4. Generate Statistics
@@ -774,7 +781,8 @@ The minimum required change is `MODEL_KEY`; every other key has a sensible defau
 
 ```text
 # Single-GPU (BACKEND=transformers): qwen-3.6-27b-it | gemma-4-31b-it | qwen3-14b |
-#                                    qwen-3.5-9b-it | qwen2.5-14b-awq | gemma-3-12b-it
+#                                    qwen-3.5-9b-it | qwen3-8b | qwen2.5-14b-awq |
+#                                    qwen2.5-7b | gemma-3-12b-it
 # MoE / GGUF (single GPU):           gemma-4-26b-moe-gguf | qwen-3.6-35b-moe
 # Multi-GPU (BACKEND=vllm):          qwen3-235b-a22b-fp8 | deepseek-v3 | llama4-maverick | llama3.1-70b
 MODEL_KEY=qwen-3.6-27b-it
@@ -861,37 +869,40 @@ All VRAM figures assume BnB 4-bit for the transformers backend and FP8/BF16 for 
 
 #### Single-GPU — `BACKEND=transformers` (or `BACKEND=vllm`)
 
-| Registry key | Model | Size | Context | Est. VRAM | Notes |
-|---|---|---|---|---|---|
-| `qwen-3.6-27b-it` | Qwen/Qwen3.6-27B [^24] | 27 B dense | 262 k | ~18 GB | **Default.** Best accuracy/VRAM ratio on a single GPU. |
-| `gemma-4-31b-it` | google/gemma-4-31B-it [^22] | 31 B dense | 256 k | ~21 GB | Highest single-GPU accuracy. Gated — `HF_TOKEN` required. |
-| `qwen3-14b` | OpenPipe/Qwen3-14B-Instruct [^18] | 14 B dense | 128 k | ~9 GB | Good baseline; thinking mode suppressed automatically. |
-| `qwen-3.5-9b-it` | Qwen/Qwen3.5-9B [^26] | 9 B dense | 262 k | ~6 GB | Entry-level (8 GB VRAM). |
-| `qwen2.5-14b-awq` | Qwen/Qwen2.5-14B-Instruct-AWQ [^12] | 14 B AWQ | 128 k | ~9 GB | Pre-quantized; fast on NVIDIA GPUs. |
-| `gemma-3-12b-it` | google/gemma-3-12b-it [^20] | 12 B dense | 128 k | ~8 GB | Good bilingual extraction. Gated. |
+| Registry key      | Model                               | Size       | Context | Est. VRAM | Notes                                                     |
+|-------------------|-------------------------------------|------------|---------|-----------|-----------------------------------------------------------|
+| `qwen-3.6-27b-it` | Qwen/Qwen3.6-27B [^24]              | 27 B dense | 262 k   | ~18 GB    | **Default.** Best accuracy/VRAM ratio on a single GPU.    |
+| `gemma-4-31b-it`  | google/gemma-4-31B-it [^22]         | 31 B dense | 256 k   | ~21 GB    | Highest single-GPU accuracy. Gated — `HF_TOKEN` required. |
+| `qwen3-14b`       | OpenPipe/Qwen3-14B-Instruct [^18]   | 14 B dense | 128 k   | ~9 GB     | Good baseline; thinking mode suppressed automatically.    |
+| `qwen-3.5-9b-it`  | Qwen/Qwen3.5-9B [^26]               | 9 B dense  | 262 k   | ~6 GB     | Entry-level (8 GB VRAM).                                  |
+| `qwen3-8b`        | Qwen/Qwen3-8B [^19]                 | 8 B dense  | 128 k   | ~16 GB    | BF16 (no 4-bit); straightforward baseline.                |
+| `qwen2.5-14b-awq` | Qwen/Qwen2.5-14B-Instruct-AWQ [^12] | 14 B AWQ   | 128 k   | ~9 GB     | Pre-quantized; fast on NVIDIA GPUs.                       |
+| `qwen2.5-7b`      | Qwen/Qwen2.5-7B-Instruct [^13]      | 7 B dense  | 32 k    | ~14 GB    | BF16; short context window.                               |
+| `gemma-3-12b-it`  | google/gemma-3-12b-it [^20]         | 12 B dense | 128 k   | ~8 GB     | Good bilingual extraction. Gated.                         |
 
 #### MoE models — GGUF / llama.cpp fallback (any GPU, any VRAM)
 
-| Registry key | Model | Active params | Context | Notes |
-|---|---|---|---|---|
-| `gemma-4-26b-moe-gguf` | bartowski/google_gemma-4-26B-A4B-it-GGUF | 4 B | 8 k | BnB 4-bit unsupported (fused experts). Q4_K_M quantization via llama.cpp. |
+| Registry key           | Model                                    | Active params | Context | Notes                                                                     |
+|------------------------|------------------------------------------|---------------|---------|---------------------------------------------------------------------------|
+| `gemma-4-26b-moe-gguf` | bartowski/google_gemma-4-26B-A4B-it-GGUF | 4 B           | 8 k     | BnB 4-bit unsupported (fused experts). Q4_K_M quantization via llama.cpp. |
 
 #### MoE models — `BACKEND=vllm` (single GPU or multi-GPU)
 
-| Registry key | Model | Active params | Context | Notes |
-|---|---|---|---|---|
-| `qwen-3.6-35b-moe` | Qwen/Qwen3.6-35B-A3B [^23] | 3 B | 262 k | 35 B total / 3 B active. Single GPU usually fits. |
-| `gemma-4-26b-moe` | google/gemma-4-26B-A4B-it [^25] | 4 B | 256 k | 26 B total / 4 B active. Gated. |
+| Registry key          | Model                           | Active params | Context | Notes                                              |
+|-----------------------|---------------------------------|---------------|---------|----------------------------------------------------|
+| `qwen-3.6-35b-moe`    | Qwen/Qwen3.6-35B-A3B [^23]      | 3 B           | 262 k   | 35 B total / 3 B active. Single GPU usually fits.  |
+| `gemma-4-26b-moe`     | google/gemma-4-26B-A4B-it [^25] | 4 B           | 256 k   | 26 B total / 4 B active. Gated.                    |
+| `gemma-4-26b-moe-awq` | google/gemma-4-26B-A4B-it [^25] | 4 B           | 256 k   | AWQ-quantised variant of `gemma-4-26b-moe`. Gated. |
 
 #### Large models — `BACKEND=vllm`, `TENSOR_PARALLEL_SIZE ≥ 2`
 
-| Registry key | Model | Total / Active | Context | Rec. TP | Notes |
-|---|---|---|---|---|---|
-| `qwen3-235b-a22b-fp8` | Qwen/Qwen3-235B-A22B-Instruct-2507-FP8 [^27] | 235 B / 22 B | 128 k | **2** | **Recommended for 144 GB / 200 GB nodes.** Native FP8 (~117 GB loaded). |
-| `qwen3-235b-a22b` | Qwen/Qwen3-235B-A22B-Instruct-2507 [^27] | 235 B / 22 B | 128 k | 2 | BF16 variant — heavier than FP8. |
-| `deepseek-v3` | deepseek-ai/DeepSeek-V3 [^28] | 671 B MoE / — | 128 k | **4** | FP8 official checkpoint available. 4×80 GB minimum. |
-| `llama4-maverick` | meta-llama/Llama-4-Maverick-17B-128E-Instruct [^29] | 128 experts / 17 B active | 1 M | 2 | Multimodal. 1 M token context. Gated — `HF_TOKEN` required. |
-| `llama3.1-70b` | meta-llama/Meta-Llama-3.1-70B-Instruct [^30] | 70 B dense / — | 128 k | 2 | Also works with `transformers` + 4-bit on 2×40 GB. Gated. |
+| Registry key          | Model                                               | Total / Active            | Context | Rec. TP | Notes                                                                   |
+|-----------------------|-----------------------------------------------------|---------------------------|---------|---------|-------------------------------------------------------------------------|
+| `qwen3-235b-a22b-fp8` | Qwen/Qwen3-235B-A22B-Instruct-2507-FP8 [^27]        | 235 B / 22 B              | 128 k   | **2**   | **Recommended for 144 GB / 200 GB nodes.** Native FP8 (~117 GB loaded). |
+| `qwen3-235b-a22b`     | Qwen/Qwen3-235B-A22B-Instruct-2507 [^27]            | 235 B / 22 B              | 128 k   | 2       | BF16 variant — heavier than FP8.                                        |
+| `deepseek-v3`         | deepseek-ai/DeepSeek-V3 [^28]                       | 671 B MoE / —             | 128 k   | **4**   | FP8 official checkpoint available. 4×80 GB minimum.                     |
+| `llama4-maverick`     | meta-llama/Llama-4-Maverick-17B-128E-Instruct [^29] | 128 experts / 17 B active | 1 M     | 2       | Multimodal. 1 M token context. Gated — `HF_TOKEN` required.             |
+| `llama3.1-70b`        | meta-llama/Meta-Llama-3.1-70B-Instruct [^30]        | 70 B dense / —            | 128 k   | 2       | Also works with `transformers` + 4-bit on 2×40 GB. Gated.               |
 
 > [!TIP]
 > **Automatic Prefix Caching (APC)** — enabled by default for the vLLM backend
@@ -950,6 +961,8 @@ Output examples per model:
 - [KW_PER_DOC_LLM_qwen_3.6_27b_it](data_samples/KW_PER_DOC_LLM_qwen_36_27b_it) 📂 by Qwen 3.6-27B-IT [^24]
 - [KW_PER_DOC_LLM_gemma_4_31b_it](data_samples/KW_PER_DOC_LLM_gemma_4_31b_it) 📂 by Gemma 4-31B-IT [^22]
 - [KW_PER_DOC_LLM_qwen_3.5_9b_it](data_samples/KW_PER_DOC_LLM_qwen_35_9b_it) 📂 by Qwen 3.5-9B-IT [^26]
+- [KW_PER_DOC_LLM_llama31_70b](data_samples/KW_PER_DOC_LLM_llama31_70b) 📂 by LLaMA 3.1-70B [^30]
+- [KW_PER_DOC_LLM_qwen3_8b](data_samples/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 
 Pending (sample runs in progress):
 - [KW_PER_DOC_LLM_qwen_3.6_35b_moe](data_samples/KW_PER_DOC_LLM_qwen_36_35b_moe) 📂 by Qwen 3.6-35B-MoE [^23]
@@ -961,7 +974,7 @@ Archived (unsuccessful — evaluation notes in issue #6):
 - [KW_PER_DOC_LLM_bielik_11b_v3.0](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_bielik_11b_v30) 📂 by Bielik 11B v3.0 [^16]
 - [KW_PER_DOC_LLM_llama31_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_llama31_8b) 📂 by LLaMA 3.1-8B [^17]
 - [KW_PER_DOC_LLM_ministral_3_14b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_ministral_3_14b) 📂 by Ministral 3-14B [^21]
-- [KW_PER_DOC_LLM_qwen3_8b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
+- [KW_PER_DOC_LLM_qwen3_8b (early run)](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen3_8b) 📂 by Qwen 3-8B [^19]
 - [KW_PER_DOC_LLM_qwen2.5-7b](data_samples/archived_KW_PER_DOC_LLM/KW_PER_DOC_LLM_qwen25_7b) 📂 by Qwen 2.5-7B [^13]
 
 ### 📊 Paradata Integration
@@ -999,10 +1012,11 @@ started.  Because every script is an independent invocation, a complete
 four-step run will create four separate files, making it straightforward to
 audit individual stages in isolation.
 
-The paradata logs (samples in directory [paradata](paradata) 📂) capture key details about each pipeline stage, including the program name, run ID, execution 
-duration, configuration parameters, input and output statistics, and performance metrics. They also document 
-skipped files with reasons and provide a breakdown of output types and processing rates for benchmarking. This 
-structured metadata ensures traceability and facilitates auditing of the pipeline's execution.
+The paradata logs (samples in directory [paradata](paradata) 📂) capture key details about each pipeline stage, 
+including the program name, run ID, execution duration, configuration parameters, input and output statistics, 
+and performance metrics. They also document skipped files with reasons and provide a breakdown of output 
+types and processing rates for benchmarking. This structured metadata ensures traceability and facilitates
+auditing of the pipeline's execution.
 
 The declared output types per stage are:
 
@@ -1032,15 +1046,17 @@ The declared output types per stage are:
 ### `<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄
 
 [api_common.sh](api_util%2Fapi_common.sh) 📎 exposes a `log()` helper that timestamps and
-`tee`-appends every warning and error to this single flat file for the
-lifetime of the project directory:
+`tee`-appends warnings and errors to this flat file. The four main pipeline scripts
+(`api_1_manifest.sh` … `api_4_stats.sh`) write to `processing.log` indirectly through the
+Python helpers, which print timestamped messages to stderr; any script that sources
+`api_common.sh` can also write here via the `log()` function directly.
 
 ```
 [2026-01-15 09:42:11] [WARN] UDPipe failed (HTTP 503). Retrying in 2s…
 [2026-01-15 09:42:14] [ERR]  UDPipe failed permanently after 5 attempts.
 ```
 
-This file is written to by all four scripts and accumulates across reruns;
+This file accumulates across reruns;
 it is the first place to check when a document appears in
 `skipped_files_detail` but the reason is terse.
 

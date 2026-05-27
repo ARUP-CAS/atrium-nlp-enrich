@@ -7,10 +7,16 @@
         "quality_score": 0.0,
         "original_text": "504 ONDREJOV, okr. Praha-východ",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "kostr",
+                "hrob"
+            ],
+            "extracted_keywords_en": [
+                "skeleton",
+                "grave"
+            ],
+            "teater_category": "pohřební objekt",
+            "confidence_score": 0.95
         }
     },
     {
@@ -29,7 +35,7 @@
                 "skeleton",
                 "grave"
             ],
-            "teater_category": "hrob",
+            "teater_category": "pohřební objekt",
             "confidence_score": 0.95
         }
     },
@@ -42,14 +48,22 @@
         "original_text": "OKOL: kopání základu hrnčíř, pece. ULOŽ: 7. LIT: Kalina b. d. A,",
         "enrichment": {
             "extracted_keywords_cs": [
+                "hrnčíř",
+                "pece",
+                "kostr",
+                "hrob",
                 "kopání základu",
-                "hrnčířská pec"
+                "ulož"
             ],
             "extracted_keywords_en": [
-                "foundation digging",
-                "pottery kiln"
+                "potter",
+                "kiln",
+                "skeleton",
+                "grave",
+                "excavation of foundation",
+                "deposited"
             ],
-            "teater_category": "pec hrnčířská",
+            "teater_category": "pohřební objekt",
             "confidence_score": 0.95
         }
     }

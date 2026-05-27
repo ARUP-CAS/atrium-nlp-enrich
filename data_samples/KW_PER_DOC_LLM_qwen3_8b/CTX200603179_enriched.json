@@ -35,10 +35,16 @@
         "quality_score": 0.0,
         "original_text": "NÁLEZOVÁ ZPRÁVA O ARCHEOLOGICKÉM DOHLEDU P",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "nálezová zpráva",
+                "archeologický dohled"
+            ],
+            "extracted_keywords_en": [
+                "find report",
+                "archaeological survey"
+            ],
+            "teater_category": "nálezová zpráva",
+            "confidence_score": 0.95
         }
     },
     {
@@ -120,14 +126,12 @@
         "original_text": "Katastrální území: Bítov u Koněprus",
         "enrichment": {
             "extracted_keywords_cs": [
-                "Katastrální území",
-                "Bítov u Koněprus"
+                "katastrální území"
             ],
             "extracted_keywords_en": [
-                "cadastral area",
-                "Bítov u Koněprus"
+                "cadastral area"
             ],
-            "teater_category": "poloha podle katastru",
+            "teater_category": "katastrální území",
             "confidence_score": 0.95
         }
     },
@@ -139,10 +143,14 @@
         "quality_score": 0.0,
         "original_text": "Lokalita:",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Lokalita"
+            ],
+            "extracted_keywords_en": [
+                "Site"
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -153,10 +161,14 @@
         "quality_score": 0.0,
         "original_text": "Parcelní čislo: 18",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "parcelní čislo"
+            ],
+            "extracted_keywords_en": [
+                "parcel number"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.95
         }
     },
     {
@@ -167,10 +179,14 @@
         "quality_score": 0.0,
         "original_text": "Okres Beroun",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "okres"
+            ],
+            "extracted_keywords_en": [
+                "district"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.95
         }
     },
     {
@@ -181,10 +197,14 @@
         "quality_score": 0.0,
         "original_text": "Lokalizace v mapě 1:10 000:",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "mapa"
+            ],
+            "extracted_keywords_en": [
+                "map"
+            ],
+            "teater_category": "mapa",
+            "confidence_score": 0.95
         }
     },
     {
@@ -195,10 +215,18 @@
         "quality_score": 0.0,
         "original_text": "Mapový list 12-41-17 okolo bodu 68/217 mm od Z a J sekční čáry",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "mapový list",
+                "bod",
+                "sekční čára"
+            ],
+            "extracted_keywords_en": [
+                "map sheet",
+                "point",
+                "section line"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.85
         }
     },
     {
@@ -237,10 +265,16 @@
         "quality_score": 0.0,
         "original_text": "Základní metoda archeologického výzkumu, dohled",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "metoda archeologického výzkumu",
+                "dohled"
+            ],
+            "extracted_keywords_en": [
+                "archaeological research method",
+                "survey"
+            ],
+            "teater_category": "průzkum",
+            "confidence_score": 0.95
         }
     },
     {
@@ -279,10 +313,16 @@
         "quality_score": 0.0,
         "original_text": "Byla provedena kontrola odkrytých výkopů.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "kontrola",
+                "výkopů"
+            ],
+            "extracted_keywords_en": [
+                "control",
+                "trenches"
+            ],
+            "teater_category": "výkop",
+            "confidence_score": 0.95
         }
     },
     {
@@ -307,10 +347,16 @@
         "quality_score": 0.0,
         "original_text": "Zaměřeni bylo provedeno do základní mapy 1:10 000.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "mapa",
+                "zaměření"
+            ],
+            "extracted_keywords_en": [
+                "map",
+                "survey"
+            ],
+            "teater_category": "mapa",
+            "confidence_score": 0.95
         }
     },
     {
@@ -335,10 +381,16 @@
         "quality_score": 0.0,
         "original_text": "Ve výkopu byly zjištěny pouze geologické situace",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "výkop",
+                "geologické situace"
+            ],
+            "extracted_keywords_en": [
+                "trench",
+                "geological situations"
+            ],
+            "teater_category": "výkop",
+            "confidence_score": 0.85
         }
     },
     {
@@ -433,10 +485,14 @@
         "quality_score": 0.0,
         "original_text": "Dokument je určen pro investora stavby jako doklad realizovaného záchranného",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "záchranný výzkum"
+            ],
+            "extracted_keywords_en": [
+                "rescue excavation"
+            ],
+            "teater_category": "zásobnice",
+            "confidence_score": 0.95
         }
     },
     {
@@ -447,10 +503,16 @@
         "quality_score": 0.0,
         "original_text": "výzkumu. Je nedílnou součástí konkrétní stavební akce.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "výzkum",
+                "záchranný"
+            ],
+            "extracted_keywords_en": [
+                "research",
+                "rescue"
+            ],
+            "teater_category": "záchranný",
+            "confidence_score": 0.95
         }
     },
     {
@@ -475,10 +537,14 @@
         "quality_score": 0.0,
         "original_text": "KATASTRÁLNÍ UZEMÍ: BTOVU KONĚPRUS-A OKRES:",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "katastrální území"
+            ],
+            "extracted_keywords_en": [
+                "cadastral area"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.95
         }
     },
     {
@@ -559,10 +625,16 @@
         "quality_score": 0.0,
         "original_text": "FORMA ARCHEOLOGICKÉHO_VÝZKUMU: DOHLED",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "archolegický výzkum",
+                "dohléd"
+            ],
+            "extracted_keywords_en": [
+                "archaeological survey",
+                "survey"
+            ],
+            "teater_category": "průzkum",
+            "confidence_score": 0.95
         }
     },
     {
@@ -587,14 +659,10 @@
         "quality_score": 0.0,
         "original_text": "ZDOKUMENTOVÁNO POUZE GEOLOGICKÉ PODLOŽÍ.",
         "enrichment": {
-            "extracted_keywords_cs": [
-                "geologické podloží"
-            ],
-            "extracted_keywords_en": [
-                "geological substrate"
-            ],
-            "teater_category": "geologická sonda",
-            "confidence_score": 0.85
+            "extracted_keywords_cs": [],
+            "extracted_keywords_en": [],
+            "teater_category": "Nerelevantní (meta-text)",
+            "confidence_score": 1.0
         }
     },
     {
@@ -605,10 +673,16 @@
         "quality_score": 0.0,
         "original_text": "ÚZEMÍ ZASAŽENÉ STAVEBNÍ ČINNOSTÍ POSOUDIL: MGR. DANIEL STOLZ, .A.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "stavební činnost",
+                "území zasažené"
+            ],
+            "extracted_keywords_en": [
+                "construction activity",
+                "affected area"
+            ],
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.85
         }
     },
     {

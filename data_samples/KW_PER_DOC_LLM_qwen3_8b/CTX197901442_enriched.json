@@ -35,10 +35,14 @@
         "quality_score": 0.0,
         "original_text": "Vysoký jez .",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Vysoký jez"
+            ],
+            "extracted_keywords_en": [
+                "High Lake"
+            ],
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -63,10 +67,14 @@
         "quality_score": 0.0,
         "original_text": "ČÍSLO PARCELY",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "číslo parcely"
+            ],
+            "extracted_keywords_en": [
+                "parcel number"
+            ],
+            "teater_category": "katastrální území",
+            "confidence_score": 0.95
         }
     },
     {
@@ -77,10 +85,14 @@
         "quality_score": 0.0,
         "original_text": "Rychnov n.Kn.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Rychnov n.Kn."
+            ],
+            "extracted_keywords_en": [
+                "Rychnov n.Kn."
+            ],
+            "teater_category": "lokalita",
+            "confidence_score": 0.95
         }
     },
     {
@@ -119,10 +131,20 @@
         "quality_score": 0.0,
         "original_text": "Homole - kopec SZ od Vysokí-",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "Homole",
+                "kopec",
+                "SZ",
+                "Vysokí-Újezda"
+            ],
+            "extracted_keywords_en": [
+                "Homole",
+                "hill",
+                "SW",
+                "High-Újezda"
+            ],
+            "teater_category": "nespecifikovaný reliéfní útvar",
+            "confidence_score": 0.95
         }
     },
     {
@@ -133,10 +155,14 @@
         "quality_score": 0.0,
         "original_text": "Újezda pokryt lesem.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "lesem"
+            ],
+            "extracted_keywords_en": [
+                "forest"
+            ],
+            "teater_category": "krajina",
+            "confidence_score": 0.95
         }
     },
     {
@@ -147,10 +173,14 @@
         "quality_score": 0.0,
         "original_text": "Kultura Z.",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "kultura"
+            ],
+            "extracted_keywords_en": [
+                "culture"
+            ],
+            "teater_category": "kultura s lineární keramikou",
+            "confidence_score": 0.95
         }
     },
     {
@@ -175,10 +205,14 @@
         "quality_score": 0.0,
         "original_text": "Druh nálezu",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "keramické střepy"
+            ],
+            "extracted_keywords_en": [
+                "ceramic sherds"
+            ],
+            "teater_category": "zlomek keramiky",
+            "confidence_score": 0.95
         }
     },
     {
@@ -193,9 +227,9 @@
                 "keramické střepy"
             ],
             "extracted_keywords_en": [
-                "pottery sherds"
+                "ceramic fragments"
             ],
-            "teater_category": "zlomek keramiky",
+            "teater_category": "keramika",
             "confidence_score": 0.95
         }
     },
@@ -263,10 +297,14 @@
         "quality_score": 0.0,
         "original_text": "P.Jirušek starousedlík v obci Vysoký Újezd podal informaci , že před",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "keramické střepy"
+            ],
+            "extracted_keywords_en": [
+                "ceramic fragments"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 0.95
         }
     },
     {
@@ -278,14 +316,14 @@
         "original_text": "mnoha lety si rolníci v místě Homole kopali krechty na uskladnení",
         "enrichment": {
             "extracted_keywords_cs": [
-                "krechty",
-                "uskladnění"
+                "keramický materiál",
+                "střepy"
             ],
             "extracted_keywords_en": [
-                "cellars",
-                "storage"
+                "ceramic material",
+                "shards"
             ],
-            "teater_category": "sklep",
+            "teater_category": "keramika",
             "confidence_score": 0.95
         }
     },
@@ -298,10 +336,12 @@
         "original_text": "brambor a řepy . Při kopání, nalezeno mnoho různých keramických střepu .",
         "enrichment": {
             "extracted_keywords_cs": [
-                "keramických střepu"
+                "keramický materiál",
+                "keramické střepu"
             ],
             "extracted_keywords_en": [
-                "potsherds"
+                "ceramic material",
+                "ceramic fragments"
             ],
             "teater_category": "keramika",
             "confidence_score": 0.95
@@ -315,10 +355,14 @@
         "quality_score": 0.0,
         "original_text": "Keramický materiál nebyl zachován .",
         "enrichment": {
-            "extracted_keywords_cs": [],
-            "extracted_keywords_en": [],
-            "teater_category": "Nerelevantní (meta-text)",
-            "confidence_score": 1.0
+            "extracted_keywords_cs": [
+                "keramický materiál"
+            ],
+            "extracted_keywords_en": [
+                "ceramic material"
+            ],
+            "teater_category": "keramika",
+            "confidence_score": 0.95
         }
     }
 ]
