@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt><title>CTX000000002</title></titleStmt>
+      <publicationStmt><p>Unpublished</p></publicationStmt>
+      <sourceDesc><p>Source image: CTX000000002.pdf</p></sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <appInfo>
+        <application ident="udpipe" version="2"><label>UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe</label><desc>Model: czech-pdt-ud-2.15-241121</desc></application>
+        <application ident="ocr"><label>DemoScanner Pro 1.0</label></application>
+      </appInfo>
+    </encodingDesc>
+    <revisionDesc>
+      <change when="2026-06-03" who="altoconvert">Converted from ALTO file CTX000000002.alto.xml</change>
+      <change when="2024-06-02" who="DemoScanner Pro">OCR processing</change>
+      <change when="2026-06-03" who="udpipe">NLP enrichment by UDPipe 2, https://lindat.mff.cuni.cz/services/udpipe</change>
+    </revisionDesc>
+  </teiHeader>
+  <facsimile>
+    <surface id="CTX000000002.surface1" lrx="1654" lry="2339">
+      <graphic url="CTX000000002-1.png"/>
+    </surface>
+    <surface id="CTX000000002.surface2" lrx="1654" lry="2339">
+      <graphic url="CTX000000002-2.png"/>
+    </surface>
+    <surface id="CTX000000002.surface3" lrx="1654" lry="2339">
+      <graphic url="CTX000000002-3.png"/>
+    </surface>
+    <surface id="CTX000000002.surface4" lrx="1654" lry="2339">
+      <graphic url="CTX000000002-4.png"/>
+    </surface>
+  </facsimile>
+  <text>
+    <body>
+      <pb n="1" id="CTX000000002.pb1" facs="CTX000000002-1.png"/>
+      <div type="MarginTextZone-P" id="CTX000000002.P1_B1" bbox="220 160 1420 360">
+        <s id="CTX000000002.s1" text="HRADIŠTĚ U HORNÍ MEZÍ Lokalita: okr. Horní Mezi Sonda II odkryla část valového tělesa.">
+          <name type="LOC" cnec="gu">
+              <tok id="CTX000000002.s1.w1" type="w" lemma="hradiště" upos="PROPN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" deprel="root" bbox="220 160 420 194">HRADIŠTĚ</tok>
+              <tok id="CTX000000002.s1.w2" type="w" lemma="u" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX000000002.s1.w4" deprel="case" bbox="440 160 470 194">U</tok>
+              <tok id="CTX000000002.s1.w3" type="w" lemma="horní" upos="ADJ" xpos="AAFS2----1A----" feats="Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX000000002.s1.w4" deprel="amod" bbox="485 160 625 194">HORNÍ</tok>
+              <tok id="CTX000000002.s1.w4" type="w" lemma="mez" upos="NOUN" xpos="NNFP2-----A----" feats="Case=Gen|Gender=Fem|Number=Plur" head="CTX000000002.s1.w1" deprel="nmod" bbox="645 160 765 194">MEZÍ</tok>
+          </n>
+          <tok id="CTX000000002.s1.w5" type="w" lemma="lokalita" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX000000002.s1.w1" deprel="dep" join="right" bbox="220 210 400 244">Lokalita</tok>
+          <tok id="CTX000000002.s1.w6" type="pc" lemma=":" upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s1.w13" deprel="punct" bbox="220 210 400 244">:</tok>
+          <tok id="CTX000000002.s1.w7" type="w" lemma="okrázek" upos="NOUN" xpos="NNIXX-----A---b" feats="Abbr=Yes|Animacy=Inan|Gender=Masc" head="CTX000000002.s1.w13" deprel="nsubj" join="right" bbox="420 210 500 244">okr</tok>
+          <tok id="CTX000000002.s1.w8" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s1.w7" deprel="punct" bbox="420 210 500 244">.</tok>
+          <name type="LOC" cnec="gr">
+              <tok id="CTX000000002.s1.w9" type="w" lemma="horní" upos="ADJ" xpos="AAFS1----1A----" feats="Case=Nom|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX000000002.s1.w7" deprel="amod" bbox="515 210 635 244">Horní</tok>
+              <tok id="CTX000000002.s1.w10" type="w" lemma="mezi" upos="ADP" xpos="RR--7----------" feats="AdpType=Prep|Case=Ins" head="CTX000000002.s1.w11" deprel="case" bbox="655 210 755 244">Mezi</tok>
+          </n>
+          <tok id="CTX000000002.s1.w11" type="w" lemma="Sonda" upos="PROPN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|NameType=Geo|Number=Sing" head="CTX000000002.s1.w7" deprel="nmod" bbox="220 260 340 294">Sonda</tok>
+          <tok id="CTX000000002.s1.w12" type="w" lemma="II" upos="NUM" xpos="C}-------------" feats="NumForm=Roman|NumType=Card" head="CTX000000002.s1.w11" deprel="nummod" bbox="360 260 400 294">II</tok>
+          <tok id="CTX000000002.s1.w13" type="w" lemma="odkrýt" upos="VERB" xpos="VpQW----R-AAP--" feats="Aspect=Perf|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX000000002.s1.w1" deprel="conj" bbox="415 260 565 294">odkryla</tok>
+          <tok id="CTX000000002.s1.w14" type="w" lemma="část" upos="NOUN" xpos="NNFS4-----A----" feats="Case=Acc|Gender=Fem|Number=Sing" head="CTX000000002.s1.w13" deprel="obj" bbox="585 260 675 294">část</tok>
+          <tok id="CTX000000002.s1.w15" type="w" lemma="valový" upos="ADJ" xpos="AANS2----1A----" feats="Case=Gen|Degree=Pos|Gender=Neut|Number=Sing|Polarity=Pos" head="CTX000000002.s1.w16" deprel="amod" bbox="695 260 875 294">valového</tok>
+          <tok id="CTX000000002.s1.w16" type="w" lemma="těleso" upos="NOUN" xpos="NNNS2-----A----" feats="Case=Gen|Gender=Neut|Number=Sing" head="CTX000000002.s1.w14" deprel="nmod" join="right" bbox="895 260 1045 294">tělesa</tok>
+          <tok id="CTX000000002.s1.w17" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s1.w1" deprel="punct" bbox="895 260 1045 294">.</tok>
+        </s>
+      </div>
+      <pb n="2" id="CTX000000002.pb2" facs="CTX000000002-2.png"/>
+      <div type="MarginTextZone-P" id="CTX000000002.P2_B1" bbox="220 160 1420 360">
+        <s id="CTX000000002.s2" text="Eva Procházková dokumentovala nálezy.">
+          <name type="PER" cnec="P">
+              <tok id="CTX000000002.s2.w1" type="w" lemma="Eva" upos="PROPN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|NameType=Giv|Number=Sing" head="CTX000000002.s2.w3" deprel="nsubj" bbox="220 160 290 194">Eva</tok>
+              <tok id="CTX000000002.s2.w2" type="w" lemma="Procházková" upos="PROPN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|NameType=Giv|Number=Sing" head="CTX000000002.s2.w1" deprel="flat" bbox="310 160 550 194">Procházková</tok>
+          </n>
+          <tok id="CTX000000002.s2.w3" type="w" lemma="dokumentovat" upos="VERB" xpos="VpQW----R-AAB--" feats="Aspect=Imp,Perf|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" deprel="root" bbox="570 160 850 194">dokumentovala</tok>
+          <tok id="CTX000000002.s2.w4" type="w" lemma="nález" upos="NOUN" xpos="NNIP4-----A----" feats="Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur" head="CTX000000002.s2.w3" deprel="obj" join="right" bbox="870 160 1020 194">nálezy</tok>
+          <tok id="CTX000000002.s2.w5" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s2.w3" deprel="punct" bbox="870 160 1020 194">.</tok>
+        </s>
+        <s id="CTX000000002.s3" text="rnn1 ww0rd vv_~~">
+          <name type="MISC" cnec="or">
+              <tok id="CTX000000002.s3.w1" type="w" lemma="rnn" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" deprel="root" join="right" bbox="220 210 300 244">rnn</tok>
+              <tok id="CTX000000002.s3.w2" type="w" lemma="1" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000002.s3.w1" deprel="nummod" bbox="220 210 300 244">1</tok>
+          </n>
+          <tok id="CTX000000002.s3.w3" type="w" lemma="ww" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX000000002.s3.w1" deprel="dep" join="right" bbox="320 210 440 244">ww</tok>
+          <tok id="CTX000000002.s3.w4" type="w" lemma="0" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000002.s3.w1" deprel="dep" join="right" bbox="320 210 440 244">0</tok>
+          <tok id="CTX000000002.s3.w5" type="w" lemma="rd" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX000000002.s3.w1" deprel="dep" bbox="320 210 440 244">rd</tok>
+          <tok id="CTX000000002.s3.w6" type="w" lemma="vv" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX000000002.s3.w1" deprel="dep" join="right" bbox="460 210 560 244">vv</tok>
+          <tok id="CTX000000002.s3.w7" type="pc" upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s3.w8" deprel="punct" join="right" bbox="460 210 560 244">_</tok>
+          <tok id="CTX000000002.s3.w8" type="w" lemma="~" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" head="CTX000000002.s3.w6" deprel="nmod" join="right" bbox="460 210 560 244">~</tok>
+          <tok id="CTX000000002.s3.w9" type="w" lemma="~" upos="NOUN" xpos="Z:-------------" head="CTX000000002.s3.w1" deprel="dep" bbox="460 210 560 244">~</tok>
+        </s>
+      </div>
+      <pb n="3" id="CTX000000002.pb3" facs="CTX000000002-3.png"/>
+      <div type="MarginTextZone-P" id="CTX000000002.P3_B1" bbox="220 160 1420 360">
+        <s id="CTX000000002.s4" text="Mocnost kulturní vrstvy činila 40 cm.">
+          <tok id="CTX000000002.s4.w1" type="w" lemma="mocnost" upos="NOUN" xpos="NNFS1-----A----" feats="Case=Nom|Gender=Fem|Number=Sing" head="CTX000000002.s4.w4" deprel="nsubj" bbox="220 160 380 194">Mocnost</tok>
+          <tok id="CTX000000002.s4.w2" type="w" lemma="kulturní" upos="ADJ" xpos="AAFS2----1A----" feats="Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX000000002.s4.w3" deprel="amod" bbox="400 160 570 194">kulturní</tok>
+          <tok id="CTX000000002.s4.w3" type="w" lemma="vrstva" upos="NOUN" xpos="NNFS2-----A----" feats="Case=Gen|Gender=Fem|Number=Sing" head="CTX000000002.s4.w1" deprel="nmod" bbox="590 160 720 194">vrstvy</tok>
+          <tok id="CTX000000002.s4.w4" type="w" lemma="činit" upos="VERB" xpos="VpQW----R-AAI--" feats="Aspect=Imp|Gender=Fem,Neut|Number=Plur,Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" deprel="root" bbox="740 160 860 194">činila</tok>
+          <name type="MISC" cnec="nc">
+              <tok id="CTX000000002.s4.w5" type="w" lemma="40" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000002.s4.w4" deprel="obj" bbox="880 160 930 194">40</tok>
+          </n>
+          <name type="MISC" cnec="oe">
+              <tok id="CTX000000002.s4.w6" type="w" lemma="centimetr" upos="NOUN" xpos="NNIXX-----A---b" feats="Abbr=Yes|Animacy=Inan|Gender=Masc" head="CTX000000002.s4.w5" deprel="nmod" join="right" bbox="945 160 1015 194">cm</tok>
+          </n>
+          <tok id="CTX000000002.s4.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s4.w4" deprel="punct" bbox="945 160 1015 194">.</tok>
+        </s>
+        <s id="CTX000000002.s5" text="qpqb dbqp uunn Soubor nálezů byl uložen v depozitáři.">
+          <tok id="CTX000000002.s5.w1" type="w" lemma="qpqb" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX000000002.s5.w7" deprel="nsubj:pass" bbox="220 210 310 244">qpqb</tok>
+          <tok id="CTX000000002.s5.w2" type="w" lemma="dbqp" upos="X" xpos="F%-------------" feats="Foreign=Yes" head="CTX000000002.s5.w1" deprel="nmod" bbox="330 210 420 244">dbqp</tok>
+          <tok id="CTX000000002.s5.w3" type="w" lemma="uunn" upos="X" xpos="F%-------------" feats="Foreign=Yes" head="CTX000000002.s5.w2" deprel="flat:foreign" bbox="440 210 530 244">uunn</tok>
+          <tok id="CTX000000002.s5.w4" type="w" lemma="soubor" upos="NOUN" xpos="NNIS1-----A----" feats="Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing" head="CTX000000002.s5.w7" deprel="nsubj:pass" bbox="220 160 360 194">Soubor</tok>
+          <tok id="CTX000000002.s5.w5" type="w" lemma="nález" upos="NOUN" xpos="NNIP2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur" head="CTX000000002.s5.w4" deprel="nmod" bbox="380 160 520 194">nálezů</tok>
+          <tok id="CTX000000002.s5.w6" type="w" lemma="být" upos="AUX" xpos="VpYS----R-AAI--" feats="Aspect=Imp|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" head="CTX000000002.s5.w7" deprel="aux:pass" bbox="540 160 610 194">byl</tok>
+          <tok id="CTX000000002.s5.w7" type="w" lemma="uložený" upos="ADJ" xpos="VsYS----X-APP--" feats="Aspect=Perf|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos|Variant=Short|VerbForm=Part|Voice=Pass" deprel="root" bbox="630 160 770 194">uložen</tok>
+          <tok id="CTX000000002.s5.w8" type="w" lemma="v" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX000000002.s5.w9" deprel="case" bbox="790 160 815 194">v</tok>
+          <tok id="CTX000000002.s5.w9" type="w" lemma="depozitář" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX000000002.s5.w7" deprel="obl" join="right" bbox="830 160 1060 194">depozitáři</tok>
+          <tok id="CTX000000002.s5.w10" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s5.w7" deprel="punct" bbox="830 160 1060 194">.</tok>
+        </s>
+      </div>
+      <pb n="4" id="CTX000000002.pb4" facs="CTX000000002-4.png"/>
+      <div type="MarginTextZone-P" id="CTX000000002.P4_B1" bbox="220 160 1420 280">
+        <s id="CTX000000002.s6" text="A123/2024">
+          <tok id="CTX000000002.s6.w1" type="w" lemma="A" upos="NOUN" xpos="Q3-------------" feats="Abbr=Yes" deprel="root" join="right" bbox="220 210 420 244">A</tok>
+          <name type="MISC" cnec="n_">
+              <tok id="CTX000000002.s6.w2" type="w" lemma="123" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000002.s6.w1" deprel="nummod" join="right" bbox="220 210 420 244">123</tok>
+          </n>
+          <tok id="CTX000000002.s6.w3" type="pc" lemma="/" upos="PUNCT" xpos="Z:-------------" head="CTX000000002.s6.w4" deprel="punct" join="right" bbox="220 210 420 244">/</tok>
+          <name type="MISC" cnec="n_">
+              <tok id="CTX000000002.s6.w4" type="w" lemma="2024" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000002.s6.w2" deprel="conj" join="right" bbox="220 210 420 244">2024</tok>
+          </n>
+        </s>
+      </div>
+    </body>
+  </text>
+</TEI>

@@ -1,0 +1,38 @@
+{
+  "license": "CC BY-NC 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "program": "nlp-enrich",
+  "repository": "https://github.com/ufal/atrium-nlp-enrich",
+  "python_version": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+  "run_id": "260603-094334",
+  "start_time": "2026-06-03T09:43:34.592462+00:00",
+  "end_time": "2026-06-03T09:43:35.173881+00:00",
+  "duration_seconds": 0.581,
+  "config": {
+    "script": "api_4_stats",
+    "conllu_input_dir": "./data_samples/UDP",
+    "tsv_input_dir": "./data_samples/NE",
+    "output_dir": "./data_samples/UDP_NE",
+    "save_conllu_ne": "true",
+    "save_csv": "true",
+    "save_teitok": "true",
+    "alto_dir": "./data_samples/ALTO",
+    "pages_dir": "./data_samples/pages"
+  },
+  "statistics": {
+    "input_files_total": 3,
+    "successfully_processed": 3,
+    "skipped_files": 0,
+    "output_counts_by_type": {
+      "csv": 3,
+      "conllu": 3,
+      "xml": 3
+    },
+    "performance_per_minute": {
+      "csv": 309.5874,
+      "conllu": 309.5874,
+      "xml": 309.5874
+    }
+  },
+  "skipped_files_detail": []
+}
