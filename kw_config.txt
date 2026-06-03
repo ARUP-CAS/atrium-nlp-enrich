@@ -1,8 +1,8 @@
 [DEFAULTS]
 # I/O Directories and Files
 INPUT_DIR = data_samples/UDP
-OUTPUT_FILE = keywords_summary.csv
-PER_DOC_OUT_DIR = data_samples/KW_PER_DOC
+OUTPUT_FILE = data_samples/keywords_summary_kb.csv
+PER_DOC_OUT_DIR = data_samples/KW_PER_DOC_KB
 
 # Extraction settings
 METHOD = yake

@@ -61,7 +61,7 @@ Keywords = List[Tuple[str, float]]
 
 # ── hardcoded fallbacks ───────────────────────────────────────────────────────
 DEFAULT_INPUT_DIR       = "data_samples/UDP"
-DEFAULT_OUTPUT_FILE     = "keywords_summary.csv"
+DEFAULT_OUTPUT_FILE     = "data_samples/keywords_summary.csv"
 DEFAULT_PER_DOC_OUT_DIR = "data_samples/KW_PER_DOC"
 DEFAULT_METHOD          = "yake"
 DEFAULT_NUM_KEYWORDS    = 20
@@ -561,9 +561,23 @@ def main() -> None:
                 "batch_size":    args.batch_size}
                if args.method == "keybert" else {}),
         },
-        paradata_dir="paradata",
+        paradata_dir="data_samples/paradata",
         output_types=["csv_per_doc", "csv_summary_row"],
     )
+
+    # Record the conditional component the chosen backend actually exercises so
+    # the effective output license reflects real usage. The license for each
+    # name is looked up from para_config.txt:
+    #   legacy  -> KER (MIT, stdlib)        keeps the run at the repo MIT base
+    #   yake    -> YAKE (AGPL-3.0)          escalates to AGPL-3.0 (share-alike)
+    #   keybert -> KeyBERT (MIT) + sentence-transformers (Apache-2.0)
+    _BACKEND_COMPONENTS = {
+        "legacy":  ["ker"],
+        "yake":    ["yake"],
+        "keybert": ["keybert", "sentence_transformers"],
+    }
+    for _comp in _BACKEND_COMPONENTS.get(args.method, []):
+        _logger.log_component(_comp)
 
     print(f"--- Keyword Extraction | method={args.method} | {len(all_files)} documents | workers={args.workers} ---")
 

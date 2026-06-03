@@ -1,6 +1,5 @@
-# api_config.env
-OUTPUT_DIR="../../ARUB"
-INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_LR_CLS"
+OUTPUT_DIR="./data_samples"
+INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_CATEG"
 
 WORK_DIR="./TEMP"
 
@@ -13,8 +12,10 @@ TSV_INPUT_DIR="$OUTPUT_DIR/NE"
 SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/UDP_NE"
 
 TEITOK_OUTPUT_DIR="$OUTPUT_DIR/TEITOK"
-INPUT_ALTO_DIR="$OUTPUT_DIR/altos"
+INPUT_ALTO_DIR="$OUTPUT_DIR/ALTO"
 INPUT_PAGES_DIR="$OUTPUT_DIR/pages"
+
+PARADATA_DIR="$OUTPUT_DIR/paradata"
 
 UDPIPE_URL="https://lindat.mff.cuni.cz/services/udpipe/api/process"
 NAMETAG_URL="https://lindat.mff.cuni.cz/services/nametag/api/recognize"
