@@ -158,20 +158,90 @@ def _keybert_deps_preflight() -> None:
     except Exception as exc:
         missing.append(f"torch ({exc})")
 
-    # COMPATIBILITY PATCH: 'transformers' lazy loading hides core models when PyTorch
-    # internals fail. Forcefully inject Dummy classes so sentence-transformers doesn't crash on import.
+    # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
+    # (Bypasses C++ extension loading failures / circular imports)
+    try:
+        import torchvision
+    except Exception:
+        pass
+
+    import sys
+    if "torchvision" in sys.modules and not hasattr(sys.modules["torchvision"], "extension"):
+        import types
+        sys.modules["torchvision"].extension = types.ModuleType("torchvision.extension")
+        sys.modules["torchvision"].extension._HAS_OPS = False
+
+    # COMPATIBILITY PATCH 2: 'transformers' lazy loading bypass
     try:
         import transformers
-        _ = dir(transformers)  # trigger lazy loader
+
+        real_classes = {}
+        try:
+            from transformers.modeling_utils import PreTrainedModel
+            real_classes["PreTrainedModel"] = PreTrainedModel
+        except Exception:
+            pass
+        try:
+            from transformers.tokenization_utils import PreTrainedTokenizer
+            real_classes["PreTrainedTokenizer"] = PreTrainedTokenizer
+        except Exception:
+            pass
+        try:
+            from transformers.configuration_utils import PretrainedConfig
+            real_classes["PretrainedConfig"] = PretrainedConfig
+        except Exception:
+            pass
+        try:
+            from transformers.models.auto import AutoModel, AutoTokenizer, AutoProcessor, AutoConfig, \
+                AutoFeatureExtractor, AutoImageProcessor
+            real_classes["AutoModel"] = AutoModel
+            real_classes["AutoTokenizer"] = AutoTokenizer
+            real_classes["AutoProcessor"] = AutoProcessor
+            real_classes["AutoConfig"] = AutoConfig
+            real_classes["AutoFeatureExtractor"] = AutoFeatureExtractor
+            real_classes["AutoImageProcessor"] = AutoImageProcessor
+        except Exception:
+            pass
+        try:
+            from transformers.processing_utils import ProcessorMixin
+            real_classes["ProcessorMixin"] = ProcessorMixin
+        except Exception:
+            pass
+        try:
+            from transformers.feature_extraction_utils import BatchFeature
+            real_classes["BatchFeature"] = BatchFeature
+        except Exception:
+            pass
+        try:
+            from transformers.trainer import Trainer
+            real_classes["Trainer"] = Trainer
+        except Exception:
+            pass
+        try:
+            from transformers.training_args import TrainingArguments
+            real_classes["TrainingArguments"] = TrainingArguments
+        except Exception:
+            pass
 
         class DummyPreTrained:
             pass
 
-        for attr in ("PreTrainedModel", "PreTrainedTokenizer", "PretrainedConfig", "AutoModel", "AutoTokenizer"):
-            if not hasattr(transformers, attr):
-                setattr(transformers, attr, DummyPreTrained)
+        _to_patch = (
+            "PreTrainedModel", "PreTrainedTokenizer", "PretrainedConfig",
+            "AutoModel", "AutoTokenizer", "AutoProcessor", "AutoConfig",
+            "AutoFeatureExtractor", "AutoImageProcessor",
+            "ProcessorMixin", "BatchFeature", "Trainer", "TrainingArguments"
+        )
+
+        for attr in _to_patch:
+            try:
+                # getattr might raise an ImportError if the lazy loader is broken
+                _ = getattr(transformers, attr)
+            except Exception:
+                val = real_classes.get(attr, DummyPreTrained)
+                setattr(transformers, attr, val)
                 if "transformers" in sys.modules:
-                    setattr(sys.modules["transformers"], attr, DummyPreTrained)
+                    sys.modules["transformers"].__dict__[attr] = val
     except Exception:
         pass
 

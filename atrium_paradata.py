@@ -427,6 +427,7 @@ def _cli() -> None:
     skip    --state STATE_FILE --file PATH --reason REASON
     success --state STATE_FILE --type TYPE [--count N]
     finish  --state STATE_FILE [--input-total N]
+    merge   --paths PATH [PATH ...] --out OUTPUT_FILE [--pipeline NAME]
     """
     import argparse
 
@@ -469,6 +470,12 @@ def _cli() -> None:
     fi.add_argument("--state",       required=True)
     fi.add_argument("--input-total", type=int, default=None)
 
+    # merge (expose merge_run_paradata to bash-driven pipelines)
+    me = sub.add_parser("merge")
+    me.add_argument("--paths", nargs="+", required=True, help="Ordered list of per-stage paradata JSON paths")
+    me.add_argument("--out", required=True, help="Output path for the merged JSON")
+    me.add_argument("--pipeline", default=None, help="Name of the pipeline (e.g. nlp-enrich)")
+
     args = p.parse_args()
 
     if args.cmd == "start":
@@ -493,6 +500,10 @@ def _cli() -> None:
             json.dump(logger._to_state_dict(), fh, ensure_ascii=False)
         # print the state file path so the shell script can capture it
         print(state_path)
+
+    elif args.cmd == "merge":
+        merge_run_paradata(args.paths, args.out, pipeline=args.pipeline)
+        return
 
     elif args.cmd in ("skip", "success", "component", "finish"):
         # FIX #14: load from JSON instead of pickle.
@@ -577,6 +588,7 @@ def merge_run_paradata(
     tool_version = ""
     earliest: Optional[str] = None
     latest: Optional[str] = None
+    first_stage = True
 
     for order, p in enumerate(json_paths, 1):
         with open(p, "r", encoding="utf-8") as fh:
@@ -594,9 +606,18 @@ def merge_run_paradata(
             formats[ftype] = formats.get(ftype, 0) + int(cnt or 0)
 
         total_duration += float(data.get("duration_seconds") or 0.0)
-        total_inputs += int(stats.get("input_files_total") or 0)
-        total_processed += int(stats.get("successfully_processed") or 0)
+
+        # For a linear pipeline, inputs are defined by the first stage's input count.
+        if first_stage:
+            total_inputs = int(stats.get("input_files_total") or 0)
+            first_stage = False
+
+        # For a linear pipeline, successfully processed count is tracking the final stage's output.
+        total_processed = int(stats.get("successfully_processed") or 0)
+
+        # Files that get skipped at any intermediate stage represent unique drops.
         total_skipped += int(stats.get("skipped_files") or 0)
+
         all_skips.extend(data.get("skipped_files_detail", []) or [])
 
         st = data.get("start_time")
