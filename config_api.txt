@@ -31,3 +31,13 @@ WORD_CHUNK_LIMIT=900
 SAVE_CSV=true
 SAVE_CONLLU_NE=true
 SAVE_TEITOK=true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# run_pipeline.py (merged runner) knobs
+# ─────────────────────────────────────────────────────────────────────────────
+# FAIL_ON_EMPTY: when true, the runner exits non-zero if any stage reports
+# successfully_processed == 0 while input_files_total > 0 and nothing was
+# resumed (all-skipped runs are treated as legitimate resumes, not failures).
+# This makes `docker compose run` surface a genuinely empty run as a failure
+# instead of always "succeeding". Set to false to allow empty stages.
+FAIL_ON_EMPTY=true

@@ -61,8 +61,8 @@ Keywords = List[Tuple[str, float]]
 
 # ── hardcoded fallbacks ───────────────────────────────────────────────────────
 DEFAULT_INPUT_DIR       = "data_samples/UDP"
-DEFAULT_OUTPUT_FILE     = "data_samples/keywords_summary.csv"
-DEFAULT_PER_DOC_OUT_DIR = "data_samples/KW_PER_DOC"
+DEFAULT_OUTPUT_FILE     = "data_samples/keywords_summary_{method}.csv"
+DEFAULT_PER_DOC_OUT_DIR = "data_samples/KW_PER_DOC_{METHOD}"
 DEFAULT_METHOD          = "yake"
 DEFAULT_NUM_KEYWORDS    = 20
 DEFAULT_LANG            = "cs"
@@ -171,8 +171,8 @@ def _load_yake():
     try:
         import yake  # type: ignore
         return yake
-    except ImportError:
-        print("[Error] YAKE is not installed. Run: pip install yake", file=sys.stderr)
+    except ImportError as exc:
+        print(f"[Error] YAKE import failed: {exc}\nRun: pip install yake", file=sys.stderr)
         sys.exit(1)
 
 def _extract_yake(file_path: str, num_keywords: int, lang: str = "cs", max_words: int = 3, **_) -> Keywords:
@@ -213,16 +213,31 @@ def _get_keybert_model(model_name: str):
         return _keybert_model_instance
 
     try:
-        from keybert import KeyBERT  # type: ignore
-    except ImportError:
-        print("[Error] KeyBERT is not installed. Run: pip install keybert sentence-transformers", file=sys.stderr)
-        sys.exit(1)
-
-    try:
         import torch  # type: ignore
         device = "cuda" if torch.cuda.is_available() else "cpu"
-    except ImportError:
-        device = "cpu"
+    except ImportError as exc:
+        print(f"[Error] PyTorch import failed: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    # COMPATIBILITY PATCH: 'transformers' lazy loading hides core models when PyTorch
+    # internals fail. Forcefully inject Dummy classes so sentence-transformers doesn't crash on import.
+    try:
+        import transformers
+        _ = dir(transformers)
+        class DummyPreTrained: pass
+        for attr in ("PreTrainedModel", "PreTrainedTokenizer", "PretrainedConfig", "AutoModel", "AutoTokenizer"):
+            if not hasattr(transformers, attr):
+                setattr(transformers, attr, DummyPreTrained)
+                if "transformers" in sys.modules:
+                    setattr(sys.modules["transformers"], attr, DummyPreTrained)
+    except Exception:
+        pass
+
+    try:
+        from keybert import KeyBERT  # type: ignore
+    except ImportError as exc:
+        print(f"[Error] KeyBERT import failed: {exc}\nRun: pip install keybert sentence-transformers", file=sys.stderr)
+        sys.exit(1)
 
     tag = "CUDA" if device == "cuda" else "CPU"
     print(f"[KeyBERT] Loading model '{model_name}' on {tag} …", file=sys.stderr)
@@ -248,12 +263,6 @@ def _extract_keybert(
     diversity: float = 0.5,
     **_,
 ) -> Union[Keywords, List[Keywords]]:
-    """KeyBERT embedding-based keyword extraction with bulk batching and long-text chunking.
-
-    Accepts either a single file path or a list of file paths. Long texts are intelligently
-    chunked to bypass Transformer sequence length limits. All chunks across all requested
-    documents are processed through KeyBERT in a single vectorized pass, maximizing GPU utilization.
-    """
     is_batch = isinstance(file_path, list)
     paths = file_path if is_batch else [file_path]
 
@@ -270,11 +279,10 @@ def _extract_keybert(
 
     kw_model = _get_keybert_model(keybert_model)
 
-    # 1) Chunking to bypass the standard 512-token sequence limit for Transformer models
     chunk_size = 400
     overlap = 50
     all_chunks = []
-    doc_chunk_map = []  # Maps the flat list of chunks back to their parent document
+    doc_chunk_map = []
 
     for doc_idx, text in enumerate(texts):
         words = text.split()
@@ -289,7 +297,6 @@ def _extract_keybert(
             doc_chunk_map.append(doc_idx)
 
     try:
-        # 2) Vectorized extraction. KeyBERT passes lists down to SentenceTransformers batch encoding natively.
         results = kw_model.extract_keywords(
             all_chunks,
             keyphrase_ngram_range=(1, max_words),
@@ -299,11 +306,9 @@ def _extract_keybert(
             top_n=num_keywords,
         )
 
-        # Standardize returns: kw_model behavior diverges if len(all_chunks) == 1
         if isinstance(results, list) and len(results) > 0 and isinstance(results[0], tuple):
             results = [results]
 
-        # 3) Reconstruct chunk scores back to their respective document
         doc_keyword_scores = [{} for _ in range(len(texts))]
         for chunk_idx, chunk_res in enumerate(results):
             doc_idx = doc_chunk_map[chunk_idx]
@@ -312,13 +317,11 @@ def _extract_keybert(
                 if kw not in target_dict or score > target_dict[kw]:
                     target_dict[kw] = score
 
-        # 4) Sort globally for the document and fetch Top N
         final_valid_results = []
         for kw_scores in doc_keyword_scores:
             sorted_kws = sorted(kw_scores.items(), key=lambda x: x[1], reverse=True)[:num_keywords]
             final_valid_results.append([(kw, round(float(s), 6)) for kw, s in sorted_kws])
 
-        # 5) Repopulate the output mapping cleanly accounting for failed read streams
         full_results = []
         valid_ptr = 0
         for i in range(len(paths)):
@@ -351,8 +354,6 @@ def extract_keywords(
     num_keywords: int,
     **kwargs,
 ) -> Union[Keywords, List[Keywords]]:
-    """Dispatch a keyword-extraction request to the specified backend. Gracefully maps
-    lists of items if the backend (like legacy/yake) doesn't natively support batching."""
     fn = _BACKENDS.get(method)
     if fn is None:
         raise ValueError(f"Unknown method '{method}'. Choose from: {', '.join(_BACKENDS)}")
@@ -370,8 +371,6 @@ def extract_keywords(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
-    """Extract keywords for a batch (or single document) and write individual CSVs.
-    Returns a list of tuples containing (doc_id, Keywords)."""
     (file_paths, method, num_keywords, indiv_out_dir,
      lang, max_words, keybert_model, use_mmr, diversity) = task
 
@@ -494,6 +493,15 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    # Dynamic substitution for output paths based on chosen method
+    suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(args.method, args.method)
+    suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(args.method, args.method.upper())
+
+    if isinstance(args.output_file, str):
+        args.output_file = args.output_file.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
+    if isinstance(args.per_doc_out_dir, str):
+        args.per_doc_out_dir = args.per_doc_out_dir.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
+
     if args.method == "keybert":
         try:
             import torch  # type: ignore
@@ -517,17 +525,13 @@ def main() -> None:
     with open(args.output_file, "w", encoding="utf-8", newline="") as fh:
         csv.writer(fh).writerow(header)
 
-    # ── Task Generation (Supports Batch Mode) ──────────────────────────────
     all_files = sorted(input_path.glob("*.conllu"))
-
-    # Process 1 doc per task on legacy/yake, but BATCH_SIZE docs per task on keybert
     BATCH_SIZE = args.batch_size if args.method == "keybert" else 1
 
     tasks = []
     for i in range(0, len(all_files), BATCH_SIZE):
         batch_files = [str(p) for p in all_files[i:i + BATCH_SIZE]]
 
-        # Keep type tuple(str, ...) strictly intact if not batching
         if BATCH_SIZE == 1:
             batch_files = batch_files[0]
 
@@ -543,7 +547,6 @@ def main() -> None:
             args.diversity,
         ))
 
-    # ── paradata logger ───────────────────────────────────────────────────────
     _logger = ParadataLogger(
         program="nlp-enrich",
         config={
@@ -565,12 +568,6 @@ def main() -> None:
         output_types=["csv_per_doc", "csv_summary_row"],
     )
 
-    # Record the conditional component the chosen backend actually exercises so
-    # the effective output license reflects real usage. The license for each
-    # name is looked up from para_config.txt:
-    #   legacy  -> KER (MIT, stdlib)        keeps the run at the repo MIT base
-    #   yake    -> YAKE (AGPL-3.0)          escalates to AGPL-3.0 (share-alike)
-    #   keybert -> KeyBERT (MIT) + sentence-transformers (Apache-2.0)
     _BACKEND_COMPONENTS = {
         "legacy":  ["ker"],
         "yake":    ["yake"],

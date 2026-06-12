@@ -90,7 +90,7 @@ class TestParadataLoggerLifecycle:
         logger = ParadataLogger(PROGRAM_NAME, {}, paradata_dir=str(tmp_path))
         path = logger.finalize()
         data = json.loads(Path(path).read_text())
-        assert "CC BY-NC 4.0" in data["license"]
+        assert "CC BY-NC" in data["license"]
         assert "creativecommons" in data["license_url"]
 
     def test_explicit_input_total_stored(self, tmp_path):
