@@ -48,6 +48,7 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
   - [`<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄](#output_dirprocessinglog--human-readable-runtime-log-)
   - [`TEMP/` — intermediate working files 📂](#temp--intermediate-working-files-)
+  - [One-command pipeline run (`run_pipeline.py`)](#one-command-pipeline-run-run_pipelinepy)
 - [Acknowledgements](#acknowledgements-)
 
 ## TEITOK XML — Unified Output Format
@@ -1094,6 +1095,95 @@ the paradata logger.
 > records worth keeping long-term.
 
 ---
+
+
+### One-command pipeline run (`run_pipeline.py`)
+
+While each stage can be launched manually (see [Workflow Stages](#workflow-stages)),
+[run_pipeline.py](run_pipeline.py) 📎 chains them end-to-end and merges every per-stage paradata JSON
+produced during the run into a single `pipeline-run-merged` record.
+
+```bash
+# Full core run: api_1 → api_2 → api_3 → api_4
+python3 run_pipeline.py
+
+# Core run plus keyword extraction (CPU-only YAKE backend, default)
+python3 run_pipeline.py --kw
+
+# Keyword extraction with the GPU KeyBERT backend
+python3 run_pipeline.py --kw --kw-method keybert
+
+# Add the optional LLM semantic-enrichment stage (needs requirements_llm.txt)
+python3 run_pipeline.py --kw --llm
+
+# Run only a subset of the core stages (canonical order is always enforced)
+python3 run_pipeline.py --stages udp nt
+
+# Force execution: bypass missing dependency checks and ignore individual stage failures
+python3 run_pipeline.py --kw --kw-method keybert --force
+
+# Validate configuration and resolve the plan without running anything
+python3 run_pipeline.py --dry-run
+
+# Print the resolved config + stage plan as JSON (for wrappers / healthchecks)
+python3 run_pipeline.py --print-config json
+```
+
+The runner reads the **same** [config_api.txt](config_api.txt) 📎 that the shell stages source, so Python and Bash always agree on `OUTPUT_DIR`, `PARADATA_DIR`, and the input/output paths.
+
+#### What the runner does
+
+1. **Resolves config** from [config_api.txt](config_api.txt) 📎 (with `$VAR` / `${VAR}` expansion).
+2. **Runs each stage in order**, spacing stage starts by ≥ 1.1 s so the
+1-second-resolution paradata filenames (`YYMMDD-HHmmss_nlp-enrich.json`)
+never collide.
+3. **Collects** the paradata JSON each stage writes, scoped to **this run only**
+(paradata files that already existed before the run are never merged).
+4. **Merges** all per-stage records into one
+`<PARADATA_DIR>/<runid>_nlp-enrich_pipeline-run.json` via
+`atrium_paradata.merge_run_paradata`. The merged record accurately tracks document-level statistics across the sequential pipeline (recording true throughput without inflating input counts). The effective license of the merged record is re-derived from the **union** of every component used across the stages, so the most-restrictive rule holds end-to-end (a core run is CC BY-NC-SA 4.0; adding the YAKE backend escalates the share-alike/AGPL constraint, etc.).
+
+#### Provenance for containers
+
+When the runner (or its Docker entrypoint) is started with the
+`ATRIUM_RUNNER_IMAGE`, `ATRIUM_RUNNER_REPO`, and `ATRIUM_RUNNER_REF` environment
+variables set, those values are forwarded to every stage subprocess and end up
+in each stage's paradata record (and therefore the merged record). This ties a
+run back to the exact image/commit that produced it.
+
+```bash
+ATRIUM_RUNNER_IMAGE="ghcr.io/ufal/atrium-nlp-enrich:v0.11.0" \
+ATRIUM_RUNNER_REF="$(git rev-parse --short HEAD)" \
+python3 run_pipeline.py --kw
+```
+
+#### Exit codes
+
+| Code | Meaning                                                                                                                                                                             |
+|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `0`  | All requested stages completed; nothing flagged.                                                                                                                                    |
+| `1`  | A stage processed **nothing** despite having input and no resume, and `FAIL_ON_EMPTY=true` (the default).                                                                           |
+| `2`  | A required stage script was not found.                                                                                                                                              |
+| `3`  | A dependency preflight failed (e.g. `--kw-method keybert` without `keybert`/`sentence-transformers`, or `--llm` without the [requirements_llm.txt](requirements_llm.txt) 📎 stack). |
+| `≠0` | A stage script itself exited non-zero (its code is propagated).                                                                                                                     |
+
+> [!TIP]
+> **Using `--force` (`-f`)** overrides exit codes `1`, `3`, and `≠0`. It bypasses preflight dependency crashes and forces `FAIL_ON_EMPTY=False`, allowing the pipeline to continue attempting subsequent stages even if one stage crashes or processes zero files.
+
+The empty-run guard is governed by `FAIL_ON_EMPTY` in [config_api.txt](config_api.txt) 📎. A
+**resumed** run — where every document was already complete and thus *skipped* —
+is treated as success, not an empty failure. Set `FAIL_ON_EMPTY=false` to permit
+genuinely empty stages.
+
+> [!NOTE]
+> The runner never re-implements stage logic: it shells out to the exact same
+> [api_1_manifest.sh](api_1_manifest.sh) … [api_4_stats.sh](api_4_stats.sh), [config_api.txt](config_api.txt), and [llm_run.py](llm_run.py) 📎 you can
+> run by hand. Anything documented for those stages (resume behaviour, output
+> flags, model registry, …) applies unchanged under the runner.
+
+---
+
+
 ## Acknowledgements 🙏
 
 **For support write to:** lutsai.k@gmail.com responsible for this GitHub repository [^8] 🔗
