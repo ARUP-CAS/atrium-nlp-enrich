@@ -27,11 +27,23 @@ ERRORS=0
 for csv_file in "${INPUT_TABLES_DIR}"/*.csv "${INPUT_TABLES_DIR}"/*.xlsx; do
     [ -f "$csv_file" ] || continue
     TOTAL=$((TOTAL + 1))
+
     # build_manifest_row.py reads one CSV/XLSX, writes a temp .txt, and prints
     # a single TSV row:  doc_id <TAB> page_count <TAB> /path/to/text_file
-    if python3 api_util/build_manifest_row.py "$csv_file" \
-            --text-dir "${TEMP_TXT_DIR:-./TEMP/TXT_EXTRACT}" \
-            >> "${OUTPUT_DIR}/manifest.tsv"; then
+    if NEW_ROW=$(python3 api_util/build_manifest_row.py "$csv_file" --text-dir "${TEMP_TXT_DIR:-./TEMP/TXT_EXTRACT}"); then
+
+        # Extract the doc_id (the first column before the tab)
+        DOC_ID=$(echo "$NEW_ROW" | cut -f1)
+
+        # If this document is already in the manifest, remove the old row to prevent duplicates
+        if grep -q "^${DOC_ID}[[:space:]]" "${OUTPUT_DIR}/manifest.tsv"; then
+            grep -v "^${DOC_ID}[[:space:]]" "${OUTPUT_DIR}/manifest.tsv" > "${OUTPUT_DIR}/manifest.tmp"
+            mv "${OUTPUT_DIR}/manifest.tmp" "${OUTPUT_DIR}/manifest.tsv"
+        fi
+
+        # Append the new, fresh row
+        echo "$NEW_ROW" >> "${OUTPUT_DIR}/manifest.tsv"
+
         python3 atrium_paradata.py success --state "$PARA_STATE" --type tsv
     else
         python3 atrium_paradata.py skip \
