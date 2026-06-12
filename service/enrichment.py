@@ -346,6 +346,11 @@ class PipelineManager:
                 f"Required stage script missing (exit 2).\n{tail}",
                 http_status=502, returncode=rc,
             )
+        if rc == 3:
+            raise KeywordPreflightError(
+                f"Keyword preflight failed (exit 3).\n{tail}",
+                returncode=rc,
+            )
         if rc != 0:
             raise PipelineError(
                 f"Pipeline stage failed (exit {rc}).\n{tail}",

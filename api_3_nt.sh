@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # api_3_nt.sh – NameTag processing + paradata
 set -euo pipefail
-source config_api.txt
+source "${ATRIUM_CONFIG:-config_api.txt}"
 
 PARA_STATE=$(python3 atrium_paradata.py start \
     --program nlp-enrich \

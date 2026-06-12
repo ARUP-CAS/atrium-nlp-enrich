@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # api_4_stats.sh – statistics + TEITOK generation + paradata
 set -euo pipefail
-source config_api.txt
+source "${ATRIUM_CONFIG:-config_api.txt}"
 
 OUTPUT_TYPES=""
 [ "${SAVE_CSV:-true}"        = "true" ] && OUTPUT_TYPES="$OUTPUT_TYPES csv"

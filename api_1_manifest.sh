@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # api_1_manifest.sh – generate manifest + paradata
 set -euo pipefail
-source config_api.txt   # loads OUTPUT_DIR, INPUT_TABLES_DIR, LOG_FILE, etc.
+source "${ATRIUM_CONFIG:-config_api.txt}"
 
 # ── paradata: start ───────────────────────────────────────────────────────────
 PARA_STATE=$(python3 atrium_paradata.py start \

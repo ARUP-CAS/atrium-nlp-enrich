@@ -1,6 +1,15 @@
 #!/bin/bash
 # api_util/api_common.sh
 
+CONFIG_PATH="${ATRIUM_CONFIG:-$PROJECT_ROOT/config_api.txt}"
+
+if [ -f "$CONFIG_PATH" ]; then
+    source "$CONFIG_PATH"
+else
+    echo "Error: Config file '$CONFIG_PATH' not found."
+    exit 1
+fi
+
 # 1. Load Configuration
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PROJECT_ROOT="$SCRIPT_DIR/.."

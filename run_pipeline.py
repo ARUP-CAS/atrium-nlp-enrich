@@ -106,9 +106,14 @@ def _config_bool(values: Dict[str, str], key: str, default: bool) -> bool:
     return raw.strip().lower() in ("1", "true", "yes", "y", "on")
 
 
-def _build_stage_env() -> Dict[str, str]:
+def _build_stage_env(config_path: Optional[Path] = None) -> Dict[str, str]:
+    """Build the subprocess environment, injecting ATRIUM_CONFIG so that
+    the bash stage scripts source the correct workspace config rather than
+    falling back to the repo-root config_api.txt."""
     env = dict(os.environ)
     env.setdefault("ATRIUM_RUNNER_REPO", "https://github.com/ufal/atrium-nlp-enrich")
+    if config_path is not None:
+        env["ATRIUM_CONFIG"] = str(config_path.resolve())
     return env
 
 
@@ -489,7 +494,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"[clean-state] Removed {len(swept)} stale state file(s): "
                   + ", ".join(swept))
 
-    env = _build_stage_env()
+    # Build the subprocess environment, injecting the resolved config path so
+    # that bash stage scripts source the correct workspace config rather than
+    # the repo-root config_api.txt.
+    env = _build_stage_env(config_path=args.config)
     if args.force:
         env["ATRIUM_FORCE_RUN"] = "1"
 
