@@ -1,0 +1,6 @@
+# service/requirements.txt — extra deps for the FastAPI service layer only.
+# Installed on top of the repo-root requirements.txt (which already pulls in
+# yake, keybert, sentence-transformers, openpyxl, pandas, etc.).
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9

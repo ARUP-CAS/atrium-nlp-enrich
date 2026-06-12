@@ -537,11 +537,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(kw_method, kw_method)
         suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(kw_method, kw_method.upper())
 
+        kw_input_dir = str(Path(output_dir) / "UDP")
         kw_out_file = str(Path(output_dir) / f"keywords_summary_{suffix_l}.csv")
         kw_per_doc_dir = str(Path(output_dir) / f"KW_PER_DOC_{suffix_u}")
 
         cmd = [
             sys.executable, str(_REPO_ROOT / "keywords.py"),
+            "-i", kw_input_dir,
             "-m", kw_method,
             "-o", kw_out_file,
             "-d", kw_per_doc_dir
