@@ -10,6 +10,24 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+# Add this to your imports at the top
+from fastapi.staticfiles import StaticFiles
+
+# ... [keep existing app definition and middleware] ...
+
+# Remove the old index() route:
+# @app.get("/", response_class=HTaddedMLResponse)
+# async def index() -> str: ...
+
+# Replace it with these mounted static folders:
+app.mount("/frontend", StaticFiles(directory="service/frontend", html=True), name="frontend")
+app.mount("/frontend-lindat", StaticFiles(directory="service/frontend-lindat", html=True), name="frontend-lindat")
+
+# You can optionally add a redirect at the root to point to the main UI:
+from fastapi.responses import RedirectResponse
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/frontend")
 
 from .enrichment import (
     KeywordPreflightError,
