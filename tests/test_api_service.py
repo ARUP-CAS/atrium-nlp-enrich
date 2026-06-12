@@ -59,6 +59,7 @@ class TestNormalization:
             normalize_upload("x.pdf", b"...")
 
 
+
 class TestCanonicalCsvOrdering:
 
     def test_max_page_and_skips_empty(self, tmp_path):
@@ -67,10 +68,10 @@ class TestCanonicalCsvOrdering:
             {"text": "", "page_num": 9, "line_num": 9},
             {"text": "a", "page_num": 1, "line_num": 5},
         ]
-        dest = tmp_path / "in.csv"
-        pages = enr._rows_to_canonical_csv(rows, dest)
+        dest = tmp_path / "in"
+        pages = enr._write_canonical_csvs(rows, dest, "document")
         assert pages == 2  # empty row's page 9 must not count
-        out = list(csv.DictReader(dest.open(encoding="utf-8")))
+        out = list(csv.DictReader((dest / "document.csv").open(encoding="utf-8")))
         assert [r["text"] for r in out] == ["b", "a"]
 
 
@@ -209,32 +210,42 @@ def test_enrich_json(client, monkeypatch):
 
 def test_enrich_keybert_degrades_to_yake(client, monkeypatch):
     api, _ = client
-    # First call (keybert) fails preflight; manager retries with yake (rc 0).
     import subprocess as _sp
-    state = {"n": 0}
+    import sys
+    from types import ModuleType
+
+    # Hermetically mock the 'keywords' module which is imported dynamically
+    mock_keywords = ModuleType("keywords")
+
+    def fake_extract(paths, method, num_keywords):
+        if method == "keybert":
+            raise Exception("keybert preflight failed")
+        return [[("a", 0.5)]]
+
+    mock_keywords.extract_keywords = fake_extract
+    monkeypatch.setitem(sys.modules, "keywords", mock_keywords)
 
     def fake_run(cmd, cwd=None, env=None, capture_output=True, text=True):
         cfg_path = Path(cmd[cmd.index("--config") + 1])
         out = cfg_path.parent / "out"
         if "--dry-run" in cmd:
             return _sp.CompletedProcess(cmd, 0, "ok", "")
-        state["n"] += 1
-        if "--kw-method" in cmd and cmd[cmd.index("--kw-method") + 1] == "keybert":
-            return _sp.CompletedProcess(cmd, 3, "", "keybert preflight failed")
-        # yake path: produce outputs
+
+        # Produce baseline outputs so the pipeline manager proceeds to keyword extraction
         (out / "TEITOK").mkdir(parents=True, exist_ok=True)
         (out / "TEITOK" / "CTX1.teitok.xml").write_text("<?xml?><TEI/>", "utf-8")
-        kw = out / "KW_PER_DOC_Y"
-        kw.mkdir(parents=True, exist_ok=True)
-        (kw / "CTX1_keywords.csv").write_text("keyword,score\na,0.5\n", "utf-8")
+        (out / "UDP").mkdir(parents=True, exist_ok=True)
+        (out / "UDP" / "CTX1.conllu").write_text("1\ttext", "utf-8")
         (out / "paradata").mkdir(parents=True, exist_ok=True)
         return _sp.CompletedProcess(cmd, 0, "ok", "")
 
     monkeypatch.setattr(enr.subprocess, "run", fake_run)
     c = TestClient(api.app)
+
     r = c.post("/enrich",
                files={"file": ("CTX1.csv", b"text\nPraha\n", "text/csv")},
                data={"kw_method": "keybert"})
+
     assert r.status_code == 200
     body = r.json()
     assert body["method_requested"] == "keybert"

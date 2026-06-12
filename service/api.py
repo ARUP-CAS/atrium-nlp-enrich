@@ -9,20 +9,33 @@ import os
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
-# Add this to your imports at the top
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-# ... [keep existing app definition and middleware] ...
+# ── operator-tunable limits ───────────────────────────────────────────────────
+MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
+MAX_UPLOAD_MB = float(os.environ.get("MAX_UPLOAD_MB", "5"))
+MAX_WORDS = int(os.environ.get("MAX_WORDS", "30000"))
+ALLOWED_ORIGINS = [
+    o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()
+]
+DEFAULT_KW_METHOD = os.environ.get("DEFAULT_KW_METHOD", "keybert")
 
-# Remove the old index() route:
-# @app.get("/", response_class=HTaddedMLResponse)
-# async def index() -> str: ...
+_ALLOWED_KW = ("keybert", "yake", "legacy", "none")
+_ALLOWED_LANG = ("cs",)
 
-# Replace it with these mounted static folders:
+app = FastAPI(
+    title="ATRIUM nlp-enrich API",
+    version="0.11.0",
+    description="Text lines → NLP-enriched TEITOK XML + keywords.",
+)
+
 app.mount("/frontend", StaticFiles(directory="service/frontend", html=True), name="frontend")
 app.mount("/frontend-lindat", StaticFiles(directory="service/frontend-lindat", html=True), name="frontend-lindat")
 
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/frontend")
 # You can optionally add a redirect at the root to point to the main UI:
 from fastapi.responses import RedirectResponse
 @app.get("/")

@@ -546,7 +546,15 @@ class PipelineManager:
 
     @staticmethod
     def collect_merged_paradata(result: EnrichmentResult) -> Optional[Dict[str, Any]]:
-        pd_dir = result.output_dir / "paradata"
+        # Re-merge paradata to incorporate the in-process keywords paradata
+        pd_dir = workspace / "out" / "paradata"
+        all_pd = sorted(pd_dir.glob("*_nlp-enrich.json"))
+
+        merge_run_paradata(
+            [str(x) for x in all_pd],
+            str(pd_dir / f"{doc_id_stem}_nlp-enrich_pipeline-run.json"),
+            pipeline="nlp-enrich"
+        )
         if not pd_dir.exists():
             return None
         cands = sorted(pd_dir.glob("*_nlp-enrich_pipeline-run.json"))
