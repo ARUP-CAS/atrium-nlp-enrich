@@ -1,46 +1,16 @@
 """
-service/api.py — FastAPI surface for the nlp-enrich pipeline (issue #8).
+service/api.py — FastAPI surface for the nlp-enrich pipeline.
 """
 
 from __future__ import annotations
 
 import asyncio
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse, JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-
-# ── operator-tunable limits ───────────────────────────────────────────────────
-MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
-MAX_UPLOAD_MB = float(os.environ.get("MAX_UPLOAD_MB", "5"))
-MAX_WORDS = int(os.environ.get("MAX_WORDS", "30000"))
-ALLOWED_ORIGINS = [
-    o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()
-]
-DEFAULT_KW_METHOD = os.environ.get("DEFAULT_KW_METHOD", "keybert")
-
-_ALLOWED_KW = ("keybert", "yake", "legacy", "none")
-_ALLOWED_LANG = ("cs",)
-
-app = FastAPI(
-    title="ATRIUM nlp-enrich API",
-    version="0.11.0",
-    description="Text lines → NLP-enriched TEITOK XML + keywords.",
-)
-
-app.mount("/frontend", StaticFiles(directory="service/frontend", html=True), name="frontend")
-app.mount("/frontend-lindat", StaticFiles(directory="service/frontend-lindat", html=True), name="frontend-lindat")
-
-@app.get("/", include_in_schema=False)
-async def root():
-    return RedirectResponse(url="/frontend")
-# You can optionally add a redirect at the root to point to the main UI:
-from fastapi.responses import RedirectResponse
-@app.get("/")
-async def root():
-    return RedirectResponse(url="/frontend")
 
 from .enrichment import (
     KeywordPreflightError,
@@ -55,6 +25,7 @@ from .jobs import Job, create_job, _jobs
 MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
 MAX_UPLOAD_MB = float(os.environ.get("MAX_UPLOAD_MB", "5"))
 MAX_WORDS = int(os.environ.get("MAX_WORDS", "30000"))
+API_JOB_TIMEOUT = int(os.environ.get("API_JOB_TIMEOUT", "600"))
 ALLOWED_ORIGINS = [
     o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()
 ]
@@ -66,8 +37,12 @@ _ALLOWED_LANG = ("cs",)
 app = FastAPI(
     title="ATRIUM nlp-enrich API",
     version="0.11.0",
-    description="Text lines → NLP-enriched TEITOK XML + keywords (issue #8).",
+    description="Text lines → NLP-enriched TEITOK XML + keywords.",
 )
+
+# Mount static directories and set root redirect before any other routes
+app.mount("/frontend", StaticFiles(directory="service/frontend", html=True), name="frontend")
+app.mount("/frontend-lindat", StaticFiles(directory="service/frontend-lindat", html=True), name="frontend-lindat")
 
 try:
     from fastapi.middleware.cors import CORSMiddleware
@@ -159,7 +134,14 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
         raise HTTPException(429, "Server busy; max concurrent jobs reached.")
 
     async with _semaphore:
-        data, out_fmt = await _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt)
+        try:
+            data, out_fmt = await asyncio.wait_for(
+                _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt),
+                timeout=API_JOB_TIMEOUT
+            )
+        except asyncio.TimeoutError:
+            raise HTTPException(504, "Pipeline execution timed out.")
+
         if out_fmt == "zip":
             return FileResponse(
                 str(data),
@@ -173,9 +155,15 @@ async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, l
     try:
         job.status = "running"
         async with _semaphore:
-            data, out_fmt = await _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt="json")
+            data, out_fmt = await asyncio.wait_for(
+                _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt="json"),
+                timeout=API_JOB_TIMEOUT
+            )
             job.result = data
             job.status = "done"
+    except asyncio.TimeoutError:
+        job.error = "Pipeline execution timed out."
+        job.status = "failed"
     except HTTPException as e:
         job.error = str(e.detail)
         job.status = "failed"
@@ -192,14 +180,9 @@ async def startup_event():
     await loop.run_in_executor(None, _manager.warmup, DEFAULT_KW_METHOD)
 
 
-@app.get("/", response_class=HTMLResponse)
-async def index() -> str:
-    return (
-        "<html><body><h1>ATRIUM nlp-enrich API</h1>"
-        "<p>POST a CSV/XLSX/TXT/ZIP of ordered text lines to "
-        "<code>/enrich</code>. See <a href='/docs'>/docs</a>.</p>"
-        "</body></html>"
-    )
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/frontend")
 
 
 @app.get("/info")

@@ -1,22 +1,5 @@
 """
 service/enrichment.py — PipelineManager for the nlp-enrich API service.
-
-Treats run_pipeline.py as the ONLY execution interface (never the stage scripts
-directly), mirroring the runner's own "never re-implement stage logic" rule.
-
-Each request gets a fresh workspace under TEMP/api_jobs/<job_id>/ with every
-pipeline directory (OUTPUT_DIR, INPUT_TABLES_DIR, TEMP_TXT_DIR, CHUNK_DIR,
-PARADATA_DIR) relocated inside it, so resume / paradata-collision /
-FAIL_ON_EMPTY semantics all behave as a clean first run and concurrent requests
-cannot collide.
-
-Input normalization: every accepted form (CSV / XLSX / TXT / inline JSON / ZIP) is
-materialized as a canonical CSV with columns text[,page_num,line_num] in
-INPUT_TABLES_DIR.
-
-LLM is never invoked from this manager (issue #8 excludes it from API entry
-points). The 4 core stages always run; keyword extraction runs in-process to
-prevent overhead and memory-spikes.
 """
 
 from __future__ import annotations
@@ -39,19 +22,15 @@ from typing import Any, Dict, List, Optional, Tuple
 _SERVICE_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _SERVICE_DIR.parent
 
-# Operator-pinned, read-only config template (models, service URLs, timeouts…).
 _CONFIG_TEMPLATE = _REPO_ROOT / "config_api.txt"
 _RUN_PIPELINE = _REPO_ROOT / "run_pipeline.py"
 
-# Per-request workspaces live here unless overridden by env.
 _API_JOBS_ROOT = Path(os.environ.get("API_JOBS_ROOT", _REPO_ROOT / "TEMP" / "api_jobs"))
 
-# Keep workspaces after the response for debugging when truthy.
 _KEEP_WORKSPACES = os.environ.get("API_KEEP_WORKSPACES", "").lower() in (
     "1", "true", "yes", "on",
 )
 
-# Provenance env forwarded to the runner (already honoured by it).
 _RUNNER_ENV_VARS = (
     "ATRIUM_RUNNER_IMAGE",
     "ATRIUM_RUNNER_REPO",
@@ -63,10 +42,8 @@ _DOC_ID_RE = re.compile(r"[^A-Za-z0-9._-]")
 _DEFAULT_DOC_ID = "document"
 
 
-# ── exit-code → HTTP mapping (per the runner's documented contract) ───────────
+# ── exit-code → HTTP mapping ──────────────────────────────────────────────────
 class PipelineError(Exception):
-    """Raised when the pipeline subprocess fails. Carries an HTTP status hint."""
-
     def __init__(self, message: str, http_status: int, returncode: int) -> None:
         super().__init__(message)
         self.http_status = http_status
@@ -74,8 +51,6 @@ class PipelineError(Exception):
 
 
 class KeywordPreflightError(PipelineError):
-    """Exit code 3 — keyword backend dependency preflight failed."""
-
     def __init__(self, message: str, returncode: int = 3) -> None:
         super().__init__(message, http_status=503, returncode=returncode)
 
@@ -97,7 +72,6 @@ class EnrichmentResult:
 # ── input normalization helpers ───────────────────────────────────────────────
 
 def sanitize_doc_id(name: str) -> str:
-    """Restrict a doc id to [A-Za-z0-9._-]; never empty, never path-traversing."""
     stem = Path(str(name or "")).name
     root, ext = os.path.splitext(stem)
     if ext.lower() in (".csv", ".xlsx", ".txt", ".zip"):
@@ -114,7 +88,6 @@ def _coerce_int(value: Any) -> int:
 
 
 def _write_canonical_csvs(rows: List[Dict[str, Any]], dest_dir: Path, fallback_id: str) -> int:
-    """Write canonical CSVs grouping by _source_path to preserve nested batches."""
     dest_dir.mkdir(parents=True, exist_ok=True)
     groups = collections.defaultdict(list)
     for r in rows:
@@ -291,7 +264,6 @@ class PipelineManager:
         _API_JOBS_ROOT.mkdir(parents=True, exist_ok=True)
 
     def warmup(self, kw_method: str = "keybert") -> None:
-        """Pre-load the KeyBERT model at startup to avoid first-request latency."""
         if kw_method != "keybert":
             return
         try:
@@ -356,7 +328,6 @@ class PipelineManager:
 
         method_used: Optional[str] = None if kw_method == "none" else kw_method
         cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
-        # We explicitly skip --kw because keyword extraction is done in-process below.
 
         proc = subprocess.run(
             cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
@@ -381,7 +352,6 @@ class PipelineManager:
                 http_status=502, returncode=rc,
             )
 
-        # Validate that TEITOK was actually produced (fail fast on silent empty run skips)
         teitok_dir = workspace / "out" / "TEITOK"
         teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
         if not teitok_files:
@@ -391,7 +361,6 @@ class PipelineManager:
                 http_status=502, returncode=0,
             )
 
-        # In-process Keyword Extraction
         if kw_method != "none":
             from keywords import extract_keywords
             from atrium_paradata import ParadataLogger, merge_run_paradata
@@ -450,7 +419,11 @@ class PipelineManager:
                     # Re-merge paradata to incorporate the in-process keywords paradata
                     pd_dir = workspace / "out" / "paradata"
                     all_pd = sorted(pd_dir.glob("*_nlp-enrich.json"))
-                    merge_run_paradata([str(x) for x in all_pd], str(pd_dir / "merged_pipeline-run.json"), pipeline="nlp-enrich")
+                    merge_run_paradata(
+                        [str(x) for x in all_pd],
+                        str(pd_dir / f"{doc_id}_nlp-enrich_pipeline-run.json"),
+                        pipeline="nlp-enrich"
+                    )
 
                 except Exception as exc:
                     if kw_method == "keybert":
@@ -546,15 +519,7 @@ class PipelineManager:
 
     @staticmethod
     def collect_merged_paradata(result: EnrichmentResult) -> Optional[Dict[str, Any]]:
-        # Re-merge paradata to incorporate the in-process keywords paradata
-        pd_dir = workspace / "out" / "paradata"
-        all_pd = sorted(pd_dir.glob("*_nlp-enrich.json"))
-
-        merge_run_paradata(
-            [str(x) for x in all_pd],
-            str(pd_dir / f"{doc_id_stem}_nlp-enrich_pipeline-run.json"),
-            pipeline="nlp-enrich"
-        )
+        pd_dir = result.output_dir / "paradata"
         if not pd_dir.exists():
             return None
         cands = sorted(pd_dir.glob("*_nlp-enrich_pipeline-run.json"))

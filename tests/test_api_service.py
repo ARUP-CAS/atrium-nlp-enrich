@@ -2,17 +2,6 @@
 tests/test_api_service.py
 =========================
 Hermetic tests for the nlp-enrich API service (issue #8).
-
-No network, no LINDAT, no ML models. The pipeline subprocess is monkeypatched
-to copy fixture outputs into the per-request workspace, so the full HTTP
-contract (POST /enrich, /enrich_text, /info, /health, json + zip) is exercised
-without running UDPipe/NameTag.
-
-Covered units:
-  • input normalization (CSV/XLSX/TXT/inline JSON, page_num/line_num ordering)
-  • doc_id sanitization
-  • exit-code → HTTP mapping
-  • the FastAPI surface via TestClient
 """
 
 import csv
@@ -23,7 +12,6 @@ from pathlib import Path
 
 import pytest
 
-# Skip the whole module cleanly if the service deps aren't installed.
 fastapi = pytest.importorskip("fastapi")
 pytest.importorskip("fastapi.testclient")
 
@@ -59,7 +47,6 @@ class TestNormalization:
             normalize_upload("x.pdf", b"...")
 
 
-
 class TestCanonicalCsvOrdering:
 
     def test_max_page_and_skips_empty(self, tmp_path):
@@ -70,7 +57,7 @@ class TestCanonicalCsvOrdering:
         ]
         dest = tmp_path / "in"
         pages = enr._write_canonical_csvs(rows, dest, "document")
-        assert pages == 2  # empty row's page 9 must not count
+        assert pages == 2
         out = list(csv.DictReader((dest / "document.csv").open(encoding="utf-8")))
         assert [r["text"] for r in out] == ["b", "a"]
 
@@ -94,11 +81,9 @@ class TestSanitizeDocId:
 
 def _make_stub(monkeypatch, *, returncode=0, doc_id="document",
                produce_outputs=True, kw_method_dir="KB"):
-    """Patch subprocess.run inside enrichment to fabricate workspace outputs."""
     import subprocess as _sp
 
     def fake_run(cmd, cwd=None, env=None, capture_output=True, text=True):
-        # Locate the derived --config to find the workspace.
         cfg_path = Path(cmd[cmd.index("--config") + 1])
         ws = cfg_path.parent
         out = ws / "out"
@@ -164,9 +149,7 @@ class TestExitCodeMapping:
 @pytest.fixture
 def client(monkeypatch, tmp_path):
     monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
-    # Disable workspace cleanup so zip responses can be inspected if needed.
     import service.api as api
-    # Fresh manager bound to the patched jobs root.
     monkeypatch.setattr(api, "_manager", PipelineManager())
     return api, monkeypatch
 
@@ -214,7 +197,6 @@ def test_enrich_keybert_degrades_to_yake(client, monkeypatch):
     import sys
     from types import ModuleType
 
-    # Hermetically mock the 'keywords' module which is imported dynamically
     mock_keywords = ModuleType("keywords")
 
     def fake_extract(paths, method, num_keywords):
@@ -231,7 +213,6 @@ def test_enrich_keybert_degrades_to_yake(client, monkeypatch):
         if "--dry-run" in cmd:
             return _sp.CompletedProcess(cmd, 0, "ok", "")
 
-        # Produce baseline outputs so the pipeline manager proceeds to keyword extraction
         (out / "TEITOK").mkdir(parents=True, exist_ok=True)
         (out / "TEITOK" / "CTX1.teitok.xml").write_text("<?xml?><TEI/>", "utf-8")
         (out / "UDP").mkdir(parents=True, exist_ok=True)
@@ -260,7 +241,7 @@ def test_enrich_zip_format(client, monkeypatch):
                files={"file": ("CTX1.csv", b"text\nPraha\n", "text/csv")},
                data={"format": "zip"})
     assert r.status_code == 200
-    assert r.headers["content-type"] == "application/zip"
+    assert r.headers["content-type"].lower() == "application/zip"
     zf = zipfile.ZipFile(io.BytesIO(r.content))
     names = zf.namelist()
     assert any("TEITOK" in n for n in names)
