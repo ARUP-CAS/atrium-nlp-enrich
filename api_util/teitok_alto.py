@@ -373,13 +373,16 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         image_dir=None):
     alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta = _parse_alto(alto_path)
 
+    _doc_id = doc_id or Path(teitok_path).stem
+    if not alto_strings:
+        print(f"  [TEITOK] No ALTO input for {_doc_id}; producing text-only XML without bboxes.", file=sys.stderr)
+
     effective_image_dir = image_dir
     if not effective_image_dir and alto_path:
         candidate = Path(alto_path).parent
         if any(candidate.glob('*.png')) or any(candidate.glob('*.jpg')):
             effective_image_dir = candidate
 
-    _doc_id = doc_id or Path(teitok_path).stem
     scale_map = _build_page_scale_map(alto_pages, effective_image_dir, _doc_id)
 
     sentences  = []

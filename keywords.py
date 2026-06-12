@@ -160,7 +160,20 @@ def _extract_lemmas(file_path: str) -> list[str]:
 def _extract_legacy(file_path: str, num_keywords: int, **_) -> Keywords:
     lemmas = _extract_lemmas(file_path)
     counts = Counter(lemmas)
-    return [(lemma, float(cnt)) for lemma, cnt in counts.most_common(num_keywords)]
+
+    _ADMIN_STOP_LEMMAS = {
+        "zpráva", "projekt", "číslo", "datum", "rok", "strana", "tabulka", "příloha",
+        "text", "obsah", "kapitola", "část", "oddíl",
+    }
+
+    filtered = []
+    # Fetch double the keywords to ensure enough survive the penalty
+    for lemma, cnt in counts.most_common(num_keywords * 2):
+        score = cnt * 0.3 if lemma in _ADMIN_STOP_LEMMAS else float(cnt)
+        filtered.append((lemma, score))
+
+    filtered.sort(key=lambda x: x[1], reverse=True)
+    return filtered[:num_keywords]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -221,7 +234,6 @@ def _get_keybert_model(model_name: str):
         sys.exit(1)
 
     # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
-    # (Bypasses C++ extension loading failures / circular imports)
     try:
         import torchvision
     except Exception:
@@ -296,7 +308,6 @@ def _get_keybert_model(model_name: str):
 
         for attr in _to_patch:
             try:
-                # getattr might raise an ImportError if the lazy loader is broken
                 _ = getattr(transformers, attr)
             except Exception:
                 val = real_classes.get(attr, DummyPreTrained)
@@ -538,7 +549,7 @@ def _sort_csv_file(file_path: str) -> None:
 # CLI
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def main() -> None:
+def main(argv: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Extract keywords from CoNLL-U files.\n"
@@ -550,6 +561,7 @@ def main() -> None:
     parser.add_argument("-i", "--input_dir", default=DEFAULT_INPUT_DIR)
     parser.add_argument("-o", "--output_file", default=DEFAULT_OUTPUT_FILE)
     parser.add_argument("-d", "--per_doc_out_dir", default=DEFAULT_PER_DOC_OUT_DIR)
+    parser.add_argument("--paradata-dir", default=None, help="Directory for paradata logs. Overrides config PARADATA_DIR.")
     parser.add_argument("-m", "--method", default=DEFAULT_METHOD, choices=list(_BACKENDS))
     parser.add_argument("-n", "--num_keywords", type=int, default=DEFAULT_NUM_KEYWORDS)
     parser.add_argument("-l", "--lang", default=DEFAULT_LANG)
@@ -564,7 +576,7 @@ def main() -> None:
 
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     # Dynamic substitution for output paths based on chosen method
     suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(args.method, args.method)
@@ -574,6 +586,8 @@ def main() -> None:
         args.output_file = args.output_file.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
     if isinstance(args.per_doc_out_dir, str):
         args.per_doc_out_dir = args.per_doc_out_dir.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
+
+    paradata_dir = args.paradata_dir or os.environ.get("PARADATA_DIR") or str(Path(args.input_dir).parent / "paradata")
 
     if args.method == "keybert":
         try:
@@ -637,7 +651,7 @@ def main() -> None:
                 "batch_size":    args.batch_size}
                if args.method == "keybert" else {}),
         },
-        paradata_dir="data_samples/paradata",
+        paradata_dir=str(paradata_dir),
         output_types=["csv_per_doc", "csv_summary_row"],
     )
 

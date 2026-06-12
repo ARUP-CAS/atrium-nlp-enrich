@@ -159,7 +159,6 @@ def _keybert_deps_preflight() -> None:
         missing.append(f"torch ({exc})")
 
     # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
-    # (Bypasses C++ extension loading failures / circular imports)
     try:
         import torchvision
     except Exception:
@@ -235,7 +234,6 @@ def _keybert_deps_preflight() -> None:
 
         for attr in _to_patch:
             try:
-                # getattr might raise an ImportError if the lazy loader is broken
                 _ = getattr(transformers, attr)
             except Exception:
                 val = real_classes.get(attr, DummyPreTrained)
@@ -546,7 +544,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             "-i", kw_input_dir,
             "-m", kw_method,
             "-o", kw_out_file,
-            "-d", kw_per_doc_dir
+            "-d", kw_per_doc_dir,
+            "--paradata-dir", str(paradata_dir)
         ]
 
         rc = _run_subprocess(cmd, env, _REPO_ROOT)

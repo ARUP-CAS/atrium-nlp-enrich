@@ -11,7 +11,7 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VENV="${VENV:-$HERE/venv-api}"
+VENV="${VENV:-$HERE/venv-nlp}"
 PORT="${PORT:-8000}"
 HOST="${HOST:-0.0.0.0}"
 KEYBERT_MODEL="${KEYBERT_MODEL:-paraphrase-multilingual-MiniLM-L12-v2}"

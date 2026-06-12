@@ -1,13 +1,5 @@
 """
 service/api.py — FastAPI surface for the nlp-enrich pipeline (issue #8).
-
-The single-file entry point is POST /enrich: upload a CSV/XLSX/TXT of ordered
-text lines and receive TEITOK XML + keywords + paradata. The four core stages
-(manifest → udp → nt → stats) always run and are never exposed as parameters.
-LLM enrichment is intentionally excluded from every API entry point.
-
-Run locally:
-    uvicorn service.api:app --host 0.0.0.0 --port 8000
 """
 
 from __future__ import annotations
@@ -26,6 +18,7 @@ from .enrichment import (
     count_words,
     normalize_upload,
 )
+from .jobs import Job, create_job, _jobs
 
 # ── operator-tunable limits ───────────────────────────────────────────────────
 MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
@@ -45,7 +38,6 @@ app = FastAPI(
     description="Text lines → NLP-enriched TEITOK XML + keywords (issue #8).",
 )
 
-# CORS (mirrors the page-classification reference; opt-in via env).
 try:
     from fastapi.middleware.cors import CORSMiddleware
 
@@ -81,7 +73,6 @@ def _run_pipeline_sync(rows, doc_id, kw_method, num_keywords):
                                num_keywords=num_keywords), requested
     except KeywordPreflightError:
         if kw_method == "keybert":
-            # Degrade once to yake rather than failing the whole enrichment.
             result = _manager.enrich(rows, doc_id, kw_method="yake",
                                      num_keywords=num_keywords)
             return result, requested
@@ -99,8 +90,30 @@ def _build_envelope(result, requested_method) -> Dict[str, Any]:
         "paradata": PipelineManager.collect_merged_paradata(result),
         "method_requested": requested_method,
         "method_used": result.kw_method_used,
-        "llm": None,  # reserved for forward compatibility; never populated here
+        "llm": None,
     }
+
+
+async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> tuple[Any, str]:
+    loop = asyncio.get_event_loop()
+    try:
+        result, requested = await loop.run_in_executor(
+            None, _run_pipeline_sync, rows, doc_id, kw_method, num_keywords
+        )
+    except KeywordPreflightError as exc:
+        raise HTTPException(503, str(exc))
+    except PipelineError as exc:
+        raise HTTPException(exc.http_status, str(exc))
+
+    try:
+        if fmt == "zip":
+            zip_path = PipelineManager.zip_workspace_output(result)
+            return zip_path, "zip"
+        envelope = _build_envelope(result, requested)
+        return envelope, "json"
+    finally:
+        if fmt != "zip":
+            PipelineManager.cleanup(result)
 
 
 async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
@@ -115,41 +128,44 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
         raise HTTPException(429, "Server busy; max concurrent jobs reached.")
 
     async with _semaphore:
-        loop = asyncio.get_event_loop()
-        try:
-            result, requested = await loop.run_in_executor(
-                None, _run_pipeline_sync, rows, doc_id, kw_method, num_keywords
+        data, out_fmt = await _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt)
+        if out_fmt == "zip":
+            return FileResponse(
+                str(data),
+                media_type="application/zip",
+                filename=f"{doc_id}_enriched.zip",
             )
-        except KeywordPreflightError as exc:
-            raise HTTPException(503, str(exc))
-        except PipelineError as exc:
-            raise HTTPException(exc.http_status, str(exc))
+        return JSONResponse(data)
 
-        try:
-            if fmt == "zip":
-                zip_path = PipelineManager.zip_workspace_output(result)
-                return FileResponse(
-                    str(zip_path),
-                    media_type="application/zip",
-                    filename=f"{result.doc_id}_enriched.zip",
-                )
-            envelope = _build_envelope(result, requested)
-            return JSONResponse(envelope)
-        finally:
-            # For zip we must keep the file until FileResponse streams it, so
-            # only clean non-zip responses here; zip workspaces are swept by the
-            # retention knob / OS temp policy.
-            if fmt != "zip":
-                PipelineManager.cleanup(result)
+
+async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, lang):
+    try:
+        job.status = "running"
+        async with _semaphore:
+            data, out_fmt = await _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt="json")
+            job.result = data
+            job.status = "done"
+    except HTTPException as e:
+        job.error = str(e.detail)
+        job.status = "failed"
+    except Exception as e:
+        job.error = str(e)
+        job.status = "failed"
 
 
 # ── endpoints ──────────────────────────────────────────────────────────────────
+
+@app.on_event("startup")
+async def startup_event():
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, _manager.warmup, DEFAULT_KW_METHOD)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def index() -> str:
     return (
         "<html><body><h1>ATRIUM nlp-enrich API</h1>"
-        "<p>POST a CSV/XLSX/TXT of ordered text lines to "
+        "<p>POST a CSV/XLSX/TXT/ZIP of ordered text lines to "
         "<code>/enrich</code>. See <a href='/docs'>/docs</a>.</p>"
         "</body></html>"
     )
@@ -233,3 +249,55 @@ async def enrich_text(payload: Dict[str, Any]):
     fmt = payload.get("format", "json")
     fmt = fmt if fmt in ("json", "zip") else "json"
     return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
+
+
+@app.post("/jobs")
+async def submit_job(
+    file: UploadFile = File(...),
+    kw_method: str = Form(DEFAULT_KW_METHOD),
+    num_keywords: int = Form(20),
+    lang: str = Form("cs"),
+):
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
+        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.")
+    try:
+        rows = normalize_upload(file.filename or "upload.csv", data)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+    doc_id = file.filename or "document"
+
+    job = await create_job()
+    asyncio.create_task(_run_job_background(job, rows, doc_id, kw_method, num_keywords, lang))
+    return {"job_id": job.job_id, "status": "queued"}
+
+
+@app.get("/jobs/{job_id}")
+async def get_job_status(job_id: str):
+    job = _jobs.get(job_id)
+    if not job:
+        raise HTTPException(404, "Job not found")
+    return {"job_id": job_id, "status": job.status, "error": job.error}
+
+
+@app.get("/jobs/{job_id}/result")
+async def get_job_result(job_id: str):
+    job = _jobs.get(job_id)
+    if not job:
+        raise HTTPException(404, "Job not found")
+    if job.status != "done":
+        raise HTTPException(409, f"Job not complete (status: {job.status})")
+    return job.result
+
+
+@app.delete("/jobs/{job_id}")
+async def cleanup_job(job_id: str):
+    job = _jobs.get(job_id)
+    if not job:
+        raise HTTPException(404)
+    from .enrichment import _API_JOBS_ROOT
+    import shutil
+    ws = _API_JOBS_ROOT / job_id
+    shutil.rmtree(ws, ignore_errors=True)
+    del _jobs[job_id]
+    return {"deleted": job_id}

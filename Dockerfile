@@ -38,8 +38,22 @@ CMD []
 
 
 # ---------------------------------------------------------------------------
+# API surface — published as :<version>-api
+# ---------------------------------------------------------------------------
+FROM base AS api
+
+USER root
+COPY service/requirements.txt ./service_requirements.txt
+RUN pip install -r service_requirements.txt
+RUN chown -R atrium:atrium /app
+USER atrium
+
+EXPOSE 8000
+ENTRYPOINT ["uvicorn", "service.api:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+# ---------------------------------------------------------------------------
 # Optional LLM/GPU variant — published as :<version>-llm
-# Build with: docker build --target llm -t ghcr.io/ufal/atrium-nlp-enrich:dev-llm .
 # ---------------------------------------------------------------------------
 FROM base AS llm
 

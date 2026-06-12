@@ -1,1 +1,1 @@
-<"""ATRIUM nlp-enrich FastAPI service package."""
+"""ATRIUM nlp-enrich FastAPI service package."""

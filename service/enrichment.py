@@ -10,18 +10,18 @@ PARADATA_DIR) relocated inside it, so resume / paradata-collision /
 FAIL_ON_EMPTY semantics all behave as a clean first run and concurrent requests
 cannot collide.
 
-Input normalization: every accepted form (CSV / XLSX / TXT / inline JSON) is
+Input normalization: every accepted form (CSV / XLSX / TXT / inline JSON / ZIP) is
 materialized as a canonical CSV with columns text[,page_num,line_num] in
-INPUT_TABLES_DIR, so stage 1 always runs on the same path and no input type
-bypasses any mandatory step.
+INPUT_TABLES_DIR.
 
 LLM is never invoked from this manager (issue #8 excludes it from API entry
-points). The 4 core stages always run; keyword extraction is default-on with
-keybert and opt-out only via kw_method="none".
+points). The 4 core stages always run; keyword extraction runs in-process to
+prevent overhead and memory-spikes.
 """
 
 from __future__ import annotations
 
+import collections
 import csv
 import io
 import json
@@ -64,11 +64,6 @@ _DEFAULT_DOC_ID = "document"
 
 
 # ── exit-code → HTTP mapping (per the runner's documented contract) ───────────
-# 0  → 200
-# 3  → keyword preflight failed (caller may retry with yake; else 503)
-# 1  → empty run (no input processed)            → 502
-# 2  → required stage script missing             → 502
-# ≠0 → stage script itself failed                → 502
 class PipelineError(Exception):
     """Raised when the pipeline subprocess fails. Carries an HTTP status hint."""
 
@@ -102,14 +97,10 @@ class EnrichmentResult:
 # ── input normalization helpers ───────────────────────────────────────────────
 
 def sanitize_doc_id(name: str) -> str:
-    """Restrict a doc id to [A-Za-z0-9._-]; never empty, never path-traversing.
-
-    The pipeline uses the filename stem in shell paths and grep patterns
-    (api_1_manifest.sh), so untrusted input must be stripped to a safe set.
-    """
+    """Restrict a doc id to [A-Za-z0-9._-]; never empty, never path-traversing."""
     stem = Path(str(name or "")).name
     root, ext = os.path.splitext(stem)
-    if ext.lower() in (".csv", ".xlsx", ".txt"):
+    if ext.lower() in (".csv", ".xlsx", ".txt", ".zip"):
         stem = root
     safe = _DOC_ID_RE.sub("_", stem).strip("._-")
     return safe or _DEFAULT_DOC_ID
@@ -122,21 +113,29 @@ def _coerce_int(value: Any) -> int:
         return 0
 
 
-def _rows_to_canonical_csv(rows: List[Dict[str, Any]], dest: Path) -> int:
-    """Write canonical CSV (text[,page_num,line_num]); return max page_num."""
-    dest.parent.mkdir(parents=True, exist_ok=True)
+def _write_canonical_csvs(rows: List[Dict[str, Any]], dest_dir: Path, fallback_id: str) -> int:
+    """Write canonical CSVs grouping by _source_path to preserve nested batches."""
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    groups = collections.defaultdict(list)
+    for r in rows:
+        path = r.get("_source_path", f"{fallback_id}.csv")
+        groups[path].append(r)
+
     max_page = 0
-    with open(dest, "w", encoding="utf-8", newline="") as fh:
-        writer = csv.writer(fh)
-        writer.writerow(["text", "page_num", "line_num"])
-        for r in rows:
-            text = (r.get("text") or "").strip()
-            if not text:
-                continue
-            p = _coerce_int(r.get("page_num", r.get("page", 0)))
-            ln = _coerce_int(r.get("line_num", r.get("line", 0)))
-            max_page = max(max_page, p)
-            writer.writerow([text, p, ln])
+    for path_str, group_rows in groups.items():
+        dest = dest_dir / path_str
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        with open(dest, "w", encoding="utf-8", newline="") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(["text", "page_num", "line_num"])
+            for r in group_rows:
+                text = (r.get("text") or "").strip()
+                if not text:
+                    continue
+                p = _coerce_int(r.get("page_num", r.get("page", 0)))
+                ln = _coerce_int(r.get("line_num", r.get("line", 0)))
+                max_page = max(max_page, p)
+                writer.writerow([text, p, ln])
     return max_page
 
 
@@ -161,7 +160,7 @@ def _read_txt_bytes(data: bytes) -> List[Dict[str, Any]]:
 def _read_xlsx_bytes(data: bytes) -> List[Dict[str, Any]]:
     try:
         import openpyxl  # type: ignore
-    except ImportError as exc:  # pragma: no cover - env dependent
+    except ImportError as exc:  # pragma: no cover
         raise ValueError("openpyxl is required for .xlsx input.") from exc
     wb = openpyxl.load_workbook(io.BytesIO(data), data_only=True, read_only=True)
     rows: List[Dict[str, Any]] = []
@@ -171,7 +170,7 @@ def _read_xlsx_bytes(data: bytes) -> List[Dict[str, Any]]:
             if header is None:
                 header = [str(c).strip() if c is not None else "" for c in r]
                 if "text" not in header:
-                    break  # this sheet has no text column; skip it
+                    break
                 ti = header.index("text")
                 pi = header.index("page_num") if "page_num" in header else -1
                 li = header.index("line_num") if "line_num" in header else -1
@@ -186,8 +185,21 @@ def _read_xlsx_bytes(data: bytes) -> List[Dict[str, Any]]:
     return rows
 
 
+def _read_zip_bytes(data: bytes) -> List[Dict[str, Any]]:
+    import zipfile
+    import io
+    rows = []
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        csv_names = sorted(n for n in zf.namelist() if n.lower().endswith(".csv") and not n.startswith("__MACOSX"))
+        for csv_name in csv_names:
+            sub_rows = _read_csv_bytes(zf.read(csv_name))
+            for r in sub_rows:
+                r["_source_path"] = csv_name
+            rows.extend(sub_rows)
+    return rows
+
+
 def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
-    """Dispatch on extension and return ordered rows. Raises ValueError on bad input."""
     ext = os.path.splitext(filename or "")[1].lower()
     if ext == ".csv":
         return _read_csv_bytes(data)
@@ -195,7 +207,9 @@ def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
         return _read_txt_bytes(data)
     if ext == ".xlsx":
         return _read_xlsx_bytes(data)
-    raise ValueError(f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt")
+    if ext == ".zip":
+        return _read_zip_bytes(data)
+    raise ValueError(f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt, .zip")
 
 
 def count_words(rows: List[Dict[str, Any]]) -> int:
@@ -209,33 +223,17 @@ def _read_template_config() -> List[str]:
         return fh.readlines()
 
 
-# Keys whose values are workspace-relative directories we relocate per request.
 _RELOCATED_KEYS = {
-    "OUTPUT_DIR",
-    "INPUT_TABLES_DIR",
-    "WORK_DIR",
-    "TEMP_TXT_DIR",
-    "CHUNK_DIR",
-    "PARADATA_DIR",
-    "CONLLU_INPUT_DIR",
-    "TSV_INPUT_DIR",
-    "SUMMARY_OUTPUT_DIR",
-    "TEITOK_OUTPUT_DIR",
-    "INPUT_ALTO_DIR",
-    "INPUT_PAGES_DIR",
-    "LOG_FILE",
+    "OUTPUT_DIR", "INPUT_TABLES_DIR", "WORK_DIR", "TEMP_TXT_DIR",
+    "CHUNK_DIR", "PARADATA_DIR", "CONLLU_INPUT_DIR", "TSV_INPUT_DIR",
+    "SUMMARY_OUTPUT_DIR", "TEITOK_OUTPUT_DIR", "INPUT_ALTO_DIR",
+    "INPUT_PAGES_DIR", "LOG_FILE",
 }
 
 _ASSIGN_RE = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=")
 
 
 def _derive_config(workspace: Path) -> Path:
-    """Write a per-request config_api.txt that points every path into `workspace`.
-
-    Service URLs, model identifiers, timeout/retry/chunk knobs are inherited
-    verbatim from the template; only directory paths are overridden so the run
-    is hermetic. The derived file is passed to the runner via --config.
-    """
     out = workspace / "config_api.txt"
     ws = str(workspace)
 
@@ -251,8 +249,6 @@ def _derive_config(workspace: Path) -> Path:
         "TSV_INPUT_DIR": f'"{ws}/out/NE"',
         "SUMMARY_OUTPUT_DIR": f'"{ws}/out/UDP_NE"',
         "TEITOK_OUTPUT_DIR": f'"{ws}/out/TEITOK"',
-        # ALTO/pages are unusable for text-only API input: leave unset so
-        # api_4_stats emits TEITOK without bboxes (a warning, not an error).
         "INPUT_ALTO_DIR": '""',
         "INPUT_PAGES_DIR": '""',
     }
@@ -268,7 +264,6 @@ def _derive_config(workspace: Path) -> Path:
         else:
             lines_out.append(raw)
 
-    # Append any override keys absent from the template.
     for key, val in overrides.items():
         if key not in seen:
             lines_out.append(f"{key}={val}\n")
@@ -276,42 +271,44 @@ def _derive_config(workspace: Path) -> Path:
     with open(out, "w", encoding="utf-8") as fh:
         fh.writelines(lines_out)
 
-    # Pre-create the directory tree the stages expect.
     for sub in ("in", "out", "tmp", "out/UDP", "out/NE", "out/UDP_NE",
                 "out/TEITOK", "out/paradata", "tmp/TXT_EXTRACT", "tmp/CHUNKS"):
         (workspace / sub).mkdir(parents=True, exist_ok=True)
     return out
 
 
-def _stage_env() -> Dict[str, str]:
+def _stage_env(job_id: str = "") -> Dict[str, str]:
     env = dict(os.environ)
     env.setdefault("ATRIUM_RUNNER_REPO", "https://github.com/ufal/atrium-nlp-enrich")
-    # Make subprocess output predictable / unbuffered.
     env["PYTHONUNBUFFERED"] = "1"
+    if job_id:
+        env["ATRIUM_REQUEST_ID"] = job_id
     return env
 
 
 class PipelineManager:
-    """Runs the nlp-enrich pipeline for one request via run_pipeline.py."""
-
     def __init__(self) -> None:
         _API_JOBS_ROOT.mkdir(parents=True, exist_ok=True)
 
-    # -- introspection for /info and /health ----------------------------------
+    def warmup(self, kw_method: str = "keybert") -> None:
+        """Pre-load the KeyBERT model at startup to avoid first-request latency."""
+        if kw_method != "keybert":
+            return
+        try:
+            from keywords import _get_keybert_model, DEFAULT_KEYBERT_MODEL
+            _get_keybert_model(DEFAULT_KEYBERT_MODEL)
+            print(f"[warmup] KeyBERT model loaded.")
+        except Exception as exc:
+            print(f"[warmup] KeyBERT warmup failed: {exc}. Will degrade to yake on first request.")
 
     def config_facts(self) -> Dict[str, Any]:
         facts = {
-            "udpipe_model": None,
-            "nametag_model": None,
-            "udpipe_url": None,
-            "nametag_url": None,
-            "word_chunk_limit": None,
+            "udpipe_model": None, "nametag_model": None,
+            "udpipe_url": None, "nametag_url": None, "word_chunk_limit": None,
         }
         key_map = {
-            "MODEL_UDPIPE": "udpipe_model",
-            "MODEL_NAMETAG": "nametag_model",
-            "UDPIPE_URL": "udpipe_url",
-            "NAMETAG_URL": "nametag_url",
+            "MODEL_UDPIPE": "udpipe_model", "MODEL_NAMETAG": "nametag_model",
+            "UDPIPE_URL": "udpipe_url", "NAMETAG_URL": "nametag_url",
             "WORD_CHUNK_LIMIT": "word_chunk_limit",
         }
         for raw in _read_template_config():
@@ -326,14 +323,11 @@ class PipelineManager:
         return facts
 
     def dry_run(self, kw_method: str = "keybert") -> Tuple[int, str]:
-        """Run `run_pipeline.py --dry-run` to validate config & resolve the plan."""
         ws = _API_JOBS_ROOT / f"healthcheck-{uuid.uuid4().hex[:8]}"
         ws.mkdir(parents=True, exist_ok=True)
         try:
             cfg = _derive_config(ws)
             cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg), "--dry-run"]
-            if kw_method != "none":
-                cmd += ["--kw", "--kw-method", kw_method]
             proc = subprocess.run(
                 cmd, cwd=str(_REPO_ROOT), env=_stage_env(),
                 capture_output=True, text=True,
@@ -343,8 +337,6 @@ class PipelineManager:
             if not _KEEP_WORKSPACES:
                 shutil.rmtree(ws, ignore_errors=True)
 
-    # -- the single-file entry point ------------------------------------------
-
     def enrich(
         self,
         rows: List[Dict[str, Any]],
@@ -352,42 +344,27 @@ class PipelineManager:
         kw_method: str = "keybert",
         num_keywords: int = 20,
     ) -> EnrichmentResult:
-        """Materialize input, run the pipeline, return a result handle.
-
-        Caller is responsible for collecting artifacts and (optionally) cleanup
-        via `cleanup()`.
-        """
         if kw_method not in _KW_METHODS:
-            raise ValueError(
-                f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}."
-            )
+            raise ValueError(f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}.")
         doc_id = sanitize_doc_id(doc_id)
         job_id = uuid.uuid4().hex
         workspace = _API_JOBS_ROOT / job_id
         workspace.mkdir(parents=True, exist_ok=True)
 
         cfg = _derive_config(workspace)
-        input_csv = workspace / "in" / f"{doc_id}.csv"
-        pages = _rows_to_canonical_csv(rows, input_csv)
+        pages = _write_canonical_csvs(rows, workspace / "in", doc_id)
 
         method_used: Optional[str] = None if kw_method == "none" else kw_method
         cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
-        if kw_method != "none":
-            cmd += ["--kw", "--kw-method", kw_method]
+        # We explicitly skip --kw because keyword extraction is done in-process below.
 
         proc = subprocess.run(
-            cmd, cwd=str(_REPO_ROOT), env=_stage_env(),
+            cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
             capture_output=True, text=True,
         )
         rc = proc.returncode
         tail = (proc.stdout + proc.stderr)[-4000:]
 
-        # Map the runner's exit-code contract onto exceptions / retries.
-        if rc == 3:
-            # Keyword preflight failed. Caller decides whether to retry with yake.
-            raise KeywordPreflightError(
-                f"Keyword preflight failed (exit 3) for method '{kw_method}'.\n{tail}",
-            )
         if rc == 1:
             raise PipelineError(
                 f"Pipeline produced no output (empty run, exit 1).\n{tail}",
@@ -404,6 +381,82 @@ class PipelineManager:
                 http_status=502, returncode=rc,
             )
 
+        # Validate that TEITOK was actually produced (fail fast on silent empty run skips)
+        teitok_dir = workspace / "out" / "TEITOK"
+        teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
+        if not teitok_files:
+            raise PipelineError(
+                f"Pipeline completed (exit 0) but produced no TEITOK output. "
+                f"This indicates a silent empty run.\n{tail}",
+                http_status=502, returncode=0,
+            )
+
+        # In-process Keyword Extraction
+        if kw_method != "none":
+            from keywords import extract_keywords
+            from atrium_paradata import ParadataLogger, merge_run_paradata
+            udp_dir = workspace / "out" / "UDP"
+            conllu_files = sorted(udp_dir.glob("*.conllu"))
+
+            if conllu_files:
+                try:
+                    paths = [str(p) for p in conllu_files]
+                    results = extract_keywords(paths, method=kw_method, num_keywords=num_keywords)
+                    if not isinstance(results, list) or (results and not isinstance(results[0], list)):
+                        results = [results]
+
+                    suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(kw_method, kw_method)
+                    suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(kw_method, kw_method.upper())
+
+                    kw_dir = workspace / "out" / f"KW_PER_DOC_{suffix_u}"
+                    kw_dir.mkdir(parents=True, exist_ok=True)
+
+                    sum_file = workspace / "out" / f"keywords_summary_{suffix_l}.csv"
+                    with open(sum_file, "w", encoding="utf-8", newline="") as fh:
+                        header = ["document_id"]
+                        for i in range(1, num_keywords + 1):
+                            header.extend([f"kw-{i}", f"score-{i}"])
+                        csv.writer(fh).writerow(header)
+
+                    pd_logger = ParadataLogger(
+                        program="nlp-enrich",
+                        config={"script": "keywords", "method": kw_method},
+                        paradata_dir=str(workspace / "out" / "paradata"),
+                        output_types=["csv_per_doc", "csv_summary_row"]
+                    )
+                    pd_logger.log_component("keybert" if kw_method == "keybert" else kw_method)
+
+                    for p, kws in zip(conllu_files, results):
+                        doc_id_stem = p.stem
+                        with open(kw_dir / f"{doc_id_stem}_keywords.csv", "w", encoding="utf-8", newline="") as fh:
+                            writer = csv.writer(fh)
+                            writer.writerow(["keyword", "score"])
+                            writer.writerows(kws)
+
+                        with open(sum_file, "a", encoding="utf-8", newline="") as fh:
+                            row = [doc_id_stem]
+                            for i in range(num_keywords):
+                                if i < len(kws):
+                                    row.extend([kws[i][0], kws[i][1]])
+                                else:
+                                    row.extend(["", ""])
+                            csv.writer(fh).writerow(row)
+
+                        pd_logger.log_success("csv_per_doc")
+                        pd_logger.log_success("csv_summary_row")
+
+                    pd_logger.finalize(input_total=len(conllu_files))
+
+                    # Re-merge paradata to incorporate the in-process keywords paradata
+                    pd_dir = workspace / "out" / "paradata"
+                    all_pd = sorted(pd_dir.glob("*_nlp-enrich.json"))
+                    merge_run_paradata([str(x) for x in all_pd], str(pd_dir / "merged_pipeline-run.json"), pipeline="nlp-enrich")
+
+                except Exception as exc:
+                    if kw_method == "keybert":
+                        raise KeywordPreflightError(f"KeyBERT failed: {exc}", returncode=3)
+                    raise PipelineError(f"Keyword extraction failed: {exc}", http_status=502, returncode=1)
+
         return EnrichmentResult(
             job_id=job_id,
             doc_id=doc_id,
@@ -416,8 +469,6 @@ class PipelineManager:
             stages=self._read_stage_records(workspace / "out" / "paradata"),
             stdout_tail=tail,
         )
-
-    # -- result collection -----------------------------------------------------
 
     @staticmethod
     def _read_stage_records(paradata_dir: Path) -> List[Dict[str, Any]]:
@@ -444,7 +495,6 @@ class PipelineManager:
         tt = result.output_dir / "TEITOK" / f"{result.doc_id}.teitok.xml"
         if tt.exists():
             return tt.read_text(encoding="utf-8")
-        # Fall back to any single TEITOK file produced.
         cands = list((result.output_dir / "TEITOK").glob("*.teitok.xml"))
         return cands[0].read_text(encoding="utf-8") if cands else None
 
@@ -509,7 +559,6 @@ class PipelineManager:
 
     @staticmethod
     def zip_workspace_output(result: EnrichmentResult) -> Path:
-        """Zip the workspace OUTPUT_DIR; return the archive path."""
         archive_base = result.workspace / f"{result.doc_id}_enriched"
         shutil.make_archive(str(archive_base), "zip", root_dir=str(result.output_dir))
         return Path(f"{archive_base}.zip")

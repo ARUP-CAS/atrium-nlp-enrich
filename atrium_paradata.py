@@ -670,12 +670,14 @@ def merge_run_paradata(
         }
 
     payload = {
-        "schema_version":  "2.0",
-        "record_type":     "pipeline-run-merged",
-        "pipeline":        pipeline or "nlp-enrich",
-        "repository":      repo or _REPO_URLS.get("nlp-enrich", "https://github.com/ufal"),
-        "tool_version":    tool_version,
-        "run_id":          datetime.now(tz=timezone.utc).strftime("%y%m%d-%H%M%S"),
+        "schema_version":      "2.0",
+        "program":             self.program,
+        "tool_version":        self.version,
+        "repository":          self._resolve_repository(),
+        "runner_ref":          os.environ.get(_ENV_RUNNER_REF, ""),
+        "request_id":          os.environ.get("ATRIUM_REQUEST_ID", ""),
+        "python_version":      sys.version,
+        "run_id":              self._run_id,
         "stage_count":     len(stages),
         "pipeline_stages": stages,
         "intermediate_formats": formats,
