@@ -402,6 +402,78 @@ from vocab_manager import VocabularyManager  # noqa: E402
 
 MODEL_REGISTRY: Dict[str, Dict] = {
 
+"qwen-3.6-35b-moe": {
+        "hf_id": "Qwen/Qwen3.6-35B-A3B",
+        "context_window": 262144,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "is_moe": True,
+        "load_in_4bit": True, # Updated via correction
+        "recommended_tp": 1,
+        "min_vllm_version": "0.8.0",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 1,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
+    },
+    "gemma-4-26b-moe": {
+        "hf_id": "google/gemma-4-26B-A4B-it",
+        "context_window": 256000,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "is_moe": True,
+        "load_in_4bit": True, # Updated via correction
+        "recommended_tp": 2,
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 2,
+            "gpu_memory_utilization": 0.90,
+            "max_model_len": None,
+            "vllm_batch_size": 16,
+        },
+    },
+    "qwen3-235b-a22b": {
+        "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+        "context_window": 131072,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": False,
+        "is_moe": True,
+        "load_in_4bit": True, # Updated via correction
+        "recommended_tp": 8,
+        "min_vllm_version": "0.8.0",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,
+            "gpu_memory_utilization": 0.88,
+            "max_model_len": 16384,
+            "vllm_batch_size": 8,
+        },
+    },
+    "llama4-maverick": {
+        "hf_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+        "context_window": 1048576,
+        "trust_remote_code": False,
+        "torch_dtype": torch.bfloat16,
+        "hf_token_required": True,
+        "is_moe": True,
+        "load_in_4bit": True, # Updated via correction
+        "recommended_tp": 8,
+        "min_vllm_version": "0.8.0",
+        "inference_defaults": {
+            "backend": "vllm",
+            "tensor_parallel_size": 8,
+            "gpu_memory_utilization": 0.88,
+            "max_model_len": 16384,
+            "vllm_batch_size": 4,
+        },
+    },
+
     # ------------------------------------------------------------------
     # Small / mid models — single GPU, transformers backend
     # ------------------------------------------------------------------
@@ -575,57 +647,8 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     # MoE models — vLLM only (single or multi-GPU)
     # ------------------------------------------------------------------
 
-    "qwen-3.6-35b-moe": {
-        "hf_id": "Qwen/Qwen3.6-35B-A3B",
-        "context_window": 262144,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-        "is_moe": True,
-        "bnb_experts_broken": True,
-        "recommended_tp": 1,
-        "min_vllm_version": "0.8.0",
-        "notes": (
-            "35B MoE (3B active). vLLM single GPU usually fits. "
-            "Requires vLLM ≥ 0.8.x — architecture Qwen3_5MoeForConditionalGeneration "
-            "is not registered in vLLM 0.7.3."
-        ),
-        "inference_defaults": {
-            "backend": "vllm",
-            "tensor_parallel_size": 1,
-            "gpu_memory_utilization": 0.90,
-            "max_model_len": None,
-            "vllm_batch_size": 16,
-        },
-    },
-    "gemma-4-26b-moe": {
-        "hf_id": "google/gemma-4-26B-A4B-it",
-        "context_window": 256000,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-        "is_moe": True,
-        "bnb_experts_broken": True,
-        "recommended_tp": 2,
-        "notes": (
-            "26B MoE (4B active). BF16 weight footprint ≈ 52 GB — exceeds a single "
-            "A40 48 GB (43 GB usable at 0.90 util). Requires tensor_parallel_size=2 "
-            "on a 3-GPU node (2× A40 = 96 GB).  Use the GGUF variant for a single GPU. "
-            "rope_scaling 'type'→'rope_type' rename auto-patched for vLLM 0.7.x. "
-            "CAUTION: Gemma 4 was released April 2025 (after vLLM 0.7.3 Feb 2025). "
-            "The rope_scaling error fires before the architecture check, so it is "
-            "unknown whether vLLM 0.7.3 supports this architecture. A second "
-            "'no vLLM implementation' error may appear after the rope fix is deployed. "
-            "Upgrade vLLM if that happens."
-        ),
-        "inference_defaults": {
-            "backend": "vllm",
-            "tensor_parallel_size": 2,   # BF16 52 GB needs 2× A40 48 GB
-            "gpu_memory_utilization": 0.90,
-            "max_model_len": None,
-            "vllm_batch_size": 16,
-        },
-    },
+
+
     "gemma-4-26b-moe-awq": {
         "hf_id": "google/gemma-4-26B-A4B-it",
         "context_window": 256000,
@@ -649,33 +672,6 @@ MODEL_REGISTRY: Dict[str, Dict] = {
     # Large models — vLLM only, multi-GPU
     # ------------------------------------------------------------------
 
-    "qwen3-235b-a22b": {
-        "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
-        "context_window": 131072,
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": False,
-        "is_moe": True,
-        "bnb_experts_broken": True,
-        "vllm_only": True,
-        "recommended_tp": 8,
-        "min_vllm_version": "0.8.0",
-        "notes": (
-            "235B MoE (22B active params at inference). BF16 weight footprint ≈ 470 GB "
-            "(235B × 2 bytes). "
-            "8× A100 40 GB = 320 GB total — BF16 DOES NOT FIT on available hardware. "
-            "Use the FP8 variant (qwen3-235b-a22b-fp8) which fits at ~235 GB. "
-            "Also requires vLLM ≥ 0.8.x — Qwen3 MoE was released April 2025, "
-            "after vLLM 0.7.3 (Feb 2025)."
-        ),
-        "inference_defaults": {
-            "backend": "vllm",
-            "tensor_parallel_size": 8,   # 8× A100 40 GB (tdll-8gpu), FP8 only
-            "gpu_memory_utilization": 0.88,
-            "max_model_len": 16384,       # cap from 131 072; pipeline needs ~10k
-            "vllm_batch_size": 8,
-        },
-    },
     "qwen3-235b-a22b-fp8": {
         "hf_id": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
         "context_window": 131072,
@@ -731,37 +727,7 @@ MODEL_REGISTRY: Dict[str, Dict] = {
             "vllm_batch_size": 4,
         },
     },
-    "llama4-maverick": {
-        "hf_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
-        "context_window": 1048576,   # 1 M tokens
-        "trust_remote_code": False,
-        "torch_dtype": torch.bfloat16,
-        "hf_token_required": True,
-        "is_moe": True,
-        "bnb_experts_broken": True,
-        "vllm_only": True,
-        "recommended_tp": 8,
-        "min_vllm_version": "0.8.0",
-        "notes": (
-            "Llama 4 Maverick: 128 experts, 17B active params per token. "
-            "Total parameter count ≈ 400 B. "
-            "BF16 footprint ≈ 800 GB — far exceeds available hardware. "
-            "FP8 footprint ≈ 400 GB — also exceeds 8× A100 40 GB = 320 GB. "
-            "HARDWARE VERDICT: current cluster (max 8× A100 40 GB) is INSUFFICIENT. "
-            "Requires 8× A100 80 GB or 8× H100 80 GB (not available). "
-            "1 M token context — max_model_len MUST be capped or vLLM OOMs "
-            "pre-allocating the KV table. Gated model — HF_TOKEN required. "
-            "Also requires vLLM ≥ 0.8.x — Llama 4 released April 2025, "
-            "after vLLM 0.7.3 (Feb 2025)."
-        ),
-        "inference_defaults": {
-            "backend": "vllm",
-            "tensor_parallel_size": 8,
-            "gpu_memory_utilization": 0.88,
-            "max_model_len": 16384,      # CRITICAL — prevents 1M-token KV OOM
-            "vllm_batch_size": 4,
-        },
-    },
+
 
     # ------------------------------------------------------------------
     # Archived / Unsuccessful models (kept for reference)
@@ -1257,6 +1223,14 @@ def load_model_and_tokenizer(
     if bnb_config is not None:
         load_kwargs["quantization_config"] = bnb_config
 
+    # Enforce explicit memory capping for large MoE clusters (to resolve meta tensors and memory offloading)
+    if spec.get("is_moe") and spec.get("load_in_4bit"):
+        print("[INFO] Applying explicit memory capping for large MoE.")
+        num_gpus = torch.cuda.device_count() or 1
+        max_memory = {i: "40GiB" for i in range(num_gpus)}
+        max_memory["cpu"] = "100GiB"
+        load_kwargs["max_memory"] = max_memory
+
     model = AutoModelForCausalLM.from_pretrained(hf_id, **load_kwargs)
     _verify_quantization_effective(model, model_key, spec)
     model.eval()
@@ -1458,32 +1432,25 @@ def load_vllm_engine(
 def _should_process_line(
     text: str,
     categ: str,
+    quality_score: float, # Added via correction
     include_non_text: bool,
     min_char_count: int,
     min_char_non_text: int,
     min_alpha_ratio_non_text: float,
 ) -> Tuple[bool, str]:
-    """
-    Return ``(should_process, skip_reason)``.
 
-    Applies category-level and character-level filters before sending a line
-    to the LLM, avoiding wasted inference on noise rows.
+    # Strict range-based decision matrix for categorization
+    if quality_score < 0.40:
+        categ = "Trash"
+    elif quality_score < 0.70 and categ != "Trash":
+        categ = "Noisy"
 
-    Bug fix (v0.10.1): empty ``categ`` string previously fell through all
-    category guards silently. It is now handled explicitly as an unknown
-    category, treated identically to plain text (apply only the
-    ``min_char_count`` filter). This makes the intent explicit and prevents
-    future additions to ``_ALWAYS_SKIP_CATEG`` from accidentally matching
-    the empty-string case.
-    """
     if not text:
         return False, "empty text"
 
-    # Hard skip — noise or trash OCR output
     if categ in _ALWAYS_SKIP_CATEG:
-        return False, f"categ={categ!r}"
+        return False, f"categ={categ!r} (quality={quality_score})"
 
-    # Non-text (figures, tables, decorative elements) — apply stricter filters
     if categ == "Non-text":
         if not include_non_text:
             return False, "Non-text excluded by config"
@@ -1496,17 +1463,11 @@ def _should_process_line(
             return False, f"Non-text alpha ratio too low ({alpha_ratio:.2f})"
         return True, ""
 
-    # Empty categ — treat as regular text (explicit, not fallthrough)
-    # This covers rows where the OCR classifier produced no category label.
     if not categ:
         if len(text) < min_char_count:
-            return False, (
-                f"text too short ({len(text)} < {min_char_count} chars) "
-                "[unknown categ]"
-            )
+            return False, f"text too short ({len(text)} < {min_char_count} chars) [unknown categ]"
         return True, ""
 
-    # Regular text (and any other unlisted category)
     if len(text) < min_char_count:
         return False, f"text too short ({len(text)} < {min_char_count} chars)"
 

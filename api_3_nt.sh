@@ -15,15 +15,16 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "conllu_input_dir=${OUTPUT_DIR}/UDP" \
         "output_dir=${OUTPUT_DIR}/NE")
 
-CONLLU_FILES=("${OUTPUT_DIR}/UDP/"*.conllu)
-TOTAL=${#CONLLU_FILES[@]}
-
+TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
 mkdir -p "${OUTPUT_DIR}/NE"
 
-for conllu in "${CONLLU_FILES[@]}"; do
-    doc=$(basename "$conllu" .conllu)
+while IFS= read -r -d '' conllu; do
+    rel_path="${conllu#${OUTPUT_DIR}/UDP/}"
+    doc="${rel_path%.conllu}"
     out_dir="${OUTPUT_DIR}/NE/${doc}"
     [ -d "$out_dir" ] && continue
+
+    mkdir -p "$out_dir"
 
     if python3 api_util/call_nametag.py \
             --input      "$conllu" \
@@ -40,6 +41,6 @@ for conllu in "${CONLLU_FILES[@]}"; do
             --file  "$doc" \
             --reason "NameTag API call failed"
     fi
-done
+done < <(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f -print0)
 
 python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"

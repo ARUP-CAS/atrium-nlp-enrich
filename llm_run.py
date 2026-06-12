@@ -4,32 +4,8 @@ llm_run.py — Entry point for the LLM Semantic Enrichment Pipeline.
 Reads llm_config.txt, initialises the model and vocabulary, then iterates
 over every CSV file in INPUT_DIR and writes per-document JSON enrichment
 files to OUTPUT_DIR.
-
-Usage:
-    python llm_run.py               # uses llm_config.txt in the current directory
-    python llm_run.py my_config.txt # uses a custom config file
-
-Backend selection (set BACKEND= in llm_config.txt):
-    transformers  — HuggingFace Transformers + BnB 4-bit + lmformatenforcer.
-                    Best for single-GPU runs on models ≤ 31 B.
-    vllm          — vLLM + xgrammar guided decoding + Automatic Prefix Caching.
-                    Required for models ≥ 70 B or any multi-GPU node.
-                    Set TENSOR_PARALLEL_SIZE, GPU_MEMORY_UTILIZATION, etc.
-
-Abort-marker behaviour (bug fix v0.10.1):
-    When a document is aborted after 10 consecutive inference errors:
-      • Partial results (if any) are written to the normal output JSON.
-      • A sidecar ``<stem>_enriched.abort.json`` file is written alongside the
-        output, containing abort metadata (reason, processed count, timestamp).
-    Previously, aborted documents with partial results were written silently
-    with no indication that the output was incomplete.
-
-NOTE: llm_utils is imported first so its PYTORCH_CUDA_ALLOC_CONF guard fires
-before any other CUDA-touching library is loaded.
 """
 
-# llm_utils sets PYTORCH_CUDA_ALLOC_CONF at module level — this import
-# MUST come before any other library that might touch the CUDA context.
 import llm_utils  # noqa: F401  (side-effect: env-var guard + compat patches)
 
 import datetime
@@ -62,10 +38,6 @@ from llm_utils import (
 )
 
 
-# ---------------------------------------------------------------------------
-# Examples footer (shared between _build_candidate_prompt and token reporting)
-# ---------------------------------------------------------------------------
-
 _EXAMPLES_FOOTER = (
     "\nEXAMPLES:\n\n"
     "Input line: \"Výzkum odhalil základy gotického kostela ze 14. "
@@ -88,65 +60,7 @@ _EXAMPLES_FOOTER = (
 )
 
 
-# ---------------------------------------------------------------------------
-# Vocabulary helpers
-# ---------------------------------------------------------------------------
-
-def _term_priority(cs: str, en: str) -> int:
-    """
-    Return a sort key (lower = higher priority) for vocabulary term ordering.
-
-    Priority 2 (sorted last):  ambiguous or proper-noun-only terms.
-    Priority 1:                multi-word proper-noun pairs (likely named entities).
-    Priority 0 (default):      ordinary archaeological terms — kept at front.
-    """
-    if en.rstrip().endswith("(the)"):
-        return 2
-
-    if cs == en and cs and cs[0].isupper() and "/ " not in cs:
-        return 2
-
-    cs_words = cs.split()
-    if (
-        len(cs_words) >= 2
-        and all(w[0].isupper() for w in cs_words if w)
-        and "/" not in cs
-        and not any(c.isdigit() for c in cs)
-    ):
-        _arch_keywords = {
-            "kultura", "doba", "období", "eneolit", "paleolit", "neolit",
-            "středověk", "novověk", "pravěk", "mezolit", "bronzová",
-            "laténská", "halštatská", "stěhování",
-        }
-        _arch_prefixes = ("Creative", "HaA", "HaB", "HaC", "HaD")
-
-        if not cs.startswith(_arch_prefixes) and not any(
-            kw in cs.lower() for kw in _arch_keywords
-        ):
-            en_words = en.split()
-            _stop = {"a", "an", "the", "of", "and", "in"}
-            if len(en_words) >= 2 and all(
-                w[0].isupper() for w in en_words if w.lower() not in _stop
-            ):
-                return 1
-
-    return 0
-
-
-# ---------------------------------------------------------------------------
-# Dynamic Pydantic schema builder
-# ---------------------------------------------------------------------------
-
 def build_schema(term_names: List[str]) -> type:
-    """
-    Dynamically construct a Pydantic model whose ``teater_category`` field is
-    constrained to exactly the vocabulary terms that survived the token budget.
-
-    For the transformers backend this schema drives the lm-format-enforcer
-    JSON-schema state machine so the model can only ever emit a valid category.
-    For the vLLM backend the JSON schema dict (``model.model_json_schema()``)
-    is passed directly to ``GuidedDecodingParams``.
-    """
     if not term_names:
         raise ValueError(
             "term_names is empty — vocabulary failed to load or was fully truncated."
@@ -201,31 +115,12 @@ def build_schema(term_names: List[str]) -> type:
     return ConstrainedEnrichment
 
 
-# ---------------------------------------------------------------------------
-# System prompt builder
-# ---------------------------------------------------------------------------
-
 def build_system_prompt(
     vocab_data: dict,
     tokenizer: Any,
     max_tokens: int,
     skip_truncation: bool = False,
 ) -> Tuple[str, List[str]]:
-    """
-    Build the system prompt that embeds the thematic vocabulary.
-
-    If the full vocabulary exceeds ``max_tokens``, binary-search for the
-    largest prefix that still fits, preserving the highest-priority terms.
-
-    When ``skip_truncation=True`` (used with vLLM + Automatic Prefix Caching),
-    truncation is still attempted but the budget is set to the full model
-    context window rather than the conservative CONTEXT_RESERVED limit.
-    With APC the system prompt is computed once, so injecting the full
-    vocabulary costs nothing extra per line.
-
-    Returns:
-        (system_prompt_text, surviving_term_names_cs)
-    """
     header = (
         "You are an expert archaeological data extractor. "
         "Analyze the MARKED LINE enclosed in <target_line> ... </target_line> "
@@ -254,9 +149,7 @@ def build_system_prompt(
         "THEMATIC VOCABULARY:\n"
     )
 
-    # Collect and prioritise all vocabulary terms
     raw_terms: List[dict] = []
-    # Always-present meta-text sentinel — must survive any truncation
     raw_terms.append({
         "theme": "Administrative / Meta",
         "cs": "Nerelevantní (meta-text)",
@@ -278,10 +171,7 @@ def build_system_prompt(
                     en = pair.get("en", cs_key) if isinstance(pair, dict) else cs_key
                     raw_terms.append({"theme": theme, "cs": cs_key, "en": en})
 
-    # Sentinel always first; remaining terms sorted by priority
-    prioritised = [raw_terms[0]] + sorted(
-        raw_terms[1:], key=lambda t: _term_priority(t["cs"], t["en"])
-    )
+    prioritised = raw_terms
 
     def _build_candidate_prompt(term_list: List[dict], other_cap: int = 15) -> str:
         themes: Dict[str, List[str]] = {}
@@ -357,23 +247,11 @@ def build_system_prompt(
     return surviving_prompt, surviving_cs
 
 
-# ---------------------------------------------------------------------------
-# Abort-marker writer
-# ---------------------------------------------------------------------------
-
 def _write_abort_marker(
     out_file: Path,
     stats: Dict[str, int],
     reason: str = "10 consecutive inference errors",
 ) -> None:
-    """
-    Write a sidecar ``<stem>_enriched.abort.json`` file next to *out_file*.
-
-    This file is the canonical signal that the corresponding output JSON
-    (if it exists) contains only partial results. Downstream consumers should
-    check for the presence of this sidecar before treating the output as
-    complete.
-    """
     abort_file = out_file.with_suffix("").with_suffix(".abort.json")
     payload = {
         "aborted":                True,
@@ -387,14 +265,7 @@ def _write_abort_marker(
     print(f"  -> Abort marker written: {abort_file.name}")
 
 
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
-
-def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity OK)
-    # ------------------------------------------------------------------
-    # 1. Load configuration
-    # ------------------------------------------------------------------
+def main(config_path: str = "llm_config.txt") -> None:
     config = load_config(config_path)
 
     MODEL_KEY    = config.get("MODEL_KEY",    "qwen-3.6-27b-it")
@@ -403,7 +274,6 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
     PARADATA_DIR = config.get("PARADATA_DIR", "paradata")
 
-    # Append model-name suffix so outputs from different models never collide.
     _base_out     = Path(config.get("OUTPUT_DIR", "data_samples/KW_PER_DOC_LLM"))
     _model_suffix = MODEL_KEY.replace(".", "").replace("-", "_")
     OUTPUT_DIR    = _base_out.parent / f"{_base_out.name}_{_model_suffix}"
@@ -414,17 +284,6 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     MIN_CHAR_NON_TEXT        = int(config.get("MIN_CHAR_NON_TEXT",        "8"))
     MIN_ALPHA_RATIO_NON_TEXT = float(config.get("MIN_ALPHA_RATIO_NON_TEXT", "0.40"))
 
-    # ------------------------------------------------------------------
-    # Resolve inference parameters
-    #
-    # Three-tier priority (highest → lowest):
-    #   1. Explicit value in llm_config.txt
-    #   2. Model's inference_defaults in MODEL_REGISTRY
-    #   3. Global fallback constants (_GLOBAL_INFERENCE_FALLBACKS)
-    #
-    # Sources are recorded so the startup summary can show exactly where
-    # each value came from — letting users know what they can override.
-    # ------------------------------------------------------------------
     infer, sources = get_inference_defaults(MODEL_KEY, config)
 
     BACKEND                 = infer["BACKEND"]
@@ -437,14 +296,8 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     CPU_OFFLOAD_GB          = infer["CPU_OFFLOAD_GB"]
 
     if BACKEND not in {"transformers", "vllm"}:
-        raise ValueError(
-            f"Unknown BACKEND='{BACKEND}'. Must be 'transformers' or 'vllm'."
-        )
+        raise ValueError(f"Unknown BACKEND='{BACKEND}'. Must be 'transformers' or 'vllm'.")
 
-    # ------------------------------------------------------------------
-    # Startup summary — show every effective value and its source so users
-    # know what to add to llm_config.txt if they need a different value.
-    # ------------------------------------------------------------------
     _SRC_LABEL = {
         "config":  "← llm_config.txt",
         "model":   "  (model default)",
@@ -469,30 +322,12 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
             ("ENABLE_PREFIX_CACHING",  ENABLE_PREFIX_CACHING),
             ("GUIDED_DECODING_BACKEND",GUIDED_DECODING_BACKEND),
         ]:
-            print(
-                f"    {key:<26} = {str(val):<12}  "
-                f"{_SRC_LABEL[sources.get(key, 'global')]}"
-            )
-    print(
-        "\n  To override any value add it to llm_config.txt. "
-        "Values marked '← llm_config.txt' are already user-set.\n"
-    )
+            print(f"    {key:<26} = {str(val):<12}  {_SRC_LABEL[sources.get(key, 'global')]}")
+    print("\n  To override any value add it to llm_config.txt. Values marked '← llm_config.txt' are already user-set.\n")
 
-    # ------------------------------------------------------------------
-    # Preflight: verify required libraries are installed BEFORE entering
-    # the logger context.  This ensures a missing dependency is printed
-    # as a clear, actionable message rather than being swallowed by the
-    # logger's __exit__ (which would write paradata before the traceback).
-    # ------------------------------------------------------------------
     _check_backend_deps(BACKEND, MODEL_KEY)
-
-    # Print GPU specs before any model weights are loaded so the baseline
-    # free VRAM is visible in the SLURM log.
     log_gpu_info()
 
-    # ------------------------------------------------------------------
-    # 2. Paradata logger (context manager — finalize() always called)
-    # ------------------------------------------------------------------
     logger = ParadataLogger(
         program="nlp-enrich",
         config={
@@ -509,9 +344,6 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
     )
 
     with logger:
-        # --------------------------------------------------------------
-        # 3. Vocabulary
-        # --------------------------------------------------------------
         vocab_mgr  = VocabularyManager(vocab_path=VOCAB_PATH)
         vocab_data = vocab_mgr.load()
         total_terms = sum(
@@ -521,18 +353,9 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
             if isinstance(v, dict)
         )
         if total_terms == 0:
-            raise RuntimeError(
-                "Vocabulary is empty. "
-                "Run vocab_manager.py on a node with internet access first."
-            )
-        print(
-            f"=== Vocabulary: {total_terms} terms in "
-            f"{len(vocab_data)} broad categories ==="
-        )
+            raise RuntimeError("Vocabulary is empty. Run vocab_manager.py on a node with internet access first.")
+        print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
 
-        # --------------------------------------------------------------
-        # 4. Model / engine loader
-        # --------------------------------------------------------------
         try:
             if BACKEND == "vllm":
                 llm_engine, tokenizer, spec = load_vllm_engine(
@@ -545,37 +368,22 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
                     max_model_len=MAX_MODEL_LEN,
                     cpu_offload_gb=CPU_OFFLOAD_GB,
                 )
-                model       = None      # not used in vLLM path
+                model       = None
                 is_gguf     = False
-                prefix_function = None  # vLLM handles guided decoding natively
+                prefix_function = None
                 parser      = None
-
-            else:  # transformers
+            else:
                 model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
                 llm_engine  = None
                 is_gguf     = spec.get("is_gguf", False)
-
         except Exception as exc:
-            # Print the error before the logger context exits and writes paradata
-            # so the cause is visible at the top of the SLURM log, not buried
-            # after "[paradata] Log written → ..."
-            print(
-                f"\n[ERROR] Model loading failed: {type(exc).__name__}: {exc}\n",
-                flush=True,
-            )
+            print(f"\n[ERROR] Model loading failed: {type(exc).__name__}: {exc}\n", flush=True)
             raise
 
         log_gpu_memory(label="after model load")
         max_input_tokens = spec["context_window"] - CONTEXT_RESERVED
 
-        # --------------------------------------------------------------
-        # 5. System prompt + constrained schema
-        # --------------------------------------------------------------
-        # With vLLM + Automatic Prefix Caching, the system prompt KV-cache
-        # is shared across all lines in the document — injecting the full
-        # vocabulary is effectively free (computed once, reused N times).
         skip_trunc = BACKEND == "vllm" and ENABLE_PREFIX_CACHING
-
         system_prompt, surviving_terms = build_system_prompt(
             vocab_data,
             tokenizer,
@@ -586,32 +394,16 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
 
         if BACKEND == "vllm":
             print("=== vLLM guided decoding: JSON schema registered ===")
-            # Schema dict is passed to GuidedDecodingParams inside
-            # process_document_vllm — no lmformatenforcer required.
-
         else:
             print("=== Compiling JSON Schema State Machine (lmformatenforcer) ===")
-            # Re-apply the tokenizer compat shim one final time.
-            # llm_utils already applied it twice (stub + real-module passes),
-            # but if any intervening import replaced sys.modules again this
-            # guarantees lmformatenforcer.integrations.transformers sees the patch.
             llm_utils._patch_tokenizer_compat()
             from lmformatenforcer import JsonSchemaParser
-            from lmformatenforcer.integrations.transformers import (
-                build_transformers_prefix_allowed_tokens_fn,
-            )
+            from lmformatenforcer.integrations.transformers import build_transformers_prefix_allowed_tokens_fn
             parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
-            prefix_function = (
-                None  # GGUF: handled inline inside process_document
-                if is_gguf
-                else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
-            )
+            prefix_function = None if is_gguf else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
 
         print("=== Pipeline ready ===")
 
-        # --------------------------------------------------------------
-        # 6. Main processing loop
-        # --------------------------------------------------------------
         csv_files       = sorted(INPUT_DIR.glob("*.csv"))
         total_processed = 0
         total_errors    = 0
@@ -680,30 +472,17 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
                     + (" [ABORTED]" if was_aborted else "")
                 )
 
-                # Write output if we have any results (partial or complete)
                 if enriched_results:
                     with open(out_file, "w", encoding="utf-8") as out_f:
                         json.dump(enriched_results, out_f, indent=4, ensure_ascii=False)
-                    print(
-                        f"  -> {len(enriched_results)} records → {out_file.name}"
-                    )
+                    print(f"  -> {len(enriched_results)} records → {out_file.name}")
                     logger.log_success("json", count=1)
                     logger.log_document_success()
                 else:
-                    logger.log_skip(
-                        csv_file.name,
-                        "No lines passed quality filter or all inference calls failed.",
-                    )
+                    logger.log_skip(csv_file.name, "No lines passed quality filter or all inference calls failed.")
 
-                # Write abort sidecar — regardless of whether results exist.
-                # The presence of this file is the canonical signal that the
-                # output is incomplete. Bug fix: previously no marker was written.
                 if was_aborted:
-                    _write_abort_marker(
-                        out_file=out_file,
-                        stats=doc_stats,
-                        reason="10 consecutive inference errors",
-                    )
+                    _write_abort_marker(out_file=out_file, stats=doc_stats, reason="10 consecutive inference errors")
 
             except Exception as exc:
                 print(f"  Critical error on {csv_file.name}: {exc}")
@@ -714,15 +493,8 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
 
-        # --------------------------------------------------------------
-        # 7. Summary + finalize
-        # --------------------------------------------------------------
-        already_done  = sum(
-            1 for s in logger._skipped if s.get("reason") == "already_exists"
-        )
-        true_failures = sum(
-            1 for s in logger._skipped if s.get("reason") != "already_exists"
-        )
+        already_done  = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
+        true_failures = sum(1 for s in logger._skipped if s.get("reason") != "already_exists")
         _avg_in  = total_input_tokens  / total_inference_seconds if total_inference_seconds > 0 else 0
         _avg_out = total_output_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
         print(
@@ -738,7 +510,6 @@ def main(config_path: str = "llm_config.txt") -> None:  # noqa: C901 (complexity
             f"    avg speed:               {_avg_in:.0f} in tok/s, {_avg_out:.0f} out tok/s"
         )
         logger.finalize(input_total=len(csv_files))
-        # __exit__ checks _finalised and will not double-call finalize()
 
 
 if __name__ == "__main__":

@@ -16,23 +16,18 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "manifest=${OUTPUT_DIR}/manifest.tsv" \
         "output_dir=${OUTPUT_DIR}/UDP")
 
-# FIX #1: use tail -n +2 to skip the header row before counting, which also
-# correctly handles files that lack a trailing newline (wc -l would undercount
-# by 1 in that case).
 TOTAL=$(tail -n +2 "${OUTPUT_DIR}/manifest.tsv" | wc -l)
-
 mkdir -p "${OUTPUT_DIR}/UDP"
 
 while IFS=$'\t' read -r file page path; do
-    [ "$file" = "file" ] && continue   # skip header
+    [ "$file" = "file" ] && continue
     out="${OUTPUT_DIR}/UDP/${file}.conllu"
-    [ -f "$out" ] && continue          # resume-capable: already done
+    [ -f "$out" ] && continue
 
+    mkdir -p "$(dirname "$out")"
     chunk_dir="${CHUNK_DIR}/${file}"
     mkdir -p "$chunk_dir"
 
-    # chunk.py requires: <infile> <outdir> <word_limit>
-    # call_udpipe.py then reads all chunk_*.txt files from that directory
     if python3 api_util/chunk.py "$path" "$chunk_dir" "$WORD_CHUNK_LIMIT" && \
        python3 api_util/call_udpipe.py \
            --chunk-dir "$chunk_dir" \
