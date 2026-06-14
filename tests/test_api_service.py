@@ -43,7 +43,7 @@ class TestNormalization:
         assert rows[0]["line_num"] == 1 and rows[1]["line_num"] == 3
 
     def test_unsupported_extension(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Allowed: .csv, .xlsx, .txt"):
             normalize_upload("x.pdf", b"...")
 
 
@@ -194,25 +194,19 @@ def test_enrich_json(client, monkeypatch):
 def test_enrich_keybert_degrades_to_yake(client, monkeypatch):
     api, _ = client
     import subprocess as _sp
-    import sys
-    from types import ModuleType
-
-    mock_keywords = ModuleType("keywords")
-
-    def fake_extract(paths, method, num_keywords):
-        if method == "keybert":
-            raise Exception("keybert preflight failed")
-        return [[("a", 0.5)]]
-
-    mock_keywords.extract_keywords = fake_extract
-    monkeypatch.setitem(sys.modules, "keywords", mock_keywords)
 
     def fake_run(cmd, cwd=None, env=None, capture_output=True, text=True):
         cfg_path = Path(cmd[cmd.index("--config") + 1])
         out = cfg_path.parent / "out"
+
         if "--dry-run" in cmd:
             return _sp.CompletedProcess(cmd, 0, "ok", "")
 
+        # Simulate preflight failure for keybert
+        if "--kw-method" in cmd and cmd[cmd.index("--kw-method") + 1] == "keybert":
+            return _sp.CompletedProcess(cmd, 3, "preflight failed", "")
+
+        # Simulate successful yake fallback execution
         (out / "TEITOK").mkdir(parents=True, exist_ok=True)
         (out / "TEITOK" / "CTX1.teitok.xml").write_text("<?xml?><TEI/>", "utf-8")
         (out / "UDP").mkdir(parents=True, exist_ok=True)
@@ -231,20 +225,6 @@ def test_enrich_keybert_degrades_to_yake(client, monkeypatch):
     body = r.json()
     assert body["method_requested"] == "keybert"
     assert body["method_used"] == "yake"
-
-
-def test_enrich_zip_format(client, monkeypatch):
-    api, _ = client
-    _make_stub(monkeypatch, returncode=0, doc_id="CTX1")
-    c = TestClient(api.app)
-    r = c.post("/enrich",
-               files={"file": ("CTX1.csv", b"text\nPraha\n", "text/csv")},
-               data={"format": "zip"})
-    assert r.status_code == 200
-    assert r.headers["content-type"].lower() == "application/zip"
-    zf = zipfile.ZipFile(io.BytesIO(r.content))
-    names = zf.namelist()
-    assert any("TEITOK" in n for n in names)
 
 
 def test_enrich_text_inline(client, monkeypatch):

@@ -74,7 +74,7 @@ class EnrichmentResult:
 def sanitize_doc_id(name: str) -> str:
     stem = Path(str(name or "")).name
     root, ext = os.path.splitext(stem)
-    if ext.lower() in (".csv", ".xlsx", ".txt", ".zip"):
+    if ext.lower() in (".csv", ".xlsx", ".txt"):
         stem = root
     safe = _DOC_ID_RE.sub("_", stem).strip("._-")
     return safe or _DEFAULT_DOC_ID
@@ -158,20 +158,6 @@ def _read_xlsx_bytes(data: bytes) -> List[Dict[str, Any]]:
     return rows
 
 
-def _read_zip_bytes(data: bytes) -> List[Dict[str, Any]]:
-    import zipfile
-    import io
-    rows = []
-    with zipfile.ZipFile(io.BytesIO(data)) as zf:
-        csv_names = sorted(n for n in zf.namelist() if n.lower().endswith(".csv") and not n.startswith("__MACOSX"))
-        for csv_name in csv_names:
-            sub_rows = _read_csv_bytes(zf.read(csv_name))
-            for r in sub_rows:
-                r["_source_path"] = csv_name
-            rows.extend(sub_rows)
-    return rows
-
-
 def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
     ext = os.path.splitext(filename or "")[1].lower()
     if ext == ".csv":
@@ -180,9 +166,7 @@ def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
         return _read_txt_bytes(data)
     if ext == ".xlsx":
         return _read_xlsx_bytes(data)
-    if ext == ".zip":
-        return _read_zip_bytes(data)
-    raise ValueError(f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt, .zip")
+    raise ValueError(f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt")
 
 
 def count_words(rows: List[Dict[str, Any]]) -> int:
@@ -329,6 +313,10 @@ class PipelineManager:
         method_used: Optional[str] = None if kw_method == "none" else kw_method
         cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
 
+        # Rely natively on run_pipeline.py's subprocess coordination to manage keyword extraction
+        if kw_method != "none":
+            cmd.extend(["--kw", "--kw-method", kw_method])
+
         proc = subprocess.run(
             cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
             capture_output=True, text=True,
@@ -365,75 +353,6 @@ class PipelineManager:
                 f"This indicates a silent empty run.\n{tail}",
                 http_status=502, returncode=0,
             )
-
-        if kw_method != "none":
-            from keywords import extract_keywords
-            from atrium_paradata import ParadataLogger, merge_run_paradata
-            udp_dir = workspace / "out" / "UDP"
-            conllu_files = sorted(udp_dir.glob("*.conllu"))
-
-            if conllu_files:
-                try:
-                    paths = [str(p) for p in conllu_files]
-                    results = extract_keywords(paths, method=kw_method, num_keywords=num_keywords)
-                    if not isinstance(results, list) or (results and not isinstance(results[0], list)):
-                        results = [results]
-
-                    suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(kw_method, kw_method)
-                    suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(kw_method, kw_method.upper())
-
-                    kw_dir = workspace / "out" / f"KW_PER_DOC_{suffix_u}"
-                    kw_dir.mkdir(parents=True, exist_ok=True)
-
-                    sum_file = workspace / "out" / f"keywords_summary_{suffix_l}.csv"
-                    with open(sum_file, "w", encoding="utf-8", newline="") as fh:
-                        header = ["document_id"]
-                        for i in range(1, num_keywords + 1):
-                            header.extend([f"kw-{i}", f"score-{i}"])
-                        csv.writer(fh).writerow(header)
-
-                    pd_logger = ParadataLogger(
-                        program="nlp-enrich",
-                        config={"script": "keywords", "method": kw_method},
-                        paradata_dir=str(workspace / "out" / "paradata"),
-                        output_types=["csv_per_doc", "csv_summary_row"]
-                    )
-                    pd_logger.log_component("keybert" if kw_method == "keybert" else kw_method)
-
-                    for p, kws in zip(conllu_files, results):
-                        doc_id_stem = p.stem
-                        with open(kw_dir / f"{doc_id_stem}_keywords.csv", "w", encoding="utf-8", newline="") as fh:
-                            writer = csv.writer(fh)
-                            writer.writerow(["keyword", "score"])
-                            writer.writerows(kws)
-
-                        with open(sum_file, "a", encoding="utf-8", newline="") as fh:
-                            row = [doc_id_stem]
-                            for i in range(num_keywords):
-                                if i < len(kws):
-                                    row.extend([kws[i][0], kws[i][1]])
-                                else:
-                                    row.extend(["", ""])
-                            csv.writer(fh).writerow(row)
-
-                        pd_logger.log_success("csv_per_doc")
-                        pd_logger.log_success("csv_summary_row")
-
-                    pd_logger.finalize(input_total=len(conllu_files))
-
-                    # Re-merge paradata to incorporate the in-process keywords paradata
-                    pd_dir = workspace / "out" / "paradata"
-                    all_pd = sorted(pd_dir.glob("*_nlp-enrich.json"))
-                    merge_run_paradata(
-                        [str(x) for x in all_pd],
-                        str(pd_dir / f"{doc_id}_nlp-enrich_pipeline-run.json"),
-                        pipeline="nlp-enrich"
-                    )
-
-                except Exception as exc:
-                    if kw_method == "keybert":
-                        raise KeywordPreflightError(f"KeyBERT failed: {exc}", returncode=3)
-                    raise PipelineError(f"Keyword extraction failed: {exc}", http_status=502, returncode=1)
 
         return EnrichmentResult(
             job_id=job_id,

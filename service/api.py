@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+from contextlib import asynccontextmanager
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -34,10 +35,20 @@ DEFAULT_KW_METHOD = os.environ.get("DEFAULT_KW_METHOD", "keybert")
 _ALLOWED_KW = ("keybert", "yake", "legacy", "none")
 _ALLOWED_LANG = ("cs",)
 
+_manager = PipelineManager()
+_semaphore = asyncio.Semaphore(MAX_CONCURRENT_JOBS)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, _manager.warmup, DEFAULT_KW_METHOD)
+    yield
+
 app = FastAPI(
     title="ATRIUM nlp-enrich API",
     version="0.11.0",
     description="Text lines → NLP-enriched TEITOK XML + keywords.",
+    lifespan=lifespan,
 )
 
 # Mount static directories and set root redirect before any other routes
@@ -55,10 +66,6 @@ try:
     )
 except Exception:  # pragma: no cover
     pass
-
-_manager = PipelineManager()
-_semaphore = asyncio.Semaphore(MAX_CONCURRENT_JOBS)
-
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -130,7 +137,7 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
     if words > MAX_WORDS:
         raise HTTPException(413, f"Input too large: {words} words > {MAX_WORDS}.")
 
-    if _semaphore.locked() and _semaphore._value <= 0:  # type: ignore[attr-defined]
+    if _semaphore.locked():
         raise HTTPException(429, "Server busy; max concurrent jobs reached.")
 
     async with _semaphore:
@@ -173,12 +180,6 @@ async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, l
 
 
 # ── endpoints ──────────────────────────────────────────────────────────────────
-
-@app.on_event("startup")
-async def startup_event():
-    loop = asyncio.get_event_loop()
-    await loop.run_in_executor(None, _manager.warmup, DEFAULT_KW_METHOD)
-
 
 @app.get("/", include_in_schema=False)
 async def root():
