@@ -22,7 +22,9 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "save_csv=${SAVE_CSV:-true}" \
         "save_teitok=${SAVE_TEITOK:-true}" \
         "alto_dir=${INPUT_ALTO_DIR:-}" \
-        "pages_dir=${INPUT_PAGES_DIR:-}")
+        "pages_dir=${INPUT_PAGES_DIR:-}" \
+        "dpi=${IMAGE_DPI:-}" \
+        "alto_dpi=${ALTO_DPI:-}")
 
 TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
 rm -f "${OUTPUT_DIR}/summary_ne_counts.csv"
@@ -63,6 +65,8 @@ while IFS= read -r -d '' conllu; do
             --tt-dir         "$tt_out_dir" \
             --alto-dir       "${INPUT_ALTO_DIR:-}" \
             --pages-dir      "${INPUT_PAGES_DIR:-}" \
+            --dpi            "${IMAGE_DPI:-}" \
+            --alto-dpi       "${ALTO_DPI:-}" \
             --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
 
         if $csv_done && $conllu_done && $teitok_done; then

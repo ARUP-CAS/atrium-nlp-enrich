@@ -383,7 +383,9 @@ def process_single_document(conllu_file, ne_dir, output_dir,
                              alto_dir=None, teitok_out=None,
                              pages_dir=None,
                              summary_csv=None,
-                             model_udpipe=None, model_nametag=None):
+                             model_udpipe=None, model_nametag=None,
+                             dpi=None, alto_dpi=None):
+
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
 
     FIX #8: When both a document CSV and a summary CSV are requested, the
@@ -399,9 +401,13 @@ def process_single_document(conllu_file, ne_dir, output_dir,
     doc_out_csv = doc_out_dir / f"{doc_name}.csv"
 
     teitok_out_path = None
-    if save_teitok and teitok_out:
-        teitok_out_path = Path(teitok_out) / f"{doc_name}.teitok.xml"
-        Path(teitok_out).mkdir(parents=True, exist_ok=True)
+    if save_teitok and teitok_out_path and not teitok_out_path.exists():
+        doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
+        write_teitok_merged(
+            doc_out_conllu, teitok_out_path, doc_in_alto,
+            doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
+            image_dir=pages_dir or None, dpi=dpi, alto_dpi=alto_dpi,
+        )
 
     doc_out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -443,7 +449,7 @@ def process_single_document(conllu_file, ne_dir, output_dir,
         write_teitok_merged(
             doc_out_conllu, teitok_out_path, doc_in_alto,
             doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
-            image_dir=pages_dir or None,
+            image_dir=pages_dir or None, dpi=dpi, alto_dpi=alto_dpi,
         )
 
     if not save_conllu:

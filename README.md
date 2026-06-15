@@ -413,12 +413,16 @@ $$\text{Scaled Coordinate} = \text{round}((\text{Absolute Coordinate} - \text{Of
 
 **Dynamic Scale Calculations:**
 
-* **Native Processing (Image-free):** If `INPUT_PAGES_DIR` is unassigned or left blank, the pipeline skips physical I/O 
-tasks entirely, defaulting scale indices to a stable `1.0`. It scales positions dynamically based on internal metadata 
-dimensions, executing purely text-driven conversions.
-* **Resolution Rescaling:** If `INPUT_PAGES_DIR` is set, the tool safely reads binary file headers (supporting PNG, 
-JPEG, and TIFF) without invoking bloated third-party imaging dependencies. Ratios are resolved by evaluating layout 
-sizes against image shapes (`sx = img_width / alto_width`), normalizing display outputs across varying resolution layers.
+* **Companion Image Present (Tier 1):** If `INPUT_PAGES_DIR` is set and matching images exist, the tool safely reads 
+binary file headers without invoking bloated third-party imaging dependencies. Ratios are resolved by evaluating layout 
+sizes against image shapes (`sx = img_width / alto_width`).
+* **User-set DPI (Tier 2):** If no image is available, scale is derived directly from the ALTO `<MeasurementUnit>` 
+(`inch1200`, `mm10`, or `pixel`) mapped against the environment variables `IMAGE_DPI` and `ALTO_DPI`.
+* **Native Processing (Fallback):** If no image and no DPI is provided, the tool calibrates positions through native 
+PrintSpace logic but maintains a standard `1.0` scale factor.
+
+> **Future direction:** Relative / resolution-independent coordinates are the preferred long-term direction 
+> (pending TEITOK-team confirmation).
 
 **Pre-demonstration coordinates fix of existing teitok xml files:**
 

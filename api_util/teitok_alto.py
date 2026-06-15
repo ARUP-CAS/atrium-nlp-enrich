@@ -27,6 +27,10 @@ def _attr(value: str) -> str:
     return escape(value, {'"': '&quot;'})
 
 
+def _unit_per_inch(unit):
+    return {'inch1200': 1200, 'mm10': 254}.get(unit, None)
+
+
 def _read_image_dimensions(path):
     path = Path(path)
     if not path.exists():
@@ -96,7 +100,7 @@ def _parse_alto(alto_path):
     alto_pages   = []
     alto_graphics = []
     alto_blocks  = {}
-    alto_meta = {'source_image': '', 'ocr_software': '', 'ocr_version': '', 'ocr_date': ''}
+    alto_meta = {'source_image': '', 'ocr_software': '', 'ocr_version': '', 'ocr_date': '', 'measurement_unit': 'pixel'}
 
     if not (alto_path and Path(alto_path).exists()):
         return alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta
@@ -113,8 +117,9 @@ def _parse_alto(alto_path):
 
         for desc in root.iter(_tag('Description')):
             for img_info in desc.iter(_tag('fileName')):
-                if img_info.text:
-                    alto_meta['source_image'] = img_info.text.strip()
+                if img_info.text: alto_meta['source_image'] = img_info.text.strip()
+            for mu in desc.iter(_tag('MeasurementUnit')):
+                if mu.text: alto_meta['measurement_unit'] = mu.text.strip()
             for ocr in desc.iter(_tag('ocrProcessingStep')):
                 for dt in ocr.iter(_tag('processingDateTime')):
                     if dt.text: alto_meta['ocr_date'] = dt.text.strip()
@@ -202,7 +207,12 @@ def _parse_alto(alto_path):
     return alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta
 
 
-def _build_page_scale_map(alto_pages, image_dir, doc_id):
+def _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx=0, dy=0):
+    return (f"{round((x1 - dx) * sx)} {round((y1 - dy) * sy)} "
+            f"{round((x2 - dx) * sx)} {round((y2 - dy) * sy)}")
+
+
+def _build_page_scale_map(alto_pages, image_dir, doc_id, measurement_unit='pixel', dpi=None, alto_dpi=None):
     scale_map = {}
     for pg in alto_pages:
         idx = pg['idx']
@@ -213,25 +223,33 @@ def _build_page_scale_map(alto_pages, image_dir, doc_id):
             alto_h = float(pg.get('height') or 0)
         except (ValueError, TypeError):
             alto_w = alto_h = 0.0
+
         img_dims = None
         img_path = _find_page_image(image_dir, doc_id, idx)
         if img_path:
             img_dims = _read_image_dimensions(img_path)
+
+        # Tier 1: Companion image present
         if img_dims and alto_w > 0 and alto_h > 0:
             sx = img_dims[0] / alto_w
             sy = img_dims[1] / alto_h
             scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy)
+        # Tier 2: User-set DPI
+        elif dpi and alto_w > 0 and alto_h > 0:
+            dpi_val = float(dpi)
+            unit_inch = _unit_per_inch(measurement_unit)
+            if unit_inch:
+                sx = sy = dpi_val / unit_inch
+            else:
+                a_dpi = float(alto_dpi) if alto_dpi else dpi_val
+                sx = sy = dpi_val / a_dpi
+            scale_map[idx] = (sx, sy, round(alto_w * sx), round(alto_h * sy), dx, dy)
+        # Tier 3: Fallback
         else:
             scale_map[idx] = (1.0, 1.0,
                               int(alto_w) if alto_w else None,
                               int(alto_h) if alto_h else None, dx, dy)
     return scale_map
-
-
-def _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx=0, dy=0):
-    return (f"{round((x1 - dx) * sx)} {round((y1 - dy) * sy)} "
-            f"{round((x2 - dx) * sx)} {round((y2 - dy) * sy)}")
-
 
 def _scale_bbox_tuple(bbox_tuple, sx, sy, dx=0, dy=0):
     x1, y1, x2, y2 = bbox_tuple
@@ -372,7 +390,7 @@ def _tok_xml(tok, id_map, sx=1.0, sy=1.0, dx=0, dy=0, indent=10):
 
 def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         model_udpipe=None, model_nametag=None,
-                        image_dir=None):
+                        image_dir=None, dpi=None, alto_dpi=None):
     alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta = _parse_alto(alto_path)
 
     _doc_id = doc_id or Path(teitok_path).stem
@@ -385,7 +403,11 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
         if any(candidate.glob('*.png')) or any(candidate.glob('*.jpg')):
             effective_image_dir = candidate
 
-    scale_map = _build_page_scale_map(alto_pages, effective_image_dir, _doc_id)
+    scale_map = _build_page_scale_map(
+        alto_pages, effective_image_dir, _doc_id,
+        measurement_unit=alto_meta.get('measurement_unit', 'pixel'),
+        dpi=dpi, alto_dpi=alto_dpi
+    )
 
     sentences  = []
     current_tok = []

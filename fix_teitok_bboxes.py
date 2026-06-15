@@ -80,8 +80,22 @@ def main():
     parser.add_argument("--dy", type=float, default=0.0, help="Vertical shift adjustment (e.g. -80 to remove top margin).")
     parser.add_argument("--sx", type=float, default=1.0, help="Optional horizontal scaling scale-factor multiplier ratio.")
     parser.add_argument("--sy", type=float, default=1.0, help="Optional vertical scaling scale-factor multiplier ratio.")
-    
+    parser.add_argument("--dpi", type=float, default=None, help="Target DPI to automatically calculate scale factor.")
+    parser.add_argument("--alto-dpi", type=float, default=None,
+                        help="Source DPI of ALTO pixel coordinates (used if unit is pixel).")
+    parser.add_argument("--unit", type=str, default="pixel", help="ALTO MeasurementUnit (pixel, mm10, inch1200).")
+
     args = parser.parse_args()
+
+    if args.dpi:
+        if args.unit == 'inch1200':
+            args.sx = args.sy = args.dpi / 1200.0
+        elif args.unit == 'mm10':
+            args.sx = args.sy = args.dpi / 254.0
+        elif args.unit == 'pixel':
+            a_dpi = args.alto_dpi if args.alto_dpi else args.dpi
+            args.sx = args.sy = args.dpi / a_dpi
+
     input_path = Path(args.input)
 
     if input_path.is_file():

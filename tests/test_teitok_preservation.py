@@ -32,14 +32,15 @@ from teitok_alto import write_teitok_merged
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Add this mock ALTO string near your other constants
-_ALTO_MARGIN_XML = """<?xml version="1.0" encoding="UTF-8"?>
+_ALTO_UNIT_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <alto xmlns="http://www.loc.gov/standards/alto/ns-v3#">
+    <Description><MeasurementUnit>{unit}</MeasurementUnit></Description>
     <Layout>
         <Page ID="Page1" PHYSICAL_IMG_NR="1" HEIGHT="3500" WIDTH="2400">
-            <PrintSpace HEIGHT="3000" WIDTH="2000" HPOS="200" VPOS="100">
-                <TextBlock ID="block_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
-                    <TextLine ID="line_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
-                        <String CONTENT="Test" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50"/>
+            <PrintSpace HEIGHT="3000" WIDTH="2000" HPOS="0" VPOS="0">
+                <TextBlock ID="block_1" HPOS="100" VPOS="100" WIDTH="500" HEIGHT="50">
+                    <TextLine ID="line_1" HPOS="100" VPOS="100" WIDTH="500" HEIGHT="50">
+                        <String CONTENT="Test" HPOS="100" VPOS="100" WIDTH="500" HEIGHT="50"/>
                     </TextLine>
                 </TextBlock>
             </PrintSpace>
@@ -86,6 +87,63 @@ class TestSpatialAlignment:
         # Expected X2 = (250+500) - 200 = 550
         # Expected Y2 = (150+50) - 100 = 100
         assert bbox_str == "50 50 550 100", f"BBox displacement failed. Got: {bbox_str}"
+
+    def test_tier2_mm10(self, tmp_path):
+        conllu_file = _write_conllu(tmp_path, _ALTO_CONLLU, "test.conllu")
+        alto_file = Path(tmp_path) / "test.alto.xml"
+        alto_file.write_text(_ALTO_UNIT_XML.format(unit="mm10"), encoding="utf-8")
+        out = Path(tmp_path) / "test.teitok.xml"
+
+        # mm10 + dpi=300 -> sx = 300 / 254 = 1.1811
+        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), dpi=300)
+        root = ET.parse(str(out)).getroot()
+        tok = next(root.iter("tok"))
+        surf = next(root.iter("surface"))
+        assert tok.get("bbox").startswith("118 118")  # 100 * (300/254)
+        assert surf.get("lrx") == "2835"  # 2400 * (300/254)
+
+    def test_tier2_inch1200(self, tmp_path):
+        conllu_file = _write_conllu(tmp_path, _ALTO_CONLLU, "test.conllu")
+        alto_file = Path(tmp_path) / "test.alto.xml"
+        alto_file.write_text(_ALTO_UNIT_XML.format(unit="inch1200"), encoding="utf-8")
+        out = Path(tmp_path) / "test.teitok.xml"
+
+        # inch1200 + dpi=300 -> sx = 0.25
+        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), dpi=300)
+        root = ET.parse(str(out)).getroot()
+        tok = next(root.iter("tok"))
+        assert tok.get("bbox").startswith("25 25")  # 100 * 0.25
+
+    def test_tier2_pixel(self, tmp_path):
+        conllu_file = _write_conllu(tmp_path, _ALTO_CONLLU, "test.conllu")
+        alto_file = Path(tmp_path) / "test.alto.xml"
+        alto_file.write_text(_ALTO_UNIT_XML.format(unit="pixel"), encoding="utf-8")
+        out = Path(tmp_path) / "test.teitok.xml"
+
+        # pixel + dpi=150, alto_dpi=300 -> sx = 0.5
+        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), dpi=150, alto_dpi=300)
+        root = ET.parse(str(out)).getroot()
+        tok = next(root.iter("tok"))
+        assert tok.get("bbox").startswith("50 50")  # 100 * 0.5
+
+    def test_tier1_image_wins_over_dpi(self, tmp_path):
+        conllu_file = _write_conllu(tmp_path, _ALTO_CONLLU, "test.conllu")
+        alto_file = Path(tmp_path) / "test.alto.xml"
+        alto_file.write_text(_ALTO_UNIT_XML.format(unit="mm10"), encoding="utf-8")
+        out = Path(tmp_path) / "test.teitok.xml"
+
+        # Create a mock companion image header
+        import struct
+        img_file = Path(tmp_path) / "test-1.png"
+        png_header = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' + struct.pack('>I', 1200) + struct.pack('>I', 1750)
+        img_file.write_bytes(png_header)
+
+        # Companion image resolution (1200 / 2400 = 0.5) overrides the dpi value (300/254)
+        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), image_dir=str(tmp_path), dpi=300,
+                            doc_id="test")
+        root = ET.parse(str(out)).getroot()
+        tok = next(root.iter("tok"))
+        assert tok.get("bbox").startswith("50 50")
 
 
 def _eligible_tokens(conllu_path):

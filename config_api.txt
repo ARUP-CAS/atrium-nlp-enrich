@@ -32,6 +32,14 @@ SAVE_CSV=true
 SAVE_CONLLU_NE=true
 SAVE_TEITOK=true
 
+# ── Image Options ─────────────────────────────────────────────────────────────
+# OPTIONAL: Only required if your companion PNG/JPEG display images have been resized
+# to a different target resolution relative to ABBYY's baseline dimensions.
+# If left empty, the pipeline calibrates layout shifts natively using ALTO PrintSpace.
+INPUT_PAGES_DIR=""
+IMAGE_DPI=""
+ALTO_DPI=""
+
 # ─────────────────────────────────────────────────────────────────────────────
 # run_pipeline.py (merged runner) knobs
 # ─────────────────────────────────────────────────────────────────────────────
