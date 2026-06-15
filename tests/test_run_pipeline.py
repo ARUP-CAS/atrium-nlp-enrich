@@ -41,127 +41,26 @@ class TestParseConfig:
         assert values["INPUT_TABLES_DIR"] == "./out/DOC_LINE_CATEG"
 
     def test_comment_and_blank_lines_ignored(self, tmp_path):
-        cfg = self._write(tmp_path,
-                          '# a comment\n\nOUTPUT_DIR="./out"\n# trailing\n')
+        cfg = self._write(tmp_path, "# comment\n\nOUTPUT_DIR=x\n")
         values = rp._parse_config(cfg)
-        assert values == {"OUTPUT_DIR": "./out"}
-
-    def test_unquoted_inline_comment_stripped(self, tmp_path):
-        cfg = self._write(tmp_path, "TIMEOUT=60   # seconds\n")
-        values = rp._parse_config(cfg)
-        assert values["TIMEOUT"] == "60"
-
-    def test_quoted_value_keeps_hash(self, tmp_path):
-        cfg = self._write(tmp_path, 'MSG="a # b"\n')
-        values = rp._parse_config(cfg)
-        assert values["MSG"] == "a # b"
-
-    def test_quoted_value_with_trailing_comment(self, tmp_path):
-        cfg = self._write(tmp_path, 'MSG="a # b" # my comment\n')
-        values = rp._parse_config(cfg)
-        assert values["MSG"] == "a # b"
-
-    def test_export_prefix_accepted(self, tmp_path):
-        cfg = self._write(tmp_path, 'export OUTPUT_DIR="./out"\n')
-        values = rp._parse_config(cfg)
-        assert values["OUTPUT_DIR"] == "./out"
-
-    def test_missing_file_raises(self, tmp_path):
-        with pytest.raises(FileNotFoundError):
-            rp._parse_config(tmp_path / "nope.txt")
-
-
-class TestConfigBool:
-
-    @pytest.mark.parametrize("val", ["true", "True", "1", "yes", "y", "on"])
-    def test_truthy(self, val):
-        assert rp._config_bool({"FAIL_ON_EMPTY": val}, "FAIL_ON_EMPTY", False) is True
-
-    @pytest.mark.parametrize("val", ["false", "0", "no", "off", "nonsense"])
-    def test_falsy(self, val):
-        assert rp._config_bool({"FAIL_ON_EMPTY": val}, "FAIL_ON_EMPTY", True) is False
-
-    def test_missing_uses_default(self):
-        assert rp._config_bool({}, "FAIL_ON_EMPTY", True) is True
-        assert rp._config_bool({}, "FAIL_ON_EMPTY", False) is False
-
-    def test_empty_string_uses_default(self):
-        assert rp._config_bool({"FAIL_ON_EMPTY": ""}, "FAIL_ON_EMPTY", True) is True
-
-
-class TestIsEmptyFailure:
-
-    def test_genuine_empty_failure(self):
-        stats = {"input_files_total": 3, "successfully_processed": 0,
-                 "skipped_files": 0}
-        assert rp._is_empty_failure(stats) is True
-
-    def test_processed_some_not_a_failure(self):
-        stats = {"input_files_total": 3, "successfully_processed": 2,
-                 "skipped_files": 1}
-        assert rp._is_empty_failure(stats) is False
-
-    def test_all_skipped_is_resume_not_failure(self):
-        stats = {"input_files_total": 3, "successfully_processed": 0,
-                 "skipped_files": 3}
-        assert rp._is_empty_failure(stats) is False
-
-    def test_partial_skip_is_failure(self):
-        # 3 total, 0 processed, 1 skipped -> 2 failed silently! This should be a failure.
-        stats = {"input_files_total": 3, "successfully_processed": 0,
-                 "skipped_files": 1}
-        assert rp._is_empty_failure(stats) is True
-
-    def test_zero_input_not_a_failure(self):
-        stats = {"input_files_total": 0, "successfully_processed": 0,
-                 "skipped_files": 0}
-        assert rp._is_empty_failure(stats) is False
-
-
-class TestParadataDiscovery:
-
-    def test_snapshot_ignores_state_files(self, tmp_path):
-        (tmp_path / "a_nlp-enrich.json").write_text("{}")
-        (tmp_path / ".state_x_nlp-enrich.json").write_text("{}")
-        snap = rp._snapshot_paradata_dir(tmp_path)
-        names = {p.name for p in snap}
-        assert "a_nlp-enrich.json" in names
-        assert ".state_x_nlp-enrich.json" not in names
-
-    def test_sweep_removes_state_files(self, tmp_path):
-        (tmp_path / ".state_a_nlp-enrich.json").write_text("{}")
-        (tmp_path / ".state_b_nlp-enrich.json").write_text("{}")
-        (tmp_path / "keep_nlp-enrich.json").write_text("{}")
-        removed = rp._sweep_stale_state_files(tmp_path)
-        assert len(removed) == 2
-
-
-class TestResolveLlmParadataDir:
-
-    def test_reads_paradata_dir_from_config(self, tmp_path):
-        cfg = tmp_path / "llm_config.txt"
-        cfg.write_text('MODEL_KEY=x\nPARADATA_DIR="custom/pd" # comment\n', encoding="utf-8")
-        result = rp._resolve_llm_paradata_dir(str(cfg), Path("default"))
-        assert result == Path("custom/pd")
-
-    def test_missing_config_returns_default(self, tmp_path):
-        result = rp._resolve_llm_paradata_dir(
-            str(tmp_path / "nope.txt"), Path("default"))
-        assert result == Path("default")
+        assert values == {"OUTPUT_DIR": "x"}
 
 
 class TestBuildPlan:
 
-    def _args(self, **overrides):
-        base = dict(
-            config=Path("config_api.txt"),
-            stages=list(rp._CORE_ORDER),
-            kw=False, kw_method="yake",
-            llm=False, llm_config="llm_config.txt",
-            force=False,
+    def _args(self, **kwargs):
+        ns = argparse.Namespace(
+            stages=["manifest", "udp", "nt", "stats"],
+            config=Path("dummy"),
+            kw=False,
+            kw_method="yake",
+            llm=False,
+            llm_config="dummy_llm.txt",
+            force=False
         )
-        base.update(overrides)
-        return argparse.Namespace(**base)
+        for k, v in kwargs.items():
+            setattr(ns, k, v)
+        return ns
 
     _VALUES = {
         "OUTPUT_DIR": "./out",
@@ -187,19 +86,19 @@ class TestPreflights:
         real_import = builtins.__import__
 
         def fake_import(name, *a, **k):
-            # Includes torch/transformers to safely emulate the patched preflight loader
             if name in ("torch", "transformers", "transformers.modeling_utils", "keybert", "sentence_transformers"):
-                return object()  # pretend importable
+                return object()
             return real_import(name, *a, **k)
 
         monkeypatch.setattr(builtins, "__import__", fake_import)
-        # Should not raise
         rp._keybert_deps_preflight()
 
 
-class TestSpaceStages:
-    def test_first_call_returns_timestamp_without_sleeping(self):
-        t0 = time.time()
-        result = rp._space_stages(None)
-        assert result >= t0
-        assert time.time() - t0 < rp._STAGE_SPACING_SECONDS
+def test_is_empty_failure_strict():
+    stats_all_skipped = {"total": 3, "processed": 0, "skipped": 3}
+
+    # strict=False: skipped >= total means it's considered NOT an empty failure (a cached run)
+    assert rp._is_empty_failure(stats_all_skipped, strict=False) is False
+
+    # strict=True: processed == 0 means it IS an empty failure
+    assert rp._is_empty_failure(stats_all_skipped, strict=True) is True

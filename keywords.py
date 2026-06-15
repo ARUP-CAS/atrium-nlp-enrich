@@ -55,6 +55,10 @@ from atrium_paradata import ParadataLogger
 Keywords = List[Tuple[str, float]]
 
 
+class KeywordBackendError(RuntimeError):
+    pass
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # Configuration loading
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -185,8 +189,7 @@ def _load_yake():
         import yake  # type: ignore
         return yake
     except ImportError as exc:
-        print(f"[Error] YAKE import failed: {exc}\nRun: pip install yake", file=sys.stderr)
-        sys.exit(1)
+        raise KeywordBackendError(f"YAKE import failed: {exc}\nRun: pip install yake") from exc
 
 def _extract_yake(file_path: str, num_keywords: int, lang: str = "cs", max_words: int = 3, **_) -> Keywords:
     yake = _load_yake()
@@ -230,8 +233,7 @@ def _get_keybert_model(model_name: str):
         import torch  # type: ignore
         device = "cuda" if torch.cuda.is_available() else "cpu"
     except ImportError as exc:
-        print(f"[Error] PyTorch import failed: {exc}", file=sys.stderr)
-        sys.exit(1)
+        raise KeywordBackendError(f"PyTorch import failed: {exc}") from exc
 
     # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
     try:
@@ -320,8 +322,7 @@ def _get_keybert_model(model_name: str):
     try:
         from keybert import KeyBERT  # type: ignore
     except ImportError as exc:
-        print(f"[Error] KeyBERT import failed: {exc}\nRun: pip install keybert sentence-transformers", file=sys.stderr)
-        sys.exit(1)
+        raise KeywordBackendError(f"KeyBERT import failed: {exc}\nRun: pip install keybert sentence-transformers") from exc
 
     tag = "CUDA" if device == "cuda" else "CPU"
     print(f"[KeyBERT] Loading model '{model_name}' on {tag} …", file=sys.stderr)
@@ -332,8 +333,7 @@ def _get_keybert_model(model_name: str):
         _keybert_model_instance = KeyBERT(model=st_model)
         _keybert_model_name_loaded = model_name
     except Exception as exc:
-        print(f"[Error] Failed to load KeyBERT model '{model_name}': {exc}", file=sys.stderr)
-        sys.exit(1)
+        raise KeywordBackendError(f"Failed to load KeyBERT model '{model_name}': {exc}") from exc
 
     return _keybert_model_instance
 
@@ -597,6 +597,12 @@ def main(argv: Optional[List[str]] = None) -> None:
                 args.workers = 1
         except ImportError:
             pass
+
+        try:
+            _get_keybert_model(args.keybert_model)
+        except KeywordBackendError as e:
+            print(f"KeyBERT preflight failed: {e}", file=sys.stderr)
+            sys.exit(4)
 
     input_path    = Path(args.input_dir)
     indiv_out_dir = Path(args.per_doc_out_dir)

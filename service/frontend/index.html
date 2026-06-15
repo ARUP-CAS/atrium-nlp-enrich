@@ -15,14 +15,17 @@
 <body>
     <div class="container">
         <h2>ATRIUM NLP Document Enrichment</h2>
-        <p>Upload a CSV, XLSX, TXT, or ZIP file containing text lines to generate NLP-enriched TEITOK XML and keywords.</p>
+        <p>Upload a CSV, XLSX, or TXT file containing text lines to generate NLP-enriched TEITOK XML and keywords.</p>
         <form id="enrichForm">
             <fieldset>
-                <label for="file">Input File</label>
-                <input type="file" id="file" name="file" accept=".csv,.xlsx,.txt,.zip" required>
-
                 <div class="row">
                     <div class="column">
+                        <label for="file">Document Upload</label>
+                        <input type="file" id="file" name="file" accept=".csv,.xlsx,.txt" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column column-50">
                         <label for="kw_method">Keyword Method</label>
                         <select id="kw_method" name="kw_method">
                             <option value="keybert" selected>KeyBERT (Best quality, GPU)</option>

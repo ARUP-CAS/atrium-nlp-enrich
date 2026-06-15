@@ -1,5 +1,6 @@
 import asyncio
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from typing import Dict, Optional
 import uuid
 
@@ -9,6 +10,9 @@ class Job:
     status: str  # "queued" | "running" | "done" | "failed"
     result: Optional[dict] = None
     error: Optional[str] = None
+    created_at: float = field(default_factory=time.time)
+    finished_at: Optional[float] = None
+    workspace: Optional[str] = None
 
 _jobs: Dict[str, Job] = {}
 _job_lock = asyncio.Lock()

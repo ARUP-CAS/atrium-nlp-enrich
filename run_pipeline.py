@@ -107,9 +107,6 @@ def _config_bool(values: Dict[str, str], key: str, default: bool) -> bool:
 
 
 def _build_stage_env(config_path: Optional[Path] = None) -> Dict[str, str]:
-    """Build the subprocess environment, injecting ATRIUM_CONFIG so that
-    the bash stage scripts source the correct workspace config rather than
-    falling back to the repo-root config_api.txt."""
     env = dict(os.environ)
     env.setdefault("ATRIUM_RUNNER_REPO", "https://github.com/ufal/atrium-nlp-enrich")
     if config_path is not None:
@@ -157,13 +154,11 @@ def _sweep_stale_state_files(paradata_dir: Path) -> List[str]:
 
 def _keybert_deps_preflight() -> None:
     missing = []
-
     try:
         import torch
     except Exception as exc:
         missing.append(f"torch ({exc})")
 
-    # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
     try:
         import torchvision
     except Exception:
@@ -175,10 +170,8 @@ def _keybert_deps_preflight() -> None:
         sys.modules["torchvision"].extension = types.ModuleType("torchvision.extension")
         sys.modules["torchvision"].extension._HAS_OPS = False
 
-    # COMPATIBILITY PATCH 2: 'transformers' lazy loading bypass
     try:
         import transformers
-
         real_classes = {}
         try:
             from transformers.modeling_utils import PreTrainedModel
@@ -260,7 +253,6 @@ def _keybert_deps_preflight() -> None:
             f"failed to import: {', '.join(missing)}.\n"
             "  Fix:\n"
             "    pip install keybert sentence-transformers torch\n"
-            "  (Verify PyTorch and OS dependencies are correctly installed)\n"
             "  Or use the CPU-only YAKE backend:  --kw-method yake"
         )
 
@@ -271,18 +263,14 @@ def _llm_deps_preflight() -> None:
         import torch
     except Exception as exc:
         missing.append(f"torch ({exc})")
-
     try:
         import transformers
     except Exception as exc:
         missing.append(f"transformers ({exc})")
-
     if missing:
         raise ImportError(
             "The --llm stage requires the following package(s) which are not "
-            f"installed properly: {', '.join(missing)}.\n"
-            "  Fix:\n"
-            "    pip install -r requirements_llm.txt\n"
+            f"installed properly: {', '.join(missing)}."
         )
 
 
@@ -321,7 +309,10 @@ def _collect_stage_paradata(paradata_dir: Path, before: set) -> Tuple[Optional[D
         return None, newest
 
 
-def _is_empty_failure(stats: Dict[str, Any]) -> bool:
+def _is_empty_failure(stats: Dict[str, Any], strict: bool = False) -> bool:
+    if strict:
+        return int(stats.get("processed", stats.get("successfully_processed", 0))) == 0
+
     total = int(stats.get("input_files_total") or 0)
     processed = int(stats.get("successfully_processed") or 0)
     skipped = int(stats.get("skipped_files") or 0)
@@ -394,53 +385,21 @@ def main(argv: Optional[List[str]] = None) -> int:
                     "per-stage paradata into a single run record.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument(
-        "--config", type=Path, default=_REPO_ROOT / _CONFIG_NAME,
-        help=f"Path to config_api.txt (default: {_CONFIG_NAME} in repo root).",
-    )
-    parser.add_argument(
-        "--stages", nargs="+", choices=_CORE_ORDER, default=list(_CORE_ORDER),
-        metavar="STAGE",
-        help="Subset of core stages to run, in canonical order "
-             "(choices: manifest udp nt stats; default: all four).",
-    )
-    parser.add_argument(
-        "--kw", action="store_true",
-        help="Run the keyword-extraction stage (keywords.py) after stage 4.",
-    )
-    parser.add_argument(
-        "--kw-method", default="yake", choices=["legacy", "yake", "keybert"],
-        help="Keyword backend when --kw is set (default: yake).",
-    )
-    parser.add_argument(
-        "--llm", action="store_true",
-        help="Run the optional LLM semantic-enrichment stage (llm_run.py).",
-    )
-    parser.add_argument(
-        "--llm-config", default="llm_config.txt",
-        help="Config file for the LLM stage (default: llm_config.txt).",
-    )
-    parser.add_argument(
-        "--merged-out", default=None,
-        help="Path for the merged run record JSON "
-             "(default: <PARADATA_DIR>/<runid>_nlp-enrich_pipeline-run.json).",
-    )
-    parser.add_argument(
-        "--clean-state", action="store_true",
-        help="Sweep stale .state_*.json files from the paradata dir at start.",
-    )
-    parser.add_argument(
-        "-f", "--force", action="store_true",
-        help="Force execution: disable fail-on-empty checks and force stage progression.",
-    )
-    parser.add_argument(
-        "--dry-run", action="store_true",
-        help="Validate config and resolve the plan, but execute no stages.",
-    )
-    parser.add_argument(
-        "--print-config", choices=["json"], default=None,
-        help="Print the resolved config + stage plan and exit (no execution).",
-    )
+    parser.add_argument("--config", type=Path, default=_REPO_ROOT / _CONFIG_NAME)
+    parser.add_argument("--stages", nargs="+", choices=_CORE_ORDER, default=list(_CORE_ORDER))
+    parser.add_argument("--kw", action="store_true")
+    parser.add_argument("--kw-method", default="yake", choices=["legacy", "yake", "keybert"])
+    parser.add_argument("-n", "--num-keywords", type=int, default=None, help="Number of keywords to extract")
+    parser.add_argument("--kw-fallback", action="store_true", help="Fallback to yake if keybert fails")
+    parser.add_argument("--strict-empty", action="store_true", help="Treat all-skipped runs as failures")
+    parser.add_argument("--lang", default="cs", help="Language code passed to extraction")
+    parser.add_argument("--llm", action="store_true")
+    parser.add_argument("--llm-config", default="llm_config.txt")
+    parser.add_argument("--merged-out", default=None)
+    parser.add_argument("--clean-state", action="store_true")
+    parser.add_argument("-f", "--force", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--print-config", choices=["json"], default=None)
     args = parser.parse_args(argv)
 
     values = _parse_config(args.config)
@@ -453,33 +412,25 @@ def main(argv: Optional[List[str]] = None) -> int:
     output_dir = plan["output_dir"]
     paradata_dir = Path(plan["paradata_dir"])
     fail_on_empty = plan["fail_on_empty"]
+    effective_kw_method = args.kw_method
 
     print("=== ATRIUM nlp-enrich pipeline runner ===")
     print(f"    config:        {args.config}")
     print(f"    output_dir:    {output_dir or '(unset)'}")
     print(f"    paradata_dir:  {paradata_dir}")
-    print(f"    fail_on_empty: {fail_on_empty}" + (" (overridden by --force)" if args.force else ""))
-    print(f"    stages:        " + " → ".join(s["name"] for s in plan["stage_plan"]))
-
-    runner_repo = os.environ.get("ATRIUM_RUNNER_REPO", "")
-    runner_image = os.environ.get("ATRIUM_RUNNER_IMAGE", "")
-    runner_ref = os.environ.get("ATRIUM_RUNNER_REF", "")
-    if runner_image or runner_ref:
-        print(f"    runner image:  {runner_image or '(unset)'}")
-        print(f"    runner ref:    {runner_ref or '(unset)'}")
-    if runner_repo:
-        print(f"    runner repo:   {runner_repo}")
 
     try:
-        if args.kw and args.kw_method == "keybert":
+        if args.kw and effective_kw_method == "keybert":
             _keybert_deps_preflight()
         if getattr(args, "llm", False):
             _llm_deps_preflight()
     except ImportError as exc:
-        if args.force:
-            print(
-                f"\n[WARNING] Dependency preflight failed:\n{exc}\n\n[WARNING] --force enabled. Bypassing preflight crash.",
-                file=sys.stderr)
+        if args.kw and effective_kw_method == "keybert" and getattr(args, "kw_fallback", False):
+            print(f"\n[WARNING] KeyBERT missing, falling back to YAKE: {exc}", file=sys.stderr)
+            effective_kw_method = "yake"
+        elif args.force:
+            print(f"\n[WARNING] Dependency preflight failed:\n{exc}\n[WARNING] --force enabled. Bypassing crash.",
+                  file=sys.stderr)
         else:
             print(f"\n[ERROR] Dependency preflight failed:\n{exc}", file=sys.stderr)
             return 3
@@ -489,20 +440,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     if args.clean_state:
-        swept = _sweep_stale_state_files(paradata_dir)
-        if swept:
-            print(f"[clean-state] Removed {len(swept)} stale state file(s): "
-                  + ", ".join(swept))
+        _sweep_stale_state_files(paradata_dir)
 
-    # Build the subprocess environment, injecting the resolved config path so
-    # that bash stage scripts source the correct workspace config rather than
-    # the repo-root config_api.txt.
     env = _build_stage_env(config_path=args.config)
     if args.force:
         env["ATRIUM_FORCE_RUN"] = "1"
 
     before = _snapshot_paradata_dir(paradata_dir)
-
     results: List[StageResult] = []
     last_start: Optional[float] = None
     empty_failures: List[str] = []
@@ -511,7 +455,6 @@ def main(argv: Optional[List[str]] = None) -> int:
         script, label = _CORE_STAGES[name]
         script_path = _REPO_ROOT / script
         if not script_path.exists():
-            print(f"[ERROR] Stage script not found: {script_path}", file=sys.stderr)
             return 2
 
         last_start = _space_stages(last_start)
@@ -522,53 +465,56 @@ def main(argv: Optional[List[str]] = None) -> int:
         paradata, ppath = _collect_stage_paradata(paradata_dir, snapshot)
         results.append(StageResult(name, label, rc, paradata, ppath))
 
-        if rc != 0:
-            if args.force:
-                print(f"[WARNING] Stage '{name}' exited with code {rc}. --force is set; continuing.", file=sys.stderr)
-            else:
-                print(f"[ERROR] Stage '{name}' exited with code {rc}. Aborting.", file=sys.stderr)
-                _finalize_merge(results, paradata_dir, args, before)
-                return rc
+        if rc != 0 and not args.force:
+            _finalize_merge(results, paradata_dir, args, before)
+            return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {})):
+        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
             empty_failures.append(name)
 
     if getattr(args, "kw", False):
         last_start = _space_stages(last_start)
         snapshot = _snapshot_paradata_dir(paradata_dir)
-        kw_method = getattr(args, 'kw_method', 'yake')
-        label = f"Keyword extraction ({kw_method})"
-        print(f"\n=== Stage: keywords — {label} ===")
+        kw_method = effective_kw_method
 
-        suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(kw_method, kw_method)
-        suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(kw_method, kw_method.upper())
+        def run_kw(method):
+            label = f"Keyword extraction ({method})"
+            print(f"\n=== Stage: keywords — {label} ===")
+            suffix_l = {"legacy": "l", "yake": "y", "keybert": "kb"}.get(method, method)
+            suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(method, method.upper())
 
-        kw_input_dir = str(Path(output_dir) / "UDP")
-        kw_out_file = str(Path(output_dir) / f"keywords_summary_{suffix_l}.csv")
-        kw_per_doc_dir = str(Path(output_dir) / f"KW_PER_DOC_{suffix_u}")
+            kw_out_file = str(Path(output_dir) / f"keywords_summary_{suffix_l}.csv")
+            kw_per_doc_dir = str(Path(output_dir) / f"KW_PER_DOC_{suffix_u}")
 
-        cmd = [
-            sys.executable, str(_REPO_ROOT / "keywords.py"),
-            "-i", kw_input_dir,
-            "-m", kw_method,
-            "-o", kw_out_file,
-            "-d", kw_per_doc_dir,
-            "--paradata-dir", str(paradata_dir)
-        ]
+            cmd = [
+                sys.executable, str(_REPO_ROOT / "keywords.py"),
+                "-i", str(Path(output_dir) / "UDP"),
+                "-m", method,
+                "-o", kw_out_file,
+                "-d", kw_per_doc_dir,
+                "--paradata-dir", str(paradata_dir),
+                "-l", args.lang
+            ]
+            if args.num_keywords is not None:
+                cmd.extend(["-n", str(args.num_keywords)])
 
-        rc = _run_subprocess(cmd, env, _REPO_ROOT)
+            return _run_subprocess(cmd, env, _REPO_ROOT), label
+
+        rc, label = run_kw(kw_method)
+
+        if rc == 4 and getattr(args, "kw_fallback", False) and kw_method == "keybert":
+            print("\n[WARNING] KeyBERT runtime load failed. Re-running with YAKE.", file=sys.stderr)
+            kw_method = "yake"
+            rc, label = run_kw(kw_method)
+
         paradata, ppath = _collect_stage_paradata(paradata_dir, snapshot)
         results.append(StageResult("keywords", label, rc, paradata, ppath))
 
-        if rc != 0:
-            if args.force:
-                print(f"[WARNING] Keyword stage exited with code {rc}. --force is set; continuing.", file=sys.stderr)
-            else:
-                print(f"[ERROR] Keyword stage exited with code {rc}. Aborting.", file=sys.stderr)
-                _finalize_merge(results, paradata_dir, args, before)
-                return rc
+        if rc != 0 and not args.force:
+            _finalize_merge(results, paradata_dir, args, before)
+            return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {})):
+        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
             empty_failures.append("keywords")
 
     if getattr(args, "llm", False):
@@ -581,33 +527,17 @@ def main(argv: Optional[List[str]] = None) -> int:
         paradata, ppath = _collect_stage_paradata(llm_paradata_dir, snapshot)
         results.append(StageResult("llm", "LLM semantic enrichment", rc, paradata, ppath))
 
-        if rc != 0:
-            if args.force:
-                print(f"[WARNING] LLM stage exited with code {rc}. --force is set; continuing.", file=sys.stderr)
-            else:
-                print(f"[ERROR] LLM stage exited with code {rc}. Aborting.", file=sys.stderr)
-                _finalize_merge(results, paradata_dir, args, before)
-                return rc
+        if rc != 0 and not args.force:
+            _finalize_merge(results, paradata_dir, args, before)
+            return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {})):
+        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
             empty_failures.append("llm")
 
-    merged_path = _finalize_merge(results, paradata_dir, args, before)
-
-    print("\n=== Pipeline run complete ===")
-    for r in results:
-        s = r.stats
-        print(f"    [{r.name:<9}] rc={r.returncode} "
-              f"in={s.get('input_files_total', '?')} "
-              f"ok={s.get('successfully_processed', '?')} "
-              f"skip={s.get('skipped_files', '?')}")
-    if merged_path:
-        print(f"    merged record → {merged_path}")
+    _finalize_merge(results, paradata_dir, args, before)
 
     if empty_failures and fail_on_empty:
-        print(f"\n[FAIL] Stage(s) processed nothing despite having input and no "
-              f"resume: {', '.join(empty_failures)}. "
-              f"(Use --force flag or set FAIL_ON_EMPTY=false in config_api.txt to allow.)",
+        print(f"\n[FAIL] Stage(s) processed nothing despite having input and no resume: {', '.join(empty_failures)}.",
               file=sys.stderr)
         return 1
 
@@ -616,8 +546,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 def _resolve_llm_paradata_dir(llm_config_path: str, default_dir: Path) -> Path:
     p = Path(llm_config_path)
-    if not p.exists():
-        return default_dir
+    if not p.exists(): return default_dir
     try:
         values = _parse_config(p)
         if values.get("PARADATA_DIR"):
@@ -638,7 +567,6 @@ def _finalize_merge(results: List[StageResult], paradata_dir: Path,
         ordered_paths = [str(p) for p in _new_paradata_files(paradata_dir, before)]
 
     if not ordered_paths:
-        print("[merge] No stage paradata produced; nothing to merge.", file=sys.stderr)
         return None
 
     if args.merged_out:
@@ -651,8 +579,7 @@ def _finalize_merge(results: List[StageResult], paradata_dir: Path,
 
     try:
         return merge_run_paradata(ordered_paths, out_path, pipeline="nlp-enrich")
-    except Exception as exc:
-        print(f"[merge] WARNING — could not write merged record: {exc}", file=sys.stderr)
+    except Exception:
         return None
 
 

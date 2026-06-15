@@ -248,6 +248,12 @@ class PipelineManager:
         _API_JOBS_ROOT.mkdir(parents=True, exist_ok=True)
 
     def warmup(self, kw_method: str = "keybert") -> None:
+        """
+        Pre-populates the HuggingFace disk cache and validates KeyBERT loads
+        so the first request degrades cleanly if needed.
+        Note: This does not warm the in-RAM model per request, as extraction
+        runs in a subprocess spawn pool.
+        """
         if kw_method != "keybert":
             return
         try:
@@ -255,7 +261,7 @@ class PipelineManager:
             _get_keybert_model(DEFAULT_KEYBERT_MODEL)
             print(f"[warmup] KeyBERT model loaded.")
         except Exception as exc:
-            print(f"[warmup] KeyBERT warmup failed: {exc}. Will degrade to yake on first request.")
+            print(f"[warmup] KeyBERT warmup failed: {exc}. Will degrade gracefully.")
 
     def config_facts(self) -> Dict[str, Any]:
         facts = {
@@ -299,6 +305,7 @@ class PipelineManager:
         doc_id: str,
         kw_method: str = "keybert",
         num_keywords: int = 20,
+        lang: str = "cs",
     ) -> EnrichmentResult:
         if kw_method not in _KW_METHODS:
             raise ValueError(f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}.")
@@ -310,12 +317,13 @@ class PipelineManager:
         cfg = _derive_config(workspace)
         pages = _write_canonical_csvs(rows, workspace / "in", doc_id)
 
-        method_used: Optional[str] = None if kw_method == "none" else kw_method
         cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
+        cmd.extend(["--kw-fallback", "--strict-empty", "--lang", lang])
 
-        # Rely natively on run_pipeline.py's subprocess coordination to manage keyword extraction
         if kw_method != "none":
             cmd.extend(["--kw", "--kw-method", kw_method])
+            if num_keywords is not None:
+                cmd.extend(["--num-keywords", str(num_keywords)])
 
         proc = subprocess.run(
             cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
@@ -325,25 +333,15 @@ class PipelineManager:
         tail = (proc.stdout + proc.stderr)[-4000:]
 
         if rc == 1:
-            raise PipelineError(
-                f"Pipeline produced no output (empty run, exit 1).\n{tail}",
-                http_status=502, returncode=rc,
-            )
+            raise PipelineError(f"Pipeline produced no output (empty run, exit 1).\n{tail}", http_status=502, returncode=rc)
         if rc == 2:
-            raise PipelineError(
-                f"Required stage script missing (exit 2).\n{tail}",
-                http_status=502, returncode=rc,
-            )
+            raise PipelineError(f"Required stage script missing (exit 2).\n{tail}", http_status=502, returncode=rc)
         if rc == 3:
-            raise KeywordPreflightError(
-                f"Keyword preflight failed (exit 3).\n{tail}",
-                returncode=rc,
-            )
+            raise KeywordPreflightError(f"Keyword preflight failed (exit 3).\n{tail}", returncode=rc)
+        if rc == 4:
+            raise KeywordPreflightError("Keyword backend failed at runtime.", returncode=4)
         if rc != 0:
-            raise PipelineError(
-                f"Pipeline stage failed (exit {rc}).\n{tail}",
-                http_status=502, returncode=rc,
-            )
+            raise PipelineError(f"Pipeline stage failed (exit {rc}).\n{tail}", http_status=502, returncode=rc)
 
         teitok_dir = workspace / "out" / "TEITOK"
         teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
@@ -354,6 +352,14 @@ class PipelineManager:
                 http_status=502, returncode=0,
             )
 
+        kw_method_used = "none"
+        if (workspace / "out" / "KW_PER_DOC_KB").exists() and any((workspace / "out" / "KW_PER_DOC_KB").glob("*_keywords.csv")):
+            kw_method_used = "keybert"
+        elif (workspace / "out" / "KW_PER_DOC_Y").exists() and any((workspace / "out" / "KW_PER_DOC_Y").glob("*_keywords.csv")):
+            kw_method_used = "yake"
+        elif (workspace / "out" / "KW_PER_DOC_L").exists() and any((workspace / "out" / "KW_PER_DOC_L").glob("*_keywords.csv")):
+            kw_method_used = "legacy"
+
         return EnrichmentResult(
             job_id=job_id,
             doc_id=doc_id,
@@ -361,7 +367,7 @@ class PipelineManager:
             output_dir=workspace / "out",
             returncode=rc,
             kw_method_requested=kw_method,
-            kw_method_used=method_used,
+            kw_method_used=kw_method_used,
             pages=pages,
             stages=self._read_stage_records(workspace / "out" / "paradata"),
             stdout_tail=tail,
@@ -397,7 +403,7 @@ class PipelineManager:
 
     @staticmethod
     def collect_keywords(result: EnrichmentResult) -> List[Dict[str, Any]]:
-        if result.kw_method_used is None:
+        if result.kw_method_used is None or result.kw_method_used == "none":
             return []
         suffix = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(
             result.kw_method_used, result.kw_method_used.upper()
