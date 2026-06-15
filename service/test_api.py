@@ -65,9 +65,20 @@ def main() -> int:
     print(f"  keywords:       {len(kws)}")
     for kw in kws[:5]:
         print(f"     - {kw.get('keyword')}  ({kw.get('score')})")
+
     tt = data.get("teitok_xml") or ""
     print(f"  teitok bytes:   {len(tt)}")
-    print(f"  ne_summary rows:{len(data.get('ne_summary') or [])}")
+    ne_rows = data.get("ne_summary") or []
+    print(f"  ne_summary rows:{len(ne_rows)}")
+    for row in ne_rows:
+        print(f"     - Page {row.get('page')}:")
+        ents = row.get("entities") or []
+        for ent in ents[:5]:  # Print the top 5 entities for this page
+            print(f"         * {ent.get('text')} ({ent.get('type')} - count: {ent.get('count')})")
+        if len(ents) > 5:
+            print(f"         * ... and {len(ents) - 5} more entities")
+    # ------------------------
+
     print(f"  llm field:      {data.get('llm')!r} (must be null)")
     return 0
 

@@ -22,7 +22,14 @@ while IFS= read -r -d '' conllu; do
     rel_path="${conllu#${OUTPUT_DIR}/UDP/}"
     doc="${rel_path%.conllu}"
     out_dir="${OUTPUT_DIR}/NE/${doc}"
-    [ -d "$out_dir" ] && continue
+    
+    if [ -d "$out_dir" ]; then
+        python3 atrium_paradata.py skip \
+            --state "$PARA_STATE" \
+            --file  "$doc" \
+            --reason "output already exists"
+        continue
+    fi
 
     mkdir -p "$out_dir"
 

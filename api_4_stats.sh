@@ -25,6 +25,7 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "pages_dir=${INPUT_PAGES_DIR:-}")
 
 TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
+rm -f "${OUTPUT_DIR}/summary_ne_counts.csv"
 
 while IFS= read -r -d '' conllu; do
     rel_path="${conllu#${OUTPUT_DIR}/UDP/}"
@@ -51,6 +52,7 @@ while IFS= read -r -d '' conllu; do
         continue
     fi
 
+    # 3. Update the execution block to log a skip if it was cached, but still generate the summary:
     if python3 api_util/summarize_nt_udp.py \
             --conllu     "$conllu" \
             --ne-dir     "$ne_dir" \
@@ -63,12 +65,19 @@ while IFS= read -r -d '' conllu; do
             --pages-dir      "${INPUT_PAGES_DIR:-}" \
             --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
 
-        [ "${SAVE_CSV:-true}"       = "true" ] && \
-            python3 atrium_paradata.py success --state "$PARA_STATE" --type csv
-        [ "${SAVE_CONLLU_NE:-true}" = "true" ] && \
-            python3 atrium_paradata.py success --state "$PARA_STATE" --type conllu
-        [ "${SAVE_TEITOK:-true}"    = "true" ] && \
-            python3 atrium_paradata.py success --state "$PARA_STATE" --type xml
+        if $csv_done && $conllu_done && $teitok_done; then
+            python3 atrium_paradata.py skip \
+                --state "$PARA_STATE" \
+                --file  "$doc" \
+                --reason "all requested outputs already exist (resumed run)"
+        else
+            [ "${SAVE_CSV:-true}"       = "true" ] && \
+                python3 atrium_paradata.py success --state "$PARA_STATE" --type csv
+            [ "${SAVE_CONLLU_NE:-true}" = "true" ] && \
+                python3 atrium_paradata.py success --state "$PARA_STATE" --type conllu
+            [ "${SAVE_TEITOK:-true}"    = "true" ] && \
+                python3 atrium_paradata.py success --state "$PARA_STATE" --type xml
+        fi
     else
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
