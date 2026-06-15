@@ -27,13 +27,66 @@ import pytest
 
 from teitok_alto import write_teitok_merged
 
-TEI_NS = "http://www.tei-c.org/ns/1.0"
-_NS = {"t": TEI_NS}
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Add this mock ALTO string near your other constants
+_ALTO_MARGIN_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v3#">
+    <Layout>
+        <Page ID="Page1" PHYSICAL_IMG_NR="1" HEIGHT="3500" WIDTH="2400">
+            <PrintSpace HEIGHT="3000" WIDTH="2000" HPOS="200" VPOS="100">
+                <TextBlock ID="block_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
+                    <TextLine ID="line_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
+                        <String CONTENT="Test" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50"/>
+                    </TextLine>
+                </TextBlock>
+            </PrintSpace>
+        </Page>
+    </Layout>
+</alto>
+"""
+
+_ALTO_CONLLU = (
+    "# sent_id = 1\n"
+    "# text = Test\n"
+    "1\tTest\tTest\tNOUN\t_\t_\t0\troot\t_\t_\n\n"
+)
+
+# ═════════════════════════════════════════════════════════════════════════════
+# Spatial Bounding Box Math (Issues #4 & #9)
+# ═════════════════════════════════════════════════════════════════════════════
+class TestSpatialAlignment:
+
+    def test_printspace_margins_are_subtracted(self, tmp_path):
+        """Ensures that HPOS/VPOS from <PrintSpace> are subtracted from
+        absolute bounding boxes to fix margin displacement."""
+
+        conllu_file = _write_conllu(tmp_path, _ALTO_CONLLU, "test.conllu")
+
+        alto_file = Path(tmp_path) / "test.alto.xml"
+        alto_file.write_text(_ALTO_MARGIN_XML, encoding="utf-8")
+
+        out = Path(tmp_path) / "test.teitok.xml"
+
+        # Run conversion WITH the mock ALTO file, NO images (sx=1.0, sy=1.0)
+        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file))
+
+        root = ET.parse(str(out)).getroot()
+        tok = next(root.iter("tok"))
+
+        bbox_str = tok.get("bbox")
+        assert bbox_str is not None, "Bounding box was not assigned to token"
+
+        # The absolute coordinate of "Test" is HPOS=250, VPOS=150, Width=500, Height=50
+        # PrintSpace offset is HPOS=200, VPOS=100
+        # Expected X1 = 250 - 200 = 50
+        # Expected Y1 = 150 - 100 = 50
+        # Expected X2 = (250+500) - 200 = 550
+        # Expected Y2 = (150+50) - 100 = 100
+        assert bbox_str == "50 50 550 100", f"BBox displacement failed. Got: {bbox_str}"
+
 
 def _eligible_tokens(conllu_path):
     """Return the ordered list of token dicts the converter should emit.
@@ -79,7 +132,7 @@ def _convert(conllu_path, tmp_path, name="out.teitok.xml"):
 
 def _tok_texts(root):
     """All <tok> element texts in document order."""
-    return [el.text or "" for el in root.iter(f"{{{TEI_NS}}}tok")]
+    return [el.text or "" for el in root.iter("tok")]
 
 
 def _nonspace(chars_iterable):
@@ -124,13 +177,13 @@ class TestWellFormed:
     def test_output_is_well_formed_tei(self, sample_conllu, tmp_path):
         out = _convert(sample_conllu, tmp_path)
         root = ET.parse(str(out)).getroot()
-        assert root.tag == f"{{{TEI_NS}}}TEI"
+        assert root.tag == "TEI"
 
     def test_ner_document_is_well_formed(self, tmp_path):
         cp = _write_conllu(tmp_path, _NER_CONLLU)
         out = _convert(cp, tmp_path, "ner.teitok.xml")
         root = ET.parse(str(out)).getroot()
-        assert root.tag == f"{{{TEI_NS}}}TEI"
+        assert root.tag == "TEI"
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -164,7 +217,7 @@ class TestTokenPreservation:
         / SpaceAfter=No) reproduces the <s text="..."> attribute."""
         out = _convert(sample_conllu, tmp_path)
         root = ET.parse(str(out)).getroot()
-        sentences = list(root.iter(f"{{{TEI_NS}}}s"))
+        sentences = list(root.iter("s"))
         assert sentences, "no <s> elements emitted"
         checked = 0
         for s in sentences:
@@ -172,7 +225,7 @@ class TestTokenPreservation:
             if not text_attr:
                 continue
             rebuilt = ""
-            for tok in s.iter(f"{{{TEI_NS}}}tok"):
+            for tok in s.iter("tok"):
                 rebuilt += (tok.text or "")
                 rebuilt += "" if tok.get("join") == "right" else " "
             assert "".join(rebuilt.split()) == "".join(text_attr.split())
@@ -208,8 +261,8 @@ class TestNerSpans:
 
         # Entity tokens live inside <name> wrappers.
         name_tok_texts = []
-        for name in root.iter(f"{{{TEI_NS}}}name"):
-            name_tok_texts.extend(t.text for t in name.iter(f"{{{TEI_NS}}}tok"))
+        for name in root.iter("name"):
+            name_tok_texts.extend(t.text for t in name.iter("tok"))
         assert "Jan" in name_tok_texts
         assert "Novotný" in name_tok_texts      # I-P continues the PER span
         assert "Praze" in name_tok_texts        # separate LOC span
@@ -221,7 +274,7 @@ class TestNerSpans:
         cp = _write_conllu(tmp_path, _NER_CONLLU)
         out = _convert(cp, tmp_path, "ner.teitok.xml")
         root = ET.parse(str(out)).getroot()
-        types = {n.get("type") for n in root.iter(f"{{{TEI_NS}}}name")}
+        types = {n.get("type") for n in root.iter("name")}
         assert "PER" in types
         assert "LOC" in types
 
@@ -236,10 +289,10 @@ class TestPageBoundaries:
         root = ET.parse(str(out)).getroot()
         assert _tok_texts(root) == [t["form"] for t in _eligible_tokens(two_page_conllu)]
         # The sent_id reset must have produced two pages, no token swallowed.
-        assert len(list(root.iter(f"{{{TEI_NS}}}pb"))) == 2
+        assert len(list(root.iter("pb"))) == 2
 
     def test_all_tokens_present_across_page_break_marker(self, page_break_conllu, tmp_path):
         out = _convert(page_break_conllu, tmp_path, "pb.teitok.xml")
         root = ET.parse(str(out)).getroot()
         assert _tok_texts(root) == [t["form"] for t in _eligible_tokens(page_break_conllu)]
-        assert len(list(root.iter(f"{{{TEI_NS}}}pb"))) == 2
+        assert len(list(root.iter("pb"))) == 2
