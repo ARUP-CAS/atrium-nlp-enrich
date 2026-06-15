@@ -206,6 +206,8 @@ def _build_page_scale_map(alto_pages, image_dir, doc_id):
     scale_map = {}
     for pg in alto_pages:
         idx = pg['idx']
+        dx = pg.get('ps_hpos', 0)
+        dy = pg.get('ps_vpos', 0)
         try:
             alto_w = float(pg.get('width') or 0)
             alto_h = float(pg.get('height') or 0)
@@ -218,22 +220,22 @@ def _build_page_scale_map(alto_pages, image_dir, doc_id):
         if img_dims and alto_w > 0 and alto_h > 0:
             sx = img_dims[0] / alto_w
             sy = img_dims[1] / alto_h
-            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1])
+            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy)
         else:
             scale_map[idx] = (1.0, 1.0,
                               int(alto_w) if alto_w else None,
-                              int(alto_h) if alto_h else None)
+                              int(alto_h) if alto_h else None, dx, dy)
     return scale_map
 
 
-def _scale_bbox_str(x1, y1, x2, y2, sx, sy):
-    return (f"{round(x1 * sx)} {round(y1 * sy)} "
-            f"{round(x2 * sx)} {round(y2 * sy)}")
+def _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx=0, dy=0):
+    return (f"{round((x1 - dx) * sx)} {round((y1 - dy) * sy)} "
+            f"{round((x2 - dx) * sx)} {round((y2 - dy) * sy)}")
 
 
-def _scale_bbox_tuple(bbox_tuple, sx, sy):
+def _scale_bbox_tuple(bbox_tuple, sx, sy, dx=0, dy=0):
     x1, y1, x2, y2 = bbox_tuple
-    return _scale_bbox_str(x1, y1, x2, y2, sx, sy)
+    return _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx, dy)
 
 
 def _align_tokens_to_alto(tokens, alto_strings):
@@ -347,7 +349,7 @@ def _parse_misc(misc_str):
     return misc
 
 
-def _tok_xml(tok, id_map, sx=1.0, sy=1.0, indent=10):
+def _tok_xml(tok, id_map, sx=1.0, sy=1.0, dx=0, dy=0, indent=10):
     wid = id_map.get(tok['id'], tok['id'])
     head_ref = None
     if tok.get('head') and tok['head'] != '0':
@@ -363,7 +365,7 @@ def _tok_xml(tok, id_map, sx=1.0, sy=1.0, indent=10):
     if not tok.get('space_after', True):            attrs.append('join="right"')
     bbox = tok.get('_bbox')
     if bbox:
-        attrs.append(f'bbox="{_scale_bbox_str(bbox["left"], bbox["top"], bbox["right"], bbox["bottom"], sx, sy)}"')
+        attrs.append(f'bbox="{_scale_bbox_str(bbox["left"], bbox["top"], bbox["right"], bbox["bottom"], sx, sy, dx, dy)}"')
     pad = ' ' * indent
     return f'{pad}<tok {" ".join(attrs)}>{escape(tok["form"])}</tok>\n'
 
@@ -457,7 +459,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
     try:
         with open(teitok_path, 'w', encoding='utf-8') as out:
             out.write('<?xml version="1.0" encoding="utf-8"?>\n')
-            out.write('<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">\n')
+            out.write('<TEI xmlnsoff="http://www.tei-c.org/ns/1.0" lang="cs">\n')
             out.write('  <teiHeader>\n')
             out.write('    <fileDesc>\n')
             out.write(f'      <titleStmt><title>{doc_id_safe}</title></titleStmt>\n')
@@ -517,7 +519,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                     idx = pg['idx']
                     surf_id = f'{doc_id_safe}.surface{idx}'
                     facs_img = f'{doc_id_safe}-{idx}.png'
-                    sx, sy, img_w, img_h = scale_map.get(idx, (1.0, 1.0, None, None))
+                    sx, sy, img_w, img_h, dx, dy = scale_map.get(idx, (1.0, 1.0, None, None, 0, 0))
                     lrx_attr = f' lrx="{img_w}"' if img_w is not None else ''
                     lry_attr = f' lry="{img_h}"' if img_h is not None else ''
                     out.write(f'    <surface id="{surf_id}"{lrx_attr}{lry_attr}>\n')
@@ -547,7 +549,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         out.write('      </div>\n')
                         current_block = None
                     current_page = new_page_num
-                    sx, sy, _, _ = scale_map.get(current_page, (1.0, 1.0, None, None))
+                    sx, sy, _, _, dx, dy = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0))
                     pb_id = f'{doc_id_safe}.pb{current_page}'
                     facs_img = f'{doc_id_safe}-{current_page}.png'
                     out.write(
@@ -557,13 +559,13 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         if g['page_idx'] == current_page:
                             gid = escape(g['id']) if g.get('id') else \
                                   f"{doc_id_safe}.g{abs(hash(g['bbox'])) % 10000}"
-                            scaled_gbbox = _scale_bbox_tuple(g['bbox'], sx, sy)
+                            scaled_gbbox = _scale_bbox_tuple(g['bbox'], sx, sy, dx, dy)
                             out.write(
                                 f'      <figure type="{escape(g["type"])}" '
                                 f'id="{gid}" bbox="{scaled_gbbox}"/>\n'
                             )
                 else:
-                    sx, sy, _, _ = scale_map.get(current_page, (1.0, 1.0, None, None))
+                    sx, sy, _, _, dx, dy = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0))
 
                 sent_block = (first_bbox.get('block_id') if first_bbox else None) \
                              or f'block_{s_idx}'
@@ -578,7 +580,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         if len(parts) == 4:
                             scaled_div_bbox = _scale_bbox_str(
                                 int(parts[0]), int(parts[1]),
-                                int(parts[2]), int(parts[3]), sx, sy,
+                                int(parts[2]), int(parts[3]), sx, sy, dx, dy
                             )
                             bbox_attr = f' bbox="{scaled_div_bbox}"'
                         else:
@@ -607,7 +609,7 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                             parts = raw_lb.split()
                             scaled_lb = _scale_bbox_str(
                                 int(parts[0]), int(parts[1]),
-                                int(parts[2]), int(parts[3]), sx, sy,
+                                int(parts[2]), int(parts[3]), sx, sy, dx, dy
                             ) if len(parts) == 4 else raw_lb
                         else:
                             scaled_lb = ''
@@ -627,12 +629,12 @@ def write_teitok_merged(conllu_path, teitok_path, alto_path=None, doc_id=None,
                         )
                         for tok in grp['tokens']:
                             _emit_lb_if_changed(tok, 12)
-                            out.write('  ' + _tok_xml(tok, id_map, sx=sx, sy=sy, indent=12))
+                            out.write('  ' + _tok_xml(tok, id_map, sx=sx, sy=sy, dx=dx, dy=dy, indent=12))
                         out.write('          </name>\n')
                     else:
                         tok = grp['tokens'][0]
                         _emit_lb_if_changed(tok, 10)
-                        out.write(_tok_xml(tok, id_map, sx=sx, sy=sy, indent=10))
+                        out.write(_tok_xml(tok, id_map, sx=sx, sy=sy, dx=dx, dy=dy, indent=10))
 
                 out.write('        </s>\n')
 

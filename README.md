@@ -231,7 +231,11 @@ SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/UDP_NE"
 
 TEITOK_OUTPUT_DIR="$OUTPUT_DIR/TEITOK"
 INPUT_ALTO_DIR="$OUTPUT_DIR/altos"              # Source ALTO XML files - for TEITOK conversion
-INPUT_PAGES_DIR="$OUTPUT_DIR/pages"             # Per-page images (doc-N.png) - for bbox scaling
+# ── Image Options ─────────────────────────────────────────────────────────────
+# OPTIONAL: Only required if your companion PNG/JPEG display images have been resized 
+# to a different target resolution relative to ABBYY's baseline dimensions.
+# If left empty, the pipeline calibrates layout shifts natively using ALTO PrintSpace.
+INPUT_PAGES_DIR=""
 
 UDPIPE_URL="https://lindat.mff.cuni.cz/services/udpipe/api/process"
 NAMETAG_URL="https://lindat.mff.cuni.cz/services/nametag/api/recognize"
@@ -365,8 +369,9 @@ Optionally, TEITOK-related functionality is implemented in
 * **Input 1:** `OUTPUT_DIR/UDP/*.conllu` — Per-document CoNLL-U files containing morphology and syntax.
 * **Input 2:** `OUTPUT_DIR/NE/*/*.tsv` — Per-page TSV files containing Named Entity annotations.
 * **Input 3 (Optional):** `INPUT_ALTO_DIR/*.alto.xml` — Source ALTO XML files used during TEITOK conversion to provide spatial bounding box coordinates for each token.
-* **Input 4 (Optional):** `INPUT_PAGES_DIR/<doc_id>-N.png` — Per-page images of the scanned document. When present, the pipeline reads each image's actual pixel dimensions and applies a per-page scale factor to all bounding box coordinates, correcting for any resolution difference between ABBYY's internal scan resolution and the PNG images served to TEITOK. If omitted, raw ALTO coordinates are written unchanged.
-
+* **Input 4 (Optional):** `INPUT_PAGES_DIR/<doc_id>-N.png` — Per-page facsimile images. When specified, the pipeline dynamically 
+extracts pixel boundaries from the headers to compute scaling transformations (sx, sy). If omitted, coordinates are safely 
+translated and aligned at a native 1.0 scale factor.
 * **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv` — Global table of aggregated Named Entity statistics across all documents.
 * **Output 2:** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.csv` — Per-document CSV tables with tokens, lemmas, and human-readable NE explanations.
 * **Output 3 (Optional):** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.conllu` — Final CoNLL-U files with NER tags enriched in the `MISC` column.
@@ -384,33 +389,61 @@ The behavior of this step is controlled by boolean flags in your [config_api.txt
 
 #### ALTO-to-TEITOK XML Generation and Coordinate Alignment
 
-When `SAVE_TEITOK=true`, the script  ([teitok_alto.py](api_util/teitok_alto.py) 📎) 
-generates standard-compliant TEITOK XML by aligning UDPipe tokens to spatial bounding 
-boxes from the corresponding ALTO XML file. 
+When `SAVE_TEITOK=true`, [teitok_alto.py](api_util/teitok_alto.py) 📎 reads and processes the internal spatial 
+hierarchy of your ALTO source specifications.
 
-This alignment is powered by an optimal sequence matching algorithm 
-(`difflib.SequenceMatcher`, run with `autojunk=False` so that frequent short tokens such as
-punctuation and digits are never silently dropped). By flattening all ALTO `String` elements
-into a single NFC-normalized character sequence and mapping the token forms against it, the
-aligner seamlessly bridges complex OCR and tokeniser mismatches (such as arbitrary word splits,
-differing forms, or missing characters). This robust approach ensures virtually 100% 
-of available ALTO bounding boxes are successfully transferred to the output tokens.
+**Offset Alignment (Resolving Layout Shifting):**
 
-**Coordinate scaling.** ABBYY ALTO stores all `HPOS`/`VPOS` values as absolute pixel
-coordinates measured from the top-left corner of the full scanned page (not from the
-`PrintSpace` origin). The PNG images served to TEITOK may have been produced at a different
-resolution — for example, ABBYY may have internally used 300 DPI (page 2480 × 3507 px) while
-the stored PNG is 150 DPI (1240 × 1754 px). Without correction, every word overlay appears at
-the right relative position but at roughly twice the expected offset, causing the well-known
-*displacement* symptom reported in TEITOK's facsimile view.
+ABBYY FineReader naturally indexes element positions from the absolute physical boundary of the scanner bed `(0,0)`. 
+However, companion web images cropped for public view or optimized to strip away raw scanner artifacts introduce 
+a uniform positional drift (causing text layers to display too far left or too high up on screen).
 
-When `INPUT_PAGES_DIR` is set, `teitok_alto.py` reads the actual pixel dimensions of each
-page image (PNG/JPEG/TIFF, no external library required) and computes a per-page scale factor
-`sx = img_width / alto_page_width` (and equivalently for the vertical axis). All coordinates
-written to `@bbox` attributes — on `<tok>`, `<lb>`, `<div>`, and `<figure>` — are multiplied
-by this factor. The `<surface lrx= lry=>` attributes in the `<facsimile>` section reflect the
-actual image dimensions so TEITOK can position overlays correctly. A diagnostic line is printed
-for every page where scaling differs from 1 × 1.
+To neutralize this error without modifying binary assets or re-cropping, the script automatically parses page-level 
+`<PrintSpace>` properties from the ALTO structure:
+
+```xml
+<PrintSpace HEIGHT="3263" WIDTH="2027" VPOS="80" HPOS="297">
+```
+
+The horizontal boundary (`HPOS`) and vertical boundary (`VPOS`) values are captured as active translation variables 
+(`dx`, `dy`). Prior to rendering bounding boxes into the TEITOK XML stream, these values are subtracted from the 
+coordinate targets, recalculating alignment automatically:
+
+$$\text{Scaled Coordinate} = \text{round}((\text{Absolute Coordinate} - \text{Offset}) \times \text{Scale Factor})$$
+
+**Dynamic Scale Calculations:**
+
+* **Native Processing (Image-free):** If `INPUT_PAGES_DIR` is unassigned or left blank, the pipeline skips physical I/O 
+tasks entirely, defaulting scale indices to a stable `1.0`. It scales positions dynamically based on internal metadata 
+dimensions, executing purely text-driven conversions.
+* **Resolution Rescaling:** If `INPUT_PAGES_DIR` is set, the tool safely reads binary file headers (supporting PNG, 
+JPEG, and TIFF) without invoking bloated third-party imaging dependencies. Ratios are resolved by evaluating layout 
+sizes against image shapes (`sx = img_width / alto_width`), normalizing display outputs across varying resolution layers.
+
+**Pre-demonstration coordinates fix of existing teitok xml files:**
+
+The *post factum* fixer [fix_teitok_bboxes.py](fix_teitok_bboxes.py) 📎 is a standalone, retroactive maintenance 
+utility designed to repair or fine-tune layout alignments in your TEITOK XML corpus without forcing a full re-run 
+of the entire tokenization and NLP enrichment pipelines.
+
+* **Instant Coordinate Correction:** It targets structural elements (`<tok>`, `<lb>`, and `<div>`) in already 
+generated TEITOK XML files, parsing their whitespace-separated hOCR-style coordinates. It then applies programmatic 
+shifting ($\Delta x, \Delta y$) and optional scale transformations ($\text{scale}_x, \text{scale}_y$).
+* **Resolving Scan-Margin Shifts:** It directly eliminates the constant displacement error highlighted in the 
+developer discussions—where elements appear shifted too far left or too high up on the visual canvas due to 
+unprinted canvas margins or strict `PrintSpace` boundaries (`LeftMargin`/`TopMargin`).
+* **TEITOK-Syntax Safe:** Standard XML parsers routinely choke or strip out custom structural hacks like TEITOK's 
+`xmlnsoff="..."` attribute. This script uses a safe raw-string pre-swap block to ensure that TEITOK-specific formatting 
+remains uncorrupted and compliant during parsing and rewriting.
+
+ **When to Deploy It**
+
+1. **Pre-Demonstration Quick Fixes:** If you change your visual image layers (e.g., swapping out full-page scans for 
+tightly cropped variants) right before a live demonstration or data hand-off, you can instantly realign thousands 
+of documents using a single shell command instead of re-processing billions of tokens through UDPipe and NameTag.
+2. **Batch Calibration Testing:** It allows you to systematically trial different displacement values on a couple of 
+sample documents in the TEITOK viewer to pinpoint the exact visual delta before committing hardcoded changes to 
+your upstream generation scripts.
 
 > [!NOTE]
 > When a token's matched ALTO strings span more than one page (a rare OCR edge case near page
