@@ -49,6 +49,22 @@ _ALTO_UNIT_XML = """<?xml version="1.0" encoding="UTF-8"?>
 </alto>
 """
 
+_ALTO_MARGIN_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v3#">
+    <Layout>
+        <Page ID="Page1" PHYSICAL_IMG_NR="1" HEIGHT="3500" WIDTH="2400">
+            <PrintSpace HEIGHT="3000" WIDTH="2000" HPOS="200" VPOS="100">
+                <TextBlock ID="block_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
+                    <TextLine ID="line_1" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50">
+                        <String CONTENT="Test" HPOS="250" VPOS="150" WIDTH="500" HEIGHT="50"/>
+                    </TextLine>
+                </TextBlock>
+            </PrintSpace>
+        </Page>
+    </Layout>
+</alto>
+"""
+
 _ALTO_CONLLU = (
     "# sent_id = 1\n"
     "# text = Test\n"
