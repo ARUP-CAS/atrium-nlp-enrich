@@ -42,10 +42,14 @@ import multiprocessing
 import os
 import shutil
 import subprocess
+from pathlib import Path
 import sys
+_api_util_path = str(Path(__file__).parent / "api_util")
+if _api_util_path not in sys.path:
+    sys.path.insert(0, _api_util_path)
+from api_util.teitok_read import doc_id_from_path, read_teitok_text, read_teitok_tokens
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 from atrium_paradata import ParadataLogger
@@ -105,7 +109,7 @@ if _config_file.exists():
 # CoNLL-U reading helpers
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def _extract_surface_text(file_path: str) -> str:
+def _extract_surface_text_conllu(file_path: str) -> str:
     """Reconstruct a plain-text string from a CoNLL-U file."""
     parts: list[str] = []
     try:
@@ -130,7 +134,14 @@ def _extract_surface_text(file_path: str) -> str:
     return "".join(parts).strip()
 
 
-def _extract_lemmas(file_path: str) -> list[str]:
+def _extract_surface_text(file_path: str) -> str:
+    """Dispatches to either TEITOK XML or CoNLL-U logic based on extension."""
+    if str(file_path).lower().endswith(".teitok.xml"):
+        return read_teitok_text(file_path)
+    return _extract_surface_text_conllu(file_path)
+
+
+def _extract_lemmas_conllu(file_path: str) -> list[str]:
     """Extract content-word lemmas from a CoNLL-U file for frequency counting."""
     valid_pos = {"NOUN", "PROPN", "ADJ"}
     lemmas: list[str] = []
@@ -156,6 +167,15 @@ def _extract_lemmas(file_path: str) -> list[str]:
               file=sys.stderr)
     return lemmas
 
+
+def _extract_lemmas(file_path: str) -> list[str]:
+    """Dispatches to either TEITOK XML or CoNLL-U logic based on extension."""
+    if str(file_path).lower().endswith(".teitok.xml"):
+        return [
+            t["lemma"].lower() for t in read_teitok_tokens(file_path)
+            if t.get("upos") in {"NOUN", "PROPN", "ADJ"} and (t.get("lemma") or "").isalpha()
+        ]
+    return _extract_lemmas_conllu(file_path)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Backend: legacy KER
@@ -476,7 +496,8 @@ def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
     output = []
 
     for file_path, keywords in zip(paths, keywords_list):
-        doc_id = Path(file_path).stem
+        # doc_id = Path(file_path).stem
+        doc_id = doc_id_from_path(file_path)
         if keywords and indiv_out_dir:
             out_csv = Path(indiv_out_dir) / f"{doc_id}_keywords.csv"
             try:
@@ -618,7 +639,10 @@ def main(argv: Optional[List[str]] = None) -> None:
     with open(args.output_file, "w", encoding="utf-8", newline="") as fh:
         csv.writer(fh).writerow(header)
 
-    all_files = sorted(input_path.glob("*.conllu"))
+    all_files = sorted(
+        p for p in input_path.iterdir()
+        if p.suffix.lower() == ".conllu" or p.name.lower().endswith(".teitok.xml")
+    )
     BATCH_SIZE = args.batch_size if args.method == "keybert" else 1
 
     tasks = []

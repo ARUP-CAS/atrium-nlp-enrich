@@ -404,7 +404,10 @@ def main(config_path: str = "llm_config.txt") -> None:
 
         print("=== Pipeline ready ===")
 
-        csv_files       = sorted(INPUT_DIR.glob("*.csv"))
+        input_files = sorted(
+            p for p in INPUT_DIR.iterdir()
+            if p.suffix.lower() == ".csv" or p.name.lower().endswith(".teitok.xml")
+        )
         total_processed = 0
         total_errors    = 0
         total_aborted   = 0
@@ -412,20 +415,21 @@ def main(config_path: str = "llm_config.txt") -> None:
         total_output_tokens     = 0
         total_inference_seconds = 0.0
 
-        for csv_file in tqdm(csv_files, desc="Documents", unit="doc", dynamic_ncols=True):
-            out_file = OUTPUT_DIR / f"{csv_file.stem}_enriched.json"
+        for input_file in tqdm(input_files, desc="Documents", unit="doc", dynamic_ncols=True):
+            doc_id = llm_utils.teitok_read.doc_id_from_path(input_file)
+            out_file = OUTPUT_DIR / f"{doc_id}_enriched.json"
 
             if out_file.exists():
-                tqdm.write(f"[skip] {csv_file.name} — output already exists.")
-                logger.log_skip(csv_file.name, "already_exists")
+                tqdm.write(f"[skip] {input_file.name} — output already exists.")
+                logger.log_skip(input_file.name, "already_exists")
                 continue
 
-            tqdm.write(f"\nProcessing: {csv_file.name} …")
+            tqdm.write(f"\nProcessing: {input_file.name} …")
 
             try:
                 if BACKEND == "vllm":
                     enriched_results, doc_stats = process_document_vllm(
-                        csv_path=csv_file,
+                        input_path=input_file,  # WAS: csv_path=csv_file
                         llm_engine=llm_engine,
                         tokenizer=tokenizer,
                         system_prompt=system_prompt,
@@ -440,7 +444,7 @@ def main(config_path: str = "llm_config.txt") -> None:
                     )
                 else:
                     enriched_results, doc_stats = process_document(
-                        csv_path=csv_file,
+                        csv_path=input_file,
                         model=model,
                         tokenizer=tokenizer,
                         parser=parser,
@@ -479,37 +483,37 @@ def main(config_path: str = "llm_config.txt") -> None:
                     logger.log_success("json", count=1)
                     logger.log_document_success()
                 else:
-                    logger.log_skip(csv_file.name, "No lines passed quality filter or all inference calls failed.")
+                    logger.log_skip(input_file.name, "No lines passed quality filter or all inference calls failed.")
 
                 if was_aborted:
                     _write_abort_marker(out_file=out_file, stats=doc_stats, reason="10 consecutive inference errors")
 
             except Exception as exc:
-                print(f"  Critical error on {csv_file.name}: {exc}")
-                logger.log_skip(csv_file.name, str(exc))
+                print(f"  Critical error on {input_file.name}: {exc}")
+                logger.log_skip(input_file.name, str(exc))
 
             finally:
                 if BACKEND == "transformers" and not is_gguf:
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
 
-        already_done  = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
+        already_done = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
         true_failures = sum(1 for s in logger._skipped if s.get("reason") != "already_exists")
-        _avg_in  = total_input_tokens  / total_inference_seconds if total_inference_seconds > 0 else 0
+        _avg_in = total_input_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
         _avg_out = total_output_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
         print(
             f"\n=== Run complete ===\n"
             f"    lines enriched:          {total_processed}\n"
             f"    inference errors:        {total_errors}\n"
             f"    aborted documents:       {total_aborted}\n"
-            f"    files processed:         {len(csv_files)}\n"
+            f"    files processed:         {len(input_files)}\n"  # CHANGED
             f"    skipped (already done):  {already_done}\n"
             f"    skipped (errors):        {true_failures}\n"
             f"    total input tokens:      {total_input_tokens:,}\n"
             f"    total output tokens:     {total_output_tokens:,}\n"
             f"    avg speed:               {_avg_in:.0f} in tok/s, {_avg_out:.0f} out tok/s"
         )
-        logger.finalize(input_total=len(csv_files))
+        logger.finalize(input_total=len(input_files))  # CHANGED
 
 
 if __name__ == "__main__":

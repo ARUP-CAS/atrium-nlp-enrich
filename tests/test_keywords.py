@@ -10,6 +10,43 @@ import pytest
 
 from keywords import _sort_csv_file
 
+TEITOK_MOCK_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
+<teiCorpus>
+    <text>
+        <s>
+            <tok lemma="archeologický" pos="ADJ">Archeologický</tok>
+            <tok lemma="výzkum" pos="NOUN">výzkum</tok>
+            <tok lemma="v" pos="ADP">v</tok>
+            <tok lemma="Praha" pos="PROPN">Praze</tok>
+            <tok lemma="." pos="PUNCT">.</tok>
+        </s>
+    </text>
+</teiCorpus>
+"""
+
+
+class TestTEITOKDispatch:
+    def _make_teitok(self, tmp_path):
+        p = tmp_path / "doc.teitok.xml"
+        p.write_text(TEITOK_MOCK_CONTENT, encoding="utf-8")
+        return p
+
+    def test_extract_surface_text_teitok(self, tmp_path):
+        from keywords import _extract_surface_text
+        p = self._make_teitok(tmp_path)
+
+        # Should dynamically call teitok_read.read_teitok_text and stitch the tokens
+        text = _extract_surface_text(str(p))
+        assert text == "Archeologický výzkum v Praze ."
+
+    def test_extract_lemmas_teitok(self, tmp_path):
+        from keywords import _extract_lemmas
+        p = self._make_teitok(tmp_path)
+
+        # Should dynamically extract strictly NOUN/PROPN/ADJ lemmas mapped to lowercase
+        lemmas = _extract_lemmas(str(p))
+        assert lemmas == ["archeologický", "výzkum", "praha"]
+
 
 class TestCSVSort:
     def _make_csv(self, tmp_path, lines):

@@ -75,6 +75,11 @@ from tqdm import tqdm
 #                    `from transformers import ...` fires.
 
 import sys as _sys_tc
+from pathlib import Path
+_api_util_path = str(Path(__file__).parent / "api_util")
+if _api_util_path not in _sys_tc.path:
+    _sys_tc.path.insert(0, _api_util_path)
+from api_util.teitok_read import *
 import transformers.tokenization_utils as _tu
 import transformers.tokenization_utils_base as _tub
 
@@ -1474,6 +1479,24 @@ def _should_process_line(
     return True, ""
 
 
+
+def read_input_rows(input_path: Path) -> list[dict]:
+    """Reads rows from a CSV or synthesizes lines from a TEITOK XML document."""
+    if input_path.name.lower().endswith(".teitok.xml"):
+        return [
+            {
+                "text": r["text"],
+                "page_num": str(r.get("page_num", "")),
+                "line_num": str(r.get("line_num", "")),
+                "categ": "",  # Falls back to plain text handling
+                "quality_score": 0.0
+            }
+            for r in teitok_read.read_teitok_rows(str(input_path))
+        ]
+    with open(input_path, "r", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
 # ---------------------------------------------------------------------------
 # 8. Context-window builder
 # ---------------------------------------------------------------------------
@@ -1591,6 +1614,7 @@ def _format_chat_prompt(
 # ---------------------------------------------------------------------------
 
 def process_document(
+    input_path: Path,
     csv_path: Path,
     model: Any,
     tokenizer: Any,
@@ -1623,7 +1647,7 @@ def process_document(
     """
     from pydantic import ValidationError
 
-    file_id = csv_path.stem
+    file_id = doc_id_from_path(input_path)
     enriched_lines: List[dict] = []
     stats: Dict[str, int] = {
         "processed": 0,
@@ -1637,8 +1661,9 @@ def process_document(
     consecutive_errors = 0
     page_num = line_num = 0   # ensure defined for error messages
 
-    with open(csv_path, "r", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    # with open(csv_path, "r", encoding="utf-8") as f:
+    #     rows = list(csv.DictReader(f))
+    rows = read_input_rows(input_path)
 
     if is_gguf:
         from lmformatenforcer.integrations.llamacpp import (
@@ -1831,6 +1856,7 @@ def process_document(
 # ---------------------------------------------------------------------------
 
 def process_document_vllm(
+    input_path: Path,
     csv_path: Path,
     llm_engine: Any,        # vllm.LLM
     tokenizer: Any,
@@ -1873,7 +1899,7 @@ def process_document_vllm(
 
     from pydantic import ValidationError
 
-    file_id = csv_path.stem
+    file_id = doc_id_from_path(input_path)
     enriched_lines: List[dict] = []
     stats: Dict[str, int] = {
         "processed": 0,
@@ -1886,8 +1912,7 @@ def process_document_vllm(
     }
     consecutive_errors = 0
 
-    with open(csv_path, "r", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    rows = read_input_rows(input_path)
 
     # Build the guided-decoding sampling params once and reuse for all batches.
     schema_dict = EnrichmentModel.model_json_schema()
