@@ -40,6 +40,12 @@ INPUT_PAGES_DIR=""
 IMAGE_DPI=""
 ALTO_DPI=""
 
+# Source directory for non-tabular documents converted via Flexiconv (api_flexiconv.sh).
+INPUT_DOCS_DIR="$OUTPUT_DIR/DOCS"
+
+# Extensions the Flexiconv step ingests (space/comma separated, no dot). Empty = disabled.
+FLEXICONV_FORMATS="pdf docx odt rtf html htm md txt epub tei conllu vert folia srt"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # run_pipeline.py (merged runner) knobs
 # ─────────────────────────────────────────────────────────────────────────────
