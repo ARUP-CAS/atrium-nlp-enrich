@@ -8,7 +8,7 @@ _api_util_path = str(Path(__file__).parent.parent / "api_util")
 if _api_util_path not in sys.path:
     sys.path.insert(0, _api_util_path)
 
-from flexiconv_convert import (
+from api_util.flexiconv_convert import (
     is_flexiconv_format,
     normalize_ext_list,
     convert_to_teitok,

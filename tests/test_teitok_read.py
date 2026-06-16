@@ -8,7 +8,7 @@ _api_util_path = str(Path(__file__).parent.parent / "api_util")
 if _api_util_path not in sys.path:
     sys.path.insert(0, _api_util_path)
 
-from teitok_read import (
+from api_util.teitok_read import (
     doc_id_from_path,
     read_teitok_rows,
     read_teitok_text,
