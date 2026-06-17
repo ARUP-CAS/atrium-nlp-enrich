@@ -1,56 +1,62 @@
 #!/usr/bin/env python3
 """
-call_udpipe.py  –  Send pre-chunked text files to the UDPipe 2 API and write
-a single merged CoNLL-U file.
+call_udpipe.py  –  Send pre-chunked text files to the UDPipe 2 API,
+automatically retry on network failures, and write a single merged CoNLL-U file.
 """
 
 import argparse
 import glob
 import os
 import sys
-import time
-from tenacity import Retrying, stop_after_attempt, wait_exponential, retry_if_exception_type
+import re
 
 try:
     import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
 except ImportError:
-    print("[Error] 'requests' library is required. Run: pip install requests", file=sys.stderr)
+    print("[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr)
     sys.exit(1)
 
 UDPIPE_URL = "https://lindat.mff.cuni.cz/services/udpipe/api/process"
 
-def call_udpipe(text: str, model: str, url: str, timeout: int, retries: int) -> str | None:
-    try:
-        for attempt in Retrying(
-            retry=retry_if_exception_type((requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.HTTPError)),
-            stop=stop_after_attempt(retries),
-            wait=wait_exponential(multiplier=1, min=1, max=30),
-            reraise=True
-        ):
-            with attempt:
-                resp = requests.post(
-                    url,
-                    data={
-                        "model": model,
-                        "tokenizer": "",
-                        "tagger": "",
-                        "parser": "",
-                        "data": text,
-                    },
-                    timeout=timeout,
-                )
-                resp.raise_for_status()
-                data = resp.json()
-                result = data.get("result", "")
-                if result:
-                    return result
-                print("  [WARN] UDPipe returned empty result", file=sys.stderr)
-    except Exception as exc:
-        print(f"  [WARN] UDPipe error: {exc}", file=sys.stderr)
 
-    return None
+def get_robust_session(retries: int) -> requests.Session:
+    """Configures a requests session with exponential backoff for 429/5xx errors."""
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=retries,
+        backoff_factor=1.5,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["POST"]
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+def process_chunk(session: requests.Session, text: str, model: str, timeout: int) -> str:
+    """Send a single text chunk to UDPipe."""
+    data = {
+        "model": model,
+        "tokenizer": "",
+        "tagger": "",
+        "parser": "",
+        "data": text,
+    }
+    # If the session exhausts retries or hits a timeout, this will raise a RequestException
+    response = session.post(UDPIPE_URL, data=data, timeout=timeout)
+    response.raise_for_status()
+
+    result = response.json().get("result", "")
+    if not result:
+        print("  [WARN] UDPipe returned empty result for chunk.", file=sys.stderr)
+    return result
+
 
 def merge_conllu_chunks(chunks: list[str]) -> str:
+    """Merges multiple UDPipe CoNLL-U outputs, recalculating sent_id."""
     out_lines: list[str] = []
     global_sent_offset = 0
 
@@ -86,51 +92,55 @@ def merge_conllu_chunks(chunks: list[str]) -> str:
     return "".join(out_lines)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Send chunked text to UDPipe API and write merged CoNLL-U."
-    )
-    parser.add_argument("--chunk-dir", required=True, help="Directory containing chunk_*.txt")
+def main():
+    parser = argparse.ArgumentParser(description="Call UDPipe API with retries.")
+    parser.add_argument("--chunk-dir", required=True, help="Directory containing chunk_X.txt files.")
     parser.add_argument("--model", required=True, help="UDPipe model identifier.")
-    parser.add_argument("--output", required=True, help="Output CoNLL-U file path.")
-    parser.add_argument("--url", default=os.environ.get("UDPIPE_URL", UDPIPE_URL), help="API endpoint URL.")
+    parser.add_argument("--output", required=True, help="Output merged CoNLL-U file.")
     parser.add_argument("--timeout", type=int, default=60, help="Request timeout in seconds.")
-    parser.add_argument("--retries", type=int, default=5, help="Max retry attempts.")
+    parser.add_argument("--retries", type=int, default=5, help="Max retry attempts for 5xx errors.")
     args = parser.parse_args()
 
-    chunk_files = sorted(glob.glob(os.path.join(args.chunk_dir, "chunk_*.txt")))
+    # Find and sort chunks numerically (chunk_0.txt, chunk_1.txt...)
+    chunk_files = glob.glob(os.path.join(args.chunk_dir, "chunk_*.txt"))
+    chunk_files.sort(key=lambda x: int(re.search(r'chunk_(\d+)', x).group(1)))
+
     if not chunk_files:
         print(f"[Error] No chunk files found in {args.chunk_dir}", file=sys.stderr)
         sys.exit(1)
 
-    conllu_chunks: list[str] = []
-    for cf in chunk_files:
-        with open(cf, "r", encoding="utf-8") as fh:
-            text = fh.read().strip()
+    session = get_robust_session(args.retries)
+    processed_chunks = []
+
+    for idx, cfile in enumerate(chunk_files):
+        with open(cfile, "r", encoding="utf-8") as f:
+            text = f.read().strip()
+
         if not text:
             continue
 
-        print(f"  [UDPipe] Processing {os.path.basename(cf)} ({len(text.split())} words)…")
-        result = call_udpipe(text, args.model, args.url, args.timeout, args.retries)
-        if result is None:
-            print(f"[Error] UDPipe failed permanently on {cf}. Aborting.", file=sys.stderr)
+        try:
+            print(f"  [UDPipe] Processing chunk {idx + 1}/{len(chunk_files)}...")
+            result = process_chunk(session, text, args.model, args.timeout)
+            if result:
+                processed_chunks.append(result)
+        except requests.exceptions.RequestException as e:
+            print(f"[CRITICAL] UDPipe API failed permanently on chunk {idx + 1}. Error: {e}", file=sys.stderr)
             sys.exit(1)
-        conllu_chunks.append(result)
 
-    if not conllu_chunks:
-        print("[Error] All chunks were empty; nothing to write.", file=sys.stderr)
+    if not processed_chunks:
+        print("[Error] All UDPipe chunks returned empty.", file=sys.stderr)
         sys.exit(1)
 
-    merged = merge_conllu_chunks(conllu_chunks)
-    out_dir = os.path.dirname(args.output)
-    if out_dir:
-        os.makedirs(out_dir, exist_ok=True)
+    merged_conllu = merge_conllu_chunks(processed_chunks)
 
-    with open(args.output, "w", encoding="utf-8") as fh:
-        fh.write(merged)
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as out_f:
+        out_f.write(merged_conllu)
 
-    n_sents = merged.count("# sent_id")
-    print(f"[UDPipe] Written {args.output}  ({n_sents} sentences from {len(chunk_files)} chunks)")
+    print(f"  [UDPipe] Successfully merged {len(processed_chunks)} chunks into {args.output}")
+
 
 if __name__ == "__main__":
     main()

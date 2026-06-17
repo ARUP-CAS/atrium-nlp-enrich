@@ -1,0 +1,14 @@
+# ruff.toml
+line-length = 100
+target-version = "py311"
+
+[lint]
+# E: pycodestyle errors, F: Pyflakes, W: pycodestyle warnings, I: isort, B: flake8-bugbear
+select = ["E", "F", "W", "I", "B"]
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"

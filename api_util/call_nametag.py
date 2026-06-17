@@ -1,32 +1,20 @@
 #!/usr/bin/env python3
 """
 call_nametag.py  –  Send a CoNLL-U file to the NameTag 3 API, receive NER
-annotations, and write per-page TSV files.
-
-The per-page split follows the same convention as nametag.py: a new page begins
-whenever sent_id resets to 1.  Output files are named
-    <doc_id>-<page_num>.tsv
-
-Usage
------
-    python3 call_nametag.py \\
-        --input     OUTPUT/UDP/doc_id.conllu \\
-        --model     nametag3-czech-cnec2.0-240830 \\
-        --output-dir OUTPUT/NE/doc_id \\
-        [--url URL] [--timeout 60] [--retries 5]
+annotations, and write per-page TSV files. Retries automatically on network errors.
 """
 
 import argparse
-import json
 import os
 import sys
-import time
 from collections import defaultdict
 
 try:
     import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
 except ImportError:
-    print("[Error] 'requests' is required. Run: pip install requests", file=sys.stderr)
+    print("[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr)
     sys.exit(1)
 
 NAMETAG_URL = "https://lindat.mff.cuni.cz/services/nametag/api/recognize"
@@ -34,71 +22,54 @@ NAMETAG_URL = "https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def call_nametag(conllu_text: str, model: str, url: str, timeout: int, retries: int) -> dict | None:
+def get_robust_session(retries: int) -> requests.Session:
+    """Configures a requests session with exponential backoff for 429/5xx errors."""
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=retries,
+        backoff_factor=1.5,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["POST"]
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+def call_nametag(session: requests.Session, conllu_text: str, model: str, url: str, timeout: int) -> dict | None:
     """POST CoNLL-U text to NameTag and return the parsed JSON dict."""
-    delay = 1.0
-    for attempt in range(1, retries + 1):
-        try:
-            resp = requests.post(
-                url,
-                data={
-                    "model": model,
-                    "input": "conllu",
-                    "output": "conll",
-                    "data": conllu_text,
-                },
-                timeout=timeout,
-            )
-            if resp.status_code == 200:
-                return resp.json()
-            print(
-                f"  [WARN] NameTag HTTP {resp.status_code} (attempt {attempt})",
-                file=sys.stderr,
-            )
-        except requests.exceptions.Timeout:
-            print(f"  [WARN] NameTag timed out (attempt {attempt})", file=sys.stderr)
-        except Exception as exc:
-            print(f"  [WARN] NameTag error: {exc} (attempt {attempt})", file=sys.stderr)
-
-        if attempt < retries:
-            time.sleep(delay)
-            delay = delay * 1.5 + 1
-
-    return None
+    try:
+        resp = session.post(
+            url,
+            data={
+                "model": model,
+                "input": "conllu",
+                "output": "conll",
+                "data": conllu_text,
+            },
+            timeout=timeout,
+        )
+        resp.raise_for_status()
+        return resp.json()
+    except requests.exceptions.RequestException as exc:
+        print(f"  [WARN] NameTag API failed permanently: {exc}", file=sys.stderr)
+        return None
 
 
 # ── sent_id → page mapping ────────────────────────────────────────────────────
 
 def build_sent_page_map(conllu_path: str) -> list[int]:
-    """Return a list mapping sentence index (0-based) → page number (1-based).
-
-    Two page-boundary signals are recognised, in order of precedence:
-
-    1. ``# page_break = true``  – injected by call_udpipe.py when chunks are
-       merged and sent_id values are renumbered globally.  This is the primary
-       signal for merged/multi-chunk files.
-
-    2. ``# sent_id = 1``        – the original convention used in single-chunk
-       and legacy CoNLL-U files where each page's sentence numbering resets
-       to 1.
-
-    Supporting both signals keeps the function compatible with files produced
-    by any pipeline version.
-
-    FIX #10: If no sent_id markers are found (e.g. malformed UDPipe output)
-    a warning is emitted and all tokens are assigned to page 1 instead of
-    silently collapsing everything into page 0.
-    """
+    """Return a list mapping sentence index (0-based) → page number (1-based)."""
     sent_to_page: list[int] = []
     current_page = 0
-    pending_page_break = False  # FIX #3: set when # page_break = true is seen
+    pending_page_break = False
 
     try:
         with open(conllu_path, "r", encoding="utf-8") as fh:
             for line in fh:
                 line_stripped = line.strip()
 
-                # FIX #3: explicit page-break marker from call_udpipe.py merge
                 if line_stripped == "# page_break = true":
                     pending_page_break = True
                     continue
@@ -108,13 +79,10 @@ def build_sent_page_map(conllu_path: str) -> list[int]:
 
                 if "=" in line_stripped:
                     val = line_stripped.split("=", 1)[1].strip()
-                    # Legacy signal: sent_id resets to 1 → new page.
-                    # New signal:    pending_page_break flag → new page.
                     if val == "1" or pending_page_break:
                         current_page += 1
                         pending_page_break = False
 
-                # Fallback: ensure page never stays at 0.
                 if current_page == 0:
                     current_page = 1
 
@@ -123,7 +91,6 @@ def build_sent_page_map(conllu_path: str) -> list[int]:
     except Exception as exc:
         print(f"[Error] reading CoNLL-U {conllu_path}: {exc}", file=sys.stderr)
 
-    # FIX #10: guard against files with no sent_id markers at all.
     if not sent_to_page:
         print(
             f"[Warn] No sent_id markers found in {conllu_path}; "
@@ -153,10 +120,7 @@ def _get_ne_suffix(tag: str) -> str:
 # ── response → per-page TSV ───────────────────────────────────────────────────
 
 def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, doc_id: str) -> int:
-    """Parse NameTag JSON result and write per-page TSV files.
-
-    Returns the number of TSV files written.
-    """
+    """Parse NameTag JSON result and write per-page TSV files."""
     tagged = response_json.get("result", "")
     sentences = [s for s in tagged.strip().split("\n\n") if s.strip()]
 
@@ -207,15 +171,15 @@ def main() -> None:
 
     doc_id = os.path.splitext(os.path.basename(args.input))[0]
 
-    # Build sent_id → page mapping from the original CoNLL-U
     sent_to_page = build_sent_page_map(args.input)
 
-    # Read full CoNLL-U text for the API call
     with open(args.input, "r", encoding="utf-8") as fh:
         conllu_text = fh.read()
 
-    print(f"  [NameTag] Sending {doc_id} ({len(sent_to_page)} sentences)…")
-    response_json = call_nametag(conllu_text, args.model, args.url, args.timeout, args.retries)
+    print(f"  [NameTag] Sending {doc_id} ({len(sent_to_page)} sentences)...")
+
+    session = get_robust_session(args.retries)
+    response_json = call_nametag(session, conllu_text, args.model, args.url, args.timeout)
 
     if response_json is None:
         print(f"[Error] NameTag failed permanently for {doc_id}.", file=sys.stderr)

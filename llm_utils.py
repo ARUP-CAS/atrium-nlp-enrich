@@ -41,39 +41,6 @@ from typing import Any, Dict, List, Optional, Tuple
 import torch
 from tqdm import tqdm
 
-
-# ---------------------------------------------------------------------------
-# Compatibility shim: transformers 5.x dev moved PreTrainedTokenizerBase
-# ---------------------------------------------------------------------------
-#
-# Root-cause (observed with transformers 5.7.0.dev0 + lm-format-enforcer 0.11.3):
-#
-#   transformers 5.x uses lazy module stubs for sub-modules.  When Python first
-#   executes `import transformers.tokenization_utils`, it returns a lightweight
-#   stub object (whose __file__ is None — hence "(unknown location)" in tracebacks).
-#   That stub is stored in sys.modules['transformers.tokenization_utils'].
-#
-#   When `from transformers import AutoModelForCausalLM, AutoTokenizer` runs
-#   (line ~137 of this file), transformers finishes its internal initialisation
-#   and REPLACES every lazy stub in sys.modules with the corresponding real module
-#   object.  The real transformers.tokenization_utils no longer re-exports
-#   PreTrainedTokenizerBase (it was cleaned up in v5.x — the class lives only in
-#   tokenization_utils_base).
-#
-#   lmformatenforcer.integrations.transformers is imported lazily inside main()
-#   (after the AutoModelForCausalLM import).  At that point it sees the REAL
-#   module and raises:
-#       ImportError: cannot import name 'PreTrainedTokenizerBase'
-#                    from 'transformers.tokenization_utils' (unknown location)
-#   lmformatenforcer then wraps this as "transformers is not installed" — which
-#   is a misleading message.
-#
-# Fix: apply the patch twice —
-#   Pass 1 (below):  patches the lazy stub so early imports of lmformatenforcer
-#                    would also work.
-#   Pass 2 (line ~137): re-applies to the REAL resolved module after
-#                    `from transformers import ...` fires.
-
 import sys as _sys_tc
 from pathlib import Path
 _api_util_path = str(Path(__file__).parent / "api_util")
@@ -82,6 +49,44 @@ if _api_util_path not in _sys_tc.path:
 from api_util.teitok_read import *
 import transformers.tokenization_utils as _tu
 import transformers.tokenization_utils_base as _tub
+
+import json
+
+
+def validate_llm_output(result_json: str, EnrichmentModel: type, file_id: str, page_num: int, line_num: int) -> dict:
+    """
+    Pure helper to validate and sanitize LLM JSON output against a Pydantic model.
+    Extracted for unit testing independent of GPU inference.
+    """
+    from pydantic import ValidationError
+    try:
+        semantic_data = EnrichmentModel.model_validate_json(result_json)
+    except ValidationError:
+        try:
+            raw_dict = json.loads(result_json, strict=False)
+            if "confidence_score" in raw_dict:
+                try:
+                    val = float(raw_dict["confidence_score"])
+                    raw_dict["confidence_score"] = min(1.0, max(0.0, val))
+                except (ValueError, TypeError):
+                    pass
+            semantic_data = EnrichmentModel.model_validate(raw_dict)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            raise ValueError(f"[{file_id}] Persistent validation error P{page_num} L{line_num}: {exc}")
+
+    dump_data = semantic_data.model_dump()
+
+    # Graceful handling for teater_category based on Pydantic methods or dictionary keys
+    if hasattr(semantic_data, "category_name"):
+        dump_data["teater_category"] = semantic_data.category_name()
+    else:
+        dump_data["teater_category"] = dump_data.get("teater_category", "")
+
+    if dump_data.get("teater_category") == "Nerelevantní (meta-text)":
+        dump_data["extracted_keywords_cs"] = []
+        dump_data["extracted_keywords_en"] = []
+
+    return dump_data
 
 
 def _patch_tokenizer_compat() -> bool:

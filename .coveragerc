@@ -1,0 +1,18 @@
+# .coveragerc
+[run]
+source = .
+omit =
+    tests/*
+    *paradata.py
+    para_licenses.py
+    setup.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self\.debug
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:

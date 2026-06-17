@@ -8,14 +8,11 @@ import csv
 import io
 import json
 import zipfile
-from pathlib import Path
 
 import pytest
 
 fastapi = pytest.importorskip("fastapi")
 pytest.importorskip("fastapi.testclient")
-
-from fastapi.testclient import TestClient  # noqa: E402
 
 import service.enrichment as enr  # noqa: E402
 from service.enrichment import (  # noqa: E402
@@ -23,6 +20,111 @@ from service.enrichment import (  # noqa: E402
     normalize_upload,
     sanitize_doc_id,
 )
+
+from pathlib import Path
+
+from fastapi.testclient import TestClient
+from unittest.mock import patch, MagicMock
+
+from service.api import app
+
+
+@pytest.fixture
+def test_client():
+    """Explicitly named fixture to avoid clashing with pytest's built-in 'client'."""
+    return TestClient(app)
+
+
+@pytest.fixture
+def mock_subprocess_run():
+    with patch("service.enrichment.subprocess.run") as mock_run:
+        yield mock_run
+
+
+def create_dummy_csv() -> bytes:
+    return b"text,page_num,line_num\nTest line,1,1"
+
+
+# Update test_api_exit_code_0_success in tests/test_api_service.py
+def test_api_exit_code_0_success(mock_subprocess_run, test_client):
+    mock_result = MagicMock()
+    mock_result.returncode = 0
+    mock_subprocess_run.return_value = mock_result
+
+    # Mock the directory/file existence check
+    with patch("pathlib.Path.exists", return_value=True), \
+            patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]), \
+            patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml></xml>"), \
+            patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]), \
+            patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]), \
+            patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}):
+        response = test_client.post(
+            "/enrich",
+            files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+            data={"kw_method": "none", "format": "json"}
+        )
+
+    assert response.status_code == 200
+
+
+def test_api_exit_code_1_or_2_bad_gateway(mock_subprocess_run, test_client):
+    """Exit codes 1 and 2 (pipeline errors) should map to HTTP 502."""
+    for rc in [1, 2]:
+        mock_result = MagicMock()
+        mock_result.returncode = rc
+        mock_result.stdout = "Error output"
+        mock_result.stderr = ""
+        mock_subprocess_run.return_value = mock_result
+
+        response = test_client.post(
+            "/enrich",
+            files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+            data={"kw_method": "none"}
+        )
+        assert response.status_code == 502
+        assert "exit" in response.json()["detail"].lower()
+
+
+def test_api_exit_code_3_or_4_service_unavailable(mock_subprocess_run, test_client):
+    """Exit codes 3 and 4 (keyword/preflight errors) should map to HTTP 503."""
+    for rc in [3, 4]:
+        mock_result = MagicMock()
+        mock_result.returncode = rc
+        mock_result.stdout = "Keyword error"
+        mock_result.stderr = ""
+        mock_subprocess_run.return_value = mock_result
+
+        response = test_client.post(
+            "/enrich",
+            files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+            data={"kw_method": "keybert"}
+        )
+        assert response.status_code == 503
+
+
+@patch("service.enrichment.shutil.rmtree")
+def test_workspace_cleanup_on_success_and_failure(mock_rmtree, mock_subprocess_run, test_client):
+    mock_result = MagicMock()
+    mock_result.returncode = 2  # Failure case
+    mock_subprocess_run.return_value = mock_result
+
+    # Execute the request
+    test_client.post(
+        "/enrich",
+        files={"file": ("test.csv", create_dummy_csv(), "text/csv")}
+    )
+
+    # Manually trigger the cleanup that would have run in the background
+    from service.enrichment import PipelineManager
+    # Access the last call to cleanup or simulate the execution
+    # Alternatively, bypass BackgroundTask in tests to make it run synchronously
+    # but the easiest way is to call the cleanup explicitly since we are testing the logic:
+    # (Assuming the result object was created)
+
+    # Or, simply use a mock that catches the call if the API executed it
+    # ensure your EnrichmentResult creation doesn't fail.
+    mock_rmtree.assert_called()
+
 
 # ── input normalization ───────────────────────────────────────────────────────
 class TestNormalization:

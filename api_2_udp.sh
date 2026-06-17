@@ -37,10 +37,14 @@ while IFS=$'\t' read -r file page path; do
            --retries   "$MAX_RETRIES"; then
         python3 atrium_paradata.py success --state "$PARA_STATE" --type conllu
     else
+        # P1 FIX: Log the failure and exit immediately to halt the pipeline
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
             --file  "${file}:${page}" \
             --reason "UDPipe API call failed after ${MAX_RETRIES} retries"
+
+        echo "[CRITICAL ERROR] UDPipe processing failed for ${file}. Halting pipeline." >&2
+        exit 1
     fi
 done < "${OUTPUT_DIR}/manifest.tsv"
 

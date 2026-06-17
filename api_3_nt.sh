@@ -43,10 +43,14 @@ while IFS= read -r -d '' conllu; do
         python3 atrium_paradata.py success \
             --state "$PARA_STATE" --type tsv --count "$n_pages"
     else
+        # P1 FIX: Log the failure and exit immediately to halt the pipeline
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
             --file  "$doc" \
             --reason "NameTag API call failed"
+
+        echo "[CRITICAL ERROR] NameTag processing failed for ${doc}. Halting pipeline." >&2
+        exit 1
     fi
 done < <(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f -print0)
 

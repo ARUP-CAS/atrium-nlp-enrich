@@ -54,7 +54,6 @@ while IFS= read -r -d '' conllu; do
         continue
     fi
 
-    # 3. Update the execution block to log a skip if it was cached, but still generate the summary:
     if python3 api_util/summarize_nt_udp.py \
             --conllu     "$conllu" \
             --ne-dir     "$ne_dir" \
@@ -83,10 +82,14 @@ while IFS= read -r -d '' conllu; do
                 python3 atrium_paradata.py success --state "$PARA_STATE" --type xml
         fi
     else
+        # P1 FIX: Log the failure and exit immediately to halt the pipeline
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
             --file  "$doc" \
             --reason "summarize_nt_udp failed"
+
+        echo "[CRITICAL ERROR] summarize_nt_udp aggregation failed for ${doc}. Halting pipeline." >&2
+        exit 1
     fi
 done < <(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f -print0)
 

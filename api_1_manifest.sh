@@ -3,6 +3,12 @@
 set -euo pipefail
 source "${ATRIUM_CONFIG:-config_api.txt}"
 
+# P1 FIX: Validate input directory exists before starting
+if [[ ! -d "${INPUT_TABLES_DIR}" ]]; then
+    echo "[ERROR] Input directory '${INPUT_TABLES_DIR}' does not exist. Aborting." >&2
+    exit 1
+fi
+
 # ── paradata: start ───────────────────────────────────────────────────────────
 PARA_STATE=$(python3 atrium_paradata.py start \
     --program nlp-enrich \
@@ -22,7 +28,6 @@ if [ ! -f "${OUTPUT_DIR}/manifest.tsv" ]; then
 fi
 
 TOTAL=0
-ERRORS=0
 
 for csv_file in "${INPUT_TABLES_DIR}"/*.csv "${INPUT_TABLES_DIR}"/*.xlsx; do
     [ -f "$csv_file" ] || continue
@@ -32,27 +37,26 @@ for csv_file in "${INPUT_TABLES_DIR}"/*.csv "${INPUT_TABLES_DIR}"/*.xlsx; do
     # a single TSV row:  doc_id <TAB> page_count <TAB> /path/to/text_file
     if NEW_ROW=$(python3 api_util/build_manifest_row.py "$csv_file" --text-dir "${TEMP_TXT_DIR:-./TEMP/TXT_EXTRACT}"); then
 
-        # Extract the doc_id (the first column before the tab)
         DOC_ID=$(echo "$NEW_ROW" | cut -f1)
 
-        # If this document is already in the manifest, remove the old row to prevent duplicates
         if grep -q "^${DOC_ID}[[:space:]]" "${OUTPUT_DIR}/manifest.tsv"; then
             grep -v "^${DOC_ID}[[:space:]]" "${OUTPUT_DIR}/manifest.tsv" > "${OUTPUT_DIR}/manifest.tmp"
             mv "${OUTPUT_DIR}/manifest.tmp" "${OUTPUT_DIR}/manifest.tsv"
         fi
 
-        # Append the new, fresh row
         echo "$NEW_ROW" >> "${OUTPUT_DIR}/manifest.tsv"
-
         python3 atrium_paradata.py success --state "$PARA_STATE" --type tsv
     else
+        # P1 FIX: Log the failure and exit immediately to halt the pipeline
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
             --file  "$csv_file" \
             --reason "manifest row generation failed"
-        ERRORS=$((ERRORS + 1))
+
+        echo "[CRITICAL ERROR] Manifest generation failed for ${csv_file}. Halting pipeline." >&2
+        exit 1
     fi
 done
 
 python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"
-echo "[manifest] done: $TOTAL total, $ERRORS errors"
+echo "[manifest] done: $TOTAL total, 0 errors"
