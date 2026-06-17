@@ -243,6 +243,26 @@ def _stage_env(job_id: str = "") -> Dict[str, str]:
     return env
 
 
+def _detect_kw_method_used(out_dir: Path) -> str:
+    """Return which keyword backend produced output in *out_dir*.
+
+    Checks for per-document keyword CSV files in the three possible output
+    subdirectories (KB → Y → L) and returns the name of the first that has
+    at least one result file.  Returns ``"none"`` when no keyword output is
+    found.  This is the API's window into which backend actually ran (e.g.
+    keybert requested but yake used after degradation fallback).
+    """
+    for sub, name in (
+        ("KW_PER_DOC_KB", "keybert"),
+        ("KW_PER_DOC_Y", "yake"),
+        ("KW_PER_DOC_L", "legacy"),
+    ):
+        d = out_dir / sub
+        if d.exists() and any(d.glob("*_keywords.csv")):
+            return name
+    return "none"
+
+
 class PipelineManager:
     def __init__(self) -> None:
         _API_JOBS_ROOT.mkdir(parents=True, exist_ok=True)
@@ -314,64 +334,69 @@ class PipelineManager:
         workspace = _API_JOBS_ROOT / job_id
         workspace.mkdir(parents=True, exist_ok=True)
 
-        cfg = _derive_config(workspace)
-        pages = _write_canonical_csvs(rows, workspace / "in", doc_id)
+        # F-S2: wrap all post-mkdir work in try/except so that the workspace
+        # is deleted on any failure path (including non-zero exit codes that
+        # raise PipelineError before an EnrichmentResult is built).
+        # try/except — NOT try/finally — because on success the workspace must
+        # survive until the caller reads the outputs and calls cleanup().
+        try:
+            cfg = _derive_config(workspace)
+            pages = _write_canonical_csvs(rows, workspace / "in", doc_id)
 
-        cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
-        cmd.extend(["--kw-fallback", "--strict-empty", "--lang", lang])
+            cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
+            cmd.extend(["--kw-fallback", "--strict-empty", "--lang", lang])
 
-        if kw_method != "none":
-            cmd.extend(["--kw", "--kw-method", kw_method])
-            if num_keywords is not None:
-                cmd.extend(["--num-keywords", str(num_keywords)])
+            if kw_method != "none":
+                cmd.extend(["--kw", "--kw-method", kw_method])
+                if num_keywords is not None:
+                    cmd.extend(["--num-keywords", str(num_keywords)])
 
-        proc = subprocess.run(
-            cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
-            capture_output=True, text=True,
-        )
-        rc = proc.returncode
-        tail = (proc.stdout + proc.stderr)[-4000:]
+            proc = subprocess.run(
+                cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
+                capture_output=True, text=True,
+            )
+            rc = proc.returncode
+            tail = (proc.stdout + proc.stderr)[-4000:]
 
-        if rc == 1:
-            raise PipelineError(f"Pipeline produced no output (empty run, exit 1).\n{tail}", http_status=502, returncode=rc)
-        if rc == 2:
-            raise PipelineError(f"Required stage script missing (exit 2).\n{tail}", http_status=502, returncode=rc)
-        if rc == 3:
-            raise KeywordPreflightError(f"Keyword preflight failed (exit 3).\n{tail}", returncode=rc)
-        if rc == 4:
-            raise KeywordPreflightError("Keyword backend failed at runtime.", returncode=4)
-        if rc != 0:
-            raise PipelineError(f"Pipeline stage failed (exit {rc}).\n{tail}", http_status=502, returncode=rc)
+            if rc == 1:
+                raise PipelineError(f"Pipeline produced no output (empty run, exit 1).\n{tail}", http_status=502, returncode=rc)
+            if rc == 2:
+                raise PipelineError(f"Required stage script missing (exit 2).\n{tail}", http_status=502, returncode=rc)
+            if rc == 3:
+                raise KeywordPreflightError(f"Keyword preflight failed (exit 3).\n{tail}", returncode=rc)
+            if rc == 4:
+                raise KeywordPreflightError("Keyword backend failed at runtime.", returncode=4)
+            if rc != 0:
+                raise PipelineError(f"Pipeline stage failed (exit {rc}).\n{tail}", http_status=502, returncode=rc)
 
-        teitok_dir = workspace / "out" / "TEITOK"
-        teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
-        if not teitok_files:
-            raise PipelineError(
-                f"Pipeline completed (exit 0) but produced no TEITOK output. "
-                f"This indicates a silent empty run.\n{tail}",
-                http_status=502, returncode=0,
+            teitok_dir = workspace / "out" / "TEITOK"
+            teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
+            if not teitok_files:
+                raise PipelineError(
+                    f"Pipeline completed (exit 0) but produced no TEITOK output. "
+                    f"This indicates a silent empty run.\n{tail}",
+                    http_status=502, returncode=0,
+                )
+
+            kw_method_used = _detect_kw_method_used(workspace / "out")
+
+            return EnrichmentResult(
+                job_id=job_id,
+                doc_id=doc_id,
+                workspace=workspace,
+                output_dir=workspace / "out",
+                returncode=rc,
+                kw_method_requested=kw_method,
+                kw_method_used=kw_method_used,
+                pages=pages,
+                stages=self._read_stage_records(workspace / "out" / "paradata"),
+                stdout_tail=tail,
             )
 
-        kw_method_used = "none"
-        if (workspace / "out" / "KW_PER_DOC_KB").exists() and any((workspace / "out" / "KW_PER_DOC_KB").glob("*_keywords.csv")):
-            kw_method_used = "keybert"
-        elif (workspace / "out" / "KW_PER_DOC_Y").exists() and any((workspace / "out" / "KW_PER_DOC_Y").glob("*_keywords.csv")):
-            kw_method_used = "yake"
-        elif (workspace / "out" / "KW_PER_DOC_L").exists() and any((workspace / "out" / "KW_PER_DOC_L").glob("*_keywords.csv")):
-            kw_method_used = "legacy"
-
-        return EnrichmentResult(
-            job_id=job_id,
-            doc_id=doc_id,
-            workspace=workspace,
-            output_dir=workspace / "out",
-            returncode=rc,
-            kw_method_requested=kw_method,
-            kw_method_used=kw_method_used,
-            pages=pages,
-            stages=self._read_stage_records(workspace / "out" / "paradata"),
-            stdout_tail=tail,
-        )
+        except Exception:
+            if not _KEEP_WORKSPACES:
+                shutil.rmtree(workspace, ignore_errors=True)
+            raise
 
     @staticmethod
     def _read_stage_records(paradata_dir: Path) -> List[Dict[str, Any]]:

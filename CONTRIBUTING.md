@@ -127,13 +127,16 @@ Always run basic validation locally before pushing:
 # 1. Python compilation check
 python -m compileall -q .
 
-# 2. Pre-commit hooks (runs black, isort, flake8, etc.)
-pre-commit run --all-files
+# 2. Lint & format (Ruff — matches CI)
+ruff check .
+ruff format .
 
+# 3. Shell-script lint
+shellcheck -e SC1091 api_*.sh api_util/*.sh setup_api_service.sh
 ```
 
 > [!NOTE]
->  If specific scripts or extraction modules are updated, please run a smoke-test 
+>  If specific scripts or extraction modules are updated, please run a smoke-test
 > against the `data_samples/` directory to verify extraction integrity.
 
 ---

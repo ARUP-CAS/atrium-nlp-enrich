@@ -19,6 +19,7 @@ from service.enrichment import (  # noqa: E402
     PipelineManager,
     normalize_upload,
     sanitize_doc_id,
+    _detect_kw_method_used,
 )
 
 from pathlib import Path
@@ -45,13 +46,15 @@ def create_dummy_csv() -> bytes:
     return b"text,page_num,line_num\nTest line,1,1"
 
 
-# Update test_api_exit_code_0_success in tests/test_api_service.py
+# ── exit-code → HTTP mapping ──────────────────────────────────────────────────
+
 def test_api_exit_code_0_success(mock_subprocess_run, test_client):
     mock_result = MagicMock()
     mock_result.returncode = 0
+    mock_result.stdout = ""
+    mock_result.stderr = ""
     mock_subprocess_run.return_value = mock_result
 
-    # Mock the directory/file existence check
     with patch("pathlib.Path.exists", return_value=True), \
             patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]), \
             patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml></xml>"), \
@@ -102,28 +105,117 @@ def test_api_exit_code_3_or_4_service_unavailable(mock_subprocess_run, test_clie
         assert response.status_code == 503
 
 
+# ── F-S2: workspace cleanup ───────────────────────────────────────────────────
+
 @patch("service.enrichment.shutil.rmtree")
-def test_workspace_cleanup_on_success_and_failure(mock_rmtree, mock_subprocess_run, test_client):
+def test_workspace_cleanup_on_failure(mock_rmtree, mock_subprocess_run, test_client):
+    """F-S2: workspace must be deleted when the pipeline returns a non-zero exit code.
+
+    The bug this pins: enrich() raised PipelineError before building an
+    EnrichmentResult, so cleanup() was never called and the workspace leaked.
+    The fix wraps the whole post-mkdir body in try/except and deletes on any
+    exception (unless _KEEP_WORKSPACES is set).
+    """
     mock_result = MagicMock()
-    mock_result.returncode = 2  # Failure case
+    mock_result.returncode = 2
+    mock_result.stdout = ""
+    mock_result.stderr = ""
     mock_subprocess_run.return_value = mock_result
 
-    # Execute the request
     test_client.post(
         "/enrich",
-        files={"file": ("test.csv", create_dummy_csv(), "text/csv")}
+        files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+        data={"kw_method": "none"},
     )
 
-    # Manually trigger the cleanup that would have run in the background
-    from service.enrichment import PipelineManager
-    # Access the last call to cleanup or simulate the execution
-    # Alternatively, bypass BackgroundTask in tests to make it run synchronously
-    # but the easiest way is to call the cleanup explicitly since we are testing the logic:
-    # (Assuming the result object was created)
-
-    # Or, simply use a mock that catches the call if the API executed it
-    # ensure your EnrichmentResult creation doesn't fail.
     mock_rmtree.assert_called()
+
+
+@patch("service.enrichment.shutil.rmtree")
+def test_workspace_cleanup_on_success(mock_rmtree, mock_subprocess_run, test_client):
+    """F-S2: workspace must also be deleted on a successful run via cleanup()."""
+    mock_result = MagicMock()
+    mock_result.returncode = 0
+    mock_result.stdout = ""
+    mock_result.stderr = ""
+    mock_subprocess_run.return_value = mock_result
+
+    with patch("pathlib.Path.exists", return_value=True), \
+         patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]), \
+         patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml/>"), \
+         patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]), \
+         patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]), \
+         patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}):
+        test_client.post(
+            "/enrich",
+            files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+            data={"kw_method": "none", "format": "json"},
+        )
+
+    mock_rmtree.assert_called()
+
+
+# ── concurrency guard ─────────────────────────────────────────────────────────
+
+def test_concurrency_limit_returns_429(test_client):
+    """Posting to /enrich while the semaphore is locked must return HTTP 429.
+
+    Pins api.py:133-134: the semaphore.locked() early-exit path.
+    """
+    import service.api as api_module
+
+    with patch.object(api_module._semaphore, "locked", return_value=True):
+        response = test_client.post(
+            "/enrich",
+            files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
+            data={"kw_method": "none"},
+        )
+
+    assert response.status_code == 429
+
+
+# ── _detect_kw_method_used ────────────────────────────────────────────────────
+
+def test_detect_kw_method_used_degradation(tmp_path):
+    """_detect_kw_method_used reports the correct backend from output dir layout.
+
+    Tests the keybert → yake → legacy → none precedence and the
+    keybert-takes-priority-when-both-present case.
+    """
+    # Case 1: yake only — should return "yake"
+    yake_dir = tmp_path / "yake_only"
+    yake_dir.mkdir()
+    (yake_dir / "KW_PER_DOC_Y").mkdir()
+    (yake_dir / "KW_PER_DOC_Y" / "doc_keywords.csv").write_text("keyword,score\n")
+    assert _detect_kw_method_used(yake_dir) == "yake"
+
+    # Case 2: keybert and yake present — keybert wins
+    kb_dir = tmp_path / "both"
+    kb_dir.mkdir()
+    (kb_dir / "KW_PER_DOC_KB").mkdir()
+    (kb_dir / "KW_PER_DOC_KB" / "doc_keywords.csv").write_text("keyword,score\n")
+    (kb_dir / "KW_PER_DOC_Y").mkdir()
+    (kb_dir / "KW_PER_DOC_Y" / "doc_keywords.csv").write_text("keyword,score\n")
+    assert _detect_kw_method_used(kb_dir) == "keybert"
+
+    # Case 3: legacy only
+    leg_dir = tmp_path / "legacy_only"
+    leg_dir.mkdir()
+    (leg_dir / "KW_PER_DOC_L").mkdir()
+    (leg_dir / "KW_PER_DOC_L" / "doc_keywords.csv").write_text("keyword,score\n")
+    assert _detect_kw_method_used(leg_dir) == "legacy"
+
+    # Case 4: no keyword output at all
+    empty_dir = tmp_path / "empty_out"
+    empty_dir.mkdir()
+    assert _detect_kw_method_used(empty_dir) == "none"
+
+    # Case 5: subdirectory exists but contains no *_keywords.csv files
+    ghost_dir = tmp_path / "ghost"
+    ghost_dir.mkdir()
+    (ghost_dir / "KW_PER_DOC_Y").mkdir()
+    # no CSV files inside
+    assert _detect_kw_method_used(ghost_dir) == "none"
 
 
 # ── input normalization ───────────────────────────────────────────────────────
