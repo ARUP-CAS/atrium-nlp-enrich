@@ -1,0 +1,42 @@
+# .github/workflows/release.yml
+# Creates a GitHub Release with auto-generated notes when a v* tag is pushed.
+#
+# Notes-only variant: the Docker image published to GHCR via docker.yaml is
+# the canonical release artefact for nlp-enrich.  service/ is a subprocess
+# wrapper, not a standalone download, so no service_bundle.zip is produced here.
+#
+# Suggested tagging workflow:
+#   git tag -a v0.14.1 -m "v0.14.1 — Docker GH Actions alignment"
+#   git push origin v0.14.1
+#
+# After the tag push three workflows fire in sequence:
+#   1. docker.yaml        — builds and pushes ghcr.io/ufal/atrium-nlp-enrich:v0.14.1
+#   2. release.yml        — creates the GitHub Release (this file)
+#   3. security.yml       — (scheduled/dispatch) Trivy-scans :latest after :v0.14.1 is live
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release (notes only)
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          make_latest: true

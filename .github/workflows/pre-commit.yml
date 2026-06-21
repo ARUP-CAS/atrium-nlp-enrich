@@ -1,0 +1,50 @@
+# .github/workflows/pre-commit.yml
+# Advisory (non-blocking) pre-commit run against the full file tree.
+#
+# The pre-commit step carries continue-on-error: true — intentional per the
+# "advisory first" policy agreed for nlp-enrich.  Findings are visible in the
+# Actions tab but never turn a PR red.
+#
+# Flip to blocking later:
+#   Remove the `continue-on-error: true` line after a lint-cleanup PR has
+#   been merged and the hook suite is clean on test/master.
+#
+# Hooks configured in .pre-commit-config.yaml (repo root):
+#   • trailing-whitespace, end-of-file-fixer, check-yaml, check-merge-conflict
+#   • check-added-large-files (excludes ker_data/ to avoid flagging IDF pickles)
+#   • ruff (lint + format) — reads the repo's own ruff.toml
+#   • shellcheck (-e SC1091) — covers api_*.sh / api_util/*.sh / setup_api_service.sh
+
+name: pre-commit
+
+on:
+  push:
+    branches: [test, master]
+  pull_request:
+    branches: [test, master]
+
+jobs:
+  pre-commit:
+    name: Lint (advisory)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-
+
+      - name: Run pre-commit (advisory — non-blocking)
+        uses: pre-commit/action@v3.0.1
+        continue-on-error: true

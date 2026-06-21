@@ -1,0 +1,64 @@
+# .github/workflows/scheduled-smoke.yml
+# Nightly smoke run against the full test suite (including slow-marked tests).
+#
+# Current state: nlp-enrich has 0 tests marked @pytest.mark.slow, so
+# `pytest -m slow` exits with code 5 ("no tests collected").  The run step
+# tolerates exit 5 so the job stays green until slow tests are added.
+#
+# Follow-up: mark the genuine LINDAT/network integration tests @pytest.mark.slow
+# (call_udpipe, call_nametag live calls) to give this job real validation value.
+#
+# PARAM block (mirrors docker.yaml build args for consistency):
+#   APT_PACKAGES     — no extra apt deps for the base nlp-enrich image
+#   PRE_INSTALL_TORCH — torch is not pre-installed for the CPU-only smoke run
+#   REQUIREMENTS     — base + test requirements (no LLM stack)
+#
+# Infra note: this job runs on GitHub-hosted ubuntu-latest (CPU-only).
+# GPU inference tests live in gpu-inference.yml on self-hosted runners.
+
+name: Scheduled Smoke Tests
+
+on:
+  schedule:
+    # Weekly Monday 04:00 UTC
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+env:
+  APT_PACKAGES: ""
+  PRE_INSTALL_TORCH: ""
+  REQUIREMENTS: "requirements.txt requirements-test.txt"
+
+jobs:
+  smoke:
+    name: Smoke (slow tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-smoke-${{ runner.os }}-${{ hashFiles('requirements.txt', 'requirements-test.txt') }}
+          restore-keys: |
+            pip-smoke-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-test.txt
+
+      - name: Run slow-marked tests (exit-5 tolerant)
+        # Exit code 5 = "no tests collected" — tolerated until @pytest.mark.slow
+        # tests are added for LINDAT/network calls.  Any other non-zero exit
+        # propagates as a genuine failure.
+        run: |
+          python -m pytest -m slow -v --tb=short
+          rc=$?
+          [ "$rc" -eq 5 ] && echo "[smoke] No slow tests collected — OK" && exit 0 || exit $rc
