@@ -28,7 +28,10 @@ _RUN_PIPELINE = _REPO_ROOT / "run_pipeline.py"
 _API_JOBS_ROOT = Path(os.environ.get("API_JOBS_ROOT", _REPO_ROOT / "TEMP" / "api_jobs"))
 
 _KEEP_WORKSPACES = os.environ.get("API_KEEP_WORKSPACES", "").lower() in (
-    "1", "true", "yes", "on",
+    "1",
+    "true",
+    "yes",
+    "on",
 )
 
 _RUNNER_ENV_VARS = (
@@ -70,6 +73,7 @@ class EnrichmentResult:
 
 
 # ── input normalization helpers ───────────────────────────────────────────────
+
 
 def sanitize_doc_id(name: str) -> str:
     stem = Path(str(name or "")).name
@@ -175,16 +179,26 @@ def count_words(rows: List[Dict[str, Any]]) -> int:
 
 # ── config derivation ──────────────────────────────────────────────────────────
 
+
 def _read_template_config() -> List[str]:
     with open(_CONFIG_TEMPLATE, "r", encoding="utf-8") as fh:
         return fh.readlines()
 
 
 _RELOCATED_KEYS = {
-    "OUTPUT_DIR", "INPUT_TABLES_DIR", "WORK_DIR", "TEMP_TXT_DIR",
-    "CHUNK_DIR", "PARADATA_DIR", "CONLLU_INPUT_DIR", "TSV_INPUT_DIR",
-    "SUMMARY_OUTPUT_DIR", "TEITOK_OUTPUT_DIR", "INPUT_ALTO_DIR",
-    "INPUT_PAGES_DIR", "LOG_FILE",
+    "OUTPUT_DIR",
+    "INPUT_TABLES_DIR",
+    "WORK_DIR",
+    "TEMP_TXT_DIR",
+    "CHUNK_DIR",
+    "PARADATA_DIR",
+    "CONLLU_INPUT_DIR",
+    "TSV_INPUT_DIR",
+    "SUMMARY_OUTPUT_DIR",
+    "TEITOK_OUTPUT_DIR",
+    "INPUT_ALTO_DIR",
+    "INPUT_PAGES_DIR",
+    "LOG_FILE",
 }
 
 _ASSIGN_RE = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=")
@@ -228,8 +242,18 @@ def _derive_config(workspace: Path) -> Path:
     with open(out, "w", encoding="utf-8") as fh:
         fh.writelines(lines_out)
 
-    for sub in ("in", "out", "tmp", "out/UDP", "out/NE", "out/UDP_NE",
-                "out/TEITOK", "out/paradata", "tmp/TXT_EXTRACT", "tmp/CHUNKS"):
+    for sub in (
+        "in",
+        "out",
+        "tmp",
+        "out/UDP",
+        "out/NE",
+        "out/UDP_NE",
+        "out/TEITOK",
+        "out/paradata",
+        "tmp/TXT_EXTRACT",
+        "tmp/CHUNKS",
+    ):
         (workspace / sub).mkdir(parents=True, exist_ok=True)
     return out
 
@@ -277,20 +301,26 @@ class PipelineManager:
         if kw_method != "keybert":
             return
         try:
-            from keywords import _get_keybert_model, DEFAULT_KEYBERT_MODEL
+            from keywords import DEFAULT_KEYBERT_MODEL, _get_keybert_model
+
             _get_keybert_model(DEFAULT_KEYBERT_MODEL)
-            print(f"[warmup] KeyBERT model loaded.")
+            print("[warmup] KeyBERT model loaded.")
         except Exception as exc:
             print(f"[warmup] KeyBERT warmup failed: {exc}. Will degrade gracefully.")
 
     def config_facts(self) -> Dict[str, Any]:
         facts = {
-            "udpipe_model": None, "nametag_model": None,
-            "udpipe_url": None, "nametag_url": None, "word_chunk_limit": None,
+            "udpipe_model": None,
+            "nametag_model": None,
+            "udpipe_url": None,
+            "nametag_url": None,
+            "word_chunk_limit": None,
         }
         key_map = {
-            "MODEL_UDPIPE": "udpipe_model", "MODEL_NAMETAG": "nametag_model",
-            "UDPIPE_URL": "udpipe_url", "NAMETAG_URL": "nametag_url",
+            "MODEL_UDPIPE": "udpipe_model",
+            "MODEL_NAMETAG": "nametag_model",
+            "UDPIPE_URL": "udpipe_url",
+            "NAMETAG_URL": "nametag_url",
             "WORD_CHUNK_LIMIT": "word_chunk_limit",
         }
         for raw in _read_template_config():
@@ -311,8 +341,11 @@ class PipelineManager:
             cfg = _derive_config(ws)
             cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg), "--dry-run"]
             proc = subprocess.run(
-                cmd, cwd=str(_REPO_ROOT), env=_stage_env(),
-                capture_output=True, text=True,
+                cmd,
+                cwd=str(_REPO_ROOT),
+                env=_stage_env(),
+                capture_output=True,
+                text=True,
             )
             return proc.returncode, (proc.stdout + proc.stderr)[-4000:]
         finally:
@@ -352,22 +385,37 @@ class PipelineManager:
                     cmd.extend(["--num-keywords", str(num_keywords)])
 
             proc = subprocess.run(
-                cmd, cwd=str(_REPO_ROOT), env=_stage_env(job_id),
-                capture_output=True, text=True,
+                cmd,
+                cwd=str(_REPO_ROOT),
+                env=_stage_env(job_id),
+                capture_output=True,
+                text=True,
             )
             rc = proc.returncode
             tail = (proc.stdout + proc.stderr)[-4000:]
 
             if rc == 1:
-                raise PipelineError(f"Pipeline produced no output (empty run, exit 1).\n{tail}", http_status=502, returncode=rc)
+                raise PipelineError(
+                    f"Pipeline produced no output (empty run, exit 1).\n{tail}",
+                    http_status=502,
+                    returncode=rc,
+                )
             if rc == 2:
-                raise PipelineError(f"Required stage script missing (exit 2).\n{tail}", http_status=502, returncode=rc)
+                raise PipelineError(
+                    f"Required stage script missing (exit 2).\n{tail}",
+                    http_status=502,
+                    returncode=rc,
+                )
             if rc == 3:
-                raise KeywordPreflightError(f"Keyword preflight failed (exit 3).\n{tail}", returncode=rc)
+                raise KeywordPreflightError(
+                    f"Keyword preflight failed (exit 3).\n{tail}", returncode=rc
+                )
             if rc == 4:
                 raise KeywordPreflightError("Keyword backend failed at runtime.", returncode=4)
             if rc != 0:
-                raise PipelineError(f"Pipeline stage failed (exit {rc}).\n{tail}", http_status=502, returncode=rc)
+                raise PipelineError(
+                    f"Pipeline stage failed (exit {rc}).\n{tail}", http_status=502, returncode=rc
+                )
 
             teitok_dir = workspace / "out" / "TEITOK"
             teitok_files = list(teitok_dir.glob("*.teitok.xml")) if teitok_dir.exists() else []
@@ -375,7 +423,8 @@ class PipelineManager:
                 raise PipelineError(
                     f"Pipeline completed (exit 0) but produced no TEITOK output. "
                     f"This indicates a silent empty run.\n{tail}",
-                    http_status=502, returncode=0,
+                    http_status=502,
+                    returncode=0,
                 )
 
             kw_method_used = _detect_kw_method_used(workspace / "out")
@@ -410,12 +459,14 @@ class PipelineManager:
                 continue
             cfg = d.get("config", {}) or {}
             stats = d.get("statistics", {}) or {}
-            out.append({
-                "script": cfg.get("script"),
-                "successfully_processed": stats.get("successfully_processed"),
-                "skipped_files": stats.get("skipped_files"),
-                "output_counts_by_type": stats.get("output_counts_by_type", {}),
-            })
+            out.append(
+                {
+                    "script": cfg.get("script"),
+                    "successfully_processed": stats.get("successfully_processed"),
+                    "skipped_files": stats.get("skipped_files"),
+                    "output_counts_by_type": stats.get("output_counts_by_type", {}),
+                }
+            )
         return out
 
     @staticmethod

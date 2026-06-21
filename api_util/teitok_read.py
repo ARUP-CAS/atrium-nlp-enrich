@@ -5,9 +5,9 @@ from pathlib import Path
 def doc_id_from_path(path: str | Path) -> str:
     """Strips .conllu or .teitok.xml to produce a clean document ID."""
     name = Path(path).name
-    if name.lower().endswith('.teitok.xml'):
+    if name.lower().endswith(".teitok.xml"):
         return name[:-11]
-    if name.lower().endswith('.conllu'):
+    if name.lower().endswith(".conllu"):
         return name[:-7]
     return Path(path).stem
 
@@ -25,32 +25,28 @@ def read_teitok_rows(path: str | Path) -> list[dict]:
     line_num = 1
 
     for elem in root.iter():
-        tag = elem.tag.split('}')[-1]  # Namespace agnostic
+        tag = elem.tag.split("}")[-1]  # Namespace agnostic
 
-        if tag == 'pb':
-            page_num = int(elem.get('n', page_num + 1))
-        elif tag == 'lb':
+        if tag == "pb":
+            page_num = int(elem.get("n", page_num + 1))
+        elif tag == "lb":
             line_num += 1
-        elif tag == 's':
-            text = elem.get('text')
+        elif tag == "s":
+            text = elem.get("text")
 
             # If @text is missing, fallback to joining <tok> elements
             if not text:
                 toks = []
                 for tok in elem.iter():
-                    tok_tag = tok.tag.split('}')[-1]
-                    if tok_tag == 'tok':
+                    tok_tag = tok.tag.split("}")[-1]
+                    if tok_tag == "tok":
                         toks.append(tok.text or "")
-                        if tok.get('join') != 'right' and tok.get('spaceAfter') != 'No':
+                        if tok.get("join") != "right" and tok.get("spaceAfter") != "No":
                             toks.append(" ")
                 text = "".join(toks).strip()
 
             if text:
-                rows.append({
-                    "page_num": page_num,
-                    "line_num": line_num,
-                    "text": text
-                })
+                rows.append({"page_num": page_num, "line_num": line_num, "text": text})
 
     return rows
 
@@ -71,13 +67,15 @@ def read_teitok_tokens(path: str | Path) -> list[dict]:
     tokens = []
 
     for tok in root.iter():
-        tag = tok.tag.split('}')[-1]
-        if tag == 'tok':
-            tokens.append({
-                "form": tok.text or "",
-                "lemma": tok.get("lemma", ""),
-                "upos": tok.get("pos", tok.get("type", "")),
-                "space_after": tok.get("join") != "right" and tok.get("spaceAfter") != "No"
-            })
+        tag = tok.tag.split("}")[-1]
+        if tag == "tok":
+            tokens.append(
+                {
+                    "form": tok.text or "",
+                    "lemma": tok.get("lemma", ""),
+                    "upos": tok.get("pos", tok.get("type", "")),
+                    "space_after": tok.get("join") != "right" and tok.get("spaceAfter") != "No",
+                }
+            )
 
     return tokens

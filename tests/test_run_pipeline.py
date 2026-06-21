@@ -5,17 +5,12 @@ Unit tests for the pure helper functions in ``run_pipeline.py``.
 """
 
 import argparse
-import json
-import time
 from pathlib import Path
-
-import pytest
 
 import run_pipeline as rp
 
 
 class TestParseConfig:
-
     def _write(self, tmp_path, body):
         p = tmp_path / "config_api.txt"
         p.write_text(body, encoding="utf-8")
@@ -27,16 +22,14 @@ class TestParseConfig:
         assert values["OUTPUT_DIR"] == "./out"
 
     def test_var_expansion_braced(self, tmp_path):
-        cfg = self._write(tmp_path,
-                          'OUTPUT_DIR="./out"\n'
-                          'PARADATA_DIR="${OUTPUT_DIR}/paradata"\n')
+        cfg = self._write(tmp_path, 'OUTPUT_DIR="./out"\nPARADATA_DIR="${OUTPUT_DIR}/paradata"\n')
         values = rp._parse_config(cfg)
         assert values["PARADATA_DIR"] == "./out/paradata"
 
     def test_var_expansion_unbraced(self, tmp_path):
-        cfg = self._write(tmp_path,
-                          'OUTPUT_DIR="./out"\n'
-                          'INPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_CATEG"\n')
+        cfg = self._write(
+            tmp_path, 'OUTPUT_DIR="./out"\nINPUT_TABLES_DIR="$OUTPUT_DIR/DOC_LINE_CATEG"\n'
+        )
         values = rp._parse_config(cfg)
         assert values["INPUT_TABLES_DIR"] == "./out/DOC_LINE_CATEG"
 
@@ -47,7 +40,6 @@ class TestParseConfig:
 
 
 class TestBuildPlan:
-
     def _args(self, **kwargs):
         ns = argparse.Namespace(
             stages=["manifest", "udp", "nt", "stats"],
@@ -56,7 +48,7 @@ class TestBuildPlan:
             kw_method="yake",
             llm=False,
             llm_config="dummy_llm.txt",
-            force=False
+            force=False,
         )
         for k, v in kwargs.items():
             setattr(ns, k, v)
@@ -83,10 +75,17 @@ class TestBuildPlan:
 class TestPreflights:
     def test_keybert_preflight_passes_when_present(self, monkeypatch):
         import builtins
+
         real_import = builtins.__import__
 
         def fake_import(name, *a, **k):
-            if name in ("torch", "transformers", "transformers.modeling_utils", "keybert", "sentence_transformers"):
+            if name in (
+                "torch",
+                "transformers",
+                "transformers.modeling_utils",
+                "keybert",
+                "sentence_transformers",
+            ):
                 return object()
             return real_import(name, *a, **k)
 

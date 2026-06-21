@@ -14,13 +14,16 @@ try:
     from requests.adapters import HTTPAdapter
     from urllib3.util.retry import Retry
 except ImportError:
-    print("[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr)
+    print(
+        "[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr
+    )
     sys.exit(1)
 
 NAMETAG_URL = "https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
 
 # ── API call ──────────────────────────────────────────────────────────────────
+
 
 def get_robust_session(retries: int) -> requests.Session:
     """Configures a requests session with exponential backoff for 429/5xx errors."""
@@ -29,7 +32,7 @@ def get_robust_session(retries: int) -> requests.Session:
         total=retries,
         backoff_factor=1.5,
         status_forcelist=[429, 500, 502, 503, 504],
-        allowed_methods=["POST"]
+        allowed_methods=["POST"],
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
@@ -37,7 +40,9 @@ def get_robust_session(retries: int) -> requests.Session:
     return session
 
 
-def call_nametag(session: requests.Session, conllu_text: str, model: str, url: str, timeout: int) -> dict | None:
+def call_nametag(
+    session: requests.Session, conllu_text: str, model: str, url: str, timeout: int
+) -> dict | None:
     """POST CoNLL-U text to NameTag and return the parsed JSON dict."""
     try:
         resp = session.post(
@@ -58,6 +63,7 @@ def call_nametag(session: requests.Session, conllu_text: str, model: str, url: s
 
 
 # ── sent_id → page mapping ────────────────────────────────────────────────────
+
 
 def build_sent_page_map(conllu_path: str) -> list[int]:
     """Return a list mapping sentence index (0-based) → page number (1-based)."""
@@ -104,6 +110,7 @@ def build_sent_page_map(conllu_path: str) -> list[int]:
 
 # ── NE suffix helper ──────────────────────────────────────────────────────────
 
+
 def _get_ne_suffix(tag: str) -> str:
     if not tag:
         return ""
@@ -118,6 +125,7 @@ def _get_ne_suffix(tag: str) -> str:
 
 
 # ── response → per-page TSV ───────────────────────────────────────────────────
+
 
 def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, doc_id: str) -> int:
     """Parse NameTag JSON result and write per-page TSV files."""
@@ -150,6 +158,7 @@ def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, 
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Send CoNLL-U to NameTag API and write per-page TSV files."
@@ -158,7 +167,8 @@ def main() -> None:
     parser.add_argument("--model", required=True, help="NameTag model identifier.")
     parser.add_argument("--output-dir", required=True, help="Directory for per-page TSV output.")
     parser.add_argument(
-        "--url", default=os.environ.get("NAMETAG_URL", NAMETAG_URL),
+        "--url",
+        default=os.environ.get("NAMETAG_URL", NAMETAG_URL),
         help="NameTag API endpoint URL.",
     )
     parser.add_argument("--timeout", type=int, default=60)

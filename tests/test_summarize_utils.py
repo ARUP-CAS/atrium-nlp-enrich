@@ -15,7 +15,7 @@ No ML models, no network, no GPU required.
 
 import pytest
 
-from summarize_nt_udp import (
+from api_util.summarize_nt_udp import (  # noqa: E402
     CNEC_TYPE_MAP,
     bool_from_str,
     get_ne_explanation,
@@ -29,7 +29,6 @@ from summarize_nt_udp import (
 # bool_from_str
 # ════════════════════════════════════════════════════════════════════════════
 class TestBoolFromStr:
-
     @pytest.mark.parametrize("value", ["true", "True", "TRUE", "1", "yes", "y", "on"])
     def test_truthy_strings(self, value):
         assert bool_from_str(value) is True
@@ -62,7 +61,6 @@ class TestBoolFromStr:
 # sanitize_filename
 # ════════════════════════════════════════════════════════════════════════════
 class TestSanitizeFilename:
-
     def test_clean_name_unchanged(self):
         assert sanitize_filename("CTX199405706") == "CTX199405706"
 
@@ -101,7 +99,6 @@ class TestSanitizeFilename:
 # get_ne_explanation
 # ════════════════════════════════════════════════════════════════════════════
 class TestGetNeExplanation:
-
     def test_o_tag_returns_empty(self):
         assert get_ne_explanation("O") == ""
 
@@ -151,7 +148,7 @@ class TestGetNeExplanation:
         Every code in CNEC_TYPE_MAP must be reachable via a B- prefix tag.
         This guards against typos in the map keys.
         """
-        for code, explanation in CNEC_TYPE_MAP.items():
+        for code, _explanation in CNEC_TYPE_MAP.items():
             result = get_ne_explanation(f"B-{code}")
             # Either maps to the known explanation or produces an "Unknown Code"
             # string (for codes that map to generic labels like "O").
@@ -162,7 +159,6 @@ class TestGetNeExplanation:
 # parse_features
 # ════════════════════════════════════════════════════════════════════════════
 class TestParseFeatures:
-
     def test_underscore_returns_empty_dict(self):
         assert parse_features("_") == {}
 
@@ -201,7 +197,6 @@ class TestParseFeatures:
 # parse_misc
 # ════════════════════════════════════════════════════════════════════════════
 class TestParseMisc:
-
     def test_underscore_returns_empty_dict(self):
         assert parse_misc("_") == {}
 

@@ -42,17 +42,22 @@ import multiprocessing
 import os
 import shutil
 import subprocess
-from pathlib import Path
 import sys
+from pathlib import Path
+
 _api_util_path = str(Path(__file__).parent / "api_util")
 if _api_util_path not in sys.path:
     sys.path.insert(0, _api_util_path)
-from api_util.teitok_read import doc_id_from_path, read_teitok_text, read_teitok_tokens
-from collections import Counter
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from typing import List, Optional, Tuple, Union
+from collections import Counter  # noqa: E402
+from concurrent.futures import ProcessPoolExecutor, as_completed  # noqa: E402
+from typing import List, Optional, Tuple, Union  # noqa: E402
 
-from atrium_paradata import ParadataLogger
+from api_util.teitok_read import (  # noqa: E402
+    doc_id_from_path,
+    read_teitok_text,
+    read_teitok_tokens,
+)
+from atrium_paradata import ParadataLogger  # noqa: E402
 
 # ── type alias ────────────────────────────────────────────────────────────────
 # A keyword list is a sequence of (phrase, score) pairs sorted best-first.
@@ -68,38 +73,38 @@ class KeywordBackendError(RuntimeError):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ── hardcoded fallbacks ───────────────────────────────────────────────────────
-DEFAULT_INPUT_DIR       = "data_samples/UDP"
-DEFAULT_OUTPUT_FILE     = "data_samples/keywords_summary_{method}.csv"
+DEFAULT_INPUT_DIR = "data_samples/UDP"
+DEFAULT_OUTPUT_FILE = "data_samples/keywords_summary_{method}.csv"
 DEFAULT_PER_DOC_OUT_DIR = "data_samples/KW_PER_DOC_{METHOD}"
-DEFAULT_METHOD          = "yake"
-DEFAULT_NUM_KEYWORDS    = 20
-DEFAULT_LANG            = "cs"
-DEFAULT_MAX_WORDS       = 3
-DEFAULT_KEYBERT_MODEL   = "paraphrase-multilingual-MiniLM-L12-v2"
-DEFAULT_NO_MMR          = False
-DEFAULT_DIVERSITY       = 0.5
-DEFAULT_WORKERS         = multiprocessing.cpu_count()   # one worker per logical CPU
-DEFAULT_BATCH_SIZE      = 16                            # For KeyBERT GPU batching
+DEFAULT_METHOD = "yake"
+DEFAULT_NUM_KEYWORDS = 20
+DEFAULT_LANG = "cs"
+DEFAULT_MAX_WORDS = 3
+DEFAULT_KEYBERT_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
+DEFAULT_NO_MMR = False
+DEFAULT_DIVERSITY = 0.5
+DEFAULT_WORKERS = multiprocessing.cpu_count()  # one worker per logical CPU
+DEFAULT_BATCH_SIZE = 16  # For KeyBERT GPU batching
 
 # ── config file override ──────────────────────────────────────────────────────
-_config      = configparser.ConfigParser()
+_config = configparser.ConfigParser()
 _config_file = Path(__file__).parent / "kw_config.txt"
 
 if _config_file.exists():
     _config.read(_config_file)
     if "DEFAULTS" in _config:
         _sec = _config["DEFAULTS"]
-        DEFAULT_INPUT_DIR       = _sec.get("INPUT_DIR",       DEFAULT_INPUT_DIR)
-        DEFAULT_OUTPUT_FILE     = _sec.get("OUTPUT_FILE",     DEFAULT_OUTPUT_FILE)
+        DEFAULT_INPUT_DIR = _sec.get("INPUT_DIR", DEFAULT_INPUT_DIR)
+        DEFAULT_OUTPUT_FILE = _sec.get("OUTPUT_FILE", DEFAULT_OUTPUT_FILE)
         DEFAULT_PER_DOC_OUT_DIR = _sec.get("PER_DOC_OUT_DIR", DEFAULT_PER_DOC_OUT_DIR)
-        DEFAULT_METHOD          = _sec.get("METHOD",          DEFAULT_METHOD)
-        DEFAULT_LANG            = _sec.get("LANG",            DEFAULT_LANG)
-        DEFAULT_KEYBERT_MODEL   = _sec.get("KEYBERT_MODEL",   DEFAULT_KEYBERT_MODEL)
-        DEFAULT_NUM_KEYWORDS    = _sec.getint("NUM_KEYWORDS", DEFAULT_NUM_KEYWORDS)
-        DEFAULT_MAX_WORDS       = _sec.getint("MAX_WORDS",    DEFAULT_MAX_WORDS)
-        DEFAULT_NO_MMR          = _sec.getboolean("NO_MMR",   DEFAULT_NO_MMR)
-        DEFAULT_DIVERSITY       = _sec.getfloat("DIVERSITY",  DEFAULT_DIVERSITY)
-        DEFAULT_BATCH_SIZE      = _sec.getint("BATCH_SIZE",   DEFAULT_BATCH_SIZE)
+        DEFAULT_METHOD = _sec.get("METHOD", DEFAULT_METHOD)
+        DEFAULT_LANG = _sec.get("LANG", DEFAULT_LANG)
+        DEFAULT_KEYBERT_MODEL = _sec.get("KEYBERT_MODEL", DEFAULT_KEYBERT_MODEL)
+        DEFAULT_NUM_KEYWORDS = _sec.getint("NUM_KEYWORDS", DEFAULT_NUM_KEYWORDS)
+        DEFAULT_MAX_WORDS = _sec.getint("MAX_WORDS", DEFAULT_MAX_WORDS)
+        DEFAULT_NO_MMR = _sec.getboolean("NO_MMR", DEFAULT_NO_MMR)
+        DEFAULT_DIVERSITY = _sec.getfloat("DIVERSITY", DEFAULT_DIVERSITY)
+        DEFAULT_BATCH_SIZE = _sec.getint("BATCH_SIZE", DEFAULT_BATCH_SIZE)
         _w = _sec.getint("WORKERS", 0)
         if _w > 0:
             DEFAULT_WORKERS = _w
@@ -108,6 +113,7 @@ if _config_file.exists():
 # ═══════════════════════════════════════════════════════════════════════════════
 # CoNLL-U reading helpers
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def _extract_surface_text_conllu(file_path: str) -> str:
     """Reconstruct a plain-text string from a CoNLL-U file."""
@@ -124,13 +130,12 @@ def _extract_surface_text_conllu(file_path: str) -> str:
                 tok_id = cols[0]
                 if "-" in tok_id or "." in tok_id:
                     continue
-                form  = cols[1]
-                misc  = cols[9]
+                form = cols[1]
+                misc = cols[9]
                 space = "" if "SpaceAfter=No" in misc else " "
                 parts.append(form + space)
     except Exception as exc:
-        print(f"[Warning] Could not read surface text from {file_path}: {exc}",
-              file=sys.stderr)
+        print(f"[Warning] Could not read surface text from {file_path}: {exc}", file=sys.stderr)
     return "".join(parts).strip()
 
 
@@ -158,13 +163,12 @@ def _extract_lemmas_conllu(file_path: str) -> list[str]:
                 if "-" in tok_id or "." in tok_id:
                     continue
                 lemma = cols[2]
-                upos  = cols[3]
+                upos = cols[3]
                 if upos in valid_pos and lemma != "_":
                     if len(lemma) > 1 and lemma.isalpha():
                         lemmas.append(lemma.lower())
     except Exception as exc:
-        print(f"[Warning] Could not read CoNLL-U file {file_path}: {exc}",
-              file=sys.stderr)
+        print(f"[Warning] Could not read CoNLL-U file {file_path}: {exc}", file=sys.stderr)
     return lemmas
 
 
@@ -172,22 +176,36 @@ def _extract_lemmas(file_path: str) -> list[str]:
     """Dispatches to either TEITOK XML or CoNLL-U logic based on extension."""
     if str(file_path).lower().endswith(".teitok.xml"):
         return [
-            t["lemma"].lower() for t in read_teitok_tokens(file_path)
+            t["lemma"].lower()
+            for t in read_teitok_tokens(file_path)
             if t.get("upos") in {"NOUN", "PROPN", "ADJ"} and (t.get("lemma") or "").isalpha()
         ]
     return _extract_lemmas_conllu(file_path)
 
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # Backend: legacy KER
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def _extract_legacy(file_path: str, num_keywords: int, **_) -> Keywords:
     lemmas = _extract_lemmas(file_path)
     counts = Counter(lemmas)
 
     _ADMIN_STOP_LEMMAS = {
-        "zpráva", "projekt", "číslo", "datum", "rok", "strana", "tabulka", "příloha",
-        "text", "obsah", "kapitola", "část", "oddíl",
+        "zpráva",
+        "projekt",
+        "číslo",
+        "datum",
+        "rok",
+        "strana",
+        "tabulka",
+        "příloha",
+        "text",
+        "obsah",
+        "kapitola",
+        "část",
+        "oddíl",
     }
 
     filtered = []
@@ -204,22 +222,32 @@ def _extract_legacy(file_path: str, num_keywords: int, **_) -> Keywords:
 # Backend: YAKE
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _load_yake():
     try:
         import yake  # type: ignore
+
         return yake
     except ImportError as exc:
         raise KeywordBackendError(f"YAKE import failed: {exc}\nRun: pip install yake") from exc
 
-def _extract_yake(file_path: str, num_keywords: int, lang: str = "cs", max_words: int = 3, **_) -> Keywords:
+
+def _extract_yake(
+    file_path: str, num_keywords: int, lang: str = "cs", max_words: int = 3, **_
+) -> Keywords:
     yake = _load_yake()
     text = _extract_surface_text(file_path)
     if not text:
         return []
 
     extractor = yake.KeywordExtractor(
-        lan=lang, n=max_words, dedupLim=0.9, dedupFunc="seqm",
-        windowsSize=1, top=num_keywords, features=None,
+        lan=lang,
+        n=max_words,
+        dedupLim=0.9,
+        dedupFunc="seqm",
+        windowsSize=1,
+        top=num_keywords,
+        features=None,
     )
     try:
         raw_kws = extractor.extract_keywords(text)
@@ -229,7 +257,7 @@ def _extract_yake(file_path: str, num_keywords: int, lang: str = "cs", max_words
 
     inverted = [(kw, 1.0 / (score + 1e-10)) for kw, score in raw_kws]
     if inverted:
-        max_inv  = max(s for _, s in inverted)
+        max_inv = max(s for _, s in inverted)
         inverted = [(kw, round(s / max_inv, 6)) for kw, s in inverted]
 
     return inverted
@@ -239,7 +267,7 @@ def _extract_yake(file_path: str, num_keywords: int, lang: str = "cs", max_words
 # Backend: KeyBERT (GPU-accelerated, Batched, Chunked)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-_keybert_model_instance: object           = None
+_keybert_model_instance: object = None
 _keybert_model_name_loaded: Optional[str] = None
 
 
@@ -251,44 +279,58 @@ def _get_keybert_model(model_name: str):
 
     try:
         import torch  # type: ignore
+
         device = "cuda" if torch.cuda.is_available() else "cpu"
     except ImportError as exc:
         raise KeywordBackendError(f"PyTorch import failed: {exc}") from exc
 
     # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
     try:
-        import torchvision
+        pass
     except Exception:
         pass
 
     import sys
+
     if "torchvision" in sys.modules and not hasattr(sys.modules["torchvision"], "extension"):
         import types
+
         sys.modules["torchvision"].extension = types.ModuleType("torchvision.extension")
         sys.modules["torchvision"].extension._HAS_OPS = False
 
     # COMPATIBILITY PATCH 2: 'transformers' lazy loading bypass
     try:
         import transformers
+
         real_classes = {}
         try:
             from transformers.modeling_utils import PreTrainedModel
+
             real_classes["PreTrainedModel"] = PreTrainedModel
         except Exception:
             pass
         try:
             from transformers.tokenization_utils import PreTrainedTokenizer
+
             real_classes["PreTrainedTokenizer"] = PreTrainedTokenizer
         except Exception:
             pass
         try:
             from transformers.configuration_utils import PretrainedConfig
+
             real_classes["PretrainedConfig"] = PretrainedConfig
         except Exception:
             pass
         try:
-            from transformers.models.auto import AutoModel, AutoTokenizer, AutoProcessor, AutoConfig, \
-                AutoFeatureExtractor, AutoImageProcessor
+            from transformers.models.auto import (
+                AutoConfig,
+                AutoFeatureExtractor,
+                AutoImageProcessor,
+                AutoModel,
+                AutoProcessor,
+                AutoTokenizer,
+            )
+
             real_classes["AutoModel"] = AutoModel
             real_classes["AutoTokenizer"] = AutoTokenizer
             real_classes["AutoProcessor"] = AutoProcessor
@@ -299,21 +341,25 @@ def _get_keybert_model(model_name: str):
             pass
         try:
             from transformers.processing_utils import ProcessorMixin
+
             real_classes["ProcessorMixin"] = ProcessorMixin
         except Exception:
             pass
         try:
             from transformers.feature_extraction_utils import BatchFeature
+
             real_classes["BatchFeature"] = BatchFeature
         except Exception:
             pass
         try:
             from transformers.trainer import Trainer
+
             real_classes["Trainer"] = Trainer
         except Exception:
             pass
         try:
             from transformers.training_args import TrainingArguments
+
             real_classes["TrainingArguments"] = TrainingArguments
         except Exception:
             pass
@@ -322,10 +368,19 @@ def _get_keybert_model(model_name: str):
             pass
 
         _to_patch = (
-            "PreTrainedModel", "PreTrainedTokenizer", "PretrainedConfig",
-            "AutoModel", "AutoTokenizer", "AutoProcessor", "AutoConfig",
-            "AutoFeatureExtractor", "AutoImageProcessor",
-            "ProcessorMixin", "BatchFeature", "Trainer", "TrainingArguments"
+            "PreTrainedModel",
+            "PreTrainedTokenizer",
+            "PretrainedConfig",
+            "AutoModel",
+            "AutoTokenizer",
+            "AutoProcessor",
+            "AutoConfig",
+            "AutoFeatureExtractor",
+            "AutoImageProcessor",
+            "ProcessorMixin",
+            "BatchFeature",
+            "Trainer",
+            "TrainingArguments",
         )
 
         for attr in _to_patch:
@@ -342,13 +397,16 @@ def _get_keybert_model(model_name: str):
     try:
         from keybert import KeyBERT  # type: ignore
     except ImportError as exc:
-        raise KeywordBackendError(f"KeyBERT import failed: {exc}\nRun: pip install keybert sentence-transformers") from exc
+        raise KeywordBackendError(
+            f"KeyBERT import failed: {exc}\nRun: pip install keybert sentence-transformers"
+        ) from exc
 
     tag = "CUDA" if device == "cuda" else "CPU"
     print(f"[KeyBERT] Loading model '{model_name}' on {tag} …", file=sys.stderr)
 
     try:
         from sentence_transformers import SentenceTransformer  # type: ignore
+
         st_model = SentenceTransformer(model_name, device=device)
         _keybert_model_instance = KeyBERT(model=st_model)
         _keybert_model_name_loaded = model_name
@@ -392,7 +450,7 @@ def _extract_keybert(
         words = text.split()
         if len(words) > chunk_size:
             for i in range(0, len(words), max(1, chunk_size - overlap)):
-                chunk = " ".join(words[i:i + chunk_size])
+                chunk = " ".join(words[i : i + chunk_size])
                 if chunk:
                     all_chunks.append(chunk)
                     doc_chunk_map.append(doc_idx)
@@ -447,10 +505,11 @@ def _extract_keybert(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 _BACKENDS: dict = {
-    "legacy":  _extract_legacy,
-    "yake":    _extract_yake,
+    "legacy": _extract_legacy,
+    "yake": _extract_yake,
     "keybert": _extract_keybert,
 }
+
 
 def extract_keywords(
     file_path: Union[str, List[str]],
@@ -474,28 +533,38 @@ def extract_keywords(
 # Worker
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
-    (file_paths, method, num_keywords, indiv_out_dir,
-     lang, max_words, keybert_model, use_mmr, diversity) = task
+    (
+        file_paths,
+        method,
+        num_keywords,
+        indiv_out_dir,
+        lang,
+        max_words,
+        keybert_model,
+        use_mmr,
+        diversity,
+    ) = task
 
     is_batch = isinstance(file_paths, list)
     paths = file_paths if is_batch else [file_paths]
 
     results = extract_keywords(
         file_paths,
-        method        = method,
-        num_keywords  = num_keywords,
-        lang          = lang,
-        max_words     = max_words,
-        keybert_model = keybert_model,
-        use_mmr       = use_mmr,
-        diversity     = diversity,
+        method=method,
+        num_keywords=num_keywords,
+        lang=lang,
+        max_words=max_words,
+        keybert_model=keybert_model,
+        use_mmr=use_mmr,
+        diversity=diversity,
     )
 
     keywords_list = results if is_batch else [results]
     output = []
 
-    for file_path, keywords in zip(paths, keywords_list):
+    for file_path, keywords in zip(paths, keywords_list, strict=True):
         # doc_id = Path(file_path).stem
         doc_id = doc_id_from_path(file_path)
         if keywords and indiv_out_dir:
@@ -517,6 +586,7 @@ def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
 # CSV output helpers
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _write_csv_row(output_file: str, doc_id: str, keywords: Keywords, num_keywords: int) -> None:
     row: list = [doc_id]
     for i in range(num_keywords):
@@ -528,9 +598,11 @@ def _write_csv_row(output_file: str, doc_id: str, keywords: Keywords, num_keywor
     with open(output_file, "a", encoding="utf-8", newline="") as fh:
         csv.writer(fh).writerow(row)
 
+
 def _sort_csv_file(file_path: str) -> None:
     try:
         import pandas as pd  # type: ignore
+
         df = pd.read_csv(file_path)
         df.sort_values(by=df.columns[0], inplace=True)
         df.to_csv(file_path, index=False)
@@ -545,7 +617,9 @@ def _sort_csv_file(file_path: str) -> None:
                 header = fh.readline()
             with open(tmp, "w", encoding="utf-8") as fh:
                 fh.write(header)
-            subprocess.run(f"tail -n +2 '{file_path}' | sort -t ',' -k1 >> '{tmp}'", shell=True, check=True)
+            subprocess.run(
+                f"tail -n +2 '{file_path}' | sort -t ',' -k1 >> '{tmp}'", shell=True, check=True
+            )
             shutil.move(tmp, file_path)
             return
         except Exception as exc:
@@ -557,7 +631,7 @@ def _sort_csv_file(file_path: str) -> None:
         with open(file_path, "r", encoding="utf-8") as fh:
             reader = csv.reader(fh)
             header = next(reader)
-            rows   = sorted(reader, key=lambda r: r[0])
+            rows = sorted(reader, key=lambda r: r[0])
         with open(file_path, "w", encoding="utf-8", newline="") as fh:
             w = csv.writer(fh)
             w.writerow(header)
@@ -569,6 +643,7 @@ def _sort_csv_file(file_path: str) -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def main(argv: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser(
@@ -582,18 +657,28 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("-i", "--input_dir", default=DEFAULT_INPUT_DIR)
     parser.add_argument("-o", "--output_file", default=DEFAULT_OUTPUT_FILE)
     parser.add_argument("-d", "--per_doc_out_dir", default=DEFAULT_PER_DOC_OUT_DIR)
-    parser.add_argument("--paradata-dir", default=None, help="Directory for paradata logs. Overrides config PARADATA_DIR.")
+    parser.add_argument(
+        "--paradata-dir",
+        default=None,
+        help="Directory for paradata logs. Overrides config PARADATA_DIR.",
+    )
     parser.add_argument("-m", "--method", default=DEFAULT_METHOD, choices=list(_BACKENDS))
     parser.add_argument("-n", "--num_keywords", type=int, default=DEFAULT_NUM_KEYWORDS)
     parser.add_argument("-l", "--lang", default=DEFAULT_LANG)
     parser.add_argument("-w", "--max_words", type=int, default=DEFAULT_MAX_WORDS)
 
     keybert_group = parser.add_argument_group("KeyBERT options")
-    keybert_group.add_argument("--keybert-model", dest="keybert_model", default=DEFAULT_KEYBERT_MODEL)
+    keybert_group.add_argument(
+        "--keybert-model", dest="keybert_model", default=DEFAULT_KEYBERT_MODEL
+    )
     keybert_group.add_argument("--no-mmr", action="store_true", default=DEFAULT_NO_MMR)
     keybert_group.add_argument("--diversity", type=float, default=DEFAULT_DIVERSITY)
-    keybert_group.add_argument("--batch_size", type=int, default=DEFAULT_BATCH_SIZE,
-                               help="Max docs per KeyBERT batch. (default: %(default)s)")
+    keybert_group.add_argument(
+        "--batch_size",
+        type=int,
+        default=DEFAULT_BATCH_SIZE,
+        help="Max docs per KeyBERT batch. (default: %(default)s)",
+    )
 
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
 
@@ -604,17 +689,29 @@ def main(argv: Optional[List[str]] = None) -> None:
     suffix_u = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(args.method, args.method.upper())
 
     if isinstance(args.output_file, str):
-        args.output_file = args.output_file.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
+        args.output_file = args.output_file.replace("{method}", suffix_l).replace(
+            "{METHOD}", suffix_u
+        )
     if isinstance(args.per_doc_out_dir, str):
-        args.per_doc_out_dir = args.per_doc_out_dir.replace("{method}", suffix_l).replace("{METHOD}", suffix_u)
+        args.per_doc_out_dir = args.per_doc_out_dir.replace("{method}", suffix_l).replace(
+            "{METHOD}", suffix_u
+        )
 
-    paradata_dir = args.paradata_dir or os.environ.get("PARADATA_DIR") or str(Path(args.input_dir).parent / "paradata")
+    paradata_dir = (
+        args.paradata_dir
+        or os.environ.get("PARADATA_DIR")
+        or str(Path(args.input_dir).parent / "paradata")
+    )
 
     if args.method == "keybert":
         try:
             import torch  # type: ignore
+
             if torch.cuda.is_available() and args.workers > 1:
-                print("[KeyBERT] GPU detected: forcing --workers 1 to avoid CUDA context conflicts. Relegating to Batch Mode.", file=sys.stderr)
+                print(
+                    "[KeyBERT] GPU detected: forcing --workers 1 to avoid CUDA context conflicts. Relegating to Batch Mode.",
+                    file=sys.stderr,
+                )
                 args.workers = 1
         except ImportError:
             pass
@@ -625,7 +722,7 @@ def main(argv: Optional[List[str]] = None) -> None:
             print(f"KeyBERT preflight failed: {e}", file=sys.stderr)
             sys.exit(4)
 
-    input_path    = Path(args.input_dir)
+    input_path = Path(args.input_dir)
     indiv_out_dir = Path(args.per_doc_out_dir)
     indiv_out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -640,60 +737,70 @@ def main(argv: Optional[List[str]] = None) -> None:
         csv.writer(fh).writerow(header)
 
     all_files = sorted(
-        p for p in input_path.iterdir()
+        p
+        for p in input_path.iterdir()
         if p.suffix.lower() == ".conllu" or p.name.lower().endswith(".teitok.xml")
     )
     BATCH_SIZE = args.batch_size if args.method == "keybert" else 1
 
     tasks = []
     for i in range(0, len(all_files), BATCH_SIZE):
-        batch_files = [str(p) for p in all_files[i:i + BATCH_SIZE]]
+        batch_files = [str(p) for p in all_files[i : i + BATCH_SIZE]]
 
         if BATCH_SIZE == 1:
             batch_files = batch_files[0]
 
-        tasks.append((
-            batch_files,
-            args.method,
-            args.num_keywords,
-            str(indiv_out_dir),
-            args.lang,
-            args.max_words,
-            args.keybert_model,
-            not args.no_mmr,
-            args.diversity,
-        ))
+        tasks.append(
+            (
+                batch_files,
+                args.method,
+                args.num_keywords,
+                str(indiv_out_dir),
+                args.lang,
+                args.max_words,
+                args.keybert_model,
+                not args.no_mmr,
+                args.diversity,
+            )
+        )
 
     _logger = ParadataLogger(
         program="nlp-enrich",
         config={
-            "script":          "keywords",
-            "method":          args.method,
-            "input_dir":       str(args.input_dir),
-            "lang":            args.lang,
-            "max_words":       args.max_words,
-            "num_keywords":    args.num_keywords,
+            "script": "keywords",
+            "method": args.method,
+            "input_dir": str(args.input_dir),
+            "lang": args.lang,
+            "max_words": args.max_words,
+            "num_keywords": args.num_keywords,
             "per_doc_out_dir": str(args.per_doc_out_dir),
-            "output_file":     str(args.output_file),
-            **({"keybert_model": args.keybert_model,
-                "mmr":           not args.no_mmr,
-                "diversity":     args.diversity,
-                "batch_size":    args.batch_size}
-               if args.method == "keybert" else {}),
+            "output_file": str(args.output_file),
+            **(
+                {
+                    "keybert_model": args.keybert_model,
+                    "mmr": not args.no_mmr,
+                    "diversity": args.diversity,
+                    "batch_size": args.batch_size,
+                }
+                if args.method == "keybert"
+                else {}
+            ),
         },
         paradata_dir=str(paradata_dir),
         output_types=["csv_per_doc", "csv_summary_row"],
     )
 
     _BACKEND_COMPONENTS = {
-        "legacy":  ["ker"],
-        "yake":    ["yake"],
+        "legacy": ["ker"],
+        "yake": ["yake"],
         "keybert": ["keybert", "sentence_transformers"],
     }
     for _comp in _BACKEND_COMPONENTS.get(args.method, []):
         _logger.log_component(_comp)
 
-    print(f"--- Keyword Extraction | method={args.method} | {len(all_files)} documents | workers={args.workers} ---")
+    print(
+        f"--- Keyword Extraction | method={args.method} | {len(all_files)} documents | workers={args.workers} ---"
+    )
 
     processed_count = 0
     try:
@@ -709,7 +816,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                     for doc_id, keywords in batch_results:
                         _write_csv_row(args.output_file, doc_id, keywords, args.num_keywords)
                         processed_count += 1
-                        _logger.log_success("csv_per_doc",     count=1)
+                        _logger.log_success("csv_per_doc", count=1)
                         _logger.log_success("csv_summary_row", count=1)
 
                     print(f"  Processed {processed_count}/{len(all_files)} …")
@@ -725,7 +832,10 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     print("--- Sorting master results … ---")
     _sort_csv_file(args.output_file)
-    print(f"--- Done. {processed_count}/{len(all_files)} documents processed. Output: {args.output_file} ---")
+    print(
+        f"--- Done. {processed_count}/{len(all_files)} documents processed. Output: {args.output_file} ---"
+    )
+
 
 if __name__ == "__main__":
     main()

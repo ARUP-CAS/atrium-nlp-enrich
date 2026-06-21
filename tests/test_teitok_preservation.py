@@ -23,8 +23,6 @@ only when it has >= 10 tab-separated columns AND column 0 contains neither
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import pytest
-
 from teitok_alto import write_teitok_merged
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -65,17 +63,13 @@ _ALTO_MARGIN_XML = """<?xml version="1.0" encoding="UTF-8"?>
 </alto>
 """
 
-_ALTO_CONLLU = (
-    "# sent_id = 1\n"
-    "# text = Test\n"
-    "1\tTest\tTest\tNOUN\t_\t_\t0\troot\t_\t_\n\n"
-)
+_ALTO_CONLLU = "# sent_id = 1\n# text = Test\n1\tTest\tTest\tNOUN\t_\t_\t0\troot\t_\t_\n\n"
+
 
 # ═════════════════════════════════════════════════════════════════════════════
 # Spatial Bounding Box Math (Issues #4 & #9)
 # ═════════════════════════════════════════════════════════════════════════════
 class TestSpatialAlignment:
-
     def test_printspace_margins_are_subtracted(self, tmp_path):
         """Ensures that HPOS/VPOS from <PrintSpace> are subtracted from
         absolute bounding boxes to fix margin displacement."""
@@ -137,7 +131,9 @@ class TestSpatialAlignment:
         out = Path(tmp_path) / "test.teitok.xml"
 
         # pixel + dpi=150, alto_dpi=300 -> sx = 0.5
-        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), dpi=150, alto_dpi=300)
+        write_teitok_merged(
+            str(conllu_file), str(out), alto_path=str(alto_file), dpi=150, alto_dpi=300
+        )
         root = ET.parse(str(out)).getroot()
         tok = next(root.iter("tok"))
         assert tok.get("bbox").startswith("50 50")  # 100 * 0.5
@@ -150,13 +146,24 @@ class TestSpatialAlignment:
 
         # Create a mock companion image header
         import struct
+
         img_file = Path(tmp_path) / "test-1.png"
-        png_header = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' + struct.pack('>I', 1200) + struct.pack('>I', 1750)
+        png_header = (
+            b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"
+            + struct.pack(">I", 1200)
+            + struct.pack(">I", 1750)
+        )
         img_file.write_bytes(png_header)
 
         # Companion image resolution (1200 / 2400 = 0.5) overrides the dpi value (300/254)
-        write_teitok_merged(str(conllu_file), str(out), alto_path=str(alto_file), image_dir=str(tmp_path), dpi=300,
-                            doc_id="test")
+        write_teitok_merged(
+            str(conllu_file),
+            str(out),
+            alto_path=str(alto_file),
+            image_dir=str(tmp_path),
+            dpi=300,
+            doc_id="test",
+        )
         root = ET.parse(str(out)).getroot()
         tok = next(root.iter("tok"))
         assert tok.get("bbox").startswith("50 50")
@@ -178,11 +185,13 @@ def _eligible_tokens(conllu_path):
             if len(cols) < 10 or "-" in cols[0] or "." in cols[0]:
                 continue
             misc = cols[9]
-            tokens.append({
-                "form": cols[1],
-                "ner": _ner_from_misc(misc),
-                "space_after": "SpaceAfter=No" not in misc,
-            })
+            tokens.append(
+                {
+                    "form": cols[1],
+                    "ner": _ner_from_misc(misc),
+                    "space_after": "SpaceAfter=No" not in misc,
+                }
+            )
     return tokens
 
 
@@ -191,7 +200,7 @@ def _ner_from_misc(misc):
         return ""
     for item in misc.split("|"):
         if item.startswith("NER="):
-            return item[len("NER="):]
+            return item[len("NER=") :]
     return ""
 
 
@@ -235,7 +244,7 @@ _NER_CONLLU = (
 # Special-character forms that must survive XML escaping unchanged.
 _SPECIAL_CONLLU = (
     "# sent_id = 1\n"
-    "# text = a < b & c \" d\n"
+    '# text = a < b & c " d\n'
     "1\ta<b\ta\tNOUN\t_\t_\t0\troot\t_\t_\n"
     "2\tc&d\tc\tNOUN\t_\t_\t1\tnmod\t_\t_\n"
     '3\te"f\te\tNOUN\t_\t_\t1\tnmod\t_\t_\n'
@@ -247,7 +256,6 @@ _SPECIAL_CONLLU = (
 # Well-formedness
 # ═════════════════════════════════════════════════════════════════════════════
 class TestWellFormed:
-
     def test_output_is_well_formed_tei(self, sample_conllu, tmp_path):
         out = _convert(sample_conllu, tmp_path)
         root = ET.parse(str(out)).getroot()
@@ -264,7 +272,6 @@ class TestWellFormed:
 # Token presence / order / count
 # ═════════════════════════════════════════════════════════════════════════════
 class TestTokenPreservation:
-
     def test_every_form_present_as_tok(self, sample_conllu, tmp_path):
         out = _convert(sample_conllu, tmp_path)
         root = ET.parse(str(out)).getroot()
@@ -300,7 +307,7 @@ class TestTokenPreservation:
                 continue
             rebuilt = ""
             for tok in s.iter("tok"):
-                rebuilt += (tok.text or "")
+                rebuilt += tok.text or ""
                 rebuilt += "" if tok.get("join") == "right" else " "
             assert "".join(rebuilt.split()) == "".join(text_attr.split())
             checked += 1
@@ -311,20 +318,18 @@ class TestTokenPreservation:
 # Special-character escaping round-trip
 # ═════════════════════════════════════════════════════════════════════════════
 class TestSpecialChars:
-
     def test_special_chars_escaped_and_preserved(self, tmp_path):
         cp = _write_conllu(tmp_path, _SPECIAL_CONLLU, "special.conllu")
         out = _convert(cp, tmp_path, "special.teitok.xml")
-        root = ET.parse(str(out)).getroot()        # must parse (escaping valid)
+        root = ET.parse(str(out)).getroot()  # must parse (escaping valid)
         emitted = _tok_texts(root)
-        assert emitted == ["a<b", "c&d", 'e"f']     # parsed back to originals
+        assert emitted == ["a<b", "c&d", 'e"f']  # parsed back to originals
 
 
 # ═════════════════════════════════════════════════════════════════════════════
 # NER spans
 # ═════════════════════════════════════════════════════════════════════════════
 class TestNerSpans:
-
     def test_ner_span_tokens_all_preserved(self, tmp_path):
         cp = _write_conllu(tmp_path, _NER_CONLLU)
         out = _convert(cp, tmp_path, "ner.teitok.xml")
@@ -338,8 +343,8 @@ class TestNerSpans:
         for name in root.iter("name"):
             name_tok_texts.extend(t.text for t in name.iter("tok"))
         assert "Jan" in name_tok_texts
-        assert "Novotný" in name_tok_texts      # I-P continues the PER span
-        assert "Praze" in name_tok_texts        # separate LOC span
+        assert "Novotný" in name_tok_texts  # I-P continues the PER span
+        assert "Praze" in name_tok_texts  # separate LOC span
         # Non-entity tokens must NOT be wrapped.
         assert "v" not in name_tok_texts
         assert "." not in name_tok_texts
@@ -357,7 +362,6 @@ class TestNerSpans:
 # Page boundaries
 # ═════════════════════════════════════════════════════════════════════════════
 class TestPageBoundaries:
-
     def test_all_tokens_present_across_two_page_reset(self, two_page_conllu, tmp_path):
         out = _convert(two_page_conllu, tmp_path, "twopage.teitok.xml")
         root = ET.parse(str(out)).getroot()

@@ -23,8 +23,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Smoke-test the nlp-enrich API.")
     ap.add_argument("-u", "--url", default="http://localhost:8000")
     ap.add_argument("-f", "--file", required=True, help="CSV/XLSX/TXT to enrich.")
-    ap.add_argument("-m", "--kw-method", default="keybert",
-                    choices=["keybert", "yake", "legacy", "none"])
+    ap.add_argument(
+        "-m", "--kw-method", default="keybert", choices=["keybert", "yake", "legacy", "none"]
+    )
     ap.add_argument("-n", "--num-keywords", type=int, default=20)
     ap.add_argument("--format", default="json", choices=["json", "zip"])
     args = ap.parse_args()
@@ -39,9 +40,11 @@ def main() -> int:
         resp = requests.post(
             f"{args.url}/enrich",
             files={"file": (args.file.split("/")[-1], fh)},
-            data={"kw_method": args.kw_method,
-                  "num_keywords": str(args.num_keywords),
-                  "format": args.format},
+            data={
+                "kw_method": args.kw_method,
+                "num_keywords": str(args.num_keywords),
+                "format": args.format,
+            },
             timeout=900,
         )
 

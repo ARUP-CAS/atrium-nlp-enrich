@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # api_2_udp.sh – UDPipe processing + paradata
 set -euo pipefail
+# shellcheck disable=SC1090  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "${ATRIUM_CONFIG:-config_api.txt}"
 
 PARA_STATE=$(python3 atrium_paradata.py start \
@@ -25,6 +26,7 @@ while IFS=$'\t' read -r file page path; do
     [ -f "$out" ] && continue
 
     mkdir -p "$(dirname "$out")"
+    # shellcheck disable=SC2153  # CHUNK_DIR is provided by the sourced config file
     chunk_dir="${CHUNK_DIR}/${file}"
     mkdir -p "$chunk_dir"
 

@@ -8,11 +8,11 @@ import asyncio
 import os
 import time
 from contextlib import asynccontextmanager
-from typing import Any, Dict, List
 from pathlib import Path
+from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import RedirectResponse, FileResponse, JSONResponse, HTMLResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
@@ -23,7 +23,7 @@ from .enrichment import (
     count_words,
     normalize_upload,
 )
-from .jobs import Job, create_job, _jobs
+from .jobs import Job, _jobs, create_job
 
 # ── operator-tunable limits ───────────────────────────────────────────────────
 MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
@@ -42,11 +42,13 @@ _manager = PipelineManager()
 _semaphore = asyncio.Semaphore(MAX_CONCURRENT_JOBS)
 _SERVICE_DIR = Path(__file__).resolve().parent
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, _manager.warmup, DEFAULT_KW_METHOD)
     yield
+
 
 # DEFINITION OF THE APP
 app = FastAPI(
@@ -58,12 +60,21 @@ app = FastAPI(
 
 # Safely mount static directories if they exist
 if (_SERVICE_DIR / "frontend").exists():
-    app.mount("/frontend", StaticFiles(directory=str(_SERVICE_DIR / "frontend"), html=True), name="frontend")
+    app.mount(
+        "/frontend",
+        StaticFiles(directory=str(_SERVICE_DIR / "frontend"), html=True),
+        name="frontend",
+    )
 if (_SERVICE_DIR / "frontend-lindat").exists():
-    app.mount("/frontend-lindat", StaticFiles(directory=str(_SERVICE_DIR / "frontend-lindat"), html=True), name="frontend-lindat")
+    app.mount(
+        "/frontend-lindat",
+        StaticFiles(directory=str(_SERVICE_DIR / "frontend-lindat"), html=True),
+        name="frontend-lindat",
+    )
 
 try:
     from fastapi.middleware.cors import CORSMiddleware
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOWED_ORIGINS,
@@ -75,17 +86,22 @@ except Exception:  # pragma: no cover
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 
+
 def _validate_params(kw_method: str, lang: str, num_keywords: int) -> None:
     if kw_method not in _ALLOWED_KW:
-        raise HTTPException(422, f"kw_method must be one of {_ALLOWED_KW}")
+        raise HTTPException(422, f"kw_method must be one of {_ALLOWED_KW}") from None
     if lang not in _ALLOWED_LANG:
-        raise HTTPException(422, f"lang must be one of {_ALLOWED_LANG} in v1")
+        raise HTTPException(422, f"lang must be one of {_ALLOWED_LANG} in v1") from None
     if not (1 <= num_keywords <= 100):
-        raise HTTPException(422, "num_keywords must be between 1 and 100")
+        raise HTTPException(422, "num_keywords must be between 1 and 100") from None
+
 
 def _run_pipeline_sync(rows, doc_id, kw_method, num_keywords, lang):
     """Blocking pipeline call with graceful backend degradation configured."""
-    return _manager.enrich(rows, doc_id, kw_method=kw_method, num_keywords=num_keywords, lang=lang), kw_method
+    return _manager.enrich(
+        rows, doc_id, kw_method=kw_method, num_keywords=num_keywords, lang=lang
+    ), kw_method
+
 
 def _build_envelope(result, requested_method) -> Dict[str, Any]:
     return {
@@ -101,6 +117,7 @@ def _build_envelope(result, requested_method) -> Dict[str, Any]:
         "llm": None,
     }
 
+
 async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> tuple[Any, str, Any]:
     loop = asyncio.get_event_loop()
     try:
@@ -108,9 +125,9 @@ async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> t
             None, _run_pipeline_sync, rows, doc_id, kw_method, num_keywords, lang
         )
     except KeywordPreflightError as exc:
-        raise HTTPException(503, str(exc))
+        raise HTTPException(503, str(exc)) from exc
     except PipelineError as exc:
-        raise HTTPException(exc.http_status, str(exc))
+        raise HTTPException(exc.http_status, str(exc)) from exc
 
     try:
         if fmt == "zip":
@@ -122,36 +139,38 @@ async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> t
         PipelineManager.cleanup(result)
         raise
 
+
 async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
     _validate_params(kw_method, lang, num_keywords)
     if not rows:
-        raise HTTPException(422, "No usable text rows found in input.")
+        raise HTTPException(422, "No usable text rows found in input.") from None
     words = count_words(rows)
     if words > MAX_WORDS:
-        raise HTTPException(413, f"Input too large: {words} words > {MAX_WORDS}.")
+        raise HTTPException(413, f"Input too large: {words} words > {MAX_WORDS}.") from None
 
     if _semaphore.locked():
-        raise HTTPException(429, "Server busy; max concurrent jobs reached.")
+        raise HTTPException(429, "Server busy; max concurrent jobs reached.") from None
 
     async with _semaphore:
         try:
             data, out_fmt, result = await asyncio.wait_for(
                 _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt),
-                timeout=API_JOB_TIMEOUT
+                timeout=API_JOB_TIMEOUT,
             )
-        except asyncio.TimeoutError:
-            raise HTTPException(504, "Pipeline execution timed out.")
+        except asyncio.TimeoutError as exc:
+            raise HTTPException(504, "Pipeline execution timed out.") from exc
 
         if out_fmt == "zip":
             return FileResponse(
                 str(data),
                 media_type="application/zip",
                 filename=f"{doc_id}_enriched.zip",
-                background=BackgroundTask(PipelineManager.cleanup, result)
+                background=BackgroundTask(PipelineManager.cleanup, result),
             )
         else:
             PipelineManager.cleanup(result)
             return JSONResponse(data)
+
 
 async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, lang):
     try:
@@ -159,7 +178,7 @@ async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, l
         async with _semaphore:
             data, out_fmt, result = await asyncio.wait_for(
                 _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt="json"),
-                timeout=API_JOB_TIMEOUT
+                timeout=API_JOB_TIMEOUT,
             )
             PipelineManager.cleanup(result)
             job.result = data
@@ -179,9 +198,11 @@ async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, l
 
 # ── endpoints ──────────────────────────────────────────────────────────────────
 
+
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/frontend")
+
 
 @app.get("/info")
 async def info() -> Dict[str, Any]:
@@ -210,6 +231,7 @@ async def info() -> Dict[str, Any]:
         },
     }
 
+
 @app.get("/health")
 async def health(deep: bool = False) -> JSONResponse:
     rc, tail = _manager.dry_run(kw_method="none")
@@ -217,6 +239,7 @@ async def health(deep: bool = False) -> JSONResponse:
     if deep and ok:
         facts = _manager.config_facts()
         import urllib.request
+
         for url in (facts.get("udpipe_url"), facts.get("nametag_url")):
             if url:
                 try:
@@ -229,9 +252,10 @@ async def health(deep: bool = False) -> JSONResponse:
         status_code=200 if ok else 503,
     )
 
+
 @app.post("/enrich")
 async def enrich(
-    file: UploadFile = File(...),
+    file: UploadFile = File(...),  # noqa: B008
     kw_method: str = Form(DEFAULT_KW_METHOD),
     num_keywords: int = Form(20),
     lang: str = Form("cs"),
@@ -239,20 +263,21 @@ async def enrich(
 ):
     data = await file.read()
     if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.")
+        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
     except ValueError as exc:
-        raise HTTPException(422, str(exc))
+        raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
     fmt = format if format in ("json", "zip") else "json"
     return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
+
 
 @app.post("/enrich_text")
 async def enrich_text(payload: Dict[str, Any]):
     lines = payload.get("lines")
     if not isinstance(lines, list) or not lines:
-        raise HTTPException(422, "'lines' must be a non-empty list.")
+        raise HTTPException(422, "'lines' must be a non-empty list.") from None
     rows: List[Dict[str, Any]] = []
     for i, item in enumerate(lines, start=1):
         if isinstance(item, str):
@@ -267,9 +292,10 @@ async def enrich_text(payload: Dict[str, Any]):
     fmt = fmt if fmt in ("json", "zip") else "json"
     return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
 
+
 @app.post("/jobs")
 async def submit_job(
-    file: UploadFile = File(...),
+    file: UploadFile = File(...),  # noqa: B008
     kw_method: str = Form(DEFAULT_KW_METHOD),
     num_keywords: int = Form(20),
     lang: str = Form("cs"),
@@ -277,15 +303,21 @@ async def submit_job(
     _validate_params(kw_method, lang, num_keywords)
     data = await file.read()
     if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.")
+        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
     except ValueError as exc:
-        raise HTTPException(422, str(exc))
+        raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
 
     now = time.time()
-    to_del = [jid for jid, j in _jobs.items() if hasattr(j, 'finished_at') and getattr(j, 'finished_at', None) and now - j.finished_at > 3600]
+    to_del = [
+        jid
+        for jid, j in _jobs.items()
+        if hasattr(j, "finished_at")
+        and getattr(j, "finished_at", None)
+        and now - j.finished_at > 3600
+    ]
     for jid in to_del:
         del _jobs[jid]
 
@@ -293,25 +325,28 @@ async def submit_job(
     asyncio.create_task(_run_job_background(job, rows, doc_id, kw_method, num_keywords, lang))
     return {"job_id": job.job_id, "status": "queued"}
 
+
 @app.get("/jobs/{job_id}")
 async def get_job_status(job_id: str):
     job = _jobs.get(job_id)
     if not job:
-        raise HTTPException(404, "Job not found")
+        raise HTTPException(404, "Job not found") from None
     return {"job_id": job_id, "status": job.status, "error": job.error}
+
 
 @app.get("/jobs/{job_id}/result")
 async def get_job_result(job_id: str):
     job = _jobs.get(job_id)
     if not job:
-        raise HTTPException(404, "Job not found")
+        raise HTTPException(404, "Job not found") from None
     if job.status != "done":
-        raise HTTPException(409, f"Job not complete (status: {job.status})")
+        raise HTTPException(409, f"Job not complete (status: {job.status})") from None
     return job.result
+
 
 @app.delete("/jobs/{job_id}")
 async def cleanup_job(job_id: str):
     if job_id in _jobs:
         del _jobs[job_id]
         return {"status": "deleted"}
-    raise HTTPException(status_code=404, detail="Job not found")
+    raise HTTPException(status_code=404, detail="Job not found") from None

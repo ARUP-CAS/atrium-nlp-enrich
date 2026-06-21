@@ -7,15 +7,17 @@ automatically retry on network failures, and write a single merged CoNLL-U file.
 import argparse
 import glob
 import os
-import sys
 import re
+import sys
 
 try:
     import requests
     from requests.adapters import HTTPAdapter
     from urllib3.util.retry import Retry
 except ImportError:
-    print("[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr)
+    print(
+        "[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr
+    )
     sys.exit(1)
 
 UDPIPE_URL = "https://lindat.mff.cuni.cz/services/udpipe/api/process"
@@ -28,7 +30,7 @@ def get_robust_session(retries: int) -> requests.Session:
         total=retries,
         backoff_factor=1.5,
         status_forcelist=[429, 500, 502, 503, 504],
-        allowed_methods=["POST"]
+        allowed_methods=["POST"],
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
@@ -94,7 +96,9 @@ def merge_conllu_chunks(chunks: list[str]) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Call UDPipe API with retries.")
-    parser.add_argument("--chunk-dir", required=True, help="Directory containing chunk_X.txt files.")
+    parser.add_argument(
+        "--chunk-dir", required=True, help="Directory containing chunk_X.txt files."
+    )
     parser.add_argument("--model", required=True, help="UDPipe model identifier.")
     parser.add_argument("--output", required=True, help="Output merged CoNLL-U file.")
     parser.add_argument("--timeout", type=int, default=60, help="Request timeout in seconds.")
@@ -103,7 +107,7 @@ def main():
 
     # Find and sort chunks numerically (chunk_0.txt, chunk_1.txt...)
     chunk_files = glob.glob(os.path.join(args.chunk_dir, "chunk_*.txt"))
-    chunk_files.sort(key=lambda x: int(re.search(r'chunk_(\d+)', x).group(1)))
+    chunk_files.sort(key=lambda x: int(re.search(r"chunk_(\d+)", x).group(1)))
 
     if not chunk_files:
         print(f"[Error] No chunk files found in {args.chunk_dir}", file=sys.stderr)
@@ -125,7 +129,10 @@ def main():
             if result:
                 processed_chunks.append(result)
         except requests.exceptions.RequestException as e:
-            print(f"[CRITICAL] UDPipe API failed permanently on chunk {idx + 1}. Error: {e}", file=sys.stderr)
+            print(
+                f"[CRITICAL] UDPipe API failed permanently on chunk {idx + 1}. Error: {e}",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
     if not processed_chunks:

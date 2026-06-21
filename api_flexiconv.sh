@@ -23,9 +23,7 @@ for f in "$INPUT_DOCS_DIR"/*; do
         echo "Converting $filename to TEITOK XML..."
 
         # Execute the python conversion wrapper
-        python3 api_util/flexiconv_convert.py "$f" --out-dir "$TEITOK_OUTPUT_DIR"
-
-        if [ $? -ne 0 ]; then
+        if ! python3 api_util/flexiconv_convert.py "$f" --out-dir "$TEITOK_OUTPUT_DIR"; then
             echo "Skipping $filename (Conversion failed or flexiconv not installed)."
             # Paradata hook can be added here if needed
         fi

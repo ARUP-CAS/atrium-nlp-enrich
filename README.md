@@ -11,14 +11,14 @@
 
 # 📦 ALTO XML Files Postprocessing Pipeline - NLP Enrichment of text
 
-This project provides a workflow for processing text stored in CSV (XLSX) with NLP services. It takes ordered text 
-and extracts high-level linguistic features like Named Entities (NER) with tags and CONLL-U files with 
+This project provides a workflow for processing text stored in CSV (XLSX) with NLP services. It takes ordered text
+and extracts high-level linguistic features like Named Entities (NER) with tags and CONLL-U files with
 lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 
 ---
 
 > [!CAUTION]
-> This repository is a follow-up to main ALTO XML postprocessing [GitHub repository](https://github.com/ufal/atrium-alto-postprocess), 
+> This repository is a follow-up to main ALTO XML postprocessing [GitHub repository](https://github.com/ufal/atrium-alto-postprocess),
 > a part of ATRIUM project dedicated to ALTO-2-TXT workflow and collection of statistics and from text content
 > of the documents (text and bounding boxes ordered by LayoutReader) recorder in CSV (XLSX) tables as a `text` column [^2].
 
@@ -175,8 +175,8 @@ The process is divided into sequential steps, each responsible for a specific pa
 > If you already have a directory of CSV (XLSX) tables with `text` column containing extracted text
 > files from ALTO XMLs, you can skip Step 1 and proceed directly to Step 2.
 
-The `../CSVS_with_TEXT/` directory mentioned later is the result of ALTO XML postprocessing pipeline described 
-in the separate repository [^2]. It contains document-specific CSV (XLSX) files with the `text` column containing 
+The `../CSVS_with_TEXT/` directory mentioned later is the result of ALTO XML postprocessing pipeline described
+in the separate repository [^2]. It contains document-specific CSV (XLSX) files with the `text` column containing
 extracted textual content from the ALTO XML files. Each CSV (XLSX) file corresponds to a document and contains rows
 for each page with a line number column for the proper ordering (`page_num` and `line_num`).
 
@@ -198,20 +198,20 @@ Where `split_ws` and `split_we` are the start and end character offsets of the w
 The `lang` and `lang_score` columns indicate the detected language and its confidence score,
 while `perplex` and `categ` provide additional metadata about the text classification.
 
-If the script detects an `.xlsx` file, it will iterate over all sheet names, verify if a `text` column exists 
+If the script detects an `.xlsx` file, it will iterate over all sheet names, verify if a `text` column exists
 in each sheet, and extract the content safely for Excel tables with multiple sheets.
 
 ### ▶ Step 2: Extract NER and CONLL-U
 
-This stage performs advanced NLP analysis using external APIs (Lindat/CLARIAH-CZ) 
+This stage performs advanced NLP analysis using external APIs (Lindat/CLARIAH-CZ)
 to generate Universal Dependencies (CoNLL-U) and Named Entity Recognition (NER) data.
 
-Unlike previous steps, this process is split into modular shell scripts to handle large-scale 
+Unlike previous steps, this process is split into modular shell scripts to handle large-scale
 processing, text chunking, and API rate limiting.
 
 #### Configuration ⚙️
 
-Before running the pipeline, review the [api_config.txt](config_api.txt) 📎 file. This file controls 
+Before running the pipeline, review the [api_config.txt](config_api.txt) 📎 file. This file controls
 directory paths, API endpoints, and model selection.
 
 ```bash
@@ -232,7 +232,7 @@ SUMMARY_OUTPUT_DIR="$OUTPUT_DIR/UDP_NE"
 TEITOK_OUTPUT_DIR="$OUTPUT_DIR/TEITOK"
 INPUT_ALTO_DIR="$OUTPUT_DIR/altos"              # Source ALTO XML files - for TEITOK conversion
 # ── Image Options ─────────────────────────────────────────────────────────────
-# OPTIONAL: Only required if your companion PNG/JPEG display images have been resized 
+# OPTIONAL: Only required if your companion PNG/JPEG display images have been resized
 # to a different target resolution relative to ABBYY's baseline dimensions.
 # If left empty, the pipeline calibrates layout shifts natively using ALTO PrintSpace.
 INPUT_PAGES_DIR=""
@@ -287,7 +287,7 @@ which returns the total number of document rows in the manifest, excluding the h
 
 ##### 2. UDPipe Processing (Morphology & Syntax)
 
-Sends text to the UDPipe API [^5]. Large documents are automatically split into chunks (default 900 words) using 
+Sends text to the UDPipe API [^5]. Large documents are automatically split into chunks (default 900 words) using
 [chunk.py](api_util/chunk.py) 📎 to respect API limits, then merged back into valid CoNLL-U files.
 
 ```bash
@@ -313,20 +313,20 @@ Example output directory [UDP](data_samples%2FUDP) 📁 contains per-document Co
 > sentence-boundary hints between lines.  When a document spans multiple chunks, [call_udpipe.py](api_util/call_udpipe.py)📎
 > merges them into a single CoNLL-U and injects a `# page_break = true` comment immediately before
 > every sentence that began a new page in its source chunk.  All downstream scripts
-> ([call_nametag.py](api_util/call_nametag.py)📎, [summarize_nt_udp.py](api_util/summarize_nt_udp.py)📎, 
+> ([call_nametag.py](api_util/call_nametag.py)📎, [summarize_nt_udp.py](api_util/summarize_nt_udp.py)📎,
 > [teitok_alto.py](api_util/teitok_alto.py)📎) recognise this marker alongside the
 > legacy `# sent_id = 1` page-reset convention, so both single-chunk and multi-chunk files are
 > handled transparently.
 
 > [!TIP]
-> You can launch the next step when a portion of CoNLL-U files are ready, 
-> without waiting for the entire input collection to finish. You will have to relaunch 
+> You can launch the next step when a portion of CoNLL-U files are ready,
+> without waiting for the entire input collection to finish. You will have to relaunch
 > the next step after all CoNLL-U files are ready to process the files created after the previous
 > run began.
 
 ##### 3. NameTag Processing (NER tags)
 
-Takes the valid CoNLL-U files and passes them through the NameTag API [^6] to annotate Named Entities 
+Takes the valid CoNLL-U files and passes them through the NameTag API [^6] to annotate Named Entities
 (NE) directly into the syntax trees.
 
 ```bash
@@ -343,18 +343,18 @@ ls -l OUTPUT_DIR/NE | wc -l
 ```
 which returns the total number of directories created (each subfolder corresponds to a document).
 
-Example output directory [NE](data_samples%2FNE) 📁 contains per-page TSV files with NE annotations, where the NE tags 
+Example output directory [NE](data_samples%2FNE) 📁 contains per-page TSV files with NE annotations, where the NE tags
 follow the CNEC 2.0 standard [^3] which is used in the Czech Nametag model.
 
 
 ##### 4. Generate Statistics
 
-This stage consolidates the linguistic data from UDPipe (CoNLL-U) and the NER data from 
-NameTag (TSV) into final per-document formats. It also generates a master summary of 
-entity counts across the entire collection and can optionally produce TEITOK-compatible 
+This stage consolidates the linguistic data from UDPipe (CoNLL-U) and the NER data from
+NameTag (TSV) into final per-document formats. It also generates a master summary of
+entity counts across the entire collection and can optionally produce TEITOK-compatible
 XML files that merge linguistic tokens with original ALTO layout coordinates.
 
-The process utilizes [summarize_nt_udp.py](api_util/summarize_nt_udp.py) 📎 to merge these 
+The process utilizes [summarize_nt_udp.py](api_util/summarize_nt_udp.py) 📎 to merge these
 layers, map complex CNEC 2.0 tags (e.g., `g`, `pf`, `if`) into human-readable categories
 (e.g., "Geographical name", "First name", "Company/Firm"), and write all output formats.
 Optionally, TEITOK-related functionality is implemented in
@@ -369,8 +369,8 @@ Optionally, TEITOK-related functionality is implemented in
 * **Input 1:** `OUTPUT_DIR/UDP/*.conllu` — Per-document CoNLL-U files containing morphology and syntax.
 * **Input 2:** `OUTPUT_DIR/NE/*/*.tsv` — Per-page TSV files containing Named Entity annotations.
 * **Input 3 (Optional):** `INPUT_ALTO_DIR/*.alto.xml` — Source ALTO XML files used during TEITOK conversion to provide spatial bounding box coordinates for each token.
-* **Input 4 (Optional):** `INPUT_PAGES_DIR/<doc_id>-N.png` — Per-page facsimile images. When specified, the pipeline dynamically 
-extracts pixel boundaries from the headers to compute scaling transformations (sx, sy). If omitted, coordinates are safely 
+* **Input 4 (Optional):** `INPUT_PAGES_DIR/<doc_id>-N.png` — Per-page facsimile images. When specified, the pipeline dynamically
+extracts pixel boundaries from the headers to compute scaling transformations (sx, sy). If omitted, coordinates are safely
 translated and aligned at a native 1.0 scale factor.
 * **Output 1:** `OUTPUT_DIR/summary_ne_counts.csv` — Global table of aggregated Named Entity statistics across all documents.
 * **Output 2:** `OUTPUT_DIR/UDP_NE/<doc_id>/<doc_id>.csv` — Per-document CSV tables with tokens, lemmas, and human-readable NE explanations.
@@ -389,64 +389,64 @@ The behavior of this step is controlled by boolean flags in your [config_api.txt
 
 #### ALTO-to-TEITOK XML Generation and Coordinate Alignment
 
-When `SAVE_TEITOK=true`, [teitok_alto.py](api_util/teitok_alto.py) 📎 reads and processes the internal spatial 
+When `SAVE_TEITOK=true`, [teitok_alto.py](api_util/teitok_alto.py) 📎 reads and processes the internal spatial
 hierarchy of your ALTO source specifications.
 
 **Offset Alignment (Resolving Layout Shifting):**
 
-ABBYY FineReader naturally indexes element positions from the absolute physical boundary of the scanner bed `(0,0)`. 
-However, companion web images cropped for public view or optimized to strip away raw scanner artifacts introduce 
+ABBYY FineReader naturally indexes element positions from the absolute physical boundary of the scanner bed `(0,0)`.
+However, companion web images cropped for public view or optimized to strip away raw scanner artifacts introduce
 a uniform positional drift (causing text layers to display too far left or too high up on screen).
 
-To neutralize this error without modifying binary assets or re-cropping, the script automatically parses page-level 
+To neutralize this error without modifying binary assets or re-cropping, the script automatically parses page-level
 `<PrintSpace>` properties from the ALTO structure:
 
 ```xml
 <PrintSpace HEIGHT="3263" WIDTH="2027" VPOS="80" HPOS="297">
 ```
 
-The horizontal boundary (`HPOS`) and vertical boundary (`VPOS`) values are captured as active translation variables 
-(`dx`, `dy`). Prior to rendering bounding boxes into the TEITOK XML stream, these values are subtracted from the 
+The horizontal boundary (`HPOS`) and vertical boundary (`VPOS`) values are captured as active translation variables
+(`dx`, `dy`). Prior to rendering bounding boxes into the TEITOK XML stream, these values are subtracted from the
 coordinate targets, recalculating alignment automatically:
 
 $$\text{Scaled Coordinate} = \text{round}((\text{Absolute Coordinate} - \text{Offset}) \times \text{Scale Factor})$$
 
 **Dynamic Scale Calculations:**
 
-* **Companion Image Present (Tier 1):** If `INPUT_PAGES_DIR` is set and matching images exist, the tool safely reads 
-binary file headers without invoking bloated third-party imaging dependencies. Ratios are resolved by evaluating layout 
+* **Companion Image Present (Tier 1):** If `INPUT_PAGES_DIR` is set and matching images exist, the tool safely reads
+binary file headers without invoking bloated third-party imaging dependencies. Ratios are resolved by evaluating layout
 sizes against image shapes (`sx = img_width / alto_width`).
-* **User-set DPI (Tier 2):** If no image is available, scale is derived directly from the ALTO `<MeasurementUnit>` 
+* **User-set DPI (Tier 2):** If no image is available, scale is derived directly from the ALTO `<MeasurementUnit>`
 (`inch1200`, `mm10`, or `pixel`) mapped against the environment variables `IMAGE_DPI` and `ALTO_DPI`.
-* **Native Processing (Fallback):** If no image and no DPI is provided, the tool calibrates positions through native 
+* **Native Processing (Fallback):** If no image and no DPI is provided, the tool calibrates positions through native
 PrintSpace logic but maintains a standard `1.0` scale factor.
 
-> **Future direction:** Relative / resolution-independent coordinates are the preferred long-term direction 
+> **Future direction:** Relative / resolution-independent coordinates are the preferred long-term direction
 > (pending TEITOK-team confirmation).
 
 **Pre-demonstration coordinates fix of existing teitok xml files:**
 
-The *post factum* fixer [fix_teitok_bboxes.py](fix_teitok_bboxes.py) 📎 is a standalone, retroactive maintenance 
-utility designed to repair or fine-tune layout alignments in your TEITOK XML corpus without forcing a full re-run 
+The *post factum* fixer [fix_teitok_bboxes.py](fix_teitok_bboxes.py) 📎 is a standalone, retroactive maintenance
+utility designed to repair or fine-tune layout alignments in your TEITOK XML corpus without forcing a full re-run
 of the entire tokenization and NLP enrichment pipelines.
 
-* **Instant Coordinate Correction:** It targets structural elements (`<tok>`, `<lb>`, and `<div>`) in already 
-generated TEITOK XML files, parsing their whitespace-separated hOCR-style coordinates. It then applies programmatic 
+* **Instant Coordinate Correction:** It targets structural elements (`<tok>`, `<lb>`, and `<div>`) in already
+generated TEITOK XML files, parsing their whitespace-separated hOCR-style coordinates. It then applies programmatic
 shifting ($\Delta x, \Delta y$) and optional scale transformations ($\text{scale}_x, \text{scale}_y$).
-* **Resolving Scan-Margin Shifts:** It directly eliminates the constant displacement error highlighted in the 
-developer discussions—where elements appear shifted too far left or too high up on the visual canvas due to 
+* **Resolving Scan-Margin Shifts:** It directly eliminates the constant displacement error highlighted in the
+developer discussions—where elements appear shifted too far left or too high up on the visual canvas due to
 unprinted canvas margins or strict `PrintSpace` boundaries (`LeftMargin`/`TopMargin`).
-* **TEITOK-Syntax Safe:** Standard XML parsers routinely choke or strip out custom structural hacks like TEITOK's 
-`xmlnsoff="..."` attribute. This script uses a safe raw-string pre-swap block to ensure that TEITOK-specific formatting 
+* **TEITOK-Syntax Safe:** Standard XML parsers routinely choke or strip out custom structural hacks like TEITOK's
+`xmlnsoff="..."` attribute. This script uses a safe raw-string pre-swap block to ensure that TEITOK-specific formatting
 remains uncorrupted and compliant during parsing and rewriting.
 
  **When to Deploy It**
 
-1. **Pre-Demonstration Quick Fixes:** If you change your visual image layers (e.g., swapping out full-page scans for 
-tightly cropped variants) right before a live demonstration or data hand-off, you can instantly realign thousands 
+1. **Pre-Demonstration Quick Fixes:** If you change your visual image layers (e.g., swapping out full-page scans for
+tightly cropped variants) right before a live demonstration or data hand-off, you can instantly realign thousands
 of documents using a single shell command instead of re-processing billions of tokens through UDPipe and NameTag.
-2. **Batch Calibration Testing:** It allows you to systematically trial different displacement values on a couple of 
-sample documents in the TEITOK viewer to pinpoint the exact visual delta before committing hardcoded changes to 
+2. **Batch Calibration Testing:** It allows you to systematically trial different displacement values on a couple of
+sample documents in the TEITOK viewer to pinpoint the exact visual delta before committing hardcoded changes to
 your upstream generation scripts.
 
 > [!NOTE]
@@ -455,27 +455,27 @@ your upstream generation scripts.
 > indices. The first matched page is used for the bbox assignment in that case.
 
 The structural and spatial hierarchy from the ALTO file is strictly preserved in the generated TEITOK XML:
-* **Tokens:** Matched coordinates are written to each `<tok>` element as `@bbox="x1 y1 x2 y2"` (absolute 
-pixel coordinates in TEITOK's hOCR-derived format). Each token also carries `@type="w"` (word) or 
+* **Tokens:** Matched coordinates are written to each `<tok>` element as `@bbox="x1 y1 x2 y2"` (absolute
+pixel coordinates in TEITOK's hOCR-derived format). Each token also carries `@type="w"` (word) or
 `@type="pc"` (punctuation character) derived from UDPipe's UPOS tag.
-* **Lines:** ALTO `<TextLine>` elements are preserved via `<lb>` (line break) tags, which also include 
+* **Lines:** ALTO `<TextLine>` elements are preserved via `<lb>` (line break) tags, which also include
 their own `@bbox` spatial coordinates.
-* **Blocks:** Text blocks are encapsulated within `<div type="MarginTextZone-P">` containers, satisfying 
+* **Blocks:** Text blocks are encapsulated within `<div type="MarginTextZone-P">` containers, satisfying
 the core ATRIUM guidelines for classified text zones.
-* **Graphics:** Non-text elements like `Illustration` and `GraphicalElement` blocks are parsed and 
+* **Graphics:** Non-text elements like `Illustration` and `GraphicalElement` blocks are parsed and
 appended to their respective pages as `<figure>` tags with strict bounding boxes.
-* **Pages:** Page boundaries are marked with `<pb n="N" id="..." facs="..."/>` elements pointing to 
+* **Pages:** Page boundaries are marked with `<pb n="N" id="..." facs="..."/>` elements pointing to
 the specific document surface.
 
-Named entity spans are wrapped in `<n>` elements grouping their constituent `<tok>` nodes. 
-Two attributes encode the entity type at different levels of granularity: `@type` holds the CoNLL-style 
+Named entity spans are wrapped in `<n>` elements grouping their constituent `<tok>` nodes.
+Two attributes encode the entity type at different levels of granularity: `@type` holds the CoNLL-style
 category (`PER`, `ORG`, `LOC`, or `MISC`) intended for querying and interoperability, while `@cnec` carries
-the raw CNEC 2.0 code (e.g., `pf`, `gu`, `if`) for use in visualisation. For example, a span tagged as a 
-first name is written as `<name type="PER" cnec="pf">`. 
+the raw CNEC 2.0 code (e.g., `pf`, `gu`, `if`) for use in visualisation. For example, a span tagged as a
+first name is written as `<name type="PER" cnec="pf">`.
 
 > [!NOTE]
-> Thanks to the sequence matching approach, the script achieves near-perfect spatial alignment between 
-> NLP tokens and OCR coordinates, drastically improving upon older greedy matching methods that would 
+> Thanks to the sequence matching approach, the script achieves near-perfect spatial alignment between
+> NLP tokens and OCR coordinates, drastically improving upon older greedy matching methods that would
 > break on minor character variations. Alignment statistics (matched vs. total tokens) are printed to
 > the console per document.
 
@@ -487,7 +487,7 @@ first name is written as `<name type="PER" cnec="pf">`.
 ```bash
 ls OUTPUT_DIR/UDP_NE | wc -l
 ```
-which returns the total number of created files, both `.csv` and `.conllu` corresponding 
+which returns the total number of created files, both `.csv` and `.conllu` corresponding
 to specific documents.
 
 ```bash
@@ -504,12 +504,12 @@ returns number of recorded `.teitok.xml` documents.
 
 Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎.
 
-Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV 
-tables with NE tags and UDPipe feature columns, plus CoNLL-U files with NE annotations in 
+Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV
+tables with NE tags and UDPipe feature columns, plus CoNLL-U files with NE annotations in
 per-document manner.
 
-Example output directory [TEITOK](data_samples%2FTEITOK) 📁 contains per-document TEITOK 
-XML files combining UD linguistic annotations and NER spans with bounding boxes aligned 
+Example output directory [TEITOK](data_samples%2FTEITOK) 📁 contains per-document TEITOK
+XML files combining UD linguistic annotations and NER spans with bounding boxes aligned
 from the source ALTO XML.
 
 
@@ -527,27 +527,27 @@ AND
 ```
 <OUTPUT_DIR>
 ├── UDP_NE/
-│   ├── <doc_id>     
-│   │   ├── <doc_id>.csv    
-│   │   └── <doc_id>.conllu     
-│   ├── <doc_id>     
-│   │   ├── <doc_id>.csv    
-│   │   └── <doc_id>.conllu     
-│   └── ...          
-├── UDP/  
+│   ├── <doc_id>
+│   │   ├── <doc_id>.csv
+│   │   └── <doc_id>.conllu
+│   ├── <doc_id>
+│   │   ├── <doc_id>.csv
+│   │   └── <doc_id>.conllu
+│   └── ...
+├── UDP/
 │   ├── <doc_id>.conllu
 │   ├── <doc_id>.conllu
 │   └── ...
-├── TEITOK/  
+├── TEITOK/
 │   ├── <doc_id>.teitok.xml
 │   ├── <doc_id>.teitok.xml
 │   └── ...
-├── NE/           
-│   ├── <doc_id>     
-│   │   ├── <doc_id>-<page_num>.tsv     
-│   │   └── ...     
-│   ├── <doc_id>     
-│   │   ├── <doc_id>-<page_num>.tsv     
+├── NE/
+│   ├── <doc_id>
+│   │   ├── <doc_id>-<page_num>.tsv
+│   │   └── ...
+│   ├── <doc_id>
+│   │   ├── <doc_id>-<page_num>.tsv
 │   │   └── ...
 │   └── ...
 ├── altos/
@@ -558,19 +558,19 @@ AND
 │   ├── <doc_id>-2.png
 │   └── ...
 ├── processing.log
-├── summary_ne_counts.csv  
+├── summary_ne_counts.csv
 └── manifest.tsv
 
 ```
 
-The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎 contains aggregated Named Entity 
+The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎 contains aggregated Named Entity
 statistics across all processed pages.
 
 > [!NOTE]
 > Now you can delete `UDP/` from `<OUTPUT_DIR>/` if you no longer need the raw CoNLL-U files.
 > The final CoNLL-U files with NER features are in `<OUTPUT_DIR>/UDP_NE/`.
 
-If you do not plan to rerun any part of the pipeline, you can also delete 
+If you do not plan to rerun any part of the pipeline, you can also delete
 the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎.
 
 ---
@@ -1050,9 +1050,9 @@ started.  Because every script is an independent invocation, a complete
 four-step run will create four separate files, making it straightforward to
 audit individual stages in isolation.
 
-The paradata logs (samples in directory [paradata](paradata) 📂) capture key details about each pipeline stage, 
-including the program name, run ID, execution duration, configuration parameters, input and output statistics, 
-and performance metrics. They also document skipped files with reasons and provide a breakdown of output 
+The paradata logs (samples in directory [paradata](paradata) 📂) capture key details about each pipeline stage,
+including the program name, run ID, execution duration, configuration parameters, input and output statistics,
+and performance metrics. They also document skipped files with reasons and provide a breakdown of output
 types and processing rates for benchmarking. This structured metadata ensures traceability and facilitates
 auditing of the pipeline's execution.
 

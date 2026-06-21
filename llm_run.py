@@ -6,69 +6,62 @@ over every CSV file in INPUT_DIR and writes per-document JSON enrichment
 files to OUTPUT_DIR.
 """
 
-import llm_utils  # noqa: F401  (side-effect: env-var guard + compat patches)
-
 import datetime
 import enum
 import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import torch
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field
 from tqdm import tqdm
 
+import llm_utils  # noqa: F401  (side-effect: env-var guard + compat patches)
 from atrium_paradata import ParadataLogger
-from vocab_manager import VocabularyManager
-
 from llm_utils import (
-    count_tokens,
-    load_config,
-    get_inference_defaults,
+    CONTEXT_RESERVED,
     _check_backend_deps,
+    count_tokens,
+    get_inference_defaults,
+    load_config,
     load_model_and_tokenizer,
     load_vllm_engine,
-    process_document,
-    process_document_vllm,
-    CONTEXT_RESERVED,
     log_gpu_info,
     log_gpu_memory,
+    process_document,
+    process_document_vllm,
 )
-
+from vocab_manager import VocabularyManager
 
 _EXAMPLES_FOOTER = (
     "\nEXAMPLES:\n\n"
-    "Input line: \"Výzkum odhalil základy gotického kostela ze 14. "
-    "století.\"\n"
+    'Input line: "Výzkum odhalil základy gotického kostela ze 14. '
+    'století."\n'
     "Correct output:\n"
     "{\n"
-    "  \"extracted_keywords_cs\": [\"základy\", \"gotický kostel\"],\n"
-    "  \"extracted_keywords_en\": [\"foundations\", \"Gothic church\"],\n"
-    "  \"teater_category\": \"kostel\",\n"
-    "  \"confidence_score\": 0.92\n"
+    '  "extracted_keywords_cs": ["základy", "gotický kostel"],\n'
+    '  "extracted_keywords_en": ["foundations", "Gothic church"],\n'
+    '  "teater_category": "kostel",\n'
+    '  "confidence_score": 0.92\n'
     "}\n\n"
-    "Input line: \"Praha, dne 6. října 1956, Dr. Solle\"\n"
+    'Input line: "Praha, dne 6. října 1956, Dr. Solle"\n'
     "Correct output:\n"
     "{\n"
-    "  \"extracted_keywords_cs\": [],\n"
-    "  \"extracted_keywords_en\": [],\n"
-    "  \"teater_category\": \"Nerelevantní (meta-text)\",\n"
-    "  \"confidence_score\": 1.0\n"
+    '  "extracted_keywords_cs": [],\n'
+    '  "extracted_keywords_en": [],\n'
+    '  "teater_category": "Nerelevantní (meta-text)",\n'
+    '  "confidence_score": 1.0\n'
     "}\n"
 )
 
 
 def build_schema(term_names: List[str]) -> type:
     if not term_names:
-        raise ValueError(
-            "term_names is empty — vocabulary failed to load or was fully truncated."
-        )
+        raise ValueError("term_names is empty — vocabulary failed to load or was fully truncated.")
 
-    TermEnum = enum.Enum(
-        "TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)}
-    )
+    TermEnum = enum.Enum("TermEnum", {f"term_{i}": name for i, name in enumerate(term_names)})
 
     class ConstrainedEnrichment(BaseModel):
         extracted_keywords_cs: List[str] = Field(
@@ -150,11 +143,13 @@ def build_system_prompt(
     )
 
     raw_terms: List[dict] = []
-    raw_terms.append({
-        "theme": "Administrative / Meta",
-        "cs": "Nerelevantní (meta-text)",
-        "en": "Irrelevant / Meta-text",
-    })
+    raw_terms.append(
+        {
+            "theme": "Administrative / Meta",
+            "cs": "Nerelevantní (meta-text)",
+            "en": "Irrelevant / Meta-text",
+        }
+    )
 
     for theme, data in vocab_data.items():
         if theme.lower() == "other":
@@ -190,22 +185,17 @@ def build_system_prompt(
 
         if other_terms:
             prompt += "\n--- Other (Misc) ---\n"
-            prompt += (
-                "\n".join(
-                    f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]
-                )
-                + "\n"
-            )
+            prompt += "\n".join(f"- {t['cs']} ({t['en']})" for t in other_terms[:other_cap]) + "\n"
 
         prompt += _EXAMPLES_FOOTER
         return prompt
 
-    full_prompt  = _build_candidate_prompt(prioritised)
-    token_count  = count_tokens(full_prompt, tokenizer)
+    full_prompt = _build_candidate_prompt(prioritised)
+    token_count = count_tokens(full_prompt, tokenizer)
 
-    _header_tok   = count_tokens(header, tokenizer)
+    _header_tok = count_tokens(header, tokenizer)
     _examples_tok = count_tokens(_EXAMPLES_FOOTER, tokenizer)
-    _vocab_tok    = token_count - _header_tok - _examples_tok
+    _vocab_tok = token_count - _header_tok - _examples_tok
     print(
         f"[vocab] {len(prioritised)} terms, {token_count} tokens total "
         f"(header: {_header_tok}, vocabulary: {_vocab_tok}, examples: {_examples_tok})"
@@ -229,16 +219,16 @@ def build_system_prompt(
 
     lo, hi = 0, len(prioritised)
     while lo < hi - 1:
-        mid       = (lo + hi) // 2
+        mid = (lo + hi) // 2
         candidate = _build_candidate_prompt(prioritised[:mid])
         if count_tokens(candidate, tokenizer) <= max_tokens:
             lo = mid
         else:
             hi = mid
 
-    surviving_terms  = prioritised[:lo]
+    surviving_terms = prioritised[:lo]
     surviving_prompt = _build_candidate_prompt(surviving_terms)
-    surviving_cs     = [t["cs"] for t in surviving_terms]
+    surviving_cs = [t["cs"] for t in surviving_terms]
 
     print(
         f"[vocab] Truncated to {len(surviving_cs)} terms "
@@ -254,11 +244,11 @@ def _write_abort_marker(
 ) -> None:
     abort_file = out_file.with_suffix("").with_suffix(".abort.json")
     payload = {
-        "aborted":                True,
-        "abort_reason":           reason,
+        "aborted": True,
+        "abort_reason": reason,
         "processed_before_abort": stats.get("processed", 0),
-        "errors_before_abort":    stats.get("skipped_error", 0),
-        "timestamp_utc":          datetime.datetime.utcnow().isoformat(timespec="seconds"),
+        "errors_before_abort": stats.get("skipped_error", 0),
+        "timestamp_utc": datetime.datetime.utcnow().isoformat(timespec="seconds"),
     }
     with open(abort_file, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
@@ -268,41 +258,41 @@ def _write_abort_marker(
 def main(config_path: str = "llm_config.txt") -> None:
     config = load_config(config_path)
 
-    MODEL_KEY    = config.get("MODEL_KEY",    "qwen-3.6-27b-it")
-    HF_TOKEN     = config.get("HF_TOKEN",     os.environ.get("HF_TOKEN", None))
-    INPUT_DIR    = Path(config.get("INPUT_DIR",  "data_samples/DOC_LINE_LANG_CLASS"))
-    VOCAB_PATH   = config.get("VOCAB_PATH",   "data_samples/teater_nested_vocab.json")
+    MODEL_KEY = config.get("MODEL_KEY", "qwen-3.6-27b-it")
+    HF_TOKEN = config.get("HF_TOKEN", os.environ.get("HF_TOKEN", None))
+    INPUT_DIR = Path(config.get("INPUT_DIR", "data_samples/DOC_LINE_LANG_CLASS"))
+    VOCAB_PATH = config.get("VOCAB_PATH", "data_samples/teater_nested_vocab.json")
     PARADATA_DIR = config.get("PARADATA_DIR", "paradata")
 
-    _base_out     = Path(config.get("OUTPUT_DIR", "data_samples/KW_PER_DOC_LLM"))
+    _base_out = Path(config.get("OUTPUT_DIR", "data_samples/KW_PER_DOC_LLM"))
     _model_suffix = MODEL_KEY.replace(".", "").replace("-", "_")
-    OUTPUT_DIR    = _base_out.parent / f"{_base_out.name}_{_model_suffix}"
+    OUTPUT_DIR = _base_out.parent / f"{_base_out.name}_{_model_suffix}"
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    INCLUDE_NON_TEXT         = config.get("INCLUDE_NON_TEXT", "true").lower() == "true"
-    MIN_CHAR_COUNT           = int(config.get("MIN_CHAR_COUNT",           "3"))
-    MIN_CHAR_NON_TEXT        = int(config.get("MIN_CHAR_NON_TEXT",        "8"))
+    INCLUDE_NON_TEXT = config.get("INCLUDE_NON_TEXT", "true").lower() == "true"
+    MIN_CHAR_COUNT = int(config.get("MIN_CHAR_COUNT", "3"))
+    MIN_CHAR_NON_TEXT = int(config.get("MIN_CHAR_NON_TEXT", "8"))
     MIN_ALPHA_RATIO_NON_TEXT = float(config.get("MIN_ALPHA_RATIO_NON_TEXT", "0.40"))
 
     infer, sources = get_inference_defaults(MODEL_KEY, config)
 
-    BACKEND                 = infer["BACKEND"]
-    TENSOR_PARALLEL_SIZE    = infer["TENSOR_PARALLEL_SIZE"]
-    GPU_MEMORY_UTILIZATION  = infer["GPU_MEMORY_UTILIZATION"]
+    BACKEND = infer["BACKEND"]
+    TENSOR_PARALLEL_SIZE = infer["TENSOR_PARALLEL_SIZE"]
+    GPU_MEMORY_UTILIZATION = infer["GPU_MEMORY_UTILIZATION"]
     GUIDED_DECODING_BACKEND = infer["GUIDED_DECODING_BACKEND"]
-    ENABLE_PREFIX_CACHING   = infer["ENABLE_PREFIX_CACHING"]
-    VLLM_BATCH_SIZE         = infer["VLLM_BATCH_SIZE"]
-    MAX_MODEL_LEN           = infer["MAX_MODEL_LEN"]
-    CPU_OFFLOAD_GB          = infer["CPU_OFFLOAD_GB"]
+    ENABLE_PREFIX_CACHING = infer["ENABLE_PREFIX_CACHING"]
+    VLLM_BATCH_SIZE = infer["VLLM_BATCH_SIZE"]
+    MAX_MODEL_LEN = infer["MAX_MODEL_LEN"]
+    CPU_OFFLOAD_GB = infer["CPU_OFFLOAD_GB"]
 
     if BACKEND not in {"transformers", "vllm"}:
         raise ValueError(f"Unknown BACKEND='{BACKEND}'. Must be 'transformers' or 'vllm'.")
 
     _SRC_LABEL = {
-        "config":  "← llm_config.txt",
-        "model":   "  (model default)",
-        "global":  "  (global default)",
-        "forced":  "  (enforced — model is vllm_only)",
+        "config": "← llm_config.txt",
+        "model": "  (model default)",
+        "global": "  (global default)",
+        "forced": "  (enforced — model is vllm_only)",
     }
 
     print(
@@ -314,16 +304,18 @@ def main(config_path: str = "llm_config.txt") -> None:
     print(f"    {'BACKEND':<26} = {BACKEND:<12}  {_SRC_LABEL[sources['BACKEND']]}")
     if BACKEND == "vllm":
         for key, val in [
-            ("TENSOR_PARALLEL_SIZE",   TENSOR_PARALLEL_SIZE),
+            ("TENSOR_PARALLEL_SIZE", TENSOR_PARALLEL_SIZE),
             ("GPU_MEMORY_UTILIZATION", f"{GPU_MEMORY_UTILIZATION:.2f}"),
-            ("VLLM_BATCH_SIZE",        VLLM_BATCH_SIZE),
-            ("MAX_MODEL_LEN",          MAX_MODEL_LEN if MAX_MODEL_LEN else "(model native)"),
-            ("CPU_OFFLOAD_GB",         CPU_OFFLOAD_GB),
-            ("ENABLE_PREFIX_CACHING",  ENABLE_PREFIX_CACHING),
-            ("GUIDED_DECODING_BACKEND",GUIDED_DECODING_BACKEND),
+            ("VLLM_BATCH_SIZE", VLLM_BATCH_SIZE),
+            ("MAX_MODEL_LEN", MAX_MODEL_LEN if MAX_MODEL_LEN else "(model native)"),
+            ("CPU_OFFLOAD_GB", CPU_OFFLOAD_GB),
+            ("ENABLE_PREFIX_CACHING", ENABLE_PREFIX_CACHING),
+            ("GUIDED_DECODING_BACKEND", GUIDED_DECODING_BACKEND),
         ]:
             print(f"    {key:<26} = {str(val):<12}  {_SRC_LABEL[sources.get(key, 'global')]}")
-    print("\n  To override any value add it to llm_config.txt. Values marked '← llm_config.txt' are already user-set.\n")
+    print(
+        "\n  To override any value add it to llm_config.txt. Values marked '← llm_config.txt' are already user-set.\n"
+    )
 
     _check_backend_deps(BACKEND, MODEL_KEY)
     log_gpu_info()
@@ -332,11 +324,11 @@ def main(config_path: str = "llm_config.txt") -> None:
         program="nlp-enrich",
         config={
             **config,
-            "output_dir_resolved":      str(OUTPUT_DIR),
-            "backend":                  BACKEND,
-            "include_non_text":         INCLUDE_NON_TEXT,
-            "min_char_count":           MIN_CHAR_COUNT,
-            "min_char_non_text":        MIN_CHAR_NON_TEXT,
+            "output_dir_resolved": str(OUTPUT_DIR),
+            "backend": BACKEND,
+            "include_non_text": INCLUDE_NON_TEXT,
+            "min_char_count": MIN_CHAR_COUNT,
+            "min_char_non_text": MIN_CHAR_NON_TEXT,
             "min_alpha_ratio_non_text": MIN_ALPHA_RATIO_NON_TEXT,
         },
         paradata_dir=PARADATA_DIR,
@@ -344,16 +336,19 @@ def main(config_path: str = "llm_config.txt") -> None:
     )
 
     with logger:
-        vocab_mgr  = VocabularyManager(vocab_path=VOCAB_PATH)
+        vocab_mgr = VocabularyManager(vocab_path=VOCAB_PATH)
         vocab_data = vocab_mgr.load()
         total_terms = sum(
-            len(v.get("keywords", {}).get("cs", [])) if isinstance(v, dict) and "keywords" in v
+            len(v.get("keywords", {}).get("cs", []))
+            if isinstance(v, dict) and "keywords" in v
             else len(v)
             for v in vocab_data.values()
             if isinstance(v, dict)
         )
         if total_terms == 0:
-            raise RuntimeError("Vocabulary is empty. Run vocab_manager.py on a node with internet access first.")
+            raise RuntimeError(
+                "Vocabulary is empty. Run vocab_manager.py on a node with internet access first."
+            )
         print(f"=== Vocabulary: {total_terms} terms in {len(vocab_data)} broad categories ===")
 
         try:
@@ -368,14 +363,14 @@ def main(config_path: str = "llm_config.txt") -> None:
                     max_model_len=MAX_MODEL_LEN,
                     cpu_offload_gb=CPU_OFFLOAD_GB,
                 )
-                model       = None
-                is_gguf     = False
+                model = None
+                is_gguf = False
                 prefix_function = None
-                parser      = None
+                parser = None
             else:
                 model, tokenizer, spec = load_model_and_tokenizer(MODEL_KEY, HF_TOKEN)
-                llm_engine  = None
-                is_gguf     = spec.get("is_gguf", False)
+                llm_engine = None
+                is_gguf = spec.get("is_gguf", False)
         except Exception as exc:
             print(f"\n[ERROR] Model loading failed: {type(exc).__name__}: {exc}\n", flush=True)
             raise
@@ -398,21 +393,27 @@ def main(config_path: str = "llm_config.txt") -> None:
             print("=== Compiling JSON Schema State Machine (lmformatenforcer) ===")
             llm_utils._patch_tokenizer_compat()
             from lmformatenforcer import JsonSchemaParser
-            from lmformatenforcer.integrations.transformers import build_transformers_prefix_allowed_tokens_fn
+            from lmformatenforcer.integrations.transformers import (
+                build_transformers_prefix_allowed_tokens_fn,
+            )
+
             parser = JsonSchemaParser(EnrichmentModel.model_json_schema())
-            prefix_function = None if is_gguf else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
+            prefix_function = (
+                None if is_gguf else build_transformers_prefix_allowed_tokens_fn(tokenizer, parser)
+            )
 
         print("=== Pipeline ready ===")
 
         input_files = sorted(
-            p for p in INPUT_DIR.iterdir()
+            p
+            for p in INPUT_DIR.iterdir()
             if p.suffix.lower() == ".csv" or p.name.lower().endswith(".teitok.xml")
         )
         total_processed = 0
-        total_errors    = 0
-        total_aborted   = 0
-        total_input_tokens      = 0
-        total_output_tokens     = 0
+        total_errors = 0
+        total_aborted = 0
+        total_input_tokens = 0
+        total_output_tokens = 0
         total_inference_seconds = 0.0
 
         for input_file in tqdm(input_files, desc="Documents", unit="doc", dynamic_ncols=True):
@@ -462,18 +463,17 @@ def main(config_path: str = "llm_config.txt") -> None:
 
                 was_aborted = bool(doc_stats.get("aborted"))
                 total_processed += doc_stats["processed"]
-                total_errors    += doc_stats["skipped_error"]
+                total_errors += doc_stats["skipped_error"]
                 if was_aborted:
                     total_aborted += 1
-                total_input_tokens      += doc_stats.get("total_input_tokens", 0)
-                total_output_tokens     += doc_stats.get("total_output_tokens", 0)
+                total_input_tokens += doc_stats.get("total_input_tokens", 0)
+                total_output_tokens += doc_stats.get("total_output_tokens", 0)
                 total_inference_seconds += doc_stats.get("total_inference_seconds", 0.0)
 
                 print(
                     f"  processed={doc_stats['processed']}, "
                     f"skipped_filter={doc_stats['skipped_filter']}, "
-                    f"errors={doc_stats['skipped_error']}"
-                    + (" [ABORTED]" if was_aborted else "")
+                    f"errors={doc_stats['skipped_error']}" + (" [ABORTED]" if was_aborted else "")
                 )
 
                 if enriched_results:
@@ -483,10 +483,15 @@ def main(config_path: str = "llm_config.txt") -> None:
                     logger.log_success("json", count=1)
                     logger.log_document_success()
                 else:
-                    logger.log_skip(input_file.name, "No lines passed quality filter or all inference calls failed.")
+                    logger.log_skip(
+                        input_file.name,
+                        "No lines passed quality filter or all inference calls failed.",
+                    )
 
                 if was_aborted:
-                    _write_abort_marker(out_file=out_file, stats=doc_stats, reason="10 consecutive inference errors")
+                    _write_abort_marker(
+                        out_file=out_file, stats=doc_stats, reason="10 consecutive inference errors"
+                    )
 
             except Exception as exc:
                 print(f"  Critical error on {input_file.name}: {exc}")
@@ -500,7 +505,9 @@ def main(config_path: str = "llm_config.txt") -> None:
         already_done = sum(1 for s in logger._skipped if s.get("reason") == "already_exists")
         true_failures = sum(1 for s in logger._skipped if s.get("reason") != "already_exists")
         _avg_in = total_input_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
-        _avg_out = total_output_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
+        _avg_out = (
+            total_output_tokens / total_inference_seconds if total_inference_seconds > 0 else 0
+        )
         print(
             f"\n=== Run complete ===\n"
             f"    lines enriched:          {total_processed}\n"

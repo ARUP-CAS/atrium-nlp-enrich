@@ -4,30 +4,23 @@ tests/test_api_service.py
 Hermetic tests for the nlp-enrich API service (issue #8).
 """
 
-import csv
-import io
-import json
-import zipfile
-
 import pytest
 
 fastapi = pytest.importorskip("fastapi")
 pytest.importorskip("fastapi.testclient")
 
+from pathlib import Path  # noqa: E402
+from unittest.mock import MagicMock, patch  # noqa: E402
+
+from fastapi.testclient import TestClient  # noqa: E402
+
 import service.enrichment as enr  # noqa: E402
+from service.api import app  # noqa: E402
 from service.enrichment import (  # noqa: E402
     PipelineManager,
-    normalize_upload,
-    sanitize_doc_id,
     _detect_kw_method_used,
+    normalize_upload,
 )
-
-from pathlib import Path
-
-from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
-
-from service.api import app
 
 
 @pytest.fixture
@@ -48,6 +41,7 @@ def create_dummy_csv() -> bytes:
 
 # ── exit-code → HTTP mapping ──────────────────────────────────────────────────
 
+
 def test_api_exit_code_0_success(mock_subprocess_run, test_client):
     mock_result = MagicMock()
     mock_result.returncode = 0
@@ -55,16 +49,18 @@ def test_api_exit_code_0_success(mock_subprocess_run, test_client):
     mock_result.stderr = ""
     mock_subprocess_run.return_value = mock_result
 
-    with patch("pathlib.Path.exists", return_value=True), \
-            patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]), \
-            patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml></xml>"), \
-            patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]), \
-            patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]), \
-            patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}):
+    with (
+        patch("pathlib.Path.exists", return_value=True),
+        patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]),
+        patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml></xml>"),
+        patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]),
+        patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]),
+        patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}),
+    ):
         response = test_client.post(
             "/enrich",
             files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
-            data={"kw_method": "none", "format": "json"}
+            data={"kw_method": "none", "format": "json"},
         )
 
     assert response.status_code == 200
@@ -82,7 +78,7 @@ def test_api_exit_code_1_or_2_bad_gateway(mock_subprocess_run, test_client):
         response = test_client.post(
             "/enrich",
             files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
-            data={"kw_method": "none"}
+            data={"kw_method": "none"},
         )
         assert response.status_code == 502
         assert "exit" in response.json()["detail"].lower()
@@ -100,12 +96,13 @@ def test_api_exit_code_3_or_4_service_unavailable(mock_subprocess_run, test_clie
         response = test_client.post(
             "/enrich",
             files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
-            data={"kw_method": "keybert"}
+            data={"kw_method": "keybert"},
         )
         assert response.status_code == 503
 
 
 # ── F-S2: workspace cleanup ───────────────────────────────────────────────────
+
 
 @patch("service.enrichment.shutil.rmtree")
 def test_workspace_cleanup_on_failure(mock_rmtree, mock_subprocess_run, test_client):
@@ -140,12 +137,14 @@ def test_workspace_cleanup_on_success(mock_rmtree, mock_subprocess_run, test_cli
     mock_result.stderr = ""
     mock_subprocess_run.return_value = mock_result
 
-    with patch("pathlib.Path.exists", return_value=True), \
-         patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]), \
-         patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml/>"), \
-         patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]), \
-         patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]), \
-         patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}):
+    with (
+        patch("pathlib.Path.exists", return_value=True),
+        patch("pathlib.Path.glob", return_value=[Path("test.teitok.xml")]),
+        patch("service.enrichment.PipelineManager.collect_teitok", return_value="<xml/>"),
+        patch("service.enrichment.PipelineManager.collect_keywords", return_value=[]),
+        patch("service.enrichment.PipelineManager.collect_ne_summary", return_value=[]),
+        patch("service.enrichment.PipelineManager.collect_merged_paradata", return_value={}),
+    ):
         test_client.post(
             "/enrich",
             files={"file": ("test.csv", create_dummy_csv(), "text/csv")},
@@ -156,6 +155,7 @@ def test_workspace_cleanup_on_success(mock_rmtree, mock_subprocess_run, test_cli
 
 
 # ── concurrency guard ─────────────────────────────────────────────────────────
+
 
 def test_concurrency_limit_returns_429(test_client):
     """Posting to /enrich while the semaphore is locked must return HTTP 429.
@@ -175,6 +175,7 @@ def test_concurrency_limit_returns_429(test_client):
 
 
 # ── _detect_kw_method_used ────────────────────────────────────────────────────
+
 
 def test_detect_kw_method_used_degradation(tmp_path):
     """_detect_kw_method_used reports the correct backend from output dir layout.
@@ -220,7 +221,6 @@ def test_detect_kw_method_used_degradation(tmp_path):
 
 # ── input normalization ───────────────────────────────────────────────────────
 class TestNormalization:
-
     def test_csv_requires_text_column(self):
         with pytest.raises(ValueError):
             normalize_upload("x.csv", b"file,page_num\nA,1\n")
@@ -244,10 +244,10 @@ def test_enrich_text_inline(client, monkeypatch):
     api, _ = client
     _make_stub(monkeypatch, returncode=0, doc_id="inlinedoc")
     c = TestClient(api.app)
-    r = c.post("/enrich_text",
-               json={"doc_id": "inlinedoc",
-                     "lines": ["Praha", "Brno"],
-                     "kw_method": "yake"})
+    r = c.post(
+        "/enrich_text",
+        json={"doc_id": "inlinedoc", "lines": ["Praha", "Brno"], "kw_method": "yake"},
+    )
     assert r.status_code == 200
     assert r.json()["doc_id"] == "inlinedoc"
 
@@ -255,24 +255,24 @@ def test_enrich_text_inline(client, monkeypatch):
 def test_invalid_kw_method_422(client):
     api, _ = client
     c = TestClient(api.app)
-    r = c.post("/enrich",
-               files={"file": ("x.csv", b"text\nA\n", "text/csv")},
-               data={"kw_method": "bogus"})
+    r = c.post(
+        "/enrich", files={"file": ("x.csv", b"text\nA\n", "text/csv")}, data={"kw_method": "bogus"}
+    )
     assert r.status_code == 422
 
 
 def test_empty_input_422(client):
     api, _ = client
     c = TestClient(api.app)
-    r = c.post("/enrich",
-               files={"file": ("x.csv", b"text\n", "text/csv")},
-               data={"kw_method": "none"})
+    r = c.post(
+        "/enrich", files={"file": ("x.csv", b"text\n", "text/csv")}, data={"kw_method": "none"}
+    )
     assert r.status_code == 422
 
 
 def test_job_cleanup_evicts_job_from_memory():
-    from service.jobs import _jobs, Job
     from service.api import app
+    from service.jobs import Job, _jobs
 
     job_id = "test-delete-job"
     _jobs[job_id] = Job(job_id=job_id, status="done")
@@ -317,4 +317,5 @@ def _make_stub(monkeypatch, returncode=0, doc_id="document"):
 @pytest.fixture
 def client():
     from service import api
+
     return api, None

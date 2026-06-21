@@ -3,14 +3,16 @@ tests/test_remote_apis.py
 =========================
 Unit tests for the resilient network clients used to call LINDAT services.
 """
-import sys
+
+from unittest.mock import MagicMock, patch
+
 import pytest
 import requests
-from unittest.mock import patch, MagicMock
-from api_util import call_udpipe, call_nametag
+
+from api_util import call_nametag, call_udpipe
 
 
-@patch('api_util.call_udpipe.requests.Session.post')
+@patch("api_util.call_udpipe.requests.Session.post")
 def test_udpipe_process_chunk_success(mock_post):
     """Verify UDPipe client handles successful 200 OK responses."""
     mock_response = MagicMock()
@@ -25,7 +27,7 @@ def test_udpipe_process_chunk_success(mock_post):
     mock_post.assert_called_once()
 
 
-@patch('api_util.call_udpipe.requests.Session.post')
+@patch("api_util.call_udpipe.requests.Session.post")
 def test_udpipe_permanent_failure(mock_post):
     """Verify UDPipe client raises an exception when retries are exhausted."""
     mock_post.side_effect = requests.exceptions.ConnectionError("Network down")
@@ -35,7 +37,7 @@ def test_udpipe_permanent_failure(mock_post):
         call_udpipe.process_chunk(session, "test text", "model-x", 60)
 
 
-@patch('api_util.call_nametag.requests.Session.post')
+@patch("api_util.call_nametag.requests.Session.post")
 def test_nametag_success(mock_post):
     """Verify NameTag client handles successful 200 OK responses."""
     mock_response = MagicMock()
@@ -49,7 +51,7 @@ def test_nametag_success(mock_post):
     assert result == {"result": "NER Output"}
 
 
-@patch('api_util.call_nametag.requests.Session.post')
+@patch("api_util.call_nametag.requests.Session.post")
 def test_nametag_permanent_failure(mock_post):
     """Verify NameTag client gracefully returns None on permanent failure."""
     mock_post.side_effect = requests.exceptions.Timeout("Timed out")

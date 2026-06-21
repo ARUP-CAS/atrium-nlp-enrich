@@ -5,7 +5,7 @@ Unit tests for the pure-Python functions in ``keywords.py``.
 """
 
 import csv
-from collections import Counter
+
 import pytest
 
 from keywords import _sort_csv_file
@@ -33,6 +33,7 @@ class TestTEITOKDispatch:
 
     def test_extract_surface_text_teitok(self, tmp_path):
         from keywords import _extract_surface_text
+
         p = self._make_teitok(tmp_path)
 
         # Should dynamically call teitok_read.read_teitok_text and stitch the tokens
@@ -41,6 +42,7 @@ class TestTEITOKDispatch:
 
     def test_extract_lemmas_teitok(self, tmp_path):
         from keywords import _extract_lemmas
+
         p = self._make_teitok(tmp_path)
 
         # Should dynamically extract strictly NOUN/PROPN/ADJ lemmas mapped to lowercase
@@ -59,41 +61,52 @@ class TestCSVSort:
             return [row[0] for row in csv.reader(fh)]
 
     def test_sorts_rows_by_first_column(self, tmp_path):
-        p = self._make_csv(tmp_path, [
-            "document_id,kw-1,score-1",
-            "ctx_z,word,1.0",
-            "ctx_a,word,2.0",
-            "ctx_m,word,0.5",
-        ])
+        p = self._make_csv(
+            tmp_path,
+            [
+                "document_id,kw-1,score-1",
+                "ctx_z,word,1.0",
+                "ctx_a,word,2.0",
+                "ctx_m,word,0.5",
+            ],
+        )
         _sort_csv_file(str(p))
         first_col = self._read_first_col(p)
         data_rows = first_col[1:]
         assert data_rows == sorted(data_rows)
 
     def test_sort_is_stable_for_already_sorted_file(self, tmp_path):
-        p = self._make_csv(tmp_path, [
-            "document_id,score",
-            "aaa,1.0",
-            "bbb,2.0",
-            "ccc,3.0",
-        ])
+        p = self._make_csv(
+            tmp_path,
+            [
+                "document_id,score",
+                "aaa,1.0",
+                "bbb,2.0",
+                "ccc,3.0",
+            ],
+        )
         _sort_csv_file(str(p))
         first_col = self._read_first_col(p)
         assert first_col[1:] == ["aaa", "bbb", "ccc"]
 
     def test_single_data_row_unchanged(self, tmp_path):
-        p = self._make_csv(tmp_path, [
-            "document_id,kw-1",
-            "only_doc,word",
-        ])
+        p = self._make_csv(
+            tmp_path,
+            [
+                "document_id,kw-1",
+                "only_doc,word",
+            ],
+        )
         _sort_csv_file(str(p))
         first_col = self._read_first_col(p)
         assert first_col == ["document_id", "only_doc"]
 
 
 def test_keybert_model_raises_backend_error_on_missing_torch(monkeypatch):
-    from keywords import _get_keybert_model, KeywordBackendError
     import builtins
+
+    from keywords import KeywordBackendError, _get_keybert_model
+
     real_import = builtins.__import__
 
     def fake_import(name, *args, **kwargs):

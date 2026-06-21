@@ -1,18 +1,18 @@
-import pytest
 import subprocess
+import sys
 from pathlib import Path
 
-import sys
+import pytest
 
 _api_util_path = str(Path(__file__).parent.parent / "api_util")
 if _api_util_path not in sys.path:
     sys.path.insert(0, _api_util_path)
 
-from api_util.flexiconv_convert import (
+from api_util.flexiconv_convert import (  # noqa: E402
+    FlexiconvNotInstalled,
+    convert_to_teitok,
     is_flexiconv_format,
     normalize_ext_list,
-    convert_to_teitok,
-    FlexiconvNotInstalled
 )
 
 
@@ -36,6 +36,7 @@ def test_convert_fallback_to_cli(monkeypatch, tmp_path):
 
     # 1. Force Python library import to fail
     import builtins
+
     real_import = builtins.__import__
 
     def fake_import(name, *args, **kwargs):
@@ -47,6 +48,7 @@ def test_convert_fallback_to_cli(monkeypatch, tmp_path):
 
     # 2. Mock shutil.which to pretend CLI exists
     import shutil
+
     monkeypatch.setattr(shutil, "which", lambda x: "/usr/bin/flexiconv")
 
     # 3. Mock subprocess.run to intercept the CLI call
@@ -69,6 +71,7 @@ def test_convert_raises_when_missing(monkeypatch, tmp_path):
 
     # 1. Force Python library to fail
     import builtins
+
     real_import = builtins.__import__
 
     def fake_import(name, *args, **kwargs):
@@ -80,6 +83,7 @@ def test_convert_raises_when_missing(monkeypatch, tmp_path):
 
     # 2. Mock shutil.which to pretend CLI is ALSO missing
     import shutil
+
     monkeypatch.setattr(shutil, "which", lambda x: None)
 
     with pytest.raises(FlexiconvNotInstalled, match="Flexiconv is not installed"):

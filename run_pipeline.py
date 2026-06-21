@@ -16,7 +16,6 @@ per-stage paradata JSON produced during THIS run into a single
 from __future__ import annotations
 
 import argparse
-import glob
 import json
 import os
 import re
@@ -28,7 +27,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from atrium_paradata import merge_run_paradata
-import importlib.util
 
 # ───────────────────────────────────────────────────────────────────────────────
 # Constants
@@ -57,12 +55,13 @@ _RUNNER_ENV_VARS = (
 # config_api.txt parsing
 # ───────────────────────────────────────────────────────────────────────────────
 
+
 def _parse_config(config_path: Path) -> Dict[str, str]:
     if not config_path.exists():
         raise FileNotFoundError(
             f"Config file not found: {config_path}. "
             f"Run the pipeline from the repository root, or pass --config."
-        )
+        ) from None
 
     values: Dict[str, str] = {}
     assign_re = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$")
@@ -91,8 +90,7 @@ def _parse_config(config_path: Path) -> Dict[str, str]:
                 name = match.group(1) or match.group(2)
                 return values.get(name, os.environ.get(name, ""))
 
-            rhs = re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)",
-                         _expand, rhs)
+            rhs = re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)", _expand, rhs)
 
             values[key] = rhs
 
@@ -155,42 +153,55 @@ def _sweep_stale_state_files(paradata_dir: Path) -> List[str]:
 def _keybert_deps_preflight() -> None:
     missing = []
     try:
-        import torch
+        pass
     except Exception as exc:
         missing.append(f"torch ({exc})")
 
     try:
-        import torchvision
+        pass
     except Exception:
         pass
 
     import sys
+
     if "torchvision" in sys.modules and not hasattr(sys.modules["torchvision"], "extension"):
         import types
+
         sys.modules["torchvision"].extension = types.ModuleType("torchvision.extension")
         sys.modules["torchvision"].extension._HAS_OPS = False
 
     try:
         import transformers
+
         real_classes = {}
         try:
             from transformers.modeling_utils import PreTrainedModel
+
             real_classes["PreTrainedModel"] = PreTrainedModel
         except Exception:
             pass
         try:
             from transformers.tokenization_utils import PreTrainedTokenizer
+
             real_classes["PreTrainedTokenizer"] = PreTrainedTokenizer
         except Exception:
             pass
         try:
             from transformers.configuration_utils import PretrainedConfig
+
             real_classes["PretrainedConfig"] = PretrainedConfig
         except Exception:
             pass
         try:
-            from transformers.models.auto import AutoModel, AutoTokenizer, AutoProcessor, AutoConfig, \
-                AutoFeatureExtractor, AutoImageProcessor
+            from transformers.models.auto import (
+                AutoConfig,
+                AutoFeatureExtractor,
+                AutoImageProcessor,
+                AutoModel,
+                AutoProcessor,
+                AutoTokenizer,
+            )
+
             real_classes["AutoModel"] = AutoModel
             real_classes["AutoTokenizer"] = AutoTokenizer
             real_classes["AutoProcessor"] = AutoProcessor
@@ -201,21 +212,25 @@ def _keybert_deps_preflight() -> None:
             pass
         try:
             from transformers.processing_utils import ProcessorMixin
+
             real_classes["ProcessorMixin"] = ProcessorMixin
         except Exception:
             pass
         try:
             from transformers.feature_extraction_utils import BatchFeature
+
             real_classes["BatchFeature"] = BatchFeature
         except Exception:
             pass
         try:
             from transformers.trainer import Trainer
+
             real_classes["Trainer"] = Trainer
         except Exception:
             pass
         try:
             from transformers.training_args import TrainingArguments
+
             real_classes["TrainingArguments"] = TrainingArguments
         except Exception:
             pass
@@ -224,10 +239,19 @@ def _keybert_deps_preflight() -> None:
             pass
 
         _to_patch = (
-            "PreTrainedModel", "PreTrainedTokenizer", "PretrainedConfig",
-            "AutoModel", "AutoTokenizer", "AutoProcessor", "AutoConfig",
-            "AutoFeatureExtractor", "AutoImageProcessor",
-            "ProcessorMixin", "BatchFeature", "Trainer", "TrainingArguments"
+            "PreTrainedModel",
+            "PreTrainedTokenizer",
+            "PretrainedConfig",
+            "AutoModel",
+            "AutoTokenizer",
+            "AutoProcessor",
+            "AutoConfig",
+            "AutoFeatureExtractor",
+            "AutoImageProcessor",
+            "ProcessorMixin",
+            "BatchFeature",
+            "Trainer",
+            "TrainingArguments",
         )
 
         for attr in _to_patch:
@@ -254,30 +278,35 @@ def _keybert_deps_preflight() -> None:
             "  Fix:\n"
             "    pip install keybert sentence-transformers torch\n"
             "  Or use the CPU-only YAKE backend:  --kw-method yake"
-        )
+        ) from None
 
 
 def _llm_deps_preflight() -> None:
     missing = []
     try:
-        import torch
+        pass
     except Exception as exc:
         missing.append(f"torch ({exc})")
     try:
-        import transformers
+        pass
     except Exception as exc:
         missing.append(f"transformers ({exc})")
     if missing:
         raise ImportError(
             "The --llm stage requires the following package(s) which are not "
             f"installed properly: {', '.join(missing)}."
-        )
+        ) from None
 
 
 class StageResult:
-    def __init__(self, name: str, label: str, returncode: int,
-                 paradata: Optional[Dict[str, Any]],
-                 paradata_path: Optional[Path]) -> None:
+    def __init__(
+        self,
+        name: str,
+        label: str,
+        returncode: int,
+        paradata: Optional[Dict[str, Any]],
+        paradata_path: Optional[Path],
+    ) -> None:
         self.name = name
         self.label = label
         self.returncode = returncode
@@ -297,7 +326,9 @@ def _run_subprocess(cmd: List[str], env: Dict[str, str], cwd: Path) -> int:
     return proc.returncode
 
 
-def _collect_stage_paradata(paradata_dir: Path, before: set) -> Tuple[Optional[Dict[str, Any]], Optional[Path]]:
+def _collect_stage_paradata(
+    paradata_dir: Path, before: set
+) -> Tuple[Optional[Dict[str, Any]], Optional[Path]]:
     new_files = _new_paradata_files(paradata_dir, before)
     if not new_files:
         return None, None
@@ -338,19 +369,25 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
         script, label = _CORE_STAGES[name]
         plan_stages.append({"name": name, "script": script, "label": label})
     if getattr(args, "kw", False):
-        plan_stages.append({
-            "name": "keywords",
-            "script": "keywords.py",
-            "label": f"Keyword extraction ({getattr(args, 'kw_method', 'yake')})",
-        })
+        plan_stages.append(
+            {
+                "name": "keywords",
+                "script": "keywords.py",
+                "label": f"Keyword extraction ({getattr(args, 'kw_method', 'yake')})",
+            }
+        )
     if getattr(args, "llm", False):
-        plan_stages.append({
-            "name": "llm",
-            "script": "llm_run.py",
-            "label": "LLM semantic enrichment",
-        })
+        plan_stages.append(
+            {
+                "name": "llm",
+                "script": "llm_run.py",
+                "label": "LLM semantic enrichment",
+            }
+        )
 
-    fail_on_empty = False if getattr(args, "force", False) else _config_bool(values, "FAIL_ON_EMPTY", True)
+    fail_on_empty = (
+        False if getattr(args, "force", False) else _config_bool(values, "FAIL_ON_EMPTY", True)
+    )
 
     return {
         "repository": "https://github.com/ufal/atrium-nlp-enrich",
@@ -364,9 +401,7 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
         "llm": bool(getattr(args, "llm", False)),
         "llm_config": getattr(args, "llm_config", "llm_config.txt"),
         "stage_plan": plan_stages,
-        "runner_provenance": {
-            v: os.environ.get(v, "") for v in _RUNNER_ENV_VARS
-        },
+        "runner_provenance": {v: os.environ.get(v, "") for v in _RUNNER_ENV_VARS},
     }
 
 
@@ -382,16 +417,22 @@ def _space_stages(last_start: Optional[float]) -> float:
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Run the ATRIUM nlp-enrich pipeline end-to-end and merge "
-                    "per-stage paradata into a single run record.",
+        "per-stage paradata into a single run record.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--config", type=Path, default=_REPO_ROOT / _CONFIG_NAME)
     parser.add_argument("--stages", nargs="+", choices=_CORE_ORDER, default=list(_CORE_ORDER))
     parser.add_argument("--kw", action="store_true")
     parser.add_argument("--kw-method", default="yake", choices=["legacy", "yake", "keybert"])
-    parser.add_argument("-n", "--num-keywords", type=int, default=None, help="Number of keywords to extract")
-    parser.add_argument("--kw-fallback", action="store_true", help="Fallback to yake if keybert fails")
-    parser.add_argument("--strict-empty", action="store_true", help="Treat all-skipped runs as failures")
+    parser.add_argument(
+        "-n", "--num-keywords", type=int, default=None, help="Number of keywords to extract"
+    )
+    parser.add_argument(
+        "--kw-fallback", action="store_true", help="Fallback to yake if keybert fails"
+    )
+    parser.add_argument(
+        "--strict-empty", action="store_true", help="Treat all-skipped runs as failures"
+    )
     parser.add_argument("--lang", default="cs", help="Language code passed to extraction")
     parser.add_argument("--llm", action="store_true")
     parser.add_argument("--llm-config", default="llm_config.txt")
@@ -429,8 +470,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"\n[WARNING] KeyBERT missing, falling back to YAKE: {exc}", file=sys.stderr)
             effective_kw_method = "yake"
         elif args.force:
-            print(f"\n[WARNING] Dependency preflight failed:\n{exc}\n[WARNING] --force enabled. Bypassing crash.",
-                  file=sys.stderr)
+            print(
+                f"\n[WARNING] Dependency preflight failed:\n{exc}\n[WARNING] --force enabled. Bypassing crash.",
+                file=sys.stderr,
+            )
         else:
             print(f"\n[ERROR] Dependency preflight failed:\n{exc}", file=sys.stderr)
             return 3
@@ -469,7 +512,9 @@ def main(argv: Optional[List[str]] = None) -> int:
             _finalize_merge(results, paradata_dir, args, before)
             return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
+        if paradata is not None and _is_empty_failure(
+            paradata.get("statistics", {}), strict=args.strict_empty
+        ):
             empty_failures.append(name)
 
     if getattr(args, "kw", False):
@@ -487,13 +532,20 @@ def main(argv: Optional[List[str]] = None) -> int:
             kw_per_doc_dir = str(Path(output_dir) / f"KW_PER_DOC_{suffix_u}")
 
             cmd = [
-                sys.executable, str(_REPO_ROOT / "keywords.py"),
-                "-i", str(Path(output_dir) / "UDP"),
-                "-m", method,
-                "-o", kw_out_file,
-                "-d", kw_per_doc_dir,
-                "--paradata-dir", str(paradata_dir),
-                "-l", args.lang
+                sys.executable,
+                str(_REPO_ROOT / "keywords.py"),
+                "-i",
+                str(Path(output_dir) / "UDP"),
+                "-m",
+                method,
+                "-o",
+                kw_out_file,
+                "-d",
+                kw_per_doc_dir,
+                "--paradata-dir",
+                str(paradata_dir),
+                "-l",
+                args.lang,
             ]
             if args.num_keywords is not None:
                 cmd.extend(["-n", str(args.num_keywords)])
@@ -514,14 +566,16 @@ def main(argv: Optional[List[str]] = None) -> int:
             _finalize_merge(results, paradata_dir, args, before)
             return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
+        if paradata is not None and _is_empty_failure(
+            paradata.get("statistics", {}), strict=args.strict_empty
+        ):
             empty_failures.append("keywords")
 
     if getattr(args, "llm", False):
         last_start = _space_stages(last_start)
         llm_paradata_dir = _resolve_llm_paradata_dir(args.llm_config, paradata_dir)
         snapshot = _snapshot_paradata_dir(llm_paradata_dir)
-        print(f"\n=== Stage: llm — LLM semantic enrichment ===")
+        print("\n=== Stage: llm — LLM semantic enrichment ===")
         cmd = [sys.executable, str(_REPO_ROOT / "llm_run.py"), args.llm_config]
         rc = _run_subprocess(cmd, env, _REPO_ROOT)
         paradata, ppath = _collect_stage_paradata(llm_paradata_dir, snapshot)
@@ -531,14 +585,18 @@ def main(argv: Optional[List[str]] = None) -> int:
             _finalize_merge(results, paradata_dir, args, before)
             return rc
 
-        if paradata is not None and _is_empty_failure(paradata.get("statistics", {}), strict=args.strict_empty):
+        if paradata is not None and _is_empty_failure(
+            paradata.get("statistics", {}), strict=args.strict_empty
+        ):
             empty_failures.append("llm")
 
     _finalize_merge(results, paradata_dir, args, before)
 
     if empty_failures and fail_on_empty:
-        print(f"\n[FAIL] Stage(s) processed nothing despite having input and no resume: {', '.join(empty_failures)}.",
-              file=sys.stderr)
+        print(
+            f"\n[FAIL] Stage(s) processed nothing despite having input and no resume: {', '.join(empty_failures)}.",
+            file=sys.stderr,
+        )
         return 1
 
     return 0
@@ -546,7 +604,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 def _resolve_llm_paradata_dir(llm_config_path: str, default_dir: Path) -> Path:
     p = Path(llm_config_path)
-    if not p.exists(): return default_dir
+    if not p.exists():
+        return default_dir
     try:
         values = _parse_config(p)
         if values.get("PARADATA_DIR"):
@@ -556,8 +615,9 @@ def _resolve_llm_paradata_dir(llm_config_path: str, default_dir: Path) -> Path:
     return default_dir
 
 
-def _finalize_merge(results: List[StageResult], paradata_dir: Path,
-                    args: argparse.Namespace, before: set) -> Optional[str]:
+def _finalize_merge(
+    results: List[StageResult], paradata_dir: Path, args: argparse.Namespace, before: set
+) -> Optional[str]:
     ordered_paths: List[str] = []
     for r in results:
         if r.paradata_path is not None and Path(r.paradata_path).exists():
@@ -573,6 +633,7 @@ def _finalize_merge(results: List[StageResult], paradata_dir: Path,
         out_path = args.merged_out
     else:
         from datetime import datetime, timezone
+
         run_id = datetime.now(tz=timezone.utc).strftime("%y%m%d-%H%M%S")
         paradata_dir.mkdir(parents=True, exist_ok=True)
         out_path = str(paradata_dir / f"{run_id}_nlp-enrich_pipeline-run.json")

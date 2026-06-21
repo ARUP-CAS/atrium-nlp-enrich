@@ -11,15 +11,13 @@ Modules under test:
 No ML models, no network, no GPU required.
 """
 
-import pytest
-
-from call_nametag import _get_ne_suffix, build_sent_page_map
-from call_udpipe import merge_conllu_chunks
-
+from api_util.call_nametag import _get_ne_suffix, build_sent_page_map
+from api_util.call_udpipe import merge_conllu_chunks
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Inline chunk content helpers
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def _chunk(sent_ids: list[int], suffix: str = "") -> str:
     """Build a minimal CoNLL-U chunk with the given sentence IDs."""
@@ -28,7 +26,7 @@ def _chunk(sent_ids: list[int], suffix: str = "") -> str:
         lines.append(f"# sent_id = {sid}\n")
         lines.append(f"# text = Sentence {sid}.{suffix}\n")
         lines.append(f"1\tWord{sid}\tword\tNOUN\t_\t_\t0\troot\t_\t_\n")
-        lines.append(f"2\t.\t.\tPUNCT\t_\t_\t1\tpunct\t_\tSpaceAfter=No\n")
+        lines.append("2\t.\t.\tPUNCT\t_\t_\t1\tpunct\t_\tSpaceAfter=No\n")
         lines.append("\n")
     return "".join(lines)
 
@@ -37,7 +35,6 @@ def _chunk(sent_ids: list[int], suffix: str = "") -> str:
 # merge_conllu_chunks
 # ════════════════════════════════════════════════════════════════════════════
 class TestMergeConlluChunks:
-
     def test_empty_list_returns_empty_string(self):
         assert merge_conllu_chunks([]) == ""
 
@@ -64,8 +61,8 @@ class TestMergeConlluChunks:
         # Original sent_id = 1 from chunk 2 should no longer appear unshifted
         # (it was sent_id=1 but offset by 2 → now 3)
         lines = merged.splitlines()
-        sent_id_lines = [l for l in lines if l.startswith("# sent_id")]
-        values = [int(l.split("=")[1].strip()) for l in sent_id_lines]
+        sent_id_lines = [ln for ln in lines if ln.startswith("# sent_id")]
+        values = [int(val.split("=")[1].strip()) for val in sent_id_lines]
         assert values == [1, 2, 3, 4]
 
     def test_page_break_injected_before_first_sentence_of_second_chunk(self):
@@ -75,8 +72,8 @@ class TestMergeConlluChunks:
         """
         merged = merge_conllu_chunks([_chunk([1, 2]), _chunk([1])])
         lines = merged.splitlines()
-        pb_positions  = [i for i, l in enumerate(lines) if l == "# page_break = true"]
-        sid3_positions = [i for i, l in enumerate(lines) if l == "# sent_id = 3"]
+        pb_positions = [i for i, pp in enumerate(lines) if pp == "# page_break = true"]
+        sid3_positions = [i for i, sp in enumerate(lines) if sp == "# sent_id = 3"]
         assert len(pb_positions) == 1
         assert len(sid3_positions) == 1
         # page_break must be the line immediately before sent_id = 3
@@ -89,8 +86,7 @@ class TestMergeConlluChunks:
         """
         merged = merge_conllu_chunks([_chunk([1, 2]), _chunk([1])])
         lines = merged.splitlines()
-        first_sid_pos = next(i for i, l in enumerate(lines)
-                             if l.startswith("# sent_id"))
+        first_sid_pos = next(i for i, ln in enumerate(lines) if ln.startswith("# sent_id"))
         if first_sid_pos > 0:
             assert lines[first_sid_pos - 1] != "# page_break = true"
 
@@ -123,7 +119,6 @@ class TestMergeConlluChunks:
 # _get_ne_suffix
 # ════════════════════════════════════════════════════════════════════════════
 class TestGetNeSuffix:
-
     def test_empty_string_returns_empty(self):
         assert _get_ne_suffix("") == ""
 
@@ -165,7 +160,6 @@ class TestGetNeSuffix:
 # build_sent_page_map
 # ════════════════════════════════════════════════════════════════════════════
 class TestBuildSentPageMap:
-
     def test_single_page_all_mapped_to_page_1(self, sample_conllu):
         """
         ``sample.conllu`` has 3 sentences (sent_id 1,2,3) all on one page.
@@ -203,7 +197,7 @@ class TestBuildSentPageMap:
     def test_page_numbers_are_monotonically_non_decreasing(self, two_page_conllu):
         """Page numbers must never decrease across the sentence list."""
         page_map = build_sent_page_map(two_page_conllu)
-        for a, b in zip(page_map, page_map[1:]):
+        for a, b in zip(page_map, page_map[1:], strict=True):
             assert b >= a, f"Page number decreased: {a} → {b}"
 
     def test_result_length_equals_sentence_count(self, sample_conllu):

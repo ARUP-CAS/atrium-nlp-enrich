@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # api_3_nt.sh – NameTag processing + paradata
 set -euo pipefail
+# shellcheck disable=SC1090  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "${ATRIUM_CONFIG:-config_api.txt}"
 
 PARA_STATE=$(python3 atrium_paradata.py start \
@@ -19,10 +20,10 @@ TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
 mkdir -p "${OUTPUT_DIR}/NE"
 
 while IFS= read -r -d '' conllu; do
-    rel_path="${conllu#${OUTPUT_DIR}/UDP/}"
+    rel_path="${conllu#"${OUTPUT_DIR}"/UDP/}"
     doc="${rel_path%.conllu}"
     out_dir="${OUTPUT_DIR}/NE/${doc}"
-    
+
     if [ -d "$out_dir" ]; then
         python3 atrium_paradata.py skip \
             --state "$PARA_STATE" \
@@ -39,7 +40,7 @@ while IFS= read -r -d '' conllu; do
             --output-dir "$out_dir" \
             --timeout    "$TIMEOUT" \
             --retries    "$MAX_RETRIES"; then
-        n_pages=$(ls "$out_dir"/*.tsv 2>/dev/null | wc -l)
+        n_pages=$(find "$out_dir" -maxdepth 1 -name '*.tsv' 2>/dev/null | wc -l)
         python3 atrium_paradata.py success \
             --state "$PARA_STATE" --type tsv --count "$n_pages"
     else

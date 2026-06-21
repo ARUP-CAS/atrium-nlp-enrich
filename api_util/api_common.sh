@@ -4,6 +4,7 @@
 CONFIG_PATH="${ATRIUM_CONFIG:-$PROJECT_ROOT/config_api.txt}"
 
 if [ -f "$CONFIG_PATH" ]; then
+    # shellcheck disable=SC1090  # CONFIG_PATH is dynamic; not followed at lint time
     source "$CONFIG_PATH"
 else
     echo "Error: Config file '$CONFIG_PATH' not found."
@@ -74,11 +75,12 @@ api_call_with_retry() {
     local attempt=1
     local delay=1
 
-    while [ $attempt -le $MAX_RETRIES ]; do
+    while [ "$attempt" -le "$MAX_RETRIES" ]; do
         local http_code_file="${response_file}.code"
         # Pass remaining arguments ("$@") to curl (flags like -F)
         curl -s -S -w "%{http_code}" "$@" "$url" -o "$response_file" > "$http_code_file"
-        local http_code=$(cat "$http_code_file")
+        local http_code
+        http_code=$(cat "$http_code_file")
         rm -f "$http_code_file"
 
         if [ "$http_code" = "200" ]; then

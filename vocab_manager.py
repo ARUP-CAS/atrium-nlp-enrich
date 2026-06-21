@@ -18,7 +18,7 @@ import time
 import urllib.parse
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Optional
 
 import requests
 
@@ -54,13 +54,154 @@ class VocabularyManager:
 
         print(f"[vocab] Warning: {self.config_path} not found. Using built-in default taxonomy.")
         return {
-            "Site Types": {"priority": 10, "keywords": {"cs": ["hradiště", "pohřebiště", "sídliště", "hrad", "tvrz", "kostel", "mohyla", "studna", "depot", "jáma", "příkop", "val", "sklep", "zaniklá", "opevnění", "areál", "objekt", "zásobní"]}},
-            "Find Types": {"priority": 8, "keywords": {"cs": ["keramika", "kost", "hrob", "záušnice", "nůž", "brousek", "bronz", "kámen", "sklo", "mazanice", "nádoba", "střep", "oštěp", "jehlice", "mlat", "zásobnice", "kachel", "konstrukční prvek", "navážka", "malta", "cihla", "glazura", "zlomek", "fragment", "dno", "okraj", "ucho", "výduť"]}},
-            "Methods": {"priority": 9, "keywords": {"cs": ["povrchový sběr", "plošný odkryv", "sonda", "výkop", "průzkum", "dokumentace", "geodetický", "stavebně-historický", "záchranný", "badatelský", "dohled", "terénní", "revize"]}},
-            "Chronology": {"priority": 11, "keywords": {"cs": ["středověk", "eneolit", "paleolit", "neolit", "bronzová", "halštatská", "laténská", "novověk", "pravěk", "datum", "přesné datum", "někdy v letech", "stol", "století"]}},
-            "Location & Admin": {"priority": 6, "keywords": {"cs": ["katastrální", "parcela", "okres", "obec", "lokalita", "poloha", "mapa", "mapový", "sekce"]}},
-            "Documentation": {"priority": 7, "keywords": {"cs": ["fotografie", "plán", "kresba", "zpráva", "hlášení", "nálezová", "příloha", "plánek", "negativy", "diapozitiv"]}},
-            "Finds Context": {"priority": 8, "keywords": {"cs": ["ojedinělý nález", "náhodný nález", "nález v druhotné", "záchranný nález", "pohřeb", "kostrový", "žárový"]}},
+            "Site Types": {
+                "priority": 10,
+                "keywords": {
+                    "cs": [
+                        "hradiště",
+                        "pohřebiště",
+                        "sídliště",
+                        "hrad",
+                        "tvrz",
+                        "kostel",
+                        "mohyla",
+                        "studna",
+                        "depot",
+                        "jáma",
+                        "příkop",
+                        "val",
+                        "sklep",
+                        "zaniklá",
+                        "opevnění",
+                        "areál",
+                        "objekt",
+                        "zásobní",
+                    ]
+                },
+            },
+            "Find Types": {
+                "priority": 8,
+                "keywords": {
+                    "cs": [
+                        "keramika",
+                        "kost",
+                        "hrob",
+                        "záušnice",
+                        "nůž",
+                        "brousek",
+                        "bronz",
+                        "kámen",
+                        "sklo",
+                        "mazanice",
+                        "nádoba",
+                        "střep",
+                        "oštěp",
+                        "jehlice",
+                        "mlat",
+                        "zásobnice",
+                        "kachel",
+                        "konstrukční prvek",
+                        "navážka",
+                        "malta",
+                        "cihla",
+                        "glazura",
+                        "zlomek",
+                        "fragment",
+                        "dno",
+                        "okraj",
+                        "ucho",
+                        "výduť",
+                    ]
+                },
+            },
+            "Methods": {
+                "priority": 9,
+                "keywords": {
+                    "cs": [
+                        "povrchový sběr",
+                        "plošný odkryv",
+                        "sonda",
+                        "výkop",
+                        "průzkum",
+                        "dokumentace",
+                        "geodetický",
+                        "stavebně-historický",
+                        "záchranný",
+                        "badatelský",
+                        "dohled",
+                        "terénní",
+                        "revize",
+                    ]
+                },
+            },
+            "Chronology": {
+                "priority": 11,
+                "keywords": {
+                    "cs": [
+                        "středověk",
+                        "eneolit",
+                        "paleolit",
+                        "neolit",
+                        "bronzová",
+                        "halštatská",
+                        "laténská",
+                        "novověk",
+                        "pravěk",
+                        "datum",
+                        "přesné datum",
+                        "někdy v letech",
+                        "stol",
+                        "století",
+                    ]
+                },
+            },
+            "Location & Admin": {
+                "priority": 6,
+                "keywords": {
+                    "cs": [
+                        "katastrální",
+                        "parcela",
+                        "okres",
+                        "obec",
+                        "lokalita",
+                        "poloha",
+                        "mapa",
+                        "mapový",
+                        "sekce",
+                    ]
+                },
+            },
+            "Documentation": {
+                "priority": 7,
+                "keywords": {
+                    "cs": [
+                        "fotografie",
+                        "plán",
+                        "kresba",
+                        "zpráva",
+                        "hlášení",
+                        "nálezová",
+                        "příloha",
+                        "plánek",
+                        "negativy",
+                        "diapozitiv",
+                    ]
+                },
+            },
+            "Finds Context": {
+                "priority": 8,
+                "keywords": {
+                    "cs": [
+                        "ojedinělý nález",
+                        "náhodný nález",
+                        "nález v druhotné",
+                        "záchranný nález",
+                        "pohřeb",
+                        "kostrový",
+                        "žárový",
+                    ]
+                },
+            },
         }
 
     def fetch_amcr_vocab(self, delay: float = 0.3) -> Dict[str, Dict[str, str]]:
@@ -155,11 +296,24 @@ class VocabularyManager:
         print("[vocab] Syncing remote vocabularies…")
         raw_terms = self.fetch_amcr_vocab()
 
-        sorted_themes = sorted(self.taxonomy.keys(), key=lambda t: self.taxonomy[t].get("priority", 0), reverse=True)
+        sorted_themes = sorted(
+            self.taxonomy.keys(), key=lambda t: self.taxonomy[t].get("priority", 0), reverse=True
+        )
         themed: Dict[str, Dict] = {theme: {} for theme in sorted_themes}
         themed["Other"] = {}
 
-        ADMIN_STOP_WORDS = {"zpráva", "projekt", "číslo", "datum", "rok", "strana", "tabulka", "příloha", "text", "obsah"}
+        ADMIN_STOP_WORDS = {
+            "zpráva",
+            "projekt",
+            "číslo",
+            "datum",
+            "rok",
+            "strana",
+            "tabulka",
+            "příloha",
+            "text",
+            "obsah",
+        }
 
         for cs_key, pair in raw_terms.items():
             theme = self._assign_theme(pair)
@@ -173,10 +327,15 @@ class VocabularyManager:
             themed.setdefault(theme, {})[cs_key] = pair
 
         for theme in list(themed.keys()):
-            themed[theme] = dict(sorted(themed[theme].items(), key=lambda item: (
-                1 if any(aw in item[0].lower() for aw in ADMIN_STOP_WORDS) else 0,
-                item[0]
-            )))
+            themed[theme] = dict(
+                sorted(
+                    themed[theme].items(),
+                    key=lambda item: (
+                        1 if any(aw in item[0].lower() for aw in ADMIN_STOP_WORDS) else 0,
+                        item[0],
+                    ),
+                )
+            )
 
         self.vocab_data = themed
         self._invalidate_cache()
@@ -238,6 +397,7 @@ class VocabularyManager:
             sort_keys=False,
         )
         return self._prompt_string_cache
+
 
 if __name__ == "__main__":
     manager = VocabularyManager(

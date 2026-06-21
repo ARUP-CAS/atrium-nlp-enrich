@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 
 def write_chunk(output_dir, chunk_index, lines_list):
@@ -11,7 +11,7 @@ def write_chunk(output_dir, chunk_index, lines_list):
     separate sentences) into a single run-on paragraph.
     """
     filename = os.path.join(output_dir, f"chunk_{chunk_index}.txt")
-    with open(filename, 'w', encoding='utf-8') as out:
+    with open(filename, "w", encoding="utf-8") as out:
         out.write("\n".join(lines_list))
 
 
@@ -30,7 +30,7 @@ def main():
         os.makedirs(outdir)
 
     # Read the full text extracted from CSV (newline-separated OCR lines)
-    with open(infile, 'r', encoding='utf-8') as f:
+    with open(infile, "r", encoding="utf-8") as f:
         text = f.read().strip()
 
     if not text:
@@ -39,7 +39,7 @@ def main():
     # FIX #4: Split by lines rather than all whitespace to preserve OCR line
     # structure.  Empty lines are discarded; each non-empty line is treated as
     # one logical unit (typically one OCR text line / sentence fragment).
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
 
     current_chunk_lines = []
     current_word_count = 0
@@ -57,8 +57,10 @@ def main():
             lookback_limit = max(0, len(current_chunk_lines) - 100)
 
             for j in range(len(current_chunk_lines) - 1, lookback_limit, -1):
-                last_word = current_chunk_lines[j].split()[-1] if current_chunk_lines[j].split() else ''
-                if last_word and last_word[-1] in ('.', '?', '!'):
+                last_word = (
+                    current_chunk_lines[j].split()[-1] if current_chunk_lines[j].split() else ""
+                )
+                if last_word and last_word[-1] in (".", "?", "!"):
                     cut_index = j + 1
                     break
 
@@ -68,7 +70,7 @@ def main():
             # Carry over any lines that were after the cut point.
             leftover = current_chunk_lines[cut_index:]
             current_chunk_lines = leftover
-            current_word_count = sum(len(l.split()) for l in leftover)
+            current_word_count = sum(len(ln.split()) for ln in leftover)
 
         current_chunk_lines.append(line)
         current_word_count += words_in_line

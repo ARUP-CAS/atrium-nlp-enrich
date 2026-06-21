@@ -74,11 +74,11 @@ Every PR must include:
 
 Use a **Draft PR** if the work is not ready for review.
 
-**Do not open PRs into `master` — merging into `master` is exclusively the 
+**Do not open PRs into `master` — merging into `master` is exclusively the
 maintainers' responsibility.
 
-> **Note on issue tracking:** Issues reference the commits and PRs that resolved 
-> them — not the other way around. Commit messages describe *what changed*; the issue 
+> **Note on issue tracking:** Issues reference the commits and PRs that resolved
+> them — not the other way around. Commit messages describe *what changed*; the issue
 > is the place to record *why* and link the resulting commits together.
 
 ---
@@ -113,7 +113,7 @@ Allowed types:
 
 ### Code Conventions
 
-* **Comments:** informative but short, may be LLM-generated, added when function name does 
+* **Comments:** informative but short, may be LLM-generated, added when function name does
 not explain its functionality in detail
 * **Argument types:** set default type (e.g., `int`, `list`) for function arguments
 * **Console flags:** when a new one added, provide help message for it
@@ -198,7 +198,7 @@ Each documentation file has one target audience and one responsibility. Rules ar
 | `README.md`       | GitHub visitors | Project overview, workflow stages, quick start |
 | `CONTRIBUTING.md` | Developers      | Code conventions, branches, PRs, testing       |
 
-* **Do not duplicate rules:** if a rule is defined in `CONTRIBUTING.md`, other files 
+* **Do not duplicate rules:** if a rule is defined in `CONTRIBUTING.md`, other files
 reference it rather than copying it.
 * **When changing a rule:** update the canonical source and verify that referencing files
 still point correctly.

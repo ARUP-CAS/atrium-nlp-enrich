@@ -1,14 +1,9 @@
-import sys
-import os
 import argparse
-from pathlib import Path
 import csv
+import os
 import re
-from xml.sax.saxutils import escape
-import difflib
-import collections
-import unicodedata
-import xml.etree.ElementTree as ET
+import sys
+from pathlib import Path
 
 from teitok_alto import write_teitok_merged
 
@@ -86,32 +81,38 @@ CNEC_TYPE_MAP = {
 
 
 def bool_from_str(s, default=False):
-    if s is None: return default
-    if isinstance(s, bool): return s
+    if s is None:
+        return default
+    if isinstance(s, bool):
+        return s
     s = str(s).strip().lower()
-    return s in ('1', 'true', 'yes', 'y', 'on')
+    return s in ("1", "true", "yes", "y", "on")
 
 
 def load_config(config_path="api_config.txt"):
-    if not os.path.exists(config_path): return
-    with open(config_path, 'r', encoding='utf-8') as f:
+    if not os.path.exists(config_path):
+        return
+    with open(config_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            if not line or line.startswith('#') or '=' not in line: continue
-            key, value = line.split('=', 1)
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
             key = key.strip()
             value = value.strip().strip('"').strip("'")
-            if key not in os.environ: os.environ[key] = value
+            if key not in os.environ:
+                os.environ[key] = value
 
 
 def sanitize_filename(name):
-    return re.sub(r'[\\/*?:"<>|]', '_', name)
+    return re.sub(r'[\\/*?:"<>|]', "_", name)
 
 
 def get_ne_explanation(raw_tag):
-    if raw_tag == "O" or not raw_tag or raw_tag == "_": return ""
+    if raw_tag == "O" or not raw_tag or raw_tag == "_":
+        return ""
     if raw_tag.startswith("B-") or raw_tag.startswith("I-"):
-        primary = raw_tag.split('|')[0]
+        primary = raw_tag.split("|")[0]
         short_code = primary[2:]
         return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
     return ""
@@ -123,25 +124,27 @@ def get_sorted_tsv_content(doc_tsv_dir):
 
     def sort_key(filepath):
         try:
-            match = re.search(r'-(\d+)\.tsv$', filepath.name)
-            if match: return int(match.group(1))
+            match = re.search(r"-(\d+)\.tsv$", filepath.name)
+            if match:
+                return int(match.group(1))
             return 0
-        except:
+        except Exception:
             return 0
 
     files.sort(key=sort_key)
 
     for fpath in files:
-        with open(fpath, 'r', encoding='utf-8') as f:
-            header = next(f, None)
+        with open(fpath, "r", encoding="utf-8") as f:
+            next(f, None)
             for line in f:
                 line = line.strip()
-                if not line: continue
-                parts = line.split('\t')
+                if not line:
+                    continue
+                parts = line.split("\t")
                 if len(parts) >= 2:
-                    all_data.append({'token': parts[0], 'tag': parts[1]})
+                    all_data.append({"token": parts[0], "tag": parts[1]})
                 else:
-                    all_data.append({'token': parts[0], 'tag': 'O'})
+                    all_data.append({"token": parts[0], "tag": "O"})
     return all_data
 
 
@@ -149,28 +152,31 @@ def merge_and_write(conllu_path, tsv_data, output_path):
     tsv_index = 0
     tsv_len = len(tsv_data)
     try:
-        with open(conllu_path, 'r', encoding='utf-8') as f_conllu, \
-                open(output_path, 'w', encoding='utf-8') as f_out:
+        with (
+            open(conllu_path, "r", encoding="utf-8") as f_conllu,
+            open(output_path, "w", encoding="utf-8") as f_out,
+        ):
             for line in f_conllu:
                 stripped_line = line.strip()
-                if not stripped_line or stripped_line.startswith('#'):
+                if not stripped_line or stripped_line.startswith("#"):
                     f_out.write(line)
                     continue
 
-                cols = stripped_line.split('\t')
-                if len(cols) >= 2 and '-' not in cols[0] and '.' not in cols[0]:
+                cols = stripped_line.split("\t")
+                if len(cols) >= 2 and "-" not in cols[0] and "." not in cols[0]:
                     if tsv_index < tsv_len:
                         tsv_item = tsv_data[tsv_index]
                         new_attr = f"NER={tsv_item['tag']}"
                         if len(cols) > 9:
-                            if cols[9] == '_':
+                            if cols[9] == "_":
                                 cols[9] = new_attr
                             else:
                                 cols[9] += f"|{new_attr}"
                         else:
-                            while len(cols) < 9: cols.append('_')
+                            while len(cols) < 9:
+                                cols.append("_")
                             cols.append(new_attr)
-                        f_out.write('\t'.join(cols) + '\n')
+                        f_out.write("\t".join(cols) + "\n")
                         tsv_index += 1
                     else:
                         f_out.write(line)
@@ -183,16 +189,18 @@ def merge_and_write(conllu_path, tsv_data, output_path):
 
 
 def parse_features(feat_str):
-    if feat_str == '_' or not feat_str: return {}
-    return {k: v for item in feat_str.split('|') if '=' in item for k, v in [item.split('=', 1)]}
+    if feat_str == "_" or not feat_str:
+        return {}
+    return {k: v for item in feat_str.split("|") if "=" in item for k, v in [item.split("=", 1)]}
 
 
 def parse_misc(misc_str):
-    if misc_str == '_' or not misc_str: return {}
+    if misc_str == "_" or not misc_str:
+        return {}
     misc = {}
-    for item in misc_str.split('|'):
-        if '=' in item:
-            k, v = item.split('=', 1)
+    for item in misc_str.split("|"):
+        if "=" in item:
+            k, v = item.split("=", 1)
             misc[k] = v
         else:
             misc[item] = "Yes"
@@ -200,20 +208,24 @@ def parse_misc(misc_str):
 
 
 def write_document_csv(rows, out_path):
-    if not rows: return
+    if not rows:
+        return
     feature_keys = set()
     misc_keys = set()
     for r in rows:
         for k in r.keys():
-            if k.startswith('udpipe.feats.'):
+            if k.startswith("udpipe.feats."):
                 feature_keys.add(k)
-            elif k.startswith('udpipe.misc.'):
+            elif k.startswith("udpipe.misc."):
                 misc_keys.add(k)
 
-    header = ['page_id', 'token', 'lemma', 'position', 'nameTag', 'NE'] + \
-             sorted(list(feature_keys)) + sorted(list(misc_keys))
+    header = (
+        ["page_id", "token", "lemma", "position", "nameTag", "NE"]
+        + sorted(list(feature_keys))
+        + sorted(list(misc_keys))
+    )
     try:
-        with open(out_path, 'w', encoding='utf-8', newline='') as f:
+        with open(out_path, "w", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL, quotechar='"')
             writer.writeheader()
             writer.writerows(rows)
@@ -222,6 +234,7 @@ def write_document_csv(rows, out_path):
 
 
 # ── FIX #8: single-pass reader ───────────────────────────────────────────────
+
 
 def _collect_merged_rows(merged_filepath):
     """Parse a merged CoNLL-U file in a single pass and return both the
@@ -254,59 +267,59 @@ def _collect_merged_rows(merged_filepath):
         current_entity_toks, current_entity_type = [], None
 
     try:
-        with open(merged_filepath, 'r', encoding='utf-8') as fh:
+        with open(merged_filepath, "r", encoding="utf-8") as fh:
             for line in fh:
                 line = line.strip()
 
                 # Page-boundary detection — support both signals.
-                if line == '# page_break = true':
+                if line == "# page_break = true":
                     pending_page_break = True
                     continue
 
-                if line.startswith('# sent_id'):
-                    parts = line.split('=', 1)
+                if line.startswith("# sent_id"):
+                    parts = line.split("=", 1)
                     if len(parts) > 1:
                         val = parts[1].strip()
-                        if val == '1' or pending_page_break:
+                        if val == "1" or pending_page_break:
                             _flush_entity(page_counter)
                             page_counter += 1
                             pending_page_break = False
 
-                if line.startswith('#') or not line:
+                if line.startswith("#") or not line:
                     continue
 
-                cols = line.split('\t')
-                if len(cols) < 10 or '-' in cols[0]:
+                cols = line.split("\t")
+                if len(cols) < 10 or "-" in cols[0]:
                     continue
                 if page_counter == 0:
                     page_counter = 1
 
-                misc  = parse_misc(cols[9])
+                misc = parse_misc(cols[9])
                 feats = parse_features(cols[5])
-                ner_tag = misc.get('NER', '')
+                ner_tag = misc.get("NER", "")
 
                 # ── token row for the document CSV ──────────────────────
                 row = {
-                    'page_id':  page_counter,
-                    'token':    cols[1],
-                    'lemma':    cols[2],
-                    'position': cols[0],
-                    'nameTag':  ner_tag,
-                    'NE':       get_ne_explanation(ner_tag),
+                    "page_id": page_counter,
+                    "token": cols[1],
+                    "lemma": cols[2],
+                    "position": cols[0],
+                    "nameTag": ner_tag,
+                    "NE": get_ne_explanation(ner_tag),
                 }
                 for k, v in feats.items():
-                    row[f'udpipe.feats.{k}'] = v
+                    row[f"udpipe.feats.{k}"] = v
                 for k, v in misc.items():
-                    if k != 'NER':
-                        row[f'udpipe.misc.{k}'] = v
+                    if k != "NER":
+                        row[f"udpipe.misc.{k}"] = v
                 all_rows.append(row)
 
                 # ── entity tracking for the summary CSV ─────────────────
-                if ner_tag.startswith('B-'):
+                if ner_tag.startswith("B-"):
                     _flush_entity(page_counter)
                     current_entity_toks = [cols[1]]
                     current_entity_type = get_ne_explanation(ner_tag)
-                elif ner_tag.startswith('I-') and current_entity_toks:
+                elif ner_tag.startswith("I-") and current_entity_toks:
                     current_entity_toks.append(cols[1])
                 else:
                     _flush_entity(page_counter)
@@ -340,12 +353,13 @@ def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
     process_single_document, avoiding a second read of the merged CoNLL-U.
     """
     from collections import Counter
+
     if not summary_csv_path or not entities_by_page:
         return
     top_n = 20
     write_header = not os.path.isfile(summary_csv_path)
     try:
-        with open(summary_csv_path, 'a', newline='', encoding='utf-8-sig') as fh:
+        with open(summary_csv_path, "a", newline="", encoding="utf-8-sig") as fh:
             w = csv.writer(fh, quoting=csv.QUOTE_ALL, quotechar='"')
             if write_header:
                 header = ["file", "page"] + [
@@ -378,14 +392,23 @@ def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
 
 # ── per-document entry point (called from api_4_stats.sh) ────────────────────
 
-def process_single_document(conllu_file, ne_dir, output_dir,
-                             save_conllu=True, save_csv=True, save_teitok=False,
-                             alto_dir=None, teitok_out=None,
-                             pages_dir=None,
-                             summary_csv=None,
-                             model_udpipe=None, model_nametag=None,
-                             dpi=None, alto_dpi=None):
 
+def process_single_document(
+    conllu_file,
+    ne_dir,
+    output_dir,
+    save_conllu=True,
+    save_csv=True,
+    save_teitok=False,
+    alto_dir=None,
+    teitok_out=None,
+    pages_dir=None,
+    summary_csv=None,
+    model_udpipe=None,
+    model_nametag=None,
+    dpi=None,
+    alto_dpi=None,
+):
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
 
     FIX #8: When both a document CSV and a summary CSV are requested, the
@@ -404,9 +427,15 @@ def process_single_document(conllu_file, ne_dir, output_dir,
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
         doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
         write_teitok_merged(
-            doc_out_conllu, teitok_out_path, doc_in_alto,
-            doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
-            image_dir=pages_dir or None, dpi=dpi, alto_dpi=alto_dpi,
+            doc_out_conllu,
+            teitok_out_path,
+            doc_in_alto,
+            doc_id=doc_name,
+            model_udpipe=model_udpipe,
+            model_nametag=model_nametag,
+            image_dir=pages_dir or None,
+            dpi=dpi,
+            alto_dpi=alto_dpi,
         )
 
     doc_out_dir.mkdir(parents=True, exist_ok=True)
@@ -430,7 +459,7 @@ def process_single_document(conllu_file, ne_dir, output_dir,
     # FIX #8: collect token rows and entity data in a single pass when either
     # the document CSV or the summary CSV is needed.  This avoids reading the
     # merged file twice.
-    need_csv     = save_csv and not doc_out_csv.exists()
+    need_csv = save_csv and not doc_out_csv.exists()
     need_summary = bool(summary_csv)
 
     if need_csv or need_summary:
@@ -447,9 +476,15 @@ def process_single_document(conllu_file, ne_dir, output_dir,
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
         doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
         write_teitok_merged(
-            doc_out_conllu, teitok_out_path, doc_in_alto,
-            doc_id=doc_name, model_udpipe=model_udpipe, model_nametag=model_nametag,
-            image_dir=pages_dir or None, dpi=dpi, alto_dpi=alto_dpi,
+            doc_out_conllu,
+            teitok_out_path,
+            doc_in_alto,
+            doc_id=doc_name,
+            model_udpipe=model_udpipe,
+            model_nametag=model_nametag,
+            image_dir=pages_dir or None,
+            dpi=dpi,
+            alto_dpi=alto_dpi,
         )
 
     if not save_conllu:
@@ -466,16 +501,27 @@ def process_single_document(conllu_file, ne_dir, output_dir,
 
 # ── directory-level pipeline (used when running standalone) ──────────────────
 
-def process_pipeline(conllu_dir, tsv_dir, output_dir, alto_dir, teitok_out,
-                     save_conllu=True, save_csv=True, save_teitok=False,
-                     pages_dir=None,
-                     model_udpipe=None, model_nametag=None, summary_csv=None):
+
+def process_pipeline(
+    conllu_dir,
+    tsv_dir,
+    output_dir,
+    alto_dir,
+    teitok_out,
+    save_conllu=True,
+    save_csv=True,
+    save_teitok=False,
+    pages_dir=None,
+    model_udpipe=None,
+    model_nametag=None,
+    summary_csv=None,
+):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
         print(f"Error: CoNLL-U dir not found: {conllu_dir}")
         sys.exit(1)
 
-    conllu_files = sorted(list(conllu_path_obj.glob('*.conllu')))
+    conllu_files = sorted(list(conllu_path_obj.glob("*.conllu")))
     print(f"Found {len(conllu_files)} documents to process.")
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
@@ -515,49 +561,70 @@ def process_pipeline(conllu_dir, tsv_dir, output_dir, alto_dir, teitok_out,
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
+
 def main():
-    load_config('api_config.env')
+    load_config("api_config.env")
     parser = argparse.ArgumentParser()
 
     # --- Per-document args (used by api_4_stats.sh) ---
-    parser.add_argument('--conllu',      default=None,
-                        help="Single CoNLL-U file to process (per-document mode).")
-    parser.add_argument('--ne-dir',      default=None,
-                        help="Directory of per-page NE TSV files for this document.")
-    parser.add_argument('--output-dir',  default=None,
-                        help="Output directory for this document's results.")
-    parser.add_argument('--summary-csv', default=os.getenv('SUMMARY_CSV'),
-                        help="Path to the global summary CSV to append entity counts to.")
+    parser.add_argument(
+        "--conllu", default=None, help="Single CoNLL-U file to process (per-document mode)."
+    )
+    parser.add_argument(
+        "--ne-dir", default=None, help="Directory of per-page NE TSV files for this document."
+    )
+    parser.add_argument(
+        "--output-dir", default=None, help="Output directory for this document's results."
+    )
+    parser.add_argument(
+        "--summary-csv",
+        default=os.getenv("SUMMARY_CSV"),
+        help="Path to the global summary CSV to append entity counts to.",
+    )
 
     # --- Directory-mode args (used when running standalone) ---
-    parser.add_argument('--conllu-dir', default=os.getenv('CONLLU_INPUT_DIR'))
-    parser.add_argument('--tsv-dir',    default=os.getenv('TSV_INPUT_DIR'))
-    parser.add_argument('--out-dir',    default=os.getenv('SUMMARY_OUTPUT_DIR'))
-    parser.add_argument('--tt-dir',     default=os.getenv('TEITOK_OUTPUT_DIR'))
-    parser.add_argument('--alto-dir',   default=os.getenv('ALTO_DIR'))
-    parser.add_argument('--pages-dir',  default=os.getenv('INPUT_PAGES_DIR'),
-                        help="Directory containing per-page images (doc-N.png) used "
-                             "to scale ALTO bboxes to the actual PNG resolution.")
+    parser.add_argument("--conllu-dir", default=os.getenv("CONLLU_INPUT_DIR"))
+    parser.add_argument("--tsv-dir", default=os.getenv("TSV_INPUT_DIR"))
+    parser.add_argument("--out-dir", default=os.getenv("SUMMARY_OUTPUT_DIR"))
+    parser.add_argument("--tt-dir", default=os.getenv("TEITOK_OUTPUT_DIR"))
+    parser.add_argument("--alto-dir", default=os.getenv("ALTO_DIR"))
+    parser.add_argument(
+        "--pages-dir",
+        default=os.getenv("INPUT_PAGES_DIR"),
+        help="Directory containing per-page images (doc-N.png) used "
+        "to scale ALTO bboxes to the actual PNG resolution.",
+    )
 
     # --- Format flags ---
-    parser.add_argument('--save-conllu-ne', default=os.getenv('SAVE_CONLLU_NE', '1'),
-                        help="1/0 whether to keep the merged CoNLL-U per document.")
-    parser.add_argument('--save-csv',       default=os.getenv('SAVE_CSV', '1'),
-                        help="1/0 whether to write the summary CSV per document.")
-    parser.add_argument('--save-teitok',    default=os.getenv('SAVE_TEITOK', '0'),
-                        help="1/0 whether to write TEITOK-XML per document.")
+    parser.add_argument(
+        "--save-conllu-ne",
+        default=os.getenv("SAVE_CONLLU_NE", "1"),
+        help="1/0 whether to keep the merged CoNLL-U per document.",
+    )
+    parser.add_argument(
+        "--save-csv",
+        default=os.getenv("SAVE_CSV", "1"),
+        help="1/0 whether to write the summary CSV per document.",
+    )
+    parser.add_argument(
+        "--save-teitok",
+        default=os.getenv("SAVE_TEITOK", "0"),
+        help="1/0 whether to write TEITOK-XML per document.",
+    )
 
     args = parser.parse_args()
 
     save_conllu = bool_from_str(args.save_conllu_ne, default=True)
-    save_csv    = bool_from_str(args.save_csv,        default=True)
-    save_teitok = bool_from_str(args.save_teitok,     default=False)
+    save_csv = bool_from_str(args.save_csv, default=True)
+    save_teitok = bool_from_str(args.save_teitok, default=False)
 
     # ── per-document mode (invoked by api_4_stats.sh with --conllu) ──
     if args.conllu:
         if not args.ne_dir or not args.output_dir:
-            print("[Error] --ne-dir and --output-dir are required in per-document mode.",
-                  file=sys.stderr)
+            print(
+                "[Error] --ne-dir and --output-dir are required in per-document mode.",
+                file=sys.stderr,
+            )
             sys.exit(1)
         ok = process_single_document(
             conllu_file=args.conllu,
@@ -570,15 +637,18 @@ def main():
             teitok_out=args.tt_dir,
             pages_dir=args.pages_dir,
             summary_csv=args.summary_csv,
-            model_udpipe=os.getenv('MODEL_UDPIPE'),
-            model_nametag=os.getenv('MODEL_NAMETAG'),
+            model_udpipe=os.getenv("MODEL_UDPIPE"),
+            model_nametag=os.getenv("MODEL_NAMETAG"),
         )
         sys.exit(0 if ok else 1)
 
     # ── directory mode (standalone / legacy) ──
     if not all([args.conllu_dir, args.tsv_dir, args.out_dir]):
-        print("[Error] Provide either --conllu/--ne-dir/--output-dir (per-document) "
-              "or --conllu-dir/--tsv-dir/--out-dir (directory mode).", file=sys.stderr)
+        print(
+            "[Error] Provide either --conllu/--ne-dir/--output-dir (per-document) "
+            "or --conllu-dir/--tsv-dir/--out-dir (directory mode).",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if save_teitok:
@@ -587,11 +657,13 @@ def main():
         # Only exit if the directory is explicitly set but does not exist on disk,
         # which is most likely a configuration mistake worth surfacing loudly.
         if not args.alto_dir:
-            print("[Warn] --alto-dir not set; TEITOK output will have no bboxes.",
-                  file=sys.stderr)
+            print("[Warn] --alto-dir not set; TEITOK output will have no bboxes.", file=sys.stderr)
         elif not Path(args.alto_dir).exists():
-            print(f"[Error] A valid --alto-dir is required when save-teitok=true "
-                  f"('{args.alto_dir}' not found).", file=sys.stderr)
+            print(
+                f"[Error] A valid --alto-dir is required when save-teitok=true "
+                f"('{args.alto_dir}' not found).",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         if args.tt_dir:
@@ -607,8 +679,8 @@ def main():
         save_csv=save_csv,
         save_teitok=save_teitok,
         pages_dir=args.pages_dir,
-        model_udpipe=os.getenv('MODEL_UDPIPE'),
-        model_nametag=os.getenv('MODEL_NAMETAG'),
+        model_udpipe=os.getenv("MODEL_UDPIPE"),
+        model_nametag=os.getenv("MODEL_NAMETAG"),
         summary_csv=args.summary_csv,
     )
 

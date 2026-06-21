@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # api_1_manifest.sh – generate manifest + paradata
 set -euo pipefail
+# shellcheck disable=SC1090  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "${ATRIUM_CONFIG:-config_api.txt}"
 
 # P1 FIX: Validate input directory exists before starting

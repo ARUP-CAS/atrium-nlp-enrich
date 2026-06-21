@@ -1,18 +1,18 @@
-import pytest
-from pathlib import Path
-
 # Adjust import path assuming pytest runs from the repository root
 import sys
+from pathlib import Path
+
+import pytest
 
 _api_util_path = str(Path(__file__).parent.parent / "api_util")
 if _api_util_path not in sys.path:
     sys.path.insert(0, _api_util_path)
 
-from api_util.teitok_read import (
+from api_util.teitok_read import (  # noqa: E402
     doc_id_from_path,
     read_teitok_rows,
     read_teitok_text,
-    read_teitok_tokens
+    read_teitok_tokens,
 )
 
 TEITOK_SAMPLE = """<?xml version="1.0" encoding="UTF-8"?>

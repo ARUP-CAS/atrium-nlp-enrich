@@ -1,8 +1,9 @@
 import asyncio
 import time
+import uuid
 from dataclasses import dataclass, field
 from typing import Dict, Optional
-import uuid
+
 
 @dataclass
 class Job:
@@ -14,8 +15,10 @@ class Job:
     finished_at: Optional[float] = None
     workspace: Optional[str] = None
 
+
 _jobs: Dict[str, Job] = {}
 _job_lock = asyncio.Lock()
+
 
 async def create_job() -> Job:
     job_id = uuid.uuid4().hex
