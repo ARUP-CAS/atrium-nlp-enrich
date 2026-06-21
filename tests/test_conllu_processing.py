@@ -197,7 +197,7 @@ class TestBuildSentPageMap:
     def test_page_numbers_are_monotonically_non_decreasing(self, two_page_conllu):
         """Page numbers must never decrease across the sentence list."""
         page_map = build_sent_page_map(two_page_conllu)
-        for a, b in zip(page_map, page_map[1:], strict=True):
+        for a, b in zip(page_map, page_map[1:], strict=False):
             assert b >= a, f"Page number decreased: {a} → {b}"
 
     def test_result_length_equals_sentence_count(self, sample_conllu):
