@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
@@ -22,14 +22,17 @@ from .enrichment import (
     PipelineManager,
     count_words,
     normalize_upload,
+    sanitize_doc_id,
 )
 from .jobs import Job, _jobs, create_job
+from .rescale import RescaleError, rescale_teitok
 
 # ── operator-tunable limits ───────────────────────────────────────────────────
 MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
 MAX_UPLOAD_MB = float(os.environ.get("MAX_UPLOAD_MB", "5"))
 MAX_WORDS = int(os.environ.get("MAX_WORDS", "30000"))
 API_JOB_TIMEOUT = int(os.environ.get("API_JOB_TIMEOUT", "600"))
+MAX_RESCALE_DIM = int(os.environ.get("MAX_RESCALE_DIM", "100000"))
 ALLOWED_ORIGINS = [
     o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()
 ]
@@ -291,6 +294,62 @@ async def enrich_text(payload: Dict[str, Any]):
     fmt = payload.get("format", "json")
     fmt = fmt if fmt in ("json", "zip") else "json"
     return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
+
+
+@app.post("/rescale")
+async def rescale(
+    file: UploadFile = File(...),  # noqa: B008
+    width: int = Form(...),
+    height: int = Form(...),
+    format: str = Form("json"),
+    fix_names: bool = Form(True),
+):
+    """Rescale a single-page TEITOK to a target page-image size.
+
+    Pure XML coordinate transform (no pipeline): scales every ``bbox`` and the
+    ``<surface>`` ``lrx``/``lry`` extents from the document's own coordinate
+    space to ``width`` × ``height`` so annotations sit correctly on top of an
+    image of that size. By default it also repairs the malformed
+    ``<name>…</n>`` named-entity closings to ``</name>`` (set ``fix_names=false``
+    to disable). ``format=json`` (default) returns the rewritten XML plus scale
+    metadata; ``format=xml`` streams the rescaled ``.teitok.xml`` file.
+    """
+    if not (1 <= width <= MAX_RESCALE_DIM and 1 <= height <= MAX_RESCALE_DIM):
+        raise HTTPException(
+            422, f"width and height must be integers between 1 and {MAX_RESCALE_DIM}."
+        ) from None
+
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
+        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
+    try:
+        xml_text = data.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(422, "Uploaded file is not valid UTF-8 text.") from exc
+    if "<surface" not in xml_text and "bbox=" not in xml_text:
+        raise HTTPException(
+            422, "Input does not look like TEITOK facsimile XML (no <surface> or bbox)."
+        ) from None
+
+    try:
+        result = rescale_teitok(xml_text, width, height, fix_name_tags=fix_names)
+    except RescaleError as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+    fmt = format if format in ("json", "xml") else "json"
+    if fmt == "xml":
+        name = Path(file.filename or "document").name
+        for suf in (".teitok.xml", ".xml"):
+            if name.lower().endswith(suf):
+                name = name[: -len(suf)]
+                break
+        doc_id = sanitize_doc_id(name) or "document"
+        return Response(
+            content=result["teitok_xml"],
+            media_type="application/xml",
+            headers={"Content-Disposition": f'attachment; filename="{doc_id}.rescaled.teitok.xml"'},
+        )
+    return JSONResponse(result)
 
 
 @app.post("/jobs")

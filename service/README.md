@@ -1,4 +1,4 @@
-# nlp-enrich API service
+# NLP enrichment API service
 
 Single-file entry point for the ATRIUM NLP enrichment pipeline (issue
 [#8](https://github.com/ufal/atrium-nlp-enrich/issues/8)): upload ordered text
@@ -31,6 +31,7 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 | GET    | `/health`      | config validity via `run_pipeline.py --dry-run`              |
 | POST   | `/enrich`      | **single-file entry point** — upload CSV/XLSX/TXT            |
 | POST   | `/enrich_text` | same pipeline for inline JSON                                |
+| POST   | `/rescale`     | rescale a single-page TEITOK's bboxes to a target image size |
 
 ### `POST /enrich` (multipart form)
 
@@ -62,7 +63,7 @@ service **degrades once to `yake`** and reports `method_requested` vs
   "teitok_xml": "<?xml ...>",
   "keywords": [ {"keyword": "...", "score": 0.91} ],
   "ne_summary": [ {"file": "...", "page": "1", "entities": [...] } ],
-  "paradata": { ...merged pipeline-run record incl. license union... },
+  "paradata": { "...merged pipeline-run record incl. license union..." },
   "method_requested": "keybert", "method_used": "keybert",
   "llm": null
 }
@@ -70,6 +71,58 @@ service **degrades once to `yake`** and reports `method_requested` vs
 
 `format=zip` instead streams the full workspace `OUTPUT_DIR`
 (`TEITOK/`, `UDP_NE/`, `KW_PER_DOC_*/`, summary CSVs, `paradata/`).
+
+### `POST /rescale` (multipart form)
+
+A standalone coordinate transform — **not** part of the NLP pipeline (no
+subprocess, no models, no workspace). Given a single-page TEITOK document and a
+target page-image size, it rescales every facsimile coordinate (the hOCR-style
+`bbox` boxes and the `<surface>` `lrx`/`lry` extents) from the document's own
+coordinate space to the requested size, so annotations line up exactly on top of
+an image of that size.
+
+| Field       | Default    | Notes                                                            |
+|-------------|------------|------------------------------------------------------------------|
+| `file`      | *required* | a single-page `.teitok.xml` (or `.xml`)                          |
+| `width`     | *required* | target image width in pixels (1–`MAX_RESCALE_DIM`)               |
+| `height`    | *required* | target image height in pixels (1–`MAX_RESCALE_DIM`)              |
+| `format`    | `json`     | `json` envelope, or `xml` to download the rescaled `.teitok.xml` |
+| `fix_names` | `true`     | repair malformed `<name>…</n>` closings to `</name>`             |
+
+The **source** coordinate space is read from the document itself: the first
+`<surface>` that declares `lrx`/`lry` (the authoritative page extent); if none
+is present it falls back to the maximum extent of all `bbox` boxes
+(`source_kind: "bbox-extent"`, approximate). The transform is a surgical,
+text-level rewrite that only touches the numeric values, so it is robust to the
+non-well-formed TEITOK quirk (named entities open `<name>` but close `</n>`) that
+makes a strict XML parse fail.
+
+Because that `</n>` quirk produces invalid XML, the endpoint also **repairs it by
+default** — rewriting stray `</n>` closings to `</name>` so the returned document
+parses cleanly (`name_tags_fixed` reports how many were fixed). This is a no-op
+on already-valid TEITOK. Pass `fix_names=false` to leave the markup byte-for-byte
+as-is and only rescale coordinates.
+
+```bash
+curl -s -F "file=@CTX000000001.teitok.xml" -F "width=827" -F "height=1170" \
+     http://localhost:8000/rescale            # JSON envelope
+curl -s -F "file=@CTX000000001.teitok.xml" -F "width=827" -F "height=1170" \
+     -F "format=xml" -OJ http://localhost:8000/rescale   # download rescaled XML
+```
+
+`format=json` response:
+
+```json
+{
+  "teitok_xml": "<?xml ...>",
+  "source": { "width": 1654, "height": 2339 },
+  "source_kind": "surface",
+  "target": { "width": 827, "height": 1170 },
+  "scale": { "sx": 0.5, "sy": 0.500214 },
+  "boxes_rescaled": 37,
+  "name_tags_fixed": 12
+}
+```
 
 ## How it works
 
@@ -97,6 +150,7 @@ error).
 | `MAX_CONCURRENT_JOBS`          | `2`       | concurrent pipeline runs (also shields LINDAT) |
 | `MAX_UPLOAD_MB`                | `5`       | upload size guard                              |
 | `MAX_WORDS`                    | `30000`   | sync request word cap                          |
+| `MAX_RESCALE_DIM`              | `100000`  | max target width/height for `/rescale`         |
 | `DEFAULT_KW_METHOD`            | `keybert` | default keyword backend                        |
 | `ALLOWED_ORIGINS`              | `*`       | CORS origins                                   |
 | `API_KEEP_WORKSPACES`          | unset     | keep per-request workspaces for debugging      |
@@ -108,7 +162,9 @@ error).
 monkeypatches the pipeline subprocess to drop fixture outputs into the
 workspace, then exercises the full HTTP contract via FastAPI `TestClient`,
 plus input normalization, `doc_id` sanitization, and exit-code→HTTP mapping.
+`tests/test_rescale.py` covers the `/rescale` transform and endpoint (including
+the non-well-formed `<name>…</n>` TEITOK quirk).
 
 ```bash
-pytest -m "not slow" tests/test_api_service.py
+pytest -m "not slow" tests/test_api_service.py tests/test_rescale.py
 ```
