@@ -11,8 +11,6 @@
 
 name: Shellcheck
 
-name: ShellCheck
-
 on:
   push:
     branches: [ test, master, main ]
