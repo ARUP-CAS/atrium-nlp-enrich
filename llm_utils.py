@@ -31,16 +31,16 @@ import os
 
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
-import csv
-import gc
-import json
-import sys as _sys_tc
-import time
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+import csv  # noqa: E402
+import gc  # noqa: E402
+import json  # noqa: E402
+import sys as _sys_tc  # noqa: E402
+import time  # noqa: E402
+from pathlib import Path  # noqa: E402
+from typing import Any, Dict, List, Optional, Tuple  # noqa: E402
 
-import torch
-from tqdm import tqdm
+import torch  # noqa: E402
+from tqdm import tqdm  # noqa: E402
 
 _api_util_path = str(Path(__file__).parent / "api_util")
 if _api_util_path not in _sys_tc.path:
@@ -59,7 +59,7 @@ def validate_llm_output(
     Pure helper to validate and sanitize LLM JSON output against a Pydantic model.
     Extracted for unit testing independent of GPU inference.
     """
-    from pydantic import ValidationError
+    from pydantic import ValidationError  # noqa: E402
 
     try:
         semantic_data = EnrichmentModel.model_validate_json(result_json)
@@ -151,7 +151,7 @@ def _patch_all_special_tokens_extended() -> bool:
     calls are no-ops once the attribute is present.
     """
     try:
-        import transformers.tokenization_utils_base as _tub2
+        import transformers.tokenization_utils_base as _tub2  # noqa: E402
 
         _PTTB = getattr(_tub2, "PreTrainedTokenizerBase", None)
         if _PTTB is None:
@@ -208,10 +208,10 @@ def _patch_params4bit_compat() -> bool:
     These patches are no-ops if the installed version is already fixed.
     """
     try:
-        import inspect
+        import inspect  # noqa: E402
 
-        import bitsandbytes.functional as _bnb_func
-        import bitsandbytes.nn as _bnb_nn
+        import bitsandbytes.functional as _bnb_func  # noqa: E402
+        import bitsandbytes.nn as _bnb_nn  # noqa: E402
 
         patched = False
 
@@ -342,7 +342,7 @@ def _patch_vllm_rope_scaling_compat() -> bool:
     actually needs the fix.
     """
     try:
-        import vllm.transformers_utils.config as _vllm_cfg
+        import vllm.transformers_utils.config as _vllm_cfg  # noqa: E402
 
         _orig = getattr(_vllm_cfg, "patch_rope_scaling_dict", None)
         if _orig is None:
@@ -1008,7 +1008,7 @@ def _check_backend_deps(backend: str, model_key: str) -> None:
         min_ver = spec.get("min_vllm_version")
         if min_ver:
             try:
-                import vllm as _vllm_mod
+                import vllm as _vllm_mod  # noqa: E402
 
                 _installed = getattr(_vllm_mod, "__version__", "0.0.0")
 
@@ -1143,7 +1143,7 @@ def load_model_and_tokenizer(
     # --- GGUF path (llama.cpp) ---
     if spec.get("is_gguf"):
         try:
-            from llama_cpp import Llama
+            from llama_cpp import Llama  # noqa: E402
         except ImportError as exc:
             raise ImportError(
                 "llama-cpp-python is required for GGUF models:\n  pip install llama-cpp-python"
@@ -1183,7 +1183,7 @@ def load_model_and_tokenizer(
     # --- AWQ path ---
     if is_awq:
         try:
-            from awq import AutoAWQForCausalLM
+            from awq import AutoAWQForCausalLM  # noqa: E402
         except ImportError as exc:
             raise ImportError(
                 f"Model '{model_key}' requires autoawq:\n  pip install autoawq"
@@ -1196,7 +1196,7 @@ def load_model_and_tokenizer(
         )
         if not hasattr(model, "device"):
             model.device = next(model.parameters()).device
-        import warnings
+        import warnings  # noqa: E402
 
         warnings.filterwarnings("ignore", category=DeprecationWarning, module="awq")
         model.eval()
@@ -1281,7 +1281,7 @@ def load_vllm_engine(
         RuntimeWarning — tensor_parallel_size below model's recommended_tp.
     """
     try:
-        from vllm import LLM
+        from vllm import LLM  # noqa: E402
     except ImportError as exc:
         raise ImportError(
             "vLLM is not installed. Install it with:\n"
@@ -1640,7 +1640,7 @@ def process_document(
                           inference errors (the abort marker is written by the
                           caller, not here).
     """
-    from pydantic import ValidationError
+    from pydantic import ValidationError  # noqa: E402
 
     file_id = doc_id_from_path(input_path)
     enriched_lines: List[dict] = []
@@ -1661,8 +1661,8 @@ def process_document(
     rows = read_input_rows(input_path)
 
     if is_gguf:
-        from llama_cpp import LogitsProcessorList
-        from lmformatenforcer.integrations.llamacpp import (
+        from llama_cpp import LogitsProcessorList  # noqa: E402
+        from lmformatenforcer.integrations.llamacpp import (  # noqa: E402
             build_llamacpp_logits_processor,
         )
 
@@ -1881,14 +1881,14 @@ def process_document_vllm(
         (enriched_lines, stats)  — same schema as ``process_document``.
     """
     try:
-        from vllm import SamplingParams
-        from vllm.sampling_params import GuidedDecodingParams
+        from vllm import SamplingParams  # noqa: E402
+        from vllm.sampling_params import GuidedDecodingParams  # noqa: E402
     except ImportError as exc:
         raise ImportError(
             "vLLM is required for process_document_vllm. Install with: pip install vllm"
         ) from exc
 
-    from pydantic import ValidationError
+    from pydantic import ValidationError  # noqa: E402
 
     file_id = doc_id_from_path(input_path)
     enriched_lines: List[dict] = []

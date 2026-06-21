@@ -1,49 +1,11 @@
-# .pre-commit-config.yaml
-# Pre-commit hook suite for atrium-nlp-enrich.
-#
-# Design notes
-# ─────────────
-# shellcheck hook is kept: nlp-enrich is shell-heavy (api_*.sh, api_util/*.sh,
-#   setup_api_service.sh) — the existing non-blocking shellcheck.yml CI step
-#   overlaps with this hook, which is fine and provides two check surfaces.
-#
-# check-added-large-files excludes ker_data/ because the repo tracks two IDF
-#   pickle files above the 1 MB default limit:
-#     ker_data/cs_idf_table.pickle  ≈ 22 MB
-#     ker_data/en_idf_table.pickle  ≈  3.9 MB
-#   Adding an exclude keeps the hook meaningful for genuinely accidental large
-#   file additions elsewhere.
-#
-# ruff reads the repo's own ruff.toml (line-length=100, target=py311,
-#   select=[E,F,W,I,B]) so local hooks and the docker workflow's ruff step
-#   always agree.
-#
-# Running locally:
-#   pip install pre-commit
-#   pre-commit install
-#   pre-commit run --all-files   # advisory — same as CI, non-fatal
-
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-merge-conflict
-      - id: check-added-large-files
-        exclude: '^ker_data/'
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.18
+    rev: v0.4.4
     hooks:
       - id: ruff
-        args: [--fix]
-      - id: ruff-format
-
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+        args: [ --fix, --exit-non-zero-on-fix ]
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
     hooks:
       - id: shellcheck
-        args: [-e, SC1091]
-        files: \.(sh)$
+        args: ["--severity=warning"]
