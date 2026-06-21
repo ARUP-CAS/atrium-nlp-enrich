@@ -34,6 +34,7 @@ jobs:
   security:
     permissions:
       contents: read
+      packages: read
       security-events: write
       id-token: write
     uses: ufal/atrium-project/.github/workflows/security.reusable.yml@test
