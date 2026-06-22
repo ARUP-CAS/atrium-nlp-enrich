@@ -79,6 +79,14 @@ CNEC_TYPE_MAP = {
     "C": "Complex bibliographic expression",
 }
 
+def _float_or_none(value):
+    if not value:
+        return None
+    try:
+        return float(value)
+    except ValueError:
+        return None
+
 
 def bool_from_str(s, default=False):
     if s is None:
@@ -407,7 +415,7 @@ def process_single_document(
     model_udpipe=None,
     model_nametag=None,
     dpi=None,
-    alto_dpi=None,
+    alto_dpi=None
 ):
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
 
@@ -423,7 +431,12 @@ def process_single_document(
     doc_out_conllu = doc_out_dir / f"{doc_name}.conllu"
     doc_out_csv = doc_out_dir / f"{doc_name}.csv"
 
-    teitok_out_path = None
+    # WITH this corrected block:
+    teitok_out_path = Path(teitok_out) / f"{doc_name}.teitok.xml" if teitok_out else None
+
+    if save_teitok and teitok_out_path:
+        teitok_out_path.parent.mkdir(parents=True, exist_ok=True)
+
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
         doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
         write_teitok_merged(
@@ -437,8 +450,6 @@ def process_single_document(
             dpi=dpi,
             alto_dpi=alto_dpi,
         )
-
-    doc_out_dir.mkdir(parents=True, exist_ok=True)
 
     # Merge NER tags into CoNLL-U if not already done
     merged_conllu_ready = doc_out_conllu.exists()
@@ -515,6 +526,7 @@ def process_pipeline(
     model_udpipe=None,
     model_nametag=None,
     summary_csv=None,
+    dpi=None, alto_dpi=None
 ):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
@@ -554,6 +566,7 @@ def process_pipeline(
             summary_csv=summary_csv,
             model_udpipe=model_udpipe,
             model_nametag=model_nametag,
+            dpi=dpi, alto_dpi=alto_dpi
         )
 
     print("\nPipeline Complete.")
@@ -581,6 +594,11 @@ def main():
         default=os.getenv("SUMMARY_CSV"),
         help="Path to the global summary CSV to append entity counts to.",
     )
+
+    # Add to the argparse.ArgumentParser definition:
+    parser.add_argument("--dpi", type=_float_or_none, default=os.environ.get("IMAGE_DPI"),
+                        help="Output image DPI for TEITOK scaling")
+    parser.add_argument("--alto-dpi", type=_float_or_none, default=os.environ.get("ALTO_DPI"), help="Source ALTO DPI")
 
     # --- Directory-mode args (used when running standalone) ---
     parser.add_argument("--conllu-dir", default=os.getenv("CONLLU_INPUT_DIR"))
@@ -682,6 +700,7 @@ def main():
         model_udpipe=os.getenv("MODEL_UDPIPE"),
         model_nametag=os.getenv("MODEL_NAMETAG"),
         summary_csv=args.summary_csv,
+        dpi=args.dpi, alto_dpi=args.alto_dpi
     )
 
 

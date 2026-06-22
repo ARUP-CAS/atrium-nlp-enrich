@@ -294,15 +294,18 @@ def _build_page_scale_map(
             alto_w = alto_h = 0.0
 
         img_dims = None
+        img_ext = ".png"  # <--- Default fallback defined here
+
         img_path = _find_page_image(image_dir, doc_id, idx)
         if img_path:
             img_dims = _read_image_dimensions(img_path)
+            img_ext = img_path.suffix  # <--- Dynamically capture extension (.png, .jpg, etc.)
 
         # Tier 1: Companion image present
         if img_dims and alto_w > 0 and alto_h > 0:
             sx = img_dims[0] / alto_w
             sy = img_dims[1] / alto_h
-            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy)
+            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy, img_ext)
         # Tier 2: User-set DPI
         elif dpi and alto_w > 0 and alto_h > 0:
             dpi_val = float(dpi)
@@ -312,16 +315,14 @@ def _build_page_scale_map(
             else:
                 a_dpi = float(alto_dpi) if alto_dpi else dpi_val
                 sx = sy = dpi_val / a_dpi
-            scale_map[idx] = (sx, sy, round(alto_w * sx), round(alto_h * sy), dx, dy)
+            scale_map[idx] = (sx, sy, round(alto_w * sx), round(alto_h * sy), dx, dy, img_ext)
         # Tier 3: Fallback
         else:
             scale_map[idx] = (
-                1.0,
-                1.0,
+                1.0, 1.0,
                 int(alto_w) if alto_w else None,
                 int(alto_h) if alto_h else None,
-                dx,
-                dy,
+                dx, dy, img_ext
             )
     return scale_map
 
@@ -651,13 +652,15 @@ def write_teitok_merged(
                 )
             out.write("    </revisionDesc>\n  </teiHeader>\n")
 
+            # 1. Inside the <facsimile> generator block:
             if alto_pages:
                 out.write("  <facsimile>\n")
                 for pg in alto_pages:
                     idx = pg["idx"]
                     surf_id = f"{doc_id_safe}.surface{idx}"
-                    facs_img = f"{doc_id_safe}-{idx}.png"
-                    sx, sy, img_w, img_h, dx, dy = scale_map.get(idx, (1.0, 1.0, None, None, 0, 0))
+                    # FIXED: Added ".png" to fallback tuple
+                    sx, sy, img_w, img_h, dx, dy, img_ext = scale_map.get(idx, (1.0, 1.0, None, None, 0, 0, ".png"))
+                    facs_img = f"{doc_id_safe}-{idx}{img_ext}"
                     lrx_attr = f' lrx="{img_w}"' if img_w is not None else ""
                     lry_attr = f' lry="{img_h}"' if img_h is not None else ""
                     out.write(f'    <surface id="{surf_id}"{lrx_attr}{lry_attr}>\n')
@@ -683,15 +686,20 @@ def write_teitok_merged(
                 else:
                     new_page_num = current_page + 1 if sent_page_trigger else current_page
 
+                # 2. Inside the "if sent_page_trigger:" block:
                 if sent_page_trigger:
                     if current_block is not None:
                         out.write("      </div>\n")
                         current_block = None
                     current_page = new_page_num
-                    sx, sy, _, _, dx, dy = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0))
+
+                    # FIXED: Added ".png" to fallback tuple
+                    sx, sy, _, _, dx, dy, img_ext = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0, ".png"))
+
                     pb_id = f"{doc_id_safe}.pb{current_page}"
-                    facs_img = f"{doc_id_safe}-{current_page}.png"
+                    facs_img = f"{doc_id_safe}-{current_page}{img_ext}"
                     out.write(f'      <pb n="{current_page}" id="{pb_id}" facs="{facs_img}"/>\n')
+
                     for g in alto_graphics:
                         if g["page_idx"] == current_page:
                             gid = (
@@ -704,8 +712,9 @@ def write_teitok_merged(
                                 f'      <figure type="{escape(g["type"])}" '
                                 f'id="{gid}" bbox="{scaled_gbbox}"/>\n'
                             )
-                else:
-                    sx, sy, _, _, dx, dy = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0))
+                            pass
+                    else:
+                        sx, sy, _, _, dx, dy, _ = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0, ".png"))
 
                 sent_block = (
                     first_bbox.get("block_id") if first_bbox else None

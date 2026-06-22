@@ -1,76 +1,40 @@
 #!/usr/bin/env python3
 import argparse
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
-def adjust_bbox_string(bbox_str, dx, dy, sx=1.0, sy=1.0):
-    """Parses a TEITOK hOCR-style bbox string 'x1 y1 x2 y2' and recalculates position."""
-    try:
-        parts = [float(c) for c in bbox_str.strip().split()]
-        if len(parts) != 4:
-            return bbox_str
-
-        x1, y1, x2, y2 = parts
-
-        # Apply displacement translation offsets and scaling factor transformations
-        x1_new = round((x1 + dx) * sx)
-        y1_new = round((y1 + dy) * sy)
-        x2_new = round((x2 + dx) * sx)
-        y2_new = round((y2 + dy) * sy)
-
-        return f"{x1_new} {y1_new} {x2_new} {y2_new}"
-    except (ValueError, TypeError):
-        return bbox_str
+from api_util.bbox_scale import (
+    detect_source_size,
+    dpi_scale,
+    fix_name_close_tags,
+    rewrite_bboxes,
+    scale_bbox_coords,
+    set_surface_extent,
+)
 
 
-def process_teitok_file(file_path, dx, dy, sx, sy):
-    """Parses an existing TEITOK XML file and rewrites updated bbox fields."""
+def process_teitok_file(file_path, args, sx, sy):
+    """Parses an existing TEITOK XML file and rewrites updated bbox fields using regex primitives."""
     print(f"Processing: {file_path}")
 
-    # Read raw text to handle unique non-standard markup like xmlnsoff cleanly
-    with open(file_path, "r", encoding="utf-8") as f:
-        xml_content = f.read()
+    with open(file_path, 'r', encoding='utf-8') as f:
+        xml_text = f.read()
 
-    # Temporary placeholder modification to preserve custom attributes during standard parsing
-    has_xmlnsoff = "xmlnsoff=" in xml_content
-    if has_xmlnsoff:
-        xml_content = xml_content.replace("xmlnsoff=", "xmlns=")
+    xml_text = fix_name_close_tags(xml_text)
 
-    try:
-        root = ET.fromstring(xml_content)
-    except ET.ParseError as e:
-        print(f"  [Error] Failed parsing XML for {file_path}: {e}", file=sys.stderr)
-        return False
+    # Maintain the offset sign logic per the TODO requirement
+    def scale_fn(bbox_str):
+        return scale_bbox_coords(bbox_str, sx, sy, dx=-args.dx, dy=-args.dy)
 
-    mutated = False
+    xml_text = rewrite_bboxes(xml_text, scale_fn)
 
-    # Traverse all elements containing bbox properties (tok, lb, div, figure)
-    for elem in root.iter():
-        if "bbox" in elem.attrib:
-            old_bbox = elem.attrib["bbox"]
-            new_bbox = adjust_bbox_string(old_bbox, dx, dy, sx, sy)
-            if old_bbox != new_bbox:
-                elem.attrib["bbox"] = new_bbox
-                mutated = True
+    # Process <surface> scaling
+    w, h = detect_source_size(xml_text)
+    if w is not None and h is not None:
+        xml_text = set_surface_extent(xml_text, round(w * sx), round(h * sy))
 
-    if mutated:
-        # Export back into raw string
-        out_bytes = ET.tostring(root, encoding="utf-8")
-        out_str = out_bytes.decode("utf-8")
-
-        # Restore the specific naming format requested by TEITOK system requirements
-        if has_xmlnsoff:
-            out_str = out_str.replace("xmlns=", "xmlnsoff=")
-
-        # Write clean, updated header records back out safely
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(out_str)
-        print("  [Success] Patched bounding box offsets.")
-    else:
-        print("  [Info] No modifications needed.")
-    return True
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(xml_text)
 
 
 def main():
@@ -122,22 +86,17 @@ def main():
 
     args = parser.parse_args()
 
-    if args.dpi:
-        if args.unit == "inch1200":
-            args.sx = args.sy = args.dpi / 1200.0
-        elif args.unit == "mm10":
-            args.sx = args.sy = args.dpi / 254.0
-        elif args.unit == "pixel":
-            a_dpi = args.alto_dpi if args.alto_dpi else args.dpi
-            args.sx = args.sy = args.dpi / a_dpi
+    # Calculate scales via unified primitive (replaces the old if/elif blocks)
+    sx, sy = dpi_scale(args.unit, args.dpi, args.alto_dpi) if args.dpi else (args.sx, args.sy)
 
     input_path = Path(args.input)
 
+    # Dispatch to either single file or directory batch processing
     if input_path.is_file():
-        process_teitok_file(input_path, args.dx, args.dy, args.sx, args.sy)
+        process_teitok_file(input_path, args, sx, sy)
     elif input_path.is_dir():
         for xml_file in input_path.glob("*.xml"):
-            process_teitok_file(xml_file, args.dx, args.dy, args.sx, args.sy)
+            process_teitok_file(xml_file, args, sx, sy)
     else:
         print(f"Error: Specified path target {args.input} does not exist.", file=sys.stderr)
         sys.exit(1)
