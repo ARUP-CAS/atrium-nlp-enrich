@@ -1,4 +1,5 @@
 import base64
+import os
 import subprocess
 from pathlib import Path
 from unittest.mock import patch
@@ -6,16 +7,20 @@ from unittest.mock import patch
 # Base64 encoded minimal 1x1 transparent PNG to act as our data sample
 MINIMAL_PNG_B64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
 
-
 def test_cli_argparse_dpi_support():
     """Ensure that the summarize_nt_udp.py pipeline natively understands dpi and alto-dpi arguments."""
     script_path = Path("api_util") / "summarize_nt_udp.py"
+
+    # Mimic a robust shell environment by injecting PYTHONPATH
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path.cwd())
 
     # We run the command with help explicitly to ensure it parses --dpi without erroring out
     result = subprocess.run(
         ["python", str(script_path), "--help"],
         capture_output=True,
-        text=True
+        text=True,
+        env=env
     )
 
     assert result.returncode == 0, f"Script failed: {result.stderr}"

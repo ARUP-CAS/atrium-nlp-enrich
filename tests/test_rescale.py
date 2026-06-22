@@ -16,13 +16,9 @@ pytest.importorskip("fastapi.testclient")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
+from api_util.bbox_scale import detect_source_size, fix_name_close_tags  # noqa: E402
 from service.api import app  # noqa: E402
-from service.rescale import (  # noqa: E402
-    RescaleError,
-    detect_source_size,
-    fix_name_close_tags,
-    rescale_teitok,
-)
+from service.rescale import RescaleError, rescale_teitok  # noqa: E402
 
 # A minimal single-page TEITOK that deliberately includes the malformed
 # ``<name>...</n>`` entity quirk found in real exports (data_samples/TEITOK).
@@ -68,12 +64,21 @@ def test_detect_source_size_bbox_extent_fallback():
     assert detect_source_size(NO_SURFACE_TEITOK) == (400, 600, "bbox-extent")
 
 
-def test_detect_source_size_raises_without_coords():
-    with pytest.raises(RescaleError):
-        detect_source_size("<TEI><text><body><p>no coordinates here</p></body></text></TEI>")
+def test_detect_source_size_returns_none_without_coords():
+    """Now returns None so the caller orchestrator can raise a localized error."""
+    w, h, kind = detect_source_size("<TEI><text><body><p>no coordinates here</p></body></text></TEI>")
+    assert w is None
+    assert h is None
+    assert kind is None
 
 
 # ── rescale_teitok (pure) ──────────────────────────────────────────────────────
+
+
+def test_rescale_raises_without_coords():
+    """Verify RescaleError is raised internally when dependencies fail to find coords."""
+    with pytest.raises(RescaleError):
+        rescale_teitok("<TEI><text><body><p>no coordinates here</p></body></text></TEI>", 500, 1000)
 
 
 def test_rescale_halves_coordinates_and_surface():

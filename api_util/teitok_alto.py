@@ -10,6 +10,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+from api_util.bbox_scale import dpi_scale, scale_bbox_coords
+
 _CNEC_TO_CONLL = {
     "p": "PER",
     "p_": "PER",
@@ -42,6 +44,60 @@ _CNEC_TO_CONLL = {
 }
 
 _IMAGE_EXTS = (".png", ".PNG", ".jpg", ".JPG", ".jpeg", ".JPEG", ".tiff", ".TIFF", ".tif", ".TIF")
+
+
+# Local wrapper to avoid rewriting complex formatting clusters in the loop
+def _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx=0, dy=0):
+    return scale_bbox_coords(f"{x1} {y1} {x2} {y2}", sx, sy, dx, dy)
+
+
+def _scale_bbox_tuple(bbox_tuple, sx, sy, dx=0, dy=0):
+    x1, y1, x2, y2 = bbox_tuple
+    return scale_bbox_coords(f"{x1} {y1} {x2} {y2}", sx, sy, dx, dy)
+
+
+def _build_page_scale_map(
+        alto_pages, image_dir, doc_id, measurement_unit="pixel", dpi=None, alto_dpi=None
+):
+    scale_map = {}
+    for pg in alto_pages:
+        idx = pg["idx"]
+        dx = pg.get("ps_hpos", 0)
+        dy = pg.get("ps_vpos", 0)
+        try:
+            alto_w = float(pg.get("width") or 0)
+            alto_h = float(pg.get("height") or 0)
+        except (ValueError, TypeError):
+            alto_w = alto_h = 0.0
+
+        img_dims = None
+        img_ext = ".png"  # Default fallback
+
+        img_path = _find_page_image(image_dir, doc_id, idx)
+        if img_path:
+            img_dims = _read_image_dimensions(img_path)
+            img_ext = img_path.suffix  # Dynamically capture extension
+
+        # Tier 1: Companion image present
+        if img_dims and alto_w > 0 and alto_h > 0:
+            sx = img_dims[0] / alto_w
+            sy = img_dims[1] / alto_h
+            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy, img_ext)
+
+        # Tier 2: User-set DPI -> math delegated to bbox_scale
+        elif dpi and alto_w > 0 and alto_h > 0:
+            sx, sy = dpi_scale(measurement_unit, dpi, alto_dpi)
+            scale_map[idx] = (sx, sy, round(alto_w * sx), round(alto_h * sy), dx, dy, img_ext)
+
+        # Tier 3: Fallback
+        else:
+            scale_map[idx] = (
+                1.0, 1.0,
+                int(alto_w) if alto_w else None,
+                int(alto_h) if alto_h else None,
+                dx, dy, img_ext
+            )
+    return scale_map
 
 
 def _attr(value: str) -> str:
@@ -270,66 +326,6 @@ def _parse_alto(alto_path):
     except Exception as exc:
         print(f"  [Warn] Failed to parse ALTO {alto_path}: {exc}", file=sys.stderr)
     return alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta
-
-
-def _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx=0, dy=0):
-    return (
-        f"{round((x1 - dx) * sx)} {round((y1 - dy) * sy)} "
-        f"{round((x2 - dx) * sx)} {round((y2 - dy) * sy)}"
-    )
-
-
-def _build_page_scale_map(
-    alto_pages, image_dir, doc_id, measurement_unit="pixel", dpi=None, alto_dpi=None
-):
-    scale_map = {}
-    for pg in alto_pages:
-        idx = pg["idx"]
-        dx = pg.get("ps_hpos", 0)
-        dy = pg.get("ps_vpos", 0)
-        try:
-            alto_w = float(pg.get("width") or 0)
-            alto_h = float(pg.get("height") or 0)
-        except (ValueError, TypeError):
-            alto_w = alto_h = 0.0
-
-        img_dims = None
-        img_ext = ".png"  # <--- Default fallback defined here
-
-        img_path = _find_page_image(image_dir, doc_id, idx)
-        if img_path:
-            img_dims = _read_image_dimensions(img_path)
-            img_ext = img_path.suffix  # <--- Dynamically capture extension (.png, .jpg, etc.)
-
-        # Tier 1: Companion image present
-        if img_dims and alto_w > 0 and alto_h > 0:
-            sx = img_dims[0] / alto_w
-            sy = img_dims[1] / alto_h
-            scale_map[idx] = (sx, sy, img_dims[0], img_dims[1], dx, dy, img_ext)
-        # Tier 2: User-set DPI
-        elif dpi and alto_w > 0 and alto_h > 0:
-            dpi_val = float(dpi)
-            unit_inch = _unit_per_inch(measurement_unit)
-            if unit_inch:
-                sx = sy = dpi_val / unit_inch
-            else:
-                a_dpi = float(alto_dpi) if alto_dpi else dpi_val
-                sx = sy = dpi_val / a_dpi
-            scale_map[idx] = (sx, sy, round(alto_w * sx), round(alto_h * sy), dx, dy, img_ext)
-        # Tier 3: Fallback
-        else:
-            scale_map[idx] = (
-                1.0, 1.0,
-                int(alto_w) if alto_w else None,
-                int(alto_h) if alto_h else None,
-                dx, dy, img_ext
-            )
-    return scale_map
-
-
-def _scale_bbox_tuple(bbox_tuple, sx, sy, dx=0, dy=0):
-    x1, y1, x2, y2 = bbox_tuple
-    return _scale_bbox_str(x1, y1, x2, y2, sx, sy, dx, dy)
 
 
 def _align_tokens_to_alto(tokens, alto_strings):

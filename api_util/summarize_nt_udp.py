@@ -5,7 +5,13 @@ import re
 import sys
 from pathlib import Path
 
-from teitok_alto import write_teitok_merged
+# Inject project root into sys.path so 'api_util' package absolute imports resolve
+# correctly when the script is invoked directly from the command line.
+_project_root = Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from api_util.teitok_alto import write_teitok_merged  # noqa: E402
 
 # Increase CSV field size limit just in case
 csv.field_size_limit(sys.maxsize)
