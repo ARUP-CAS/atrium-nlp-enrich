@@ -27,8 +27,6 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: '.'
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Install shellcheck
         run: sudo apt-get install -y shellcheck

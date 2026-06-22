@@ -1,6 +1,10 @@
 #!/bin/bash
 # api_util/api_common.sh
 
+# 1. Load Configuration Paths
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+PROJECT_ROOT="$SCRIPT_DIR/.."
+
 CONFIG_PATH="${ATRIUM_CONFIG:-$PROJECT_ROOT/config_api.txt}"
 
 if [ -f "$CONFIG_PATH" ]; then
@@ -8,17 +12,6 @@ if [ -f "$CONFIG_PATH" ]; then
     source "$CONFIG_PATH"
 else
     echo "Error: Config file '$CONFIG_PATH' not found."
-    exit 1
-fi
-
-# 1. Load Configuration
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-PROJECT_ROOT="$SCRIPT_DIR/.."
-
-if [ -f "$PROJECT_ROOT/config_api.txt" ]; then
-    source "$PROJECT_ROOT/config_api.txt"
-else
-    echo "Error: config_api.txt not found in $PROJECT_ROOT"
     exit 1
 fi
 
@@ -77,7 +70,7 @@ api_call_with_retry() {
 
     while [ "$attempt" -le "$MAX_RETRIES" ]; do
         local http_code_file="${response_file}.code"
-        # Pass remaining arguments ("$@") to curl (flags like -F)
+        # Pass remaining arguments (\"$@\") to curl (flags like -F)
         curl -s -S -w "%{http_code}" "$@" "$url" -o "$response_file" > "$http_code_file"
         local http_code
         http_code=$(cat "$http_code_file")
