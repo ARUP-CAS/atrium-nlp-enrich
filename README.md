@@ -1,10 +1,10 @@
 <p align="center">
-  <a href="[https://www.python.org/downloads/](https://www.python.org/downloads/)"><img src="[https://img.shields.io/badge/python-3.8+-blue.svg](https://img.shields.io/badge/python-3.8+-blue.svg)" title="Python Version"></a>
-  <a href="[https://lindat.mff.cuni.cz/services/udpipe/api-reference.php](https://lindat.mff.cuni.cz/services/udpipe/api-reference.php)"><img src="[https://img.shields.io/badge/API-UDPipe%202-0055A4.svg](https://img.shields.io/badge/API-UDPipe%202-0055A4.svg)" title="UDPipe 2 API (Lindat)"></a>
-  <a href="[https://lindat.mff.cuni.cz/services/nametag/api-reference.php](https://lindat.mff.cuni.cz/services/nametag/api-reference.php)"><img src="[https://img.shields.io/badge/API-NameTag%203-0055A4.svg](https://img.shields.io/badge/API-NameTag%203-0055A4.svg)" title="NameTag 3 API (Lindat)"></a>
-  <a href="[https://github.com/ufal/ker](https://github.com/ufal/ker)"><img src="[https://img.shields.io/badge/dep-KER-lightgrey.svg](https://img.shields.io/badge/dep-KER-lightgrey.svg)" title="KER Keyword Extraction"></a>
-  <a href="[https://opensource.org/license/mit/](https://opensource.org/license/mit/)"><img src="[https://img.shields.io/github/license/ufal/atrium-nlp-enrich](https://img.shields.io/github/license/ufal/atrium-nlp-enrich)" title="MIT License"></a>
-  <a href="[https://atrium-research.eu/](https://atrium-research.eu/)"><img src="[https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg](https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg)" title="ATRIUM Project"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" title="Python Version"></a>
+  <a href="https://lindat.mff.cuni.cz/services/udpipe/api-reference.php"><img src="https://img.shields.io/badge/API-UDPipe%202-0055A4.svg" title="UDPipe 2 API (Lindat)"></a>
+  <a href="https://lindat.mff.cuni.cz/services/nametag/api-reference.php"><img src="https://img.shields.io/badge/API-NameTag%203-0055A4.svg" title="NameTag 3 API (Lindat)"></a>
+  <a href="https://github.com/ufal/ker"><img src="https://img.shields.io/badge/dep-KER-lightgrey.svg" title="KER Keyword Extraction"></a>
+  <a href="https://opensource.org/license/mit/"><img src="https://img.shields.io/github/license/ufal/atrium-nlp-enrich" title="MIT License"></a>
+  <a href="https://atrium-research.eu/"><img src="https://img.shields.io/badge/funded%20by-ATRIUM-8A2BE2.svg" title="ATRIUM Project"></a>
 </p>
 
 ---
@@ -39,11 +39,7 @@ lemmas & part-of-sentence tags, and keywords (KER) per page/document.
 - [EXTRA: Extract Keywords (KER / YAKE / KeyBERT)](#extra-extract-keywords-ker--yake--keybert)
 - [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv)
 - [EXTRA: LLM Semantic Enrichment (Vocabulary Mapping)](#extra-llm-semantic-enrichment-vocabulary-mapping)
-  - [Configuration ⚙️](#-configuration-llm_configtxt-)
-  - [Workflow](#-workflow)
-  - [Model Registry](#-model-registry)
-  - [Inputs and Outputs](#-inputs-and-outputs)
-  - [Paradata Integration](#-paradata-integration)
+- [EXTRA: REST API Service](#extra-rest-api-service)
 - [Paradata Logs](#paradata-logs)
   - [`<OUTPUT_DIR>/paradata/` — structured run logs 📂](#output_dirparadata--structured-run-logs-)
   - [`<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄](#output_dirprocessinglog--human-readable-runtime-log-)
@@ -129,37 +125,45 @@ over keeping CoNLL-U, TSV, and image files in separate silos:
 > is still produced but without bounding box attributes. If your documents are not in
 > ALTO format, see [EXTRA: Converting Other Input Formats with flexiconv](#extra-converting-other-input-formats-with-flexiconv).
 
+
 ---
 
 ## ⚙️ Setup
 
 Before you begin, set up your environment.
 
-1.  Create and activate a new virtual environment in the project directory 🖥.
-2.  Install the required Python packages:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    For keyword extraction, install the backend(s) you intend to use:
-    ```bash
-    # YAKE — unsupervised statistical extraction, CPU-only
-    pip install yake
+1. Create and activate a new virtual environment in the project directory 🖥.
+2. Install the required Python packages:
+```bash
+pip install -r requirements.txt
+```
 
-    # KeyBERT — embedding-based extraction, GPU-accelerated when available
-    pip install keybert sentence-transformers
-    pip install torch          # optional — enables CUDA GPU acceleration
-    ```
-    The original **legacy KER** backend requires no additional packages.
+For keyword extraction, install the backend(s) you intend to use:
+```bash
+# YAKE — unsupervised statistical extraction, CPU-only
+pip install yake
 
-    For the LLM Semantic Enrichment pipeline, install the inference backend you intend to use:
-    ```bash
-    # Transformers backend — single GPU, models ≤ 31 B (BnB 4-bit / AWQ / GGUF)
-    pip install -r requirements_llm.txt
+# KeyBERT — embedding-based extraction, GPU-accelerated when available
+pip install keybert sentence-transformers
+pip install torch          # optional — enables CUDA GPU acceleration
+```
 
-    # vLLM backend — multi-GPU, large models (≥ 70 B), Automatic Prefix Caching
-    # Replaces lmformatenforcer; uses xgrammar for native guided JSON decoding
-    pip install vllm
-    ```
+The original **legacy KER** backend requires no additional packages.
+For the LLM Semantic Enrichment pipeline, install the inference backend you intend to use:
+```bash
+# Transformers backend — single GPU, models ≤ 31 B (BnB 4-bit / AWQ / GGUF)
+pip install -r requirements_llm.txt
+
+# vLLM backend — multi-GPU, large models (≥ 70 B), Automatic Prefix Caching
+# Replaces lmformatenforcer; uses xgrammar for native guided JSON decoding
+pip install vllm
+```
+
+*(Optional) To run the REST API service, install additional requirements:*
+```bash
+pip install -r service/requirements.txt
+```
+
 3. Review and update the [config_api.txt](config_api.txt) 📎 file with your specific paths and API configurations.
 You are now ready to start the workflow.
 
@@ -263,7 +267,7 @@ the Python helper scripts ([call_udpipe.py](api_util/call_udpipe.py),
 is a standalone utility module that exposes a `log()` helper and an `api_call_with_retry()`
 shell function for any custom scripts that choose to source it; the four main pipeline scripts
 (`api_1_manifest.sh` … `api_4_stats.sh`) do not source it. Additionally, [api_util/](api_util/) 📁
-contains helper Python scripts for chunking and analysis.
+contains helper Python scripts for chunking and analysis
 
 ##### 1. Generate Manifest
 
@@ -386,7 +390,6 @@ The behavior of this step is controlled by boolean flags in your [config_api.txt
 | `SAVE_TEITOK`     | Write TEITOK-style TEI XML with bounding boxes and NER spans. When `INPUT_ALTO_DIR` is not set a warning is emitted and TEITOK XML is still produced without bboxes. If `INPUT_ALTO_DIR` is set but the path does not exist, the step exits with an error. | `true`    |
 | `INPUT_PAGES_DIR` | Directory of per-page images (`<doc_id>-N.png`). When set, bbox coordinates are scaled to match the actual PNG resolution. Leave empty to write raw ALTO pixel values.                                                                                     | *(empty)* |
 
-
 #### ALTO-to-TEITOK XML Generation and Coordinate Alignment
 
 When `SAVE_TEITOK=true`, [teitok_alto.py](api_util/teitok_alto.py) 📎 reads and processes the internal spatial
@@ -424,30 +427,67 @@ PrintSpace logic but maintains a standard `1.0` scale factor.
 > **Future direction:** Relative / resolution-independent coordinates are the preferred long-term direction
 > (pending TEITOK-team confirmation).
 
-**Pre-demonstration coordinates fix of existing teitok xml files:**
+#### Fixing Bounding Box Alignments (Practical Guide)
 
-The *post factum* fixer [fix_teitok_bboxes.py](fix_teitok_bboxes.py) 📎 is a standalone, retroactive maintenance
-utility designed to repair or fine-tune layout alignments in your TEITOK XML corpus without forcing a full re-run
-of the entire tokenization and NLP enrichment pipelines.
+If you are a new user approaching this pipeline—perhaps a researcher who just digitized a batch of archival documents—your 
+primary goal might be making sure the semantic annotations actually line up with your page images in a web viewer.
 
-* **Instant Coordinate Correction:** It targets structural elements (`<tok>`, `<lb>`, and `<div>`) in already
-generated TEITOK XML files, parsing their whitespace-separated hOCR-style coordinates. It then applies programmatic
-shifting ($\Delta x, \Delta y$) and optional scale transformations ($\text{scale}_x, \text{scale}_y$).
-* **Resolving Scan-Margin Shifts:** It directly eliminates the constant displacement error highlighted in the
-developer discussions—where elements appear shifted too far left or too high up on the visual canvas due to
-unprinted canvas margins or strict `PrintSpace` boundaries (`LeftMargin`/`TopMargin`).
-* **TEITOK-Syntax Safe:** Standard XML parsers routinely choke or strip out custom structural hacks like TEITOK's
-`xmlnsoff="..."` attribute. This script uses a safe raw-string pre-swap block to ensure that TEITOK-specific formatting
-remains uncorrupted and compliant during parsing and rewriting.
+Let's say your original document was processed at a massive archival resolution, but the image you are serving to your 
+web frontend is exactly 1200 pixels wide and 1800 pixels high. Currently, your TEITOK XML bounding boxes are completely 
+misaligned.
 
- **When to Deploy It**
+Here is exactly how you would use the integrated tools to solve this problem.
 
-1. **Pre-Demonstration Quick Fixes:** If you change your visual image layers (e.g., swapping out full-page scans for
-tightly cropped variants) right before a live demonstration or data hand-off, you can instantly realign thousands
-of documents using a single shell command instead of re-processing billions of tokens through UDPipe and NameTag.
-2. **Batch Calibration Testing:** It allows you to systematically trial different displacement values on a couple of
-sample documents in the TEITOK viewer to pinpoint the exact visual delta before committing hardcoded changes to
-your upstream generation scripts.
+**Method 1: The Quick API Fix (Best for single files or web integrations)**
+
+Since the pipeline now includes a dedicated FastAPI service, you don't even need to write a script. You can just send 
+your misaligned XML to the `/rescale` endpoint.
+
+Open your terminal and run a simple curl command, explicitly telling the API the exact dimensions of your target image 
+and requesting the output as an XML file instead of the default JSON metadata:
+
+```bash
+curl -X POST "http://localhost:8000/rescale" \
+     -F "file=@CTX000000001.teitok.xml" \
+     -F "width=1200" \
+     -F "height=1800" \
+     -F "format=xml" \
+     -o CTX000000001.rescaled.teitok.xml
+```
+
+*What happens behind the scenes:* The API automatically detects the original coordinate space from the `<surface>` tag 
+in your XML. It calculates the exact scaling factors needed to stretch or shrink the bounding boxes (`bbox`) to fit the 
+new 1200x1800 dimensions. As a bonus, it also silently repairs any malformed named-entity tags (like `<name>...</n>`) 
+in the document.
+
+**Method 2: The Command-Line Batch Process (Best for whole directories)**
+
+If you have hundreds of XML files in a folder and you know exactly what scale ratio or DPI conversion you need, using 
+the REST API file-by-file would be tedious. Instead, use the dedicated CLI tool, `fix_teitok_bboxes.py`.
+
+If you know your web images are exactly 50% the size of your original scans (a scale factor of 0.5), you can process 
+the entire directory at once:
+
+```bash
+python3 fix_teitok_bboxes.py -i /path/to/my/teitok_folder/ --sx 0.5 --sy 0.5
+```
+
+Alternatively, if your original ALTO OCR data was in millimeters (`mm10`) and you need to target a standard 72 DPI 
+screen resolution, the script can handle that math directly:
+
+```bash
+python3 fix_teitok_bboxes.py -i my_document.teitok.xml --unit mm10 --dpi 72
+```
+
+If the original scans included a scanner bed margin (e.g., 50 pixels on the left and 20 on the top) that was cropped 
+out of the final web image, you can strip that out by shifting everything left and up:
+
+```bash
+python3 fix_teitok_bboxes.py -i my_document.teitok.xml --dx -50 --dy -20
+```
+
+Both methods directly address the historical pain point of facsimile alignment, allowing you to flawlessly overlay
+the NLP enrichments onto the visual documents without needing to re-run the entire pipeline.
 
 > [!NOTE]
 > When a token's matched ALTO strings span more than one page (a rare OCR edge case near page
@@ -455,6 +495,7 @@ your upstream generation scripts.
 > indices. The first matched page is used for the bbox assignment in that case.
 
 The structural and spatial hierarchy from the ALTO file is strictly preserved in the generated TEITOK XML:
+
 * **Tokens:** Matched coordinates are written to each `<tok>` element as `@bbox="x1 y1 x2 y2"` (absolute
 pixel coordinates in TEITOK's hOCR-derived format). Each token also carries `@type="w"` (word) or
 `@type="pc"` (punctuation character) derived from UDPipe's UPOS tag.
@@ -479,43 +520,39 @@ first name is written as `<name type="PER" cnec="pf">`.
 > break on minor character variations. Alignment statistics (matched vs. total tokens) are printed to
 > the console per document.
 
-
-<details>
-<summary> Commands to check progress of the script </summary>
-  Run the following command to see how many documents have been processed into CSV files:
-
 ```bash
 ls OUTPUT_DIR/UDP_NE | wc -l
 ```
+
 which returns the total number of created files, both `.csv` and `.conllu` corresponding
 to specific documents.
 
 ```bash
 ls OUTPUT_DIR/UDP_NE/*/*.csv | wc -l
 ```
+
 returns number of documents processed into tables
 
 ```bash
 ls OUTPUT_DIR/TEITOK/*.xml | wc -l
 ```
+
 returns number of recorded `.teitok.xml` documents.
 
-</details>
+Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎.
 
-Example summary table: [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎.
-
-Example output directory [UDP_NE](data_samples%2FUDP_NE) 📁 contains per-document CSV
+Example output directory [UDP_NE](data_samples/UDP_NE) 📁 contains per-document CSV
 tables with NE tags and UDPipe feature columns, plus CoNLL-U files with NE annotations in
 per-document manner.
 
-Example output directory [TEITOK](data_samples%2FTEITOK) 📁 contains per-document TEITOK
+Example output directory [TEITOK](data_samples/TEITOK) 📁 contains per-document TEITOK
 XML files combining UD linguistic annotations and NER spans with bounding boxes aligned
 from the source ALTO XML.
-
 
 #### Output Structure
 
 After completing the pipeline, your working and output directories will be organized as follows:
+
 ```
 TEMP/
 ├── CHUNKS/
@@ -523,7 +560,9 @@ TEMP/
 ├── nametag_response_docname1.conllu.json
 └── ...
 ```
+
 AND
+
 ```
 <OUTPUT_DIR>
 ├── UDP_NE/
@@ -560,10 +599,9 @@ AND
 ├── processing.log
 ├── summary_ne_counts.csv
 └── manifest.tsv
-
 ```
 
-The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts_SHORT.csv) 📎 contains aggregated Named Entity
+The combined output [summary_ne_counts.csv](data_samples/summary_ne_counts.csv) 📎 contains aggregated Named Entity
 statistics across all processed pages.
 
 > [!NOTE]
@@ -571,7 +609,7 @@ statistics across all processed pages.
 > The final CoNLL-U files with NER features are in `<OUTPUT_DIR>/UDP_NE/`.
 
 If you do not plan to rerun any part of the pipeline, you can also delete
-the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest_SHORT.tsv) 📎.
+the entire `TEMP/` directory including [manifest.tsv](data_samples/manifest.tsv) 📎.
 
 ---
 
@@ -588,11 +626,13 @@ Extract keywords 🔎 from your documents by running `keywords.py` on a director
 ### Configuration Priority
 
 The keyword extraction script uses a three-tier configuration hierarchy (from highest to lowest priority):
+
 1. **Command-line flags** (e.g., `-m yake`, `-w 3`) always override everything else.
 2. **`kw_config.txt`** (the `[DEFAULTS]` section) is read automatically if placed next to the script.
 3. **Hardcoded fallbacks** are used if no config file or flags are provided.
 
 This means if you configure your settings in `kw_config.txt`, you can simply run:
+
 ```bash
 python3 keywords.py
 ```
@@ -604,11 +644,6 @@ python3 keywords.py
 | `legacy`           | Original KER — NOUN/PROPN/ADJ lemma frequency | none (stdlib only)                          | raw occurrence count                  | reproducing original ATRIUM results       |
 | `yake` *(default)* | YAKE — unsupervised statistical, CPU-only     | `pip install yake`                          | normalised inverse YAKE score, [0, 1] | fast CPU runs, no model download          |
 | `keybert`          | KeyBERT — embedding-based, GPU-accelerated    | `pip install keybert sentence-transformers` | cosine similarity, [0, 1]             | highest semantic quality, GPU recommended |
-
-
-<details>
-
-<summary> Command Line usage (with examples) 👀</summary>
 
 You can override any `kw_config.txt` setting via the command line:
 
@@ -636,23 +671,26 @@ All available flags:
 Examples:
 
 **YAKE** — Czech, up to 3-word phrases, 20 keywords per document (default)
+
 ```bash
 python3 keywords.py -i OUTPUT_DIR/UDP -m yake -l cs -w 3 -n 20 \
         -o keywords_summary.csv -d KW_PER_DOC
 ```
- **KeyBERT** — multilingual model, GPU-accelerated
+
+**KeyBERT** — multilingual model, GPU-accelerated
+
 ```bash
 python3 keywords.py -i OUTPUT_DIR/UDP -m keybert -w 3 -n 20 \
         --keybert-model paraphrase-multilingual-MiniLM-L12-v2 \
         -o keywords_summary.csv -d KW_PER_DOC
 ```
+
 **Legacy KER** — (English/Czech) original ATRIUM lemma-frequency approach, no extra dependencies
+
 ```bash
 python3 keywords.py -i OUTPUT_DIR/UDP -m legacy -n 20 \
         -o keywords_summary.csv -d KW_PER_DOC
 ```
-
-</details>
 
 > [!WARNING]
 > For **KeyBERT with a GPU**, the script automatically forces `--workers 1` to
@@ -679,10 +717,7 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 ### Score interpretation by backend
 
 **`legacy`** — raw lemma count; higher = more frequent in the document. Examples in directory: [KW_PER_DOC_L](data_samples/KW_PER_DOC_L) 📂 and summary file
-[kw_summary_l.csv](data_samples/kw_summary_l.csv) 📎.
-
-<details>
-<summary>KER (Legacy) scores interpretation 👀</summary>
+[kw_summary_l.csv](data_samples/keywords_summary_l.csv) 📎.
 
 | Score range | Interpretation                                           |
 |-------------|----------------------------------------------------------|
@@ -690,13 +725,8 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 5–20        | Topic-representative vocabulary                          |
 | > 20        | Dominant terms, likely named entities or domain headings |
 
-</details>
-
 **`yake`** — normalised inverse YAKE score, [0, 1] per document. Examples in directory: [KW_PER_DOC_Y](data_samples/KW_PER_DOC_Y) 📂 and summary file
-[kw_summary_y.csv](data_samples/kw_summary_y.csv) 📎.
-
-<details>
-<summary>YAKE) scores interpretation 👀</summary>
+[kw_summary_y.csv](data_samples/keywords_summary_y.csv) 📎.
 
 | Score range | Semantic category | Interpretation                               |
 |-------------|-------------------|----------------------------------------------|
@@ -705,21 +735,14 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 | 0.6–0.9     | Topic layer       | Specific nouns and verbs central to the text |
 | 0.9–1.0     | Entity layer      | Rare terms, neologisms, named entities       |
 
-</details>
-
 **`keybert`** — cosine similarity to document centroid, [0, 1]. Examples in directory: [KW_PER_DOC_KB](data_samples/KW_PER_DOC_KB) 📂 and summary file
-[kw_summary_kb.csv](data_samples/kw_summary_kb.csv) 📎.
-
-<details>
-<summary>KeyBERT scores interpretation 👀</summary>
+[kw_summary_kb.csv](data_samples/keywords_summary_kb.csv) 📎.
 
 | Score range | Interpretation                   |
 |-------------|----------------------------------|
 | < 0.3       | Weakly related phrases           |
 | 0.3–0.6     | Contextually relevant terms      |
 | > 0.6       | Highly representative keyphrases |
-
-</details>
 
 ---
 
@@ -733,7 +756,7 @@ as the original pipeline (`document_id`, `kw-1`, `score-1`, `kw-2`, `score-2`, �
 
 ### What is flexiconv?
 
-[**flexiconv**](https://github.com/ufal/flexiconv) [^9] is a flexible format-conversion tool
+**[flexiconv](https://github.com/ufal/flexiconv)** [^9](https://github.com/ufal/flexiconv) is a flexible format-conversion tool
 developed at UFAL that translates a variety of OCR and document layout formats into **TEITOK
 XML** — the unified output format used by this project. It acts as a universal adapter: once
 your documents are in TEITOK XML, they can be ingested directly into the TEITOK corpus
@@ -753,39 +776,40 @@ described above.
 
 Use flexiconv **before** running this pipeline when:
 
-- Your collection was OCR-processed with a tool that outputs **PAGE XML** (e.g. Transkribus, OCRopus, kraken).
-- Your layout data is in **hOCR** format (used by Tesseract and some ABBYY exports).
-- You have structured text with positional metadata but no standard bounding-box format.
-- You received digitised material from a partner institution using a format not natively supported
-  by `teitok_alto.py`.
+* Your collection was OCR-processed with a tool that outputs **PAGE XML** (e.g. Transkribus, OCRopus, kraken).
+* Your layout data is in **hOCR** format (used by Tesseract and some ABBYY exports).
+* You have structured text with positional metadata but no standard bounding-box format.
+* You received digitised material from a partner institution using a format not natively supported
+by `teitok_alto.py`.
 
 ### How to use flexiconv
 
 1. **Clone and install** the tool:
 
-    ```bash
-    git clone https://github.com/ufal/flexiconv.git
-    cd flexiconv
-    pip install -r requirements.txt
-    ```
+```bash
+git clone [https://github.com/ufal/flexiconv.git](https://github.com/ufal/flexiconv.git)
+cd flexiconv
+pip install -r requirements.txt
+```
+
 
 2. **Run the conversion** on your input files:
 
-    ```bash
-    python flexiconv.py \
-        --input-dir  /path/to/your/source/documents \
-        --input-fmt  page-xml \          # or: hocr, plain, ...
-        --output-dir /path/to/teitok_out \
-        --output-fmt teitok
-    ```
+```bash
+python flexiconv.py \
+    --input-dir  /path/to/your/source/documents \
+    --input-fmt  page-xml \          # or: hocr, plain, ...
+    --output-dir /path/to/teitok_out \
+    --output-fmt teitok
+```
 
-    Refer to the [flexiconv documentation](https://github.com/ufal/flexiconv) for the full list
-    of supported `--input-fmt` values and format-specific options.
+Refer to the [flexiconv documentation](https://github.com/ufal/flexiconv) for the full list
+of supported `--input-fmt` values and format-specific options.
 
 3. **Continue with this pipeline** using the converted TEITOK XML files. At this point your
-   documents already have layout structure and bounding boxes embedded — the NLP enrichment
-   steps (UDPipe morphology, NameTag NER, keyword extraction) can be applied on top via the
-   scripts in this repository.
+documents already have layout structure and bounding boxes embedded — the NLP enrichment
+steps (UDPipe morphology, NameTag NER, keyword extraction) can be applied on top via the
+scripts in this repository.
 
 > [!TIP]
 > If your format is not yet supported by flexiconv, please open an issue on the
@@ -1023,12 +1047,26 @@ Just like the main shell-script pipelines, LLM enrichment natively hooks into
 * Full snapshot of [llm_config.txt](llm_config.txt) 📎 and quality-filter settings.
 * Total processed lines (`json` success events).
 * Per-line tracking of filter skips (`skipped_filter`), inference faults
-  (`skipped_error`), and already-completed files (`already_exists`).
+(`skipped_error`), and already-completed files (`already_exists`).
 * **Abort events** — when a document is abandoned after 10 consecutive inference errors,
-  the paradata entry records the abort reason alongside the count of lines processed
-  before the failure. A sidecar `*.abort.json` file is also written next to the
-  (partial) output JSON for easy programmatic detection.
+the paradata entry records the abort reason alongside the count of lines processed
+before the failure. A sidecar `*.abort.json` file is also written next to the
+(partial) output JSON for easy programmatic detection.
 The resulting logs are dropped into the specified `PARADATA_DIR` alongside the other pipeline execution records.
+
+---
+
+## EXTRA: REST API Service
+
+The pipeline now includes a fully-featured **FastAPI REST service** that exposes the core NLP enrichment and rescaling functionalities over HTTP.
+
+* **Single-file enrichment:** Upload CSV, XLSX, or plain text to the `/enrich` endpoint and receive a combined JSON envelope (or ZIP workspace) with TEITOK XML, keywords, paradata, and NER summaries.
+* **Coordinate Rescaling:** Use the `/rescale` endpoint to align XML spatial coordinates to specific target image resolutions directly over the network.
+* **Job Management:** Background processing for larger documents with a asynchronous `/jobs` queue.
+
+For complete setup instructions, payload examples, and endpoint documentation, refer to the [Service README](service/README.md).
+
+---
 
 ## Paradata Logs
 
@@ -1083,7 +1121,7 @@ The declared output types per stage are:
 
 ### `<OUTPUT_DIR>/processing.log` — human-readable runtime log 📄
 
-[api_common.sh](api_util%2Fapi_common.sh) 📎 exposes a `log()` helper that timestamps and
+[api_common.sh](api_util/api_common.sh) 📎 exposes a `log()` helper that timestamps and
 `tee`-appends warnings and errors to this flat file. The four main pipeline scripts
 (`api_1_manifest.sh` … `api_4_stats.sh`) write to `processing.log` indirectly through the
 Python helpers, which print timestamped messages to stderr; any script that sources
@@ -1132,7 +1170,6 @@ the paradata logger.
 > records worth keeping long-term.
 
 ---
-
 
 ### One-command pipeline run (`run_pipeline.py`)
 
