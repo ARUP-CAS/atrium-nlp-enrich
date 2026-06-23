@@ -1,3 +1,6 @@
 pytest>=8.0
 pytest-cov
 requests
+# Optional heavy deps only if the suite truly needs them:
+# torch
+# transformers

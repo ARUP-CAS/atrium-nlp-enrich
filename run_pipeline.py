@@ -414,12 +414,13 @@ def _space_stages(last_start: Optional[float]) -> float:
     return time.time()
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Run the ATRIUM nlp-enrich pipeline end-to-end and merge "
-        "per-stage paradata into a single run record.",
+                    "per-stage paradata into a single run record.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+
     parser.add_argument("--config", type=Path, default=_REPO_ROOT / _CONFIG_NAME)
     parser.add_argument("--stages", nargs="+", choices=_CORE_ORDER, default=list(_CORE_ORDER))
     parser.add_argument("--kw", action="store_true")
@@ -645,4 +646,4 @@ def _finalize_merge(
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

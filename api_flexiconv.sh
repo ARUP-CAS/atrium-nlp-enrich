@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Convert non-tabular input formats directly to TEITOK XML using flexiconv.
 
+# shellcheck disable=SC1091  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "config_api.txt"
+# shellcheck disable=SC1091  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "api_util/api_common.sh"
 
 mkdir -p "$TEITOK_OUTPUT_DIR"
