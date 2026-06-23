@@ -1386,6 +1386,7 @@ def load_vllm_engine(
     _patch_vllm_rope_scaling_compat()
 
     try:
+        engine_kwargs.pop("tokenizer_pool_size", None)
         llm_engine = LLM(**engine_kwargs)
     except ValueError as _exc:
         _msg = str(_exc)

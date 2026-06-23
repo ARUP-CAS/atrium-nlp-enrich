@@ -5,22 +5,25 @@ Reads llm_config.txt, initialises the model and vocabulary, then iterates
 over every CSV file in INPUT_DIR and writes per-document JSON enrichment
 files to OUTPUT_DIR.
 """
+__import__('pysqlite3')
+import sys  # noqa: E402
 
-import datetime
-import enum
-import json
-import os
-import sys
-from pathlib import Path
-from typing import Any, Dict, List, Tuple
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import datetime  # noqa: E402
+import enum  # noqa: E402
+import json  # noqa: E402
+import os  # noqa: E402
+import sys  # noqa: E402
+from pathlib import Path  # noqa: E402
+from typing import Any, Dict, List, Tuple  # noqa: E402
 
-import torch
-from pydantic import BaseModel, Field
-from tqdm import tqdm
+import torch  # noqa: E402
+from pydantic import BaseModel, Field  # noqa: E402
+from tqdm import tqdm  # noqa: E402
 
-import llm_utils  # noqa: F401  (side-effect: env-var guard + compat patches)
-from atrium_paradata import ParadataLogger
-from llm_utils import (
+import llm_utils  # noqa: E402  (side-effect: env-var guard + compat patches)
+from atrium_paradata import ParadataLogger  # noqa: E402
+from llm_utils import (  # noqa: E402
     CONTEXT_RESERVED,
     _check_backend_deps,
     count_tokens,
@@ -33,7 +36,7 @@ from llm_utils import (
     process_document,
     process_document_vllm,
 )
-from vocab_manager import VocabularyManager
+from vocab_manager import VocabularyManager  # noqa: E402
 
 _EXAMPLES_FOOTER = (
     "\nEXAMPLES:\n\n"
