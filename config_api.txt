@@ -20,7 +20,7 @@ UDPIPE_URL="https://lindat.mff.cuni.cz/services/udpipe/api/process"
 NAMETAG_URL="https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
 MODEL_UDPIPE="czech-pdt-ud-2.15-241121"
-MODEL_NAMETAG="nametag3-czech-cnec2.0-240830"
+MODEL_NAMETAG="nametag3-multilingual-onto-260521"
 
 TIMEOUT=60
 MAX_RETRIES=5

@@ -1,36 +1,36 @@
 Word	Tag	NE
-Výzkumná	O
-zpráva	O
-č	O
-.	O
-1	B-n_	n_
-/	O
-2024	B-ty	ty
-—	O
-Hradiště	B-gu	gu
-u	I-gu	gu
-Horní	I-gu|B-gu	gu|gu
-Mezí	I-gu	gu
-Terénní	O
-výzkum	O
-provedl	O
-Jan	B-P|B-pf	P|pf
-Novotný	I-P|B-ps	P|ps
-v	O
-červnu	B-T|B-tm	T|tm
-2024	I-T|B-ty	T|ty
-.	O
-Nalezená	O
-keramika	O
-pochází	O
-z	O
-raného	O
-středověku	O
-.	O
-Výzkum	O
-byl	O
-financován	O
-z	O
-projektu	O
-DEMO	B-ia	ia
-.	O
+Výzkumná	O	
+zpráva	O	
+č	O	
+.	O	
+1	O	
+/	O	
+2024	O	
+—	O	
+Hradiště	B-GPE	GPE
+u	I-GPE	GPE
+Horní	I-GPE	GPE
+Mezí	I-GPE	GPE
+Terénní	O	
+výzkum	O	
+provedl	O	
+Jan	B-PERSON	PERSON
+Novotný	I-PERSON	PERSON
+v	O	
+červnu	O	
+2024	O	
+.	O	
+Nalezená	O	
+keramika	O	
+pochází	O	
+z	O	
+raného	O	
+středověku	O	
+.	O	
+Výzkum	O	
+byl	O	
+financován	O	
+z	O	
+projektu	O	
+DEMO	O	
+.	O	

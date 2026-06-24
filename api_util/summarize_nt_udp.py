@@ -85,6 +85,28 @@ CNEC_TYPE_MAP = {
     "C": "Complex bibliographic expression",
 }
 
+# --- OntoNotes v5 Type Hierarchy Mapping ---
+ONTO_TYPE_MAP = {
+    "PERSON": "People, including fictional",
+    "NORP": "Nationalities or religious or political groups",
+    "FAC": "Buildings, airports, highways, bridges, etc.",
+    "ORG": "Companies, agencies, institutions, etc.",
+    "GPE": "Countries, cities, states",
+    "LOC": "Non-GPE locations, mountain ranges, bodies of water",
+    "PRODUCT": "Objects, vehicles, foods, etc. (not services)",
+    "EVENT": "Named hurricanes, battles, wars, sports events, etc.",
+    "WORK_OF_ART": "Titles of books, songs, etc.",
+    "LAW": "Named documents made into laws",
+    "LANGUAGE": "Any named language",
+    "DATE": "Absolute or relative dates or periods",
+    "TIME": "Times smaller than a day",
+    "PERCENT": "Percentage, including '%'",
+    "MONEY": "Monetary values, including unit",
+    "QUANTITY": "Measurements, as of weight or distance",
+    "ORDINAL": "\"first\", \"second\", etc.",
+    "CARDINAL": "Numerals that do not fall under another type"
+}
+
 def _float_or_none(value):
     if not value:
         return None
@@ -128,7 +150,8 @@ def get_ne_explanation(raw_tag):
     if raw_tag.startswith("B-") or raw_tag.startswith("I-"):
         primary = raw_tag.split("|")[0]
         short_code = primary[2:]
-        return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+        # UPDATE THIS LINE:
+        return ONTO_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
     return ""
 
 

@@ -16,13 +16,35 @@ No ML models, no network, no GPU required.
 import pytest
 
 from api_util.summarize_nt_udp import (  # noqa: E402
-    CNEC_TYPE_MAP,
     bool_from_str,
     get_ne_explanation,
     parse_features,
     parse_misc,
     sanitize_filename,
 )
+
+
+def test_get_ne_explanation_ontonotes():
+    # 1. Test standard B- (Begin) tags
+    assert get_ne_explanation("B-PERSON") == "People, including fictional"
+    assert get_ne_explanation("B-GPE") == "Countries, cities, states"
+    assert get_ne_explanation("B-DATE") == "Absolute or relative dates or periods"
+
+    # 2. Test standard I- (Inside) tags
+    assert get_ne_explanation("I-ORG") == "Companies, agencies, institutions, etc."
+    assert get_ne_explanation("I-WORK_OF_ART") == "Titles of books, songs, etc."
+
+    # 3. Test Out (O) / Empty / Null conditions
+    assert get_ne_explanation("O") == ""
+    assert get_ne_explanation("") == ""
+    assert get_ne_explanation("_") == ""
+
+    # 4. Test unknown/unmapped tag fallback
+    assert get_ne_explanation("B-UNKNOWN_TAG") == "Unknown Code (UNKNOWN_TAG)"
+
+    # 5. Test nested/piped complex tags
+    # (The pipeline splits by '|' and grabs the first tag for the primary explanation)
+    assert get_ne_explanation("B-FAC|I-GPE") == "Buildings, airports, highways, bridges, etc."
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -99,60 +121,40 @@ class TestSanitizeFilename:
 # get_ne_explanation
 # ════════════════════════════════════════════════════════════════════════════
 class TestGetNeExplanation:
-    def test_o_tag_returns_empty(self):
-        assert get_ne_explanation("O") == ""
 
-    def test_underscore_returns_empty(self):
-        assert get_ne_explanation("_") == ""
+    # Replaces test_b_gu_settlement_name
+    def test_b_gpe_location(self):
+        assert get_ne_explanation("B-GPE") == "Countries, cities, states"
 
-    def test_empty_string_returns_empty(self):
-        assert get_ne_explanation("") == ""
+    # Replaces test_i_ps_surname
+    def test_i_person_inside(self):
+        assert get_ne_explanation("I-PERSON") == "People, including fictional"
 
-    def test_b_gu_settlement_name(self):
-        assert get_ne_explanation("B-gu") == "Settlement name (City/Town)"
+    # Replaces test_b_pf_first_name
+    def test_b_person_begin(self):
+        assert get_ne_explanation("B-PERSON") == "People, including fictional"
 
-    def test_i_ps_surname(self):
-        assert get_ne_explanation("I-ps") == "Surname"
+    # Replaces test_b_ty_year
+    def test_b_date_year(self):
+        assert get_ne_explanation("B-DATE") == "Absolute or relative dates or periods"
 
-    def test_b_pf_first_name(self):
-        assert get_ne_explanation("B-pf") == "First name"
+    # Replaces test_b_nc_cardinal_number
+    def test_b_cardinal_number(self):
+        assert get_ne_explanation("B-CARDINAL") == "Numerals that do not fall under another type"
 
-    def test_b_ty_year(self):
-        assert get_ne_explanation("B-ty") == "Year"
+    # Replaces test_b_ic_educational_institution
+    def test_b_org_institution(self):
+        assert get_ne_explanation("B-ORG") == "Companies, agencies, institutions, etc."
 
-    def test_b_nc_cardinal_number(self):
-        assert get_ne_explanation("B-nc") == "Cardinal number"
-
-    def test_b_ic_educational_institution(self):
-        assert get_ne_explanation("B-ic") == "Cult/Educational institution"
-
+    # Updates test_multi_pipe_tag_uses_primary_part
     def test_multi_pipe_tag_uses_primary_part(self):
-        """Pipe-separated tags (e.g. 'B-P|B-pf') should resolve to a non-empty explanation
+        """Pipe-separated tags (e.g. 'B-ORG|B-GPE') should resolve to a non-empty explanation
         rather than raising or returning an empty/error string."""
-        result = get_ne_explanation("B-P|B-pf")
+        result = get_ne_explanation("B-ORG|B-GPE")
         assert isinstance(result, str)
         assert len(result) > 0
         assert "Unknown Code" not in result
-
-    def test_unknown_code_returns_unknown_code_string(self):
-        result = get_ne_explanation("B-xyz")
-        assert "Unknown Code" in result
-        assert "xyz" in result
-
-    def test_plain_tag_no_bio_prefix_returns_empty(self):
-        """Tags not starting with B-/I- should return empty string."""
-        assert get_ne_explanation("gu") == ""
-
-    def test_all_cnec_codes_in_map_are_reachable(self):
-        """
-        Every code in CNEC_TYPE_MAP must be reachable via a B- prefix tag.
-        This guards against typos in the map keys.
-        """
-        for code, _explanation in CNEC_TYPE_MAP.items():
-            result = get_ne_explanation(f"B-{code}")
-            # Either maps to the known explanation or produces an "Unknown Code"
-            # string (for codes that map to generic labels like "O").
-            assert isinstance(result, str)
+        assert result == "Companies, agencies, institutions, etc."
 
 
 # ════════════════════════════════════════════════════════════════════════════
