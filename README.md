@@ -1193,6 +1193,15 @@ python3 run_pipeline.py --kw --llm
 # Run only a subset of the core stages (canonical order is always enforced)
 python3 run_pipeline.py --stages udp nt
 
+# Resume after an interruption: start from a chosen stage, skip every earlier one
+python3 run_pipeline.py --start-from nt
+
+# Skip individual stages (re-run only NER + stats, leave manifest/UDPipe as-is)
+python3 run_pipeline.py --skip-manifest --skip-udp
+
+# Clear stale .state_* checkpoint sidecars from PARADATA_DIR before running
+python3 run_pipeline.py --clean-state
+
 # Force execution: bypass missing dependency checks and ignore individual stage failures
 python3 run_pipeline.py --kw --kw-method keybert --force
 
@@ -1216,6 +1225,48 @@ never collide.
 4. **Merges** all per-stage records into one
 `<PARADATA_DIR>/<runid>_nlp-enrich_pipeline-run.json` via
 `atrium_paradata.merge_run_paradata`. The merged record accurately tracks document-level statistics across the sequential pipeline (recording true throughput without inflating input counts). The effective license of the merged record is re-derived from the **union** of every component used across the stages, so the most-restrictive rule holds end-to-end (a core run is CC BY-NC-SA 4.0; adding the YAKE backend escalates the share-alike/AGPL constraint, etc.).
+
+#### Resume / checkpoint recovery
+
+Long batches on constrained hardware are expensive to restart from scratch, so the
+runner lets you re-enter the pipeline at any stage instead of redoing completed work.
+Recovery operates at two complementary levels.
+
+**Document-level (automatic).** Every stage already skips inputs whose output exists
+(steps 2–4 via `[ -f "$out" ] && continue`; the LLM stage logs `already_exists` and
+moves on), so simply re-running the same command picks up where the previous run
+stopped. When the LLM stage abandons a document after 10 consecutive inference
+errors it writes a `*_enriched.abort.json` sidecar next to the partial output (see
+[LLM Inputs and Outputs](#-inputs-and-outputs)); that marker is the canonical signal
+that a document holds partial results and should be re-run.
+
+**Pipeline-level starting points.** To skip whole stages — not just completed
+documents — the runner accepts explicit entry points over the full stage order:
+
+| Flag                   | Effect                                                                   |
+|------------------------|--------------------------------------------------------------------------|
+| `--start-from <stage>` | Run from `<stage>` onward; every earlier stage is skipped.               |
+| `--skip-<stage>`       | Skip one named stage, run the rest.                                      |
+| `--clean-state`        | Sweep stale `.state_*.json` sidecars from `PARADATA_DIR` before running. |
+
+`<stage>` is one of `manifest`, `udp`, `nt`, `stats`, `keywords`, `llm` (the canonical
+order; `keywords`/`llm` require their `--kw`/`--llm` flags to be part of the run).
+Each skip flag also has an equivalent `SKIP_<STAGE>=true` knob that can live in
+[config_api.txt](config_api.txt) 📎 (e.g. `SKIP_MANIFEST=true`), so a habitual resume
+profile can be persisted without retyping flags.
+
+```bash
+# UDPipe + NameTag already finished — resume at statistics, then keywords
+python3 run_pipeline.py --kw --start-from stats
+
+# Re-run only NER and statistics; keep the existing manifest and CoNLL-U
+python3 run_pipeline.py --skip-manifest --skip-udp
+```
+
+Skipped stages are recorded under `skipped_stages` in the merged
+`<runid>_nlp-enrich_pipeline-run.json` record, so a resumed run remains fully
+auditable. An all-skipped run is treated as a **successful resume**, not an empty
+failure (see [Exit codes](#exit-codes) below).
 
 #### Provenance for containers
 
@@ -1245,9 +1296,11 @@ python3 run_pipeline.py --kw
 > **Using `--force` (`-f`)** overrides exit codes `1`, `3`, and `≠0`. It bypasses preflight dependency crashes and forces `FAIL_ON_EMPTY=False`, allowing the pipeline to continue attempting subsequent stages even if one stage crashes or processes zero files.
 
 The empty-run guard is governed by `FAIL_ON_EMPTY` in [config_api.txt](config_api.txt) 📎. A
-**resumed** run — where every document was already complete and thus *skipped* —
-is treated as success, not an empty failure. Set `FAIL_ON_EMPTY=false` to permit
-genuinely empty stages.
+**resumed** run — where every document was already complete and thus *skipped*, or
+where a stage was skipped outright via `--start-from` / `--skip-<stage>` (see
+[Resume / checkpoint recovery](#resume--checkpoint-recovery)) — is treated as
+success, not an empty failure. Set `FAIL_ON_EMPTY=false` to permit genuinely empty
+stages.
 
 > [!NOTE]
 > The runner never re-implements stage logic: it shells out to the exact same
