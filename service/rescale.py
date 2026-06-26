@@ -24,6 +24,7 @@ from api_util.bbox_scale import (
 class RescaleError(ValueError):
     """Raised when the request is unprocessable (bad target or no source size)."""
 
+
 def rescale_teitok(
     xml_text: str,
     target_w: int,

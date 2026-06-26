@@ -103,9 +103,10 @@ ONTO_TYPE_MAP = {
     "PERCENT": "Percentage, including '%'",
     "MONEY": "Monetary values, including unit",
     "QUANTITY": "Measurements, as of weight or distance",
-    "ORDINAL": "\"first\", \"second\", etc.",
-    "CARDINAL": "Numerals that do not fall under another type"
+    "ORDINAL": '"first", "second", etc.',
+    "CARDINAL": "Numerals that do not fall under another type",
 }
+
 
 def _float_or_none(value):
     if not value:
@@ -444,7 +445,7 @@ def process_single_document(
     model_udpipe=None,
     model_nametag=None,
     dpi=None,
-    alto_dpi=None
+    alto_dpi=None,
 ):
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
 
@@ -555,7 +556,8 @@ def process_pipeline(
     model_udpipe=None,
     model_nametag=None,
     summary_csv=None,
-    dpi=None, alto_dpi=None
+    dpi=None,
+    alto_dpi=None,
 ):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
@@ -595,7 +597,8 @@ def process_pipeline(
             summary_csv=summary_csv,
             model_udpipe=model_udpipe,
             model_nametag=model_nametag,
-            dpi=dpi, alto_dpi=alto_dpi
+            dpi=dpi,
+            alto_dpi=alto_dpi,
         )
 
     print("\nPipeline Complete.")
@@ -625,9 +628,18 @@ def main():
     )
 
     # Add to the argparse.ArgumentParser definition:
-    parser.add_argument("--dpi", type=_float_or_none, default=os.environ.get("IMAGE_DPI"),
-                        help="Output image DPI for TEITOK scaling")
-    parser.add_argument("--alto-dpi", type=_float_or_none, default=os.environ.get("ALTO_DPI"), help="Source ALTO DPI")
+    parser.add_argument(
+        "--dpi",
+        type=_float_or_none,
+        default=os.environ.get("IMAGE_DPI"),
+        help="Output image DPI for TEITOK scaling",
+    )
+    parser.add_argument(
+        "--alto-dpi",
+        type=_float_or_none,
+        default=os.environ.get("ALTO_DPI"),
+        help="Source ALTO DPI",
+    )
 
     # --- Directory-mode args (used when running standalone) ---
     parser.add_argument("--conllu-dir", default=os.getenv("CONLLU_INPUT_DIR"))
@@ -729,7 +741,8 @@ def main():
         model_udpipe=os.getenv("MODEL_UDPIPE"),
         model_nametag=os.getenv("MODEL_NAMETAG"),
         summary_csv=args.summary_csv,
-        dpi=args.dpi, alto_dpi=args.alto_dpi
+        dpi=args.dpi,
+        alto_dpi=args.alto_dpi,
     )
 
 

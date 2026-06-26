@@ -12,4 +12,3 @@ def test_manifest_generation_direct(monkeypatch, tmp_path: Path):
     # Pass the arguments exactly as your CLI expects them based on the usage log
     rc = cli_main(["--stages", "manifest"])
     assert rc == 0
-

@@ -5,7 +5,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 # Base64 encoded minimal 1x1 transparent PNG to act as our data sample
-MINIMAL_PNG_B64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+MINIMAL_PNG_B64 = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+)
+
 
 def test_cli_argparse_dpi_support():
     """Ensure that the summarize_nt_udp.py pipeline natively understands dpi and alto-dpi arguments."""
@@ -17,10 +20,7 @@ def test_cli_argparse_dpi_support():
 
     # We run the command with help explicitly to ensure it parses --dpi without erroring out
     result = subprocess.run(
-        ["python", str(script_path), "--help"],
-        capture_output=True,
-        text=True,
-        env=env
+        ["python", str(script_path), "--help"], capture_output=True, text=True, env=env
     )
 
     assert result.returncode == 0, f"Script failed: {result.stderr}"
@@ -50,7 +50,7 @@ def test_process_single_document_threading(tmp_path):
             teitok_out=str(teitok_out_dir),
             alto_dir="dummy_alto_dir",
             dpi=300.0,
-            alto_dpi=200.0
+            alto_dpi=200.0,
         )
 
         assert mock_write.call_count >= 1, "write_teitok_merged was never called"

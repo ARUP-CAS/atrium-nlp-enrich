@@ -3,6 +3,7 @@
 call_nametag.py  –  Send a CoNLL-U file to the NameTag 3 API, receive NER
 annotations, and write per-page TSV files. Retries automatically on network errors.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,15 +25,18 @@ except ImportError:
 
 NAMETAG_URL = "https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
+
 @lru_cache(maxsize=1)
 def _lazy_load_torch():
     import torch  # type: ignore
+
     return torch
 
 
 @lru_cache(maxsize=1)
 def _lazy_load_transformers():
     from transformers import AutoModel, AutoTokenizer  # type: ignore
+
     return AutoTokenizer, AutoModel
 
 

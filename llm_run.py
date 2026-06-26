@@ -5,10 +5,11 @@ Reads llm_config.txt, initialises the model and vocabulary, then iterates
 over every CSV file in INPUT_DIR and writes per-document JSON enrichment
 files to OUTPUT_DIR.
 """
-__import__('pysqlite3')
+
+__import__("pysqlite3")
 import sys  # noqa: E402
 
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import datetime  # noqa: E402
 import enum  # noqa: E402
 import json  # noqa: E402

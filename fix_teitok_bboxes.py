@@ -17,7 +17,7 @@ def process_teitok_file(file_path, args, sx, sy):
     """Parses an existing TEITOK XML file and rewrites updated bbox fields using regex primitives."""
     print(f"Processing: {file_path}")
 
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         xml_text = f.read()
 
     xml_text = fix_name_close_tags(xml_text)
@@ -33,7 +33,7 @@ def process_teitok_file(file_path, args, sx, sy):
     if w is not None and h is not None:
         xml_text = set_surface_extent(xml_text, round(w * sx), round(h * sy))
 
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(xml_text)
 
 

@@ -18,6 +18,7 @@ import pytest
 def pytest_configure(config):
     config.addinivalue_line("markers", "slow: marks tests as slow integration smoke tests")
 
+
 # ── path wiring ───────────────────────────────────────────────────────────────
 _REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(_REPO_ROOT))

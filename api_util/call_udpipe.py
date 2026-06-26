@@ -3,6 +3,7 @@
 call_udpipe.py  –  Send pre-chunked text files to the UDPipe 2 API,
 automatically retry on network failures, and write a single merged CoNLL-U file.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -26,12 +27,10 @@ except ImportError:
 UDPIPE_URL = "https://lindat.mff.cuni.cz/services/udpipe/api/process"
 
 
-
-
-
 @lru_cache(maxsize=1)
 def _lazy_load_transformers():
     from transformers import pipeline  # type: ignore
+
     return pipeline
 
 
@@ -44,6 +43,7 @@ def run_udpipe_like_workflow(text: str) -> Any:
     # Replace with the repository's actual model/task name.
     nlp = pipeline("text-classification")
     return nlp(text)
+
 
 def get_robust_session(retries: int) -> requests.Session:
     """Configures a requests session with exponential backoff for 429/5xx errors."""

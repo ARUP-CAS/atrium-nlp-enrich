@@ -66,7 +66,9 @@ def test_detect_source_size_bbox_extent_fallback():
 
 def test_detect_source_size_returns_none_without_coords():
     """Now returns None so the caller orchestrator can raise a localized error."""
-    w, h, kind = detect_source_size("<TEI><text><body><p>no coordinates here</p></body></text></TEI>")
+    w, h, kind = detect_source_size(
+        "<TEI><text><body><p>no coordinates here</p></body></text></TEI>"
+    )
     assert w is None
     assert h is None
     assert kind is None

@@ -57,7 +57,7 @@ def _scale_bbox_tuple(bbox_tuple, sx, sy, dx=0, dy=0):
 
 
 def _build_page_scale_map(
-        alto_pages, image_dir, doc_id, measurement_unit="pixel", dpi=None, alto_dpi=None
+    alto_pages, image_dir, doc_id, measurement_unit="pixel", dpi=None, alto_dpi=None
 ):
     scale_map = {}
     for pg in alto_pages:
@@ -92,10 +92,13 @@ def _build_page_scale_map(
         # Tier 3: Fallback
         else:
             scale_map[idx] = (
-                1.0, 1.0,
+                1.0,
+                1.0,
                 int(alto_w) if alto_w else None,
                 int(alto_h) if alto_h else None,
-                dx, dy, img_ext
+                dx,
+                dy,
+                img_ext,
             )
     return scale_map
 
@@ -655,7 +658,9 @@ def write_teitok_merged(
                     idx = pg["idx"]
                     surf_id = f"{doc_id_safe}.surface{idx}"
                     # FIXED: Added ".png" to fallback tuple
-                    sx, sy, img_w, img_h, dx, dy, img_ext = scale_map.get(idx, (1.0, 1.0, None, None, 0, 0, ".png"))
+                    sx, sy, img_w, img_h, dx, dy, img_ext = scale_map.get(
+                        idx, (1.0, 1.0, None, None, 0, 0, ".png")
+                    )
                     facs_img = f"{doc_id_safe}-{idx}{img_ext}"
                     lrx_attr = f' lrx="{img_w}"' if img_w is not None else ""
                     lry_attr = f' lry="{img_h}"' if img_h is not None else ""
@@ -690,7 +695,9 @@ def write_teitok_merged(
                     current_page = new_page_num
 
                     # FIXED: Added ".png" to fallback tuple
-                    sx, sy, _, _, dx, dy, img_ext = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0, ".png"))
+                    sx, sy, _, _, dx, dy, img_ext = scale_map.get(
+                        current_page, (1.0, 1.0, None, None, 0, 0, ".png")
+                    )
 
                     pb_id = f"{doc_id_safe}.pb{current_page}"
                     facs_img = f"{doc_id_safe}-{current_page}{img_ext}"
@@ -710,7 +717,9 @@ def write_teitok_merged(
                             )
                             pass
                     else:
-                        sx, sy, _, _, dx, dy, _ = scale_map.get(current_page, (1.0, 1.0, None, None, 0, 0, ".png"))
+                        sx, sy, _, _, dx, dy, _ = scale_map.get(
+                            current_page, (1.0, 1.0, None, None, 0, 0, ".png")
+                        )
 
                 sent_block = (
                     first_bbox.get("block_id") if first_bbox else None

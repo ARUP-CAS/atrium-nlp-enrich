@@ -12,20 +12,22 @@ _NAME_CLOSE_RE = re.compile(r"</n\s*>")
 
 
 def unit_per_inch(unit: str) -> Optional[float]:
-    if unit == 'inch1200':
+    if unit == "inch1200":
         return 1200.0
-    if unit == 'mm10':
+    if unit == "mm10":
         return 254.0
     return None
 
 
-def dpi_scale(unit: str, dpi: Optional[float], alto_dpi: Optional[float] = None) -> Tuple[float, float]:
+def dpi_scale(
+    unit: str, dpi: Optional[float], alto_dpi: Optional[float] = None
+) -> Tuple[float, float]:
     if not dpi:
         return 1.0, 1.0
     upi = unit_per_inch(unit)
     if upi:
         return float(dpi) / upi, float(dpi) / upi
-    if unit == 'pixel':
+    if unit == "pixel":
         adpi = alto_dpi or dpi
         if not adpi:
             return 1.0, 1.0

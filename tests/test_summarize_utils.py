@@ -121,7 +121,6 @@ class TestSanitizeFilename:
 # get_ne_explanation
 # ════════════════════════════════════════════════════════════════════════════
 class TestGetNeExplanation:
-
     # Replaces test_b_gu_settlement_name
     def test_b_gpe_location(self):
         assert get_ne_explanation("B-GPE") == "Countries, cities, states"

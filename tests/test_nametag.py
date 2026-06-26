@@ -20,6 +20,7 @@ def test_get_ne_suffix_ontonotes():
     assert _get_ne_suffix("I-DATE|O") == "DATE|"
     assert _get_ne_suffix("B-WORK_OF_ART|I-WORK_OF_ART") == "WORK_OF_ART|WORK_OF_ART"
 
+
 def test_process_data_smoke():
     result = process_data({"text": "Hello"})
     assert result == {"text": "Hello"}
