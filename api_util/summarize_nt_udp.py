@@ -107,6 +107,38 @@ ONTO_TYPE_MAP = {
     "CARDINAL": "Numerals that do not fall under another type",
 }
 
+# --- CNEC to ONTO Mapping ---
+# Tagset conversion logic validating the mapping of legacy CNEC hierarchal tags
+# to the generalized OntoNotes v5 types returned by the multilingual model.
+CNEC_TO_ONTO_MAP = {
+    # Person
+    "p": "PERSON", "p_": "PERSON", "P": "PERSON", "pf": "PERSON",
+    "ps": "PERSON", "pm": "PERSON", "ph": "PERSON", "pd": "PERSON", "pp": "PERSON",
+    "pc": "NORP", # Inhabitant name mapped to NORP
+    # Geography
+    "g": "GPE", "G": "GPE", "g_": "GPE", "gu": "GPE", "gr": "GPE", "gc": "GPE",
+    "gl": "LOC", "gs": "LOC", "gt": "LOC", "gh": "LOC",
+    "gq": "FAC",
+    # Institution
+    "i": "ORG", "i_": "ORG", "I": "ORG", "if": "ORG", "io": "ORG", "ic": "ORG",
+    "ia": "EVENT",
+    # Artifact
+    "o": "PRODUCT", "o_": "PRODUCT", "op": "PRODUCT",
+    "oa": "WORK_OF_ART", "oe": "QUANTITY", "om": "MONEY", "or": "LAW",
+    # Media
+    "m": "ORG", "mn": "WORK_OF_ART", "ms": "ORG", "mi": "ORG",
+    # Time
+    "t": "TIME", "T": "TIME", "th": "TIME", "tt": "TIME",
+    "td": "DATE", "tm": "DATE", "ty": "DATE", "tf": "EVENT",
+    # Numbers
+    "n": "CARDINAL", "N": "CARDINAL", "n_": "CARDINAL", "nc": "CARDINAL", "ns": "CARDINAL",
+    "na": "DATE", "nb": "QUANTITY", "ni": "ORDINAL", "no": "ORDINAL",
+    # Address/Number
+    "a": "LOC", "A": "LOC", "ah": "FAC", "at": "CARDINAL", "az": "CARDINAL",
+    # Email / Web / Misc
+    "me": "CARDINAL", "C": "WORK_OF_ART", "unk": "O", "O": "O"
+}
+
 
 def _float_or_none(value):
     if not value:
@@ -146,13 +178,33 @@ def sanitize_filename(name):
 
 
 def get_ne_explanation(raw_tag):
+    """
+    Translates the short NER code into a human-readable description.
+    Supports both native ONTO tags (from the new multilingual models)
+    and legacy CNEC tags by transparently mapping them to ONTO equivalents.
+    """
     if raw_tag == "O" or not raw_tag or raw_tag == "_":
         return ""
     if raw_tag.startswith("B-") or raw_tag.startswith("I-"):
         primary = raw_tag.split("|")[0]
         short_code = primary[2:]
-        # UPDATE THIS LINE:
-        return ONTO_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+
+        # 1. Native ONTO tag (direct output from nametag3-multilingual-onto)
+        if short_code in ONTO_TYPE_MAP:
+            return ONTO_TYPE_MAP[short_code]
+
+        # 2. Legacy CNEC tag mapping
+        if short_code in CNEC_TO_ONTO_MAP:
+            onto_mapped = CNEC_TO_ONTO_MAP[short_code]
+            # Prioritize the mapped ONTO description, but fallback to native CNEC if weirdly handled
+            return ONTO_TYPE_MAP.get(
+                onto_mapped,
+                CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+            )
+
+        # 3. Complete fallback for unmapped legacy or unknown codes
+        return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+
     return ""
 
 
