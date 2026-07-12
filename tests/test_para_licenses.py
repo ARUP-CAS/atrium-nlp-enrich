@@ -120,9 +120,7 @@ class TestResolveEffectiveLicense:
         assert len(result["components"]) == 1
 
     def test_most_restrictive_component_wins(self):
-        result = resolve_effective_license(
-            [("code", "MIT"), ("cubbitt", "CC BY-NC-SA 4.0"), ("lib", "Apache-2.0")]
-        )
+        result = resolve_effective_license([("code", "MIT"), ("cubbitt", "CC BY-NC-SA 4.0"), ("lib", "Apache-2.0")])
         assert result["effective_license"] == "CC BY-NC-SA 4.0"
         assert result["determined_by"] == ["cubbitt"]
 
@@ -176,9 +174,7 @@ class TestResolveEffectiveLicense:
     def test_unknown_does_not_displace_known_max_seen_first(self):
         """A known max-rank license seen first keeps the title; the unknown
         still ranks equal-max, so both components share determined_by."""
-        result = resolve_effective_license(
-            [("cubbitt", "CC BY-NC-SA 4.0"), ("blob", "Mystery-1.0")]
-        )
+        result = resolve_effective_license([("cubbitt", "CC BY-NC-SA 4.0"), ("blob", "Mystery-1.0")])
         assert result["effective_license"] == "CC BY-NC-SA 4.0"
         assert result["unknown_licenses"] == ["Mystery-1.0"]
         assert set(result["determined_by"]) == {"cubbitt", "blob"}
@@ -198,9 +194,7 @@ class TestResolveEffectiveLicense:
         assert entry["rank"] == LICENSE_RANK["CC BY-NC-SA 4.0"]
 
     def test_duplicate_unknowns_reported_once_sorted(self):
-        result = resolve_effective_license(
-            [("a", "Zeta-1"), ("b", "Zeta-1"), ("c", "Alpha-1")]
-        )
+        result = resolve_effective_license([("a", "Zeta-1"), ("b", "Zeta-1"), ("c", "Alpha-1")])
         assert result["unknown_licenses"] == ["Alpha-1", "Zeta-1"]
 
     def test_notes_mention_component_count(self):
@@ -233,21 +227,15 @@ class TestMergeEffectiveLicenses:
     def test_same_name_different_license_is_not_deduped(self):
         """Dedup key is (name, license) — a relicensed component is real
         information and must keep both entries."""
-        merged = merge_effective_licenses(
-            [_block(("tool", "MIT")), _block(("tool", "GPL-3.0"))]
-        )
+        merged = merge_effective_licenses([_block(("tool", "MIT")), _block(("tool", "GPL-3.0"))])
         assert len(merged["components"]) == 2
         assert merged["effective_license"] == "GPL-3.0"
 
     def test_merge_resolution_matches_flat_resolution(self):
         """Merging blocks must give the same answer as resolving the deduped
         union directly."""
-        merged = merge_effective_licenses(
-            [_block(("code", "MIT")), _block(("cubbitt", "CC BY-NC-SA 4.0"))]
-        )
-        flat = resolve_effective_license(
-            [("code", "MIT"), ("cubbitt", "CC BY-NC-SA 4.0")]
-        )
+        merged = merge_effective_licenses([_block(("code", "MIT")), _block(("cubbitt", "CC BY-NC-SA 4.0"))])
+        flat = resolve_effective_license([("code", "MIT"), ("cubbitt", "CC BY-NC-SA 4.0")])
         assert merged["effective_license"] == flat["effective_license"]
         assert merged["is_non_commercial"] is True
         assert merged["is_share_alike"] is True
@@ -269,21 +257,15 @@ class TestMergeEffectiveLicenses:
         assert len(merged["components"]) == 1
 
     def test_unknowns_propagate_through_merge(self):
-        merged = merge_effective_licenses(
-            [_block(("blob", "Mystery-1.0")), _block(("code", "MIT"))]
-        )
+        merged = merge_effective_licenses([_block(("blob", "Mystery-1.0")), _block(("code", "MIT"))])
         assert merged["unknown_licenses"] == ["Mystery-1.0"]
         assert "WARNING" in merged["notes"]
 
     def test_realistic_atrium_pipeline_merge(self):
         """LINDAT CUBBITT + UDPipe stages resolve to CC BY-NC-SA 4.0, the
         documented effective license of the translation+enrichment chain."""
-        translate = _block(
-            ("LINDAT CUBBITT", "CC BY-NC-SA 4.0"), ("lxml", "BSD-3-Clause")
-        )
-        enrich = _block(
-            ("UDPipe", "CC BY-NC-SA 4.0"), ("NameTag 3", "CC BY-NC-SA 4.0")
-        )
+        translate = _block(("LINDAT CUBBITT", "CC BY-NC-SA 4.0"), ("lxml", "BSD-3-Clause"))
+        enrich = _block(("UDPipe", "CC BY-NC-SA 4.0"), ("NameTag 3", "CC BY-NC-SA 4.0"))
         merged = merge_effective_licenses([translate, enrich])
         assert merged["effective_license"] == "CC BY-NC-SA 4.0"
         assert merged["is_non_commercial"] is True
