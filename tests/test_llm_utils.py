@@ -4,9 +4,14 @@ tests/test_llm_utils.py
 Tests for the pure helpers carved out of the llm_utils.py monolith.
 """
 
-from pydantic import BaseModel, Field
+import pytest
 
-from llm_utils import _should_process_line, get_context_window, validate_llm_output
+pytest.importorskip("torch")
+pytest.importorskip("transformers")
+
+from pydantic import BaseModel, Field  # noqa: E402
+
+from llm_utils import _should_process_line, get_context_window, validate_llm_output  # noqa: E402
 
 
 class DummyEnrichment(BaseModel):

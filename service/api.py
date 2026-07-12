@@ -5,6 +5,7 @@ service/api.py — FastAPI surface for the nlp-enrich pipeline.
 from __future__ import annotations
 
 import asyncio
+import configparser
 import os
 import time
 from contextlib import asynccontextmanager
@@ -46,6 +47,19 @@ _semaphore = asyncio.Semaphore(MAX_CONCURRENT_JOBS)
 _SERVICE_DIR = Path(__file__).resolve().parent
 
 
+def _read_tool_version() -> str:
+    """Read the tool version from para_config.txt [tool] section.
+
+    Single source of truth — security.reusable.yml already validates this value
+    against CITATION.cff and the release tag, so the API version can never drift
+    from the released version again.
+    """
+    config = configparser.ConfigParser()
+    config.read(_SERVICE_DIR.parent / "para_config.txt", encoding="utf-8")
+    version = config.get("tool", "version", fallback="unknown")
+    return version[1:] if version.lower().startswith("v") else version
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     loop = asyncio.get_event_loop()
@@ -56,7 +70,7 @@ async def lifespan(app: FastAPI):
 # DEFINITION OF THE APP
 app = FastAPI(
     title="ATRIUM nlp-enrich API",
-    version="0.11.0",
+    version=_read_tool_version(),
     description="Text lines → NLP-enriched TEITOK XML + keywords.",
     lifespan=lifespan,
 )
@@ -212,6 +226,7 @@ async def info() -> Dict[str, Any]:
     facts = _manager.config_facts()
     return {
         "service": "atrium-nlp-enrich",
+        "version": app.version,
         "stage_plan": ["manifest", "udp", "nt", "stats"],
         "core_stages_mandatory": True,
         "models": {

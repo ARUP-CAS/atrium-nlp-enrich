@@ -29,6 +29,20 @@ def test_client():
     return TestClient(app)
 
 
+def test_info_version_matches_para_config(test_client):
+    """The API version must come from para_config.txt [tool], never hardcoded."""
+    import configparser
+
+    config = configparser.ConfigParser()
+    config.read(Path(__file__).resolve().parent.parent / "para_config.txt", encoding="utf-8")
+    expected = config.get("tool", "version").lstrip("v")
+
+    response = test_client.get("/info")
+    assert response.status_code == 200
+    assert response.json()["version"] == expected
+    assert app.version == expected
+
+
 @pytest.fixture
 def mock_subprocess_run():
     with patch("service.enrichment.subprocess.run") as mock_run:
