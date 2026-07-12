@@ -6,7 +6,7 @@ on:
       - "**/*.sh"
       - ".github/workflows/shellcheck.yml"
   push:
-    branches: [main, master]
+    branches: [test, master]
     paths:
       - "**/*.sh"
       - ".github/workflows/shellcheck.yml"
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck

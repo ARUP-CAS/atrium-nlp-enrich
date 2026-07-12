@@ -9,16 +9,8 @@
 # llm_utils.py) which requires requirements_llm.txt (torch, transformers,
 # bitsandbytes, etc.).  The GPU runner must have CUDA drivers installed.
 #
-# Exit-5 guard: same as scheduled-smoke.yml — tolerated until @pytest.mark.slow
-# GPU tests are written.  Until then the job "passes" by collecting no tests.
-#
 # HF_TOKEN: add as a repo/org secret if gated HF models (gemma, llama4) are
 # exercised in the slow GPU test suite.
-#
-# PARAM block mirrors docker.yaml gpu targets for consistency:
-#   APT_PACKAGES     — no extra apt deps
-#   PRE_INSTALL_TORCH — torch already in requirements_llm.txt; no pre-install step
-#   REQUIREMENTS     — full stack including LLM deps
 
 name: GPU Inference Tests
 
@@ -40,10 +32,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -53,11 +45,12 @@ jobs:
           pip install -r requirements.txt -r requirements-test.txt -r requirements_llm.txt
 
       - name: Run GPU/slow-marked tests (exit-5 tolerant)
-        # Exit code 5 = "no tests collected" — tolerated until GPU slow tests exist.
-        # HF_TOKEN is injected if set, enabling gated model tests.
+        # Exit code 5 = "no tests collected" — tolerated until GPU slow tests
+        # exist. `|| rc=$?` is required under the runner's `bash -e` shell.
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python -m pytest -m slow -v --tb=short
-          rc=$?
-          [ "$rc" -eq 5 ] && echo "[gpu] No slow tests collected — OK (infra ready)" && exit 0 || exit $rc
+          rc=0
+          python -m pytest -m slow -v --tb=short || rc=$?
+          if [ "$rc" -eq 5 ]; then echo "[gpu] No slow tests collected — OK (infra ready)"; exit 0; fi
+          exit $rc
