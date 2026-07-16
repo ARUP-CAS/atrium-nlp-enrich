@@ -1,7 +1,4 @@
 import base64
-import os
-import subprocess
-from pathlib import Path
 from unittest.mock import patch
 
 # Base64 encoded minimal 1x1 transparent PNG to act as our data sample
@@ -12,20 +9,17 @@ MINIMAL_PNG_B64 = (
 
 def test_cli_argparse_dpi_support():
     """Ensure that the summarize_nt_udp.py pipeline natively understands dpi and alto-dpi arguments."""
-    script_path = Path("api_util") / "summarize_nt_udp.py"
+    from api_util.summarize_nt_udp import build_parser
 
-    # Mimic a robust shell environment by injecting PYTHONPATH
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(Path.cwd())
+    parser = build_parser()
+    help_text = parser.format_help()
+    assert "--dpi" in help_text, "Missing --dpi flag in argparse configuration."
+    assert "--alto-dpi" in help_text, "Missing --alto-dpi flag in argparse configuration."
 
-    # We run the command with help explicitly to ensure it parses --dpi without erroring out
-    result = subprocess.run(
-        ["python", str(script_path), "--help"], capture_output=True, text=True, env=env
-    )
-
-    assert result.returncode == 0, f"Script failed: {result.stderr}"
-    assert "--dpi" in result.stdout, "Missing --dpi flag in argparse configuration."
-    assert "--alto-dpi" in result.stdout, "Missing --alto-dpi flag in argparse configuration."
+    # The parser must accept the flags in-process without erroring out
+    args = parser.parse_args(["--dpi", "300", "--alto-dpi", "200"])
+    assert args.dpi == 300.0
+    assert args.alto_dpi == 200.0
 
 
 def test_process_single_document_threading(tmp_path):

@@ -659,8 +659,8 @@ def process_pipeline(
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
 
-def main():
-    load_config("api_config.env")
+def build_parser():
+    """Build the CLI parser (extracted from main() for in-process testing)."""
     parser = argparse.ArgumentParser()
 
     # --- Per-document args (used by api_4_stats.sh) ---
@@ -722,8 +722,12 @@ def main():
         default=os.getenv("SAVE_TEITOK", "0"),
         help="1/0 whether to write TEITOK-XML per document.",
     )
+    return parser
 
-    args = parser.parse_args()
+
+def main(argv=None):
+    load_config("api_config.env")
+    args = build_parser().parse_args(argv)
 
     save_conllu = bool_from_str(args.save_conllu_ne, default=True)
     save_csv = bool_from_str(args.save_csv, default=True)
