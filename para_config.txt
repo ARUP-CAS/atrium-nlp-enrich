@@ -1,0 +1,37 @@
+# para_config.txt — atrium-nlp-enrich
+# Repository-specific paradata facts. Edit this file (not the Python) when
+# components or versions change.
+
+[tool]
+program = nlp-enrich
+version = v0.16.1
+repository_fallback = https://github.com/ufal/atrium-nlp-enrich
+
+[components]
+# name = <license> ; <always|conditional> ; <role>
+# "always"      -> component is part of every core run (worst-case baseline)
+# "conditional" -> only counts toward the license when log_component() is called
+#                  (or, via the CLI shim, when `--component NAME` is passed to
+#                  `start`/`success`).
+#
+# License rationale (see ATRIUM issue #6 licensing breakdown):
+#   * The NameTag 3 and UDPipe 2 *engines* are MPL 2.0, accessed here only as
+#     hosted Lindat/CLARIAH-CZ APIs. The binding constraint is the pre-trained
+#     *models*: the Czech CNEC 2.0 tagger and the czech-pdt UD parser are both
+#     CC BY-NC-SA 4.0. Because the core enrichment pipeline (api_2_udp →
+#     api_3_nt → api_4_stats) always exercises both models, CC BY-NC-SA 4.0 is
+#     the project-wide floor for this repo — every core run is non-commercial
+#     AND share-alike.
+#   * KER (legacy lemma-frequency keyword extraction) is stdlib-only; it adds
+#     no third-party license, so the repo MIT base applies for KER-only runs.
+#   * YAKE is AGPL-3.0 (LIAAD/yake PyPI package); KeyBERT is MIT and pulls in
+#     sentence-transformers (Apache-2.0). These are conditional: they only
+#     constrain the optional keyword-extraction step that actually loads them.
+nametag3_models   = CC BY-NC-SA 4.0 ; always      ; NameTag 3 Czech CNEC 2.0 NER model (api_3_nt)
+udpipe2_models    = CC BY-NC-SA 4.0 ; always      ; UDPipe 2 czech-pdt UD model (api_2_udp)
+nametag3_engine   = MPL 2.0         ; conditional ; NameTag 3 engine (Lindat API, MPL 2.0)
+udpipe2_engine    = MPL 2.0         ; conditional ; UDPipe 2 engine (Lindat API, MPL 2.0)
+ker               = MIT             ; conditional ; legacy KER lemma-frequency keyword extraction (stdlib only)
+yake              = AGPL-3.0        ; conditional ; YAKE statistical keyword extraction (LIAAD/yake)
+keybert           = MIT             ; conditional ; KeyBERT embedding-based keyword extraction
+sentence_transformers = Apache-2.0  ; conditional ; sentence-transformers backbone for KeyBERT

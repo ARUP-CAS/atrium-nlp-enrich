@@ -1,0 +1,64 @@
+services:
+  nlp:
+    image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}
+    build:
+      context: .
+      target: base
+      args:
+        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}
+        ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
+        ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
+    environment:
+      ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}
+      ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
+      ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
+      HF_HOME: /cache/huggingface
+    volumes:
+      - ./data:/data
+      - hf-cache:/cache/huggingface
+      - ./config_api.txt:/app/config_api.txt:ro
+
+  nlp-api:
+    profiles: [api]
+    image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-api
+    build:
+      context: .
+      target: api
+      args:
+        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-api
+        ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
+        ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
+    environment:
+      MAX_CONCURRENT_JOBS: "2"
+      DEFAULT_KW_METHOD: "keybert"
+      HF_HOME: /cache/huggingface
+    volumes:
+      - ./data:/data
+      - hf-cache:/cache/huggingface
+      - ./config_api.txt:/app/config_api.txt:ro
+    ports:
+      - "8000:8000"
+
+  nlp-llm:
+    profiles: [llm]
+    image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+    build:
+      context: .
+      target: llm
+      args:
+        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+        ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
+        ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
+    environment:
+      ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+      ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
+      ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
+      HF_HOME: /cache/huggingface
+      HF_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - ./data:/data
+      - hf-cache:/cache/huggingface
+      - ./llm_config.txt:/app/llm_config.txt:ro
+
+volumes:
+  hf-cache:

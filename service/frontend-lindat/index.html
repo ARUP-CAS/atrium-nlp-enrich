@@ -53,20 +53,6 @@
             </fieldset>
         </form>
         <pre id="result-container"><code id="result"></code></pre>
-
-        <hr style="margin: 2rem 0;">
-        <footer style="font-size: 0.9rem; color: #555;">
-            <h3>API usage 📡</h3>
-            <p>This page is a thin client over the REST API. The same call from the command line:</p>
-            <pre style="overflow-x: auto;"><code>curl -X POST "http://localhost:8000/enrich" \
-  -F "file=@lines.csv" -F "kw_method=keybert" -F "num_keywords=20"</code></pre>
-            <p>
-                Interactive docs: <a href="/docs">/docs</a> (Swagger UI) ·
-                machine-readable schema: <a href="/openapi.json">/openapi.json</a> ·
-                full reference:
-                <a href="https://github.com/ufal/atrium-nlp-enrich/blob/test/service/README.md">service/README.md</a>
-            </p>
-        </footer>
     </div>
 
     <div id="lindat-footer"></div>
