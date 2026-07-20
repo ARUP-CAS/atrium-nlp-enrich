@@ -6,15 +6,15 @@ source "${ATRIUM_CONFIG:-config_api.txt}"
 
 PARA_STATE=$(python3 atrium_paradata.py start \
     --program nlp-enrich \
-    --paradata-dir "${OUTPUT_DIR}/paradata" \
+    --paradata-dir "${PARADATA_DIR}" \
     --output-types tsv \
     --config \
         "script=api_3_nt" \
         "model_nametag=${MODEL_NAMETAG}" \
         "timeout=${TIMEOUT}" \
         "max_retries=${MAX_RETRIES}" \
-        "conllu_input_dir=${OUTPUT_DIR}/UDP" \
-        "output_dir=${OUTPUT_DIR}/NE")
+        "conllu_input_dir=${CONLLU_INPUT_DIR}" \
+        "output_dir=${TSV_INPUT_DIR}")
 
 TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
 mkdir -p "${OUTPUT_DIR}/NE"
@@ -22,7 +22,7 @@ mkdir -p "${OUTPUT_DIR}/NE"
 while IFS= read -r -d '' conllu; do
     rel_path="${conllu#"${OUTPUT_DIR}"/UDP/}"
     doc="${rel_path%.conllu}"
-    out_dir="${OUTPUT_DIR}/NE/${doc}"
+    out_dir="${TSV_INPUT_DIR}/${doc}"
 
     if [ -d "$out_dir" ]; then
         python3 atrium_paradata.py skip \
@@ -53,6 +53,6 @@ while IFS= read -r -d '' conllu; do
         echo "[CRITICAL ERROR] NameTag processing failed for ${doc}. Halting pipeline." >&2
         exit 1
     fi
-done < <(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f -print0)
+done < <(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f -print0)
 
 python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"

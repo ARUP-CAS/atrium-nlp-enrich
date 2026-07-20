@@ -13,13 +13,13 @@ OUTPUT_TYPES="${OUTPUT_TYPES# }"
 # shellcheck disable=SC2086  # OUTPUT_TYPES is intentionally word-split into multiple --output-types args
 PARA_STATE=$(python3 atrium_paradata.py start \
     --program nlp-enrich \
-    --paradata-dir "${OUTPUT_DIR}/paradata" \
+    --paradata-dir "${PARADATA_DIR}" \
     --output-types $OUTPUT_TYPES \
     --config \
         "script=api_4_stats" \
-        "conllu_input_dir=${OUTPUT_DIR}/UDP" \
-        "tsv_input_dir=${OUTPUT_DIR}/NE" \
-        "output_dir=${OUTPUT_DIR}/UDP_NE" \
+        "conllu_input_dir=${CONLLU_INPUT_DIR}" \
+        "tsv_input_dir=${TSV_INPUT_DIR}" \
+        "output_dir=${SUMMARY_OUTPUT_DIR}" \
         "save_conllu_ne=${SAVE_CONLLU_NE:-true}" \
         "save_csv=${SAVE_CSV:-true}" \
         "save_teitok=${SAVE_TEITOK:-true}" \
@@ -28,7 +28,7 @@ PARA_STATE=$(python3 atrium_paradata.py start \
         "dpi=${IMAGE_DPI:-}" \
         "alto_dpi=${ALTO_DPI:-}")
 
-TOTAL=$(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f | wc -l)
+TOTAL=$(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f | wc -l)
 rm -f "${OUTPUT_DIR}/summary_ne_counts.csv"
 
 while IFS= read -r -d '' conllu; do
@@ -36,9 +36,9 @@ while IFS= read -r -d '' conllu; do
     doc="${rel_path%.conllu}"
     doc_name=$(basename "$doc")
 
-    ne_dir="${OUTPUT_DIR}/NE/${doc}"
-    doc_out_dir="${OUTPUT_DIR}/UDP_NE/${doc}"
-    tt_out_dir="${OUTPUT_DIR}/TEITOK/$(dirname "$doc")"
+    ne_dir="${TSV_INPUT_DIR}/${doc}"
+    doc_out_dir="${SUMMARY_OUTPUT_DIR}/${doc}"
+    tt_out_dir="${TEITOK_OUTPUT_DIR}/$(dirname "$doc")"
 
     mkdir -p "$doc_out_dir"
     mkdir -p "$tt_out_dir"
@@ -93,6 +93,6 @@ while IFS= read -r -d '' conllu; do
         echo "[CRITICAL ERROR] summarize_nt_udp aggregation failed for ${doc}. Halting pipeline." >&2
         exit 1
     fi
-done < <(find "${OUTPUT_DIR}/UDP" -name '*.conllu' -type f -print0)
+done < <(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f -print0)
 
 python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"
