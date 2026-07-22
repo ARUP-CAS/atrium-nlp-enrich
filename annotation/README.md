@@ -17,15 +17,21 @@ are pure-stdlib Python (no extra dependencies).
 
 ## Contents
 
-| File | Purpose |
-|------|---------|
-| `docker-compose.yml`, `.env.example` | Standalone doccano (all-in-one image, host port 8001) |
-| `archaeo_labels.json` | The 6-type label set — import on the project's **Labels** page |
-| `GUIDELINES.md` | Annotator boundary rules (hand this to annotators) |
-| `conllu_to_doccano.py` | Tokenised input → doccano import JSONL (with optional pre-annotations) |
-| `doccano_to_iob2.py` | doccano export JSONL → NameTag 3 IOB2 |
+| File                                 | Purpose                                                                |
+|--------------------------------------|------------------------------------------------------------------------|
+| `docker-compose.yml`, `.env.example` | Standalone doccano (all-in-one image, host port 8001)                  |
+| `archaeo_labels.json`                | The 6-type label set — import on the project's **Labels** page         |
+| `GUIDELINES.md`                      | Annotator boundary rules (hand this to annotators)                     |
+| `conllu_to_doccano.py`               | Tokenised input → doccano import JSONL (with optional pre-annotations) |
+| `doccano_to_iob2.py`                 | doccano export JSONL → NameTag 3 IOB2                                  |
 
 ## 1. Deploy doccano
+
+Docker Compose is only one launch option — pick whichever fits. The rest of this
+guide (project, labels, converters) is identical no matter how doccano is
+started, since the converters only touch the import/export JSONL.
+
+### Option A — Docker Compose (multi-user / campaign server)
 
 ```bash
 cd annotation
@@ -33,8 +39,42 @@ cp .env.example .env          # then edit DOCCANO_ADMIN_PASSWORD
 docker compose up -d          # http://localhost:8001
 ```
 
-Log in with the admin credentials from `.env`. Create annotator user accounts
-under the Django admin (`/admin`) or add them to the project as members.
+### Option B — single `docker run` (no compose file)
+
+The all-in-one image bundles the web server **and** the Celery task worker, so
+one command is enough:
+
+```bash
+docker run -d --name atrium-doccano -p 8001:8000 \
+  -e ADMIN_USERNAME=admin -e ADMIN_EMAIL=admin@example.com -e ADMIN_PASSWORD=changeme \
+  -v doccano-db:/data doccano/doccano:1.8.4    # http://localhost:8001
+```
+
+### Option C — pip, no Docker at all (single annotator)
+
+doccano is a Django app and runs straight from a virtualenv:
+
+```bash
+pip install doccano
+doccano init                                          # create the SQLite DB
+doccano createuser --username admin --password admin  # your account
+doccano webserver --port 8000                         # http://localhost:8000
+```
+
+⚠️ In a **second terminal**, also start the task worker — dataset **import and
+export run as background jobs**, so without it they will silently hang:
+
+```bash
+doccano task
+```
+
+(Options A and B include this worker inside the container; only the pip path
+needs it started separately.)
+
+---
+
+Then log in with your admin credentials. Create annotator user accounts under
+the Django admin (`/admin`) or add them to the project as members.
 
 ## 2. Create the project
 

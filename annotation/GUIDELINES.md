@@ -5,14 +5,14 @@ Six flat entity types for the domain-specific NameTag 3 model (issue
 ArchaeoBERT guidelines (`ART/PER/LOC/CON/MAT/SPE`). Annotate spans over the
 displayed text; the exporter turns them into token-level IOB2.
 
-| Type | Hotkey | Meaning |
-|------|--------|---------|
-| `ARTEFACT` | a | Objects found in the ground (pottery, beams, waste, iron ore, sherds…) |
-| `PERIOD`   | p | Dates and time periods |
-| `LOCATION` | l | Municipalities, provinces, countries, full addresses, named institutions |
-| `CONTEXT`  | c | Human-made features that can contain artefacts (cesspit, moat, ditch, burial mound…) |
-| `MATERIAL` | m | What an artefact is made of (flint, bronze, brick, wood…) |
-| `SPECIES`  | s | Animal / plant / human species |
+| Type       | Hotkey | Meaning                                                                              |
+|------------|--------|--------------------------------------------------------------------------------------|
+| `ARTEFACT` | a      | Objects found in the ground (pottery, beams, waste, iron ore, sherds…)               |
+| `PERIOD`   | p      | Dates and time periods                                                               |
+| `LOCATION` | l      | Municipalities, provinces, countries, full addresses, named institutions             |
+| `CONTEXT`  | c      | Human-made features that can contain artefacts (cesspit, moat, ditch, burial mound…) |
+| `MATERIAL` | m      | What an artefact is made of (flint, bronze, brick, wood…)                            |
+| `SPECIES`  | s      | Animal / plant / human species                                                       |
 
 ## Boundary rules (summary)
 
