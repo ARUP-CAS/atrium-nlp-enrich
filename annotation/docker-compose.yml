@@ -1,0 +1,28 @@
+# Standalone doccano deployment for the ATRIUM archaeo NER annotation campaign.
+#
+# The doccano/doccano all-in-one image bundles the web server, the Celery task
+# queue and a SQLite database in one container, so no external DB/broker is
+# required. This is intentionally a self-contained campaign deployment, separate
+# from the pipeline services (whose FastAPI convention is port 8000) — doccano is
+# mapped to host port 8001 to avoid clashing.
+#
+#   Configure:  cp .env.example .env   # then edit the admin password
+#   Start:      docker compose up -d   ->  http://localhost:8001
+#   Stop:       docker compose down    # data persists in the doccano-data volume
+#   Reset:      docker compose down -v  # deletes all projects/annotations
+services:
+  doccano:
+    image: doccano/doccano:1.8.4
+    container_name: atrium-doccano
+    ports:
+      - "8001:8000"
+    environment:
+      ADMIN_USERNAME: "${DOCCANO_ADMIN_USERNAME:-admin}"
+      ADMIN_EMAIL: "${DOCCANO_ADMIN_EMAIL:-admin@example.com}"
+      ADMIN_PASSWORD: "${DOCCANO_ADMIN_PASSWORD:-changeme}"
+    volumes:
+      - doccano-data:/data
+    restart: unless-stopped
+
+volumes:
+  doccano-data:
