@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
@@ -21,6 +22,7 @@ from .enrichment import (
     KeywordPreflightError,
     PipelineError,
     PipelineManager,
+    UnsupportedMediaTypeError,
     count_words,
     normalize_upload,
     sanitize_doc_id,
@@ -89,17 +91,18 @@ if (_SERVICE_DIR / "frontend-lindat").exists():
         name="frontend-lindat",
     )
 
-try:
-    from fastapi.middleware.cors import CORSMiddleware
+# CORS hardening (mirrors the atrium-page-classification exemplar): a wildcard
+# origin must not be combined with credentials — browsers reject that pairing.
+if "*" in ALLOWED_ORIGINS and os.environ.get("ALLOW_CREDENTIALS", "true").lower() == "true":
+    ALLOWED_ORIGINS.remove("*")
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=ALLOWED_ORIGINS,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-except Exception:  # pragma: no cover
-    pass
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=ALLOWED_ORIGINS != ["*"],
+    allow_methods=["GET", "POST", "DELETE"],  # DELETE for /jobs/{job_id}
+    allow_headers=["*"],
+)
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -294,6 +297,8 @@ async def enrich(
         raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
+    except UnsupportedMediaTypeError as exc:
+        raise HTTPException(415, str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
@@ -390,6 +395,8 @@ async def submit_job(
         raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
+    except UnsupportedMediaTypeError as exc:
+        raise HTTPException(415, str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
