@@ -15,11 +15,15 @@ pip install -r requirements.txt -r service/requirements.txt
 uvicorn service.api:app --host 0.0.0.0 --port 8000
 ```
 
-Two-terminal smoke test:
+Two-terminal smoke test — start the server, then exercise it with the
+zero-dependency client:
 
 ```bash
+# terminal 1
+bash scripts/server.sh
 # terminal 2
-python service/test_api.py -f small_data_samples/CTX000000001.csv
+python3 scripts/atrium_enrich.py small_data_samples/CTX000000001.csv --info
+python3 scripts/atrium_enrich.py small_data_samples/CTX000000001.csv
 ```
 
 The `/info` payload follows the ATRIUM meta-contract: `service`, `version`
@@ -168,13 +172,14 @@ error).
 
 ## Tests
 
-The API test suite lives on the development
-([`test`](https://github.com/ufal/atrium-nlp-enrich/tree/test)) branch:
-`tests/test_api_service.py` is fully hermetic (no LINDAT, no models) and
-exercises the full HTTP contract via FastAPI `TestClient`;
-`tests/test_rescale.py` covers the `/rescale` transform and endpoint (including
-the non-well-formed `<name>…</n>` TEITOK quirk).
+This `agent-skill` branch ships **no** test files. The API test suite lives on
+the development ([`test`](https://github.com/ufal/atrium-nlp-enrich/tree/test))
+branch: `tests/test_api_service.py` is fully hermetic (no LINDAT, no models) and
+exercises the full HTTP contract via FastAPI `TestClient`; `tests/test_rescale.py`
+covers the `/rescale` transform and endpoint (including the non-well-formed
+`<name>…</n>` TEITOK quirk). Check out that branch to run them:
 
 ```bash
+git checkout test
 pytest -m "not slow" tests/test_api_service.py tests/test_rescale.py
 ```
