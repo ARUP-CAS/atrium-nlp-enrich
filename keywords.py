@@ -285,11 +285,6 @@ def _get_keybert_model(model_name: str):
         raise KeywordBackendError(f"PyTorch import failed: {exc}") from exc
 
     # COMPATIBILITY PATCH 1: Pacify broken torchvision installations
-    try:
-        pass
-    except Exception:
-        pass
-
     import sys
 
     if "torchvision" in sys.modules and not hasattr(sys.modules["torchvision"], "extension"):

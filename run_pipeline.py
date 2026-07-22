@@ -726,8 +726,12 @@ def _resolve_llm_paradata_dir(llm_config_path: str, default_dir: Path) -> Path:
         values = _parse_config(p)
         if values.get("PARADATA_DIR"):
             return Path(values["PARADATA_DIR"])
-    except Exception:
-        pass
+    except Exception as exc:
+        print(
+            f"[WARNING] Could not read PARADATA_DIR from {llm_config_path}: {exc}; "
+            f"using default {default_dir}",
+            file=sys.stderr,
+        )
     return default_dir
 
 
@@ -763,7 +767,8 @@ def _finalize_merge(
         if skipped_names:
             kwargs["skipped_stages"] = skipped_names
         return merge_run_paradata(ordered_paths, out_path, **kwargs)
-    except Exception:
+    except Exception as exc:
+        print(f"[WARNING] Merged pipeline paradata could not be written: {exc}", file=sys.stderr)
         return None
 
 
