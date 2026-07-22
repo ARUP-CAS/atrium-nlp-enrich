@@ -116,7 +116,11 @@ python3 scripts/atrium_enrich.py --info
    sync endpoint.
 6. **Size limits**: 5 MB per file, 30 000 words per sync request. Split larger
    documents into parts and tell the user you did so.
-7. Do not bypass the API by importing the pipeline code directly; server-side
+7. **Input errors**: HTTP 415 means the file type is unsupported (accepted:
+   `.csv` with a `text` column, `.xlsx`, `.txt`) - convert first, do not retry.
+   HTTP 422 means a supported file had unusable content (e.g. missing `text`
+   column, no non-empty rows); fix the input rather than retrying.
+8. Do not bypass the API by importing the pipeline code directly; server-side
    runs produce the paradata provenance records shipped in every envelope.
 
 ## Acknowledgements & Citations 🙏

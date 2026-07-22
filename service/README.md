@@ -36,6 +36,10 @@ models, and keyword methods.
 | POST   | `/enrich`      | **single-file entry point** — upload CSV/XLSX/TXT            |
 | POST   | `/enrich_text` | same pipeline for inline JSON                                |
 | POST   | `/rescale`     | rescale a single-page TEITOK's bboxes to a target image size |
+| POST   | `/jobs`        | async submit (returns `job_id`) for long inputs             |
+| GET    | `/jobs/{id}`   | job status                                                   |
+| GET    | `/jobs/{id}/result` | job result envelope (409 until `done`)                 |
+| DELETE | `/jobs/{id}`   | delete a finished job's record                              |
 
 ### `POST /enrich` (multipart form)
 
@@ -140,7 +144,9 @@ path and no input type bypasses a mandatory step.
 
 The runner's exit codes map to HTTP: `0`→200; `3` (keyword preflight)→retry with
 `yake`, else 503; `1` (empty run)/`2` (missing stage)/other→502; oversize→413;
-queue full→429.
+queue full→429. Upload validation follows the meta-contract: an unsupported file
+type (not `.csv`/`.xlsx`/`.txt`) → **415**; a supported type whose content is
+unusable (CSV without a `text` column, no non-empty rows, non-UTF-8) → **422**.
 
 UDPipe/NameTag models stay operator-pinned in `config_api.txt` and are surfaced
 read-only via `/info`. ALTO/page-image inputs are unusable for text-only API
