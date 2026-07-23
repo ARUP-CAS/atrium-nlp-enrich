@@ -17,6 +17,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
+from .atrium_service import list_endpoints
 from .enrichment import (
     KeywordPreflightError,
     PipelineError,
@@ -227,6 +228,7 @@ async def info() -> Dict[str, Any]:
     return {
         "service": "atrium-nlp-enrich",
         "version": app.version,
+        "endpoints": list_endpoints(app),
         "stage_plan": ["manifest", "udp", "nt", "stats"],
         "core_stages_mandatory": True,
         "models": {

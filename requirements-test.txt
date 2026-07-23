@@ -1,6 +1,11 @@
 pytest>=9.1.1
 pytest-cov
 requests
+# API meta-contract test deps (issue #32).
+fastapi
+httpx
+python-multipart
+openapi-spec-validator
 # Optional heavy deps only if the suite truly needs them:
 # torch
 # transformers

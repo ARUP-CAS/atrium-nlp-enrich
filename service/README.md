@@ -27,7 +27,7 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 | Method | Path           | Purpose                                                      |
 |--------|----------------|--------------------------------------------------------------|
 | GET    | `/`            | minimal landing page (see `/docs` for OpenAPI UI)            |
-| GET    | `/info`        | stage plan, pinned models, keyword methods + default, limits |
+| GET    | `/info`        | service id, endpoints, stage plan, pinned models, keyword methods + default, limits |
 | GET    | `/health`      | config validity via `run_pipeline.py --dry-run`              |
 | POST   | `/enrich`      | **single-file entry point** — upload CSV/XLSX/TXT            |
 | POST   | `/enrich_text` | same pipeline for inline JSON                                |
