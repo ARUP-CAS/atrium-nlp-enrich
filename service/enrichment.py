@@ -53,16 +53,6 @@ class PipelineError(Exception):
         self.returncode = returncode
 
 
-class UnsupportedMediaTypeError(ValueError):
-    """Upload has a file type the service does not accept (→ HTTP 415).
-
-    Subclasses ``ValueError`` so existing callers that catch ``ValueError`` keep
-    treating it as a client input error; the API layer catches it *before* the
-    generic ``ValueError`` handler to return 415 (unsupported media type) rather
-    than 422 (unusable content of an otherwise-supported type).
-    """
-
-
 class KeywordPreflightError(PipelineError):
     def __init__(self, message: str, returncode: int = 3) -> None:
         super().__init__(message, http_status=503, returncode=returncode)
@@ -180,9 +170,7 @@ def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
         return _read_txt_bytes(data)
     if ext == ".xlsx":
         return _read_xlsx_bytes(data)
-    raise UnsupportedMediaTypeError(
-        f"Unsupported file type '{ext or '(none)'}'. Allowed: .csv, .xlsx, .txt"
-    )
+    raise ValueError(f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt")
 
 
 def count_words(rows: List[Dict[str, Any]]) -> int:

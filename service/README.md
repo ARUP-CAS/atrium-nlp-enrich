@@ -15,35 +15,23 @@ pip install -r requirements.txt -r service/requirements.txt
 uvicorn service.api:app --host 0.0.0.0 --port 8000
 ```
 
-Two-terminal smoke test — start the server, then exercise it with the
-zero-dependency client:
+Two-terminal smoke test:
 
 ```bash
-# terminal 1
-bash scripts/server.sh
 # terminal 2
-python3 scripts/atrium_enrich.py small_data_samples/CTX000000001.csv --info
-python3 scripts/atrium_enrich.py small_data_samples/CTX000000001.csv
+python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 ```
-
-The `/info` payload follows the ATRIUM meta-contract: `service`, `version`
-(from `para_config.txt`), `endpoints`, `limits`, plus stage plan, pinned
-models, and keyword methods.
 
 ## Endpoints
 
 | Method | Path           | Purpose                                                      |
 |--------|----------------|--------------------------------------------------------------|
 | GET    | `/`            | minimal landing page (see `/docs` for OpenAPI UI)            |
-| GET    | `/info`        | stage plan, pinned models, keyword methods + default, limits |
+| GET    | `/info`        | service id, endpoints, stage plan, pinned models, keyword methods + default, limits |
 | GET    | `/health`      | config validity via `run_pipeline.py --dry-run`              |
 | POST   | `/enrich`      | **single-file entry point** — upload CSV/XLSX/TXT            |
 | POST   | `/enrich_text` | same pipeline for inline JSON                                |
 | POST   | `/rescale`     | rescale a single-page TEITOK's bboxes to a target image size |
-| POST   | `/jobs`        | async submit (returns `job_id`) for long inputs             |
-| GET    | `/jobs/{id}`   | job status                                                   |
-| GET    | `/jobs/{id}/result` | job result envelope (409 until `done`)                 |
-| DELETE | `/jobs/{id}`   | delete a finished job's record                              |
 
 ### `POST /enrich` (multipart form)
 
@@ -148,9 +136,7 @@ path and no input type bypasses a mandatory step.
 
 The runner's exit codes map to HTTP: `0`→200; `3` (keyword preflight)→retry with
 `yake`, else 503; `1` (empty run)/`2` (missing stage)/other→502; oversize→413;
-queue full→429. Upload validation follows the meta-contract: an unsupported file
-type (not `.csv`/`.xlsx`/`.txt`) → **415**; a supported type whose content is
-unusable (CSV without a `text` column, no non-empty rows, non-UTF-8) → **422**.
+queue full→429.
 
 UDPipe/NameTag models stay operator-pinned in `config_api.txt` and are surfaced
 read-only via `/info`. ALTO/page-image inputs are unusable for text-only API
@@ -172,14 +158,13 @@ error).
 
 ## Tests
 
-This `agent-skill` branch ships **no** test files. The API test suite lives on
-the development ([`test`](https://github.com/ufal/atrium-nlp-enrich/tree/test))
-branch: `tests/test_api_service.py` is fully hermetic (no LINDAT, no models) and
-exercises the full HTTP contract via FastAPI `TestClient`; `tests/test_rescale.py`
-covers the `/rescale` transform and endpoint (including the non-well-formed
-`<name>…</n>` TEITOK quirk). Check out that branch to run them:
+`tests/test_api_service.py` is fully hermetic (no LINDAT, no models): it
+monkeypatches the pipeline subprocess to drop fixture outputs into the
+workspace, then exercises the full HTTP contract via FastAPI `TestClient`,
+plus input normalization, `doc_id` sanitization, and exit-code→HTTP mapping.
+`tests/test_rescale.py` covers the `/rescale` transform and endpoint (including
+the non-well-formed `<name>…</n>` TEITOK quirk).
 
 ```bash
-git checkout test
 pytest -m "not slow" tests/test_api_service.py tests/test_rescale.py
 ```

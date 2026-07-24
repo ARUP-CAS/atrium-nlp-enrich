@@ -13,16 +13,15 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
+from .atrium_service import list_endpoints
 from .enrichment import (
     KeywordPreflightError,
     PipelineError,
     PipelineManager,
-    UnsupportedMediaTypeError,
     count_words,
     normalize_upload,
     sanitize_doc_id,
@@ -91,18 +90,17 @@ if (_SERVICE_DIR / "frontend-lindat").exists():
         name="frontend-lindat",
     )
 
-# CORS hardening (mirrors the atrium-page-classification exemplar): a wildcard
-# origin must not be combined with credentials — browsers reject that pairing.
-if "*" in ALLOWED_ORIGINS and os.environ.get("ALLOW_CREDENTIALS", "true").lower() == "true":
-    ALLOWED_ORIGINS.remove("*")
+try:
+    from fastapi.middleware.cors import CORSMiddleware
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=ALLOWED_ORIGINS != ["*"],
-    allow_methods=["GET", "POST", "DELETE"],  # DELETE for /jobs/{job_id}
-    allow_headers=["*"],
-)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=ALLOWED_ORIGINS,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+except Exception:  # pragma: no cover
+    pass
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -230,16 +228,7 @@ async def info() -> Dict[str, Any]:
     return {
         "service": "atrium-nlp-enrich",
         "version": app.version,
-        "endpoints": [
-            "/info",
-            "/health",
-            "/enrich",
-            "/enrich_text",
-            "/rescale",
-            "/jobs",
-            "/jobs/{job_id}",
-            "/jobs/{job_id}/result",
-        ],
+        "endpoints": list_endpoints(app),
         "stage_plan": ["manifest", "udp", "nt", "stats"],
         "core_stages_mandatory": True,
         "models": {
@@ -297,8 +286,6 @@ async def enrich(
         raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
-    except UnsupportedMediaTypeError as exc:
-        raise HTTPException(415, str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
@@ -395,8 +382,6 @@ async def submit_job(
         raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         rows = normalize_upload(file.filename or "upload.csv", data)
-    except UnsupportedMediaTypeError as exc:
-        raise HTTPException(415, str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
