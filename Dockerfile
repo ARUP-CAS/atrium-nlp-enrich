@@ -59,7 +59,10 @@ FROM base AS llm
 
 USER root
 COPY requirements_llm.txt ./
-RUN pip install \
+
+# Dynamically remove the strict torch==2.7.0 pin so vllm can install its required version
+RUN sed -i '/^torch==/d' requirements_llm.txt \
+    && pip install \
         --extra-index-url https://download.pytorch.org/whl/cpu \
         -r requirements_llm.txt
 
