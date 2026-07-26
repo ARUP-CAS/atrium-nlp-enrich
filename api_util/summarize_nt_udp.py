@@ -1,5 +1,7 @@
 import argparse
 import csv
+import glob
+import json
 import os
 import re
 import sys
@@ -108,34 +110,23 @@ ONTO_TYPE_MAP = {
 }
 
 # --- CNEC to ONTO Mapping ---
-# Tagset conversion logic validating the mapping of legacy CNEC hierarchal tags
-# to the generalized OntoNotes v5 types returned by the multilingual model.
 CNEC_TO_ONTO_MAP = {
-    # Person
     "p": "PERSON", "p_": "PERSON", "P": "PERSON", "pf": "PERSON",
     "ps": "PERSON", "pm": "PERSON", "ph": "PERSON", "pd": "PERSON", "pp": "PERSON",
-    "pc": "NORP", # Inhabitant name mapped to NORP
-    # Geography
+    "pc": "NORP",
     "g": "GPE", "G": "GPE", "g_": "GPE", "gu": "GPE", "gr": "GPE", "gc": "GPE",
     "gl": "LOC", "gs": "LOC", "gt": "LOC", "gh": "LOC",
     "gq": "FAC",
-    # Institution
     "i": "ORG", "i_": "ORG", "I": "ORG", "if": "ORG", "io": "ORG", "ic": "ORG",
     "ia": "EVENT",
-    # Artifact
     "o": "PRODUCT", "o_": "PRODUCT", "op": "PRODUCT",
     "oa": "WORK_OF_ART", "oe": "QUANTITY", "om": "MONEY", "or": "LAW",
-    # Media
     "m": "ORG", "mn": "WORK_OF_ART", "ms": "ORG", "mi": "ORG",
-    # Time
     "t": "TIME", "T": "TIME", "th": "TIME", "tt": "TIME",
     "td": "DATE", "tm": "DATE", "ty": "DATE", "tf": "EVENT",
-    # Numbers
     "n": "CARDINAL", "N": "CARDINAL", "n_": "CARDINAL", "nc": "CARDINAL", "ns": "CARDINAL",
     "na": "DATE", "nb": "QUANTITY", "ni": "ORDINAL", "no": "ORDINAL",
-    # Address/Number
     "a": "LOC", "A": "LOC", "ah": "FAC", "at": "CARDINAL", "az": "CARDINAL",
-    # Email / Web / Misc
     "me": "CARDINAL", "C": "WORK_OF_ART", "unk": "O", "O": "O"
 }
 
@@ -178,31 +169,22 @@ def sanitize_filename(name):
 
 
 def get_ne_explanation(raw_tag):
-    """
-    Translates the short NER code into a human-readable description.
-    Supports both native ONTO tags (from the new multilingual models)
-    and legacy CNEC tags by transparently mapping them to ONTO equivalents.
-    """
     if raw_tag == "O" or not raw_tag or raw_tag == "_":
         return ""
     if raw_tag.startswith("B-") or raw_tag.startswith("I-"):
         primary = raw_tag.split("|")[0]
         short_code = primary[2:]
 
-        # 1. Native ONTO tag (direct output from nametag3-multilingual-onto)
         if short_code in ONTO_TYPE_MAP:
             return ONTO_TYPE_MAP[short_code]
 
-        # 2. Legacy CNEC tag mapping
         if short_code in CNEC_TO_ONTO_MAP:
             onto_mapped = CNEC_TO_ONTO_MAP[short_code]
-            # Prioritize the mapped ONTO description, but fallback to native CNEC if weirdly handled
             return ONTO_TYPE_MAP.get(
                 onto_mapped,
                 CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
             )
 
-        # 3. Complete fallback for unmapped legacy or unknown codes
         return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
 
     return ""
@@ -310,9 +292,9 @@ def write_document_csv(rows, out_path):
                 misc_keys.add(k)
 
     header = (
-        ["page_id", "token", "lemma", "position", "nameTag", "NE"]
-        + sorted(list(feature_keys))
-        + sorted(list(misc_keys))
+            ["page_id", "token", "lemma", "position", "nameTag", "NE"]
+            + sorted(list(feature_keys))
+            + sorted(list(misc_keys))
     )
     try:
         with open(out_path, "w", encoding="utf-8", newline="") as f:
@@ -325,23 +307,7 @@ def write_document_csv(rows, out_path):
 
 # ── FIX #8: single-pass reader ───────────────────────────────────────────────
 
-
 def _collect_merged_rows(merged_filepath):
-    """Parse a merged CoNLL-U file in a single pass and return both the
-    per-token rows needed for the document CSV and the per-page entity
-    counts needed for the summary CSV.
-
-    FIX #8: Previously ``process_merged_file`` and ``append_summary_row``
-    each opened and iterated the merged CoNLL-U independently, causing two
-    full file reads per document.  This function does the work once and
-    returns both result sets so the caller can feed them to the appropriate
-    writers without any additional I/O.
-
-    Page-boundary detection understands two signals (see FIX #3 in
-    call_udpipe.py):
-      • ``# page_break = true``   – merged/multi-chunk files
-      • ``# sent_id = 1``         – original / legacy files
-    """
     all_rows = []
     entities_by_page: dict = {}
     page_counter = 0
@@ -361,7 +327,6 @@ def _collect_merged_rows(merged_filepath):
             for line in fh:
                 line = line.strip()
 
-                # Page-boundary detection — support both signals.
                 if line == "# page_break = true":
                     pending_page_break = True
                     continue
@@ -388,7 +353,6 @@ def _collect_merged_rows(merged_filepath):
                 feats = parse_features(cols[5])
                 ner_tag = misc.get("NER", "")
 
-                # ── token row for the document CSV ──────────────────────
                 row = {
                     "page_id": page_counter,
                     "token": cols[1],
@@ -404,7 +368,6 @@ def _collect_merged_rows(merged_filepath):
                         row[f"udpipe.misc.{k}"] = v
                 all_rows.append(row)
 
-                # ── entity tracking for the summary CSV ─────────────────
                 if ner_tag.startswith("B-"):
                     _flush_entity(page_counter)
                     current_entity_toks = [cols[1]]
@@ -424,24 +387,12 @@ def _collect_merged_rows(merged_filepath):
 
 
 def process_merged_file(merged_filepath, output_csv_path):
-    """Write a per-document CSV from a merged CoNLL-U file.
-
-    Kept for backwards compatibility; internally delegates to
-    _collect_merged_rows so that only one file read is performed when
-    called from process_single_document (which passes pre-collected rows
-    via write_document_csv directly).
-    """
     rows, _ = _collect_merged_rows(merged_filepath)
     if rows:
         write_document_csv(rows, output_csv_path)
 
 
 def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
-    """Write per-page entity-count rows from pre-collected entity data.
-
-    FIX #8: This replaces the file-based append_summary_row for use inside
-    process_single_document, avoiding a second read of the merged CoNLL-U.
-    """
     from collections import Counter
 
     if not summary_csv_path or not entities_by_page:
@@ -470,60 +421,39 @@ def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
 
 
 def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
-    """Append a per-page entity-count row to the global summary CSV.
-
-    Kept as the public API; internally uses _collect_merged_rows.
-    Direct callers outside process_single_document still use this entry
-    point and pay the cost of one file read.
-    """
     _, entities_by_page = _collect_merged_rows(merged_conllu_path)
     _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path)
 
 
 # ── per-document entry point (called from api_4_stats.sh) ────────────────────
 
-
 def process_single_document(
-    conllu_file,
-    ne_dir,
-    output_dir,
-    save_conllu=True,
-    save_csv=True,
-    save_teitok=False,
-    alto_dir=None,
-    teitok_out=None,
-    pages_dir=None,
-    summary_csv=None,
-    model_udpipe=None,
-    model_nametag=None,
-    dpi=None,
-    alto_dpi=None,
-    document_json_dir=None,
-    document_run_id=None,
-    document_paradata_ref="",
-    document_license_detail=None,
+        conllu_file,
+        ne_dir,
+        output_dir,
+        save_conllu=True,
+        save_csv=True,
+        save_teitok=False,
+        alto_dir=None,
+        teitok_out=None,
+        pages_dir=None,
+        summary_csv=None,
+        model_udpipe=None,
+        model_nametag=None,
+        dpi=None,
+        alto_dpi=None,
+        document_json_dir=None,
+        document_run_id=None,
+        document_paradata_ref="",
+        document_license_detail=None,
+        include_lines=False,
 ):
-    """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
-
-    FIX #8: When both a document CSV and a summary CSV are requested, the
-    merged CoNLL-U is read in a single pass via _collect_merged_rows, and
-    the collected data is passed directly to the two writers.  Previously
-    the file was read twice (once by process_merged_file and once by
-    append_summary_row).
-
-    `document_json_dir` (issue #13's paired-hook model, see
-    api_util/document_hook.py): when set, this document's `entities` and
-    `pages[].teitok_surface` blocks are written/merged into
-    `<document_json_dir>/<doc_name>.document.json`. Left unset (the
-    default), this is a complete no-op — standalone runs are unaffected.
-    """
     conllu_path = Path(conllu_file)
     doc_name = conllu_path.stem
     doc_out_dir = Path(output_dir)
     doc_out_conllu = doc_out_dir / f"{doc_name}.conllu"
     doc_out_csv = doc_out_dir / f"{doc_name}.csv"
 
-    # WITH this corrected block:
     teitok_out_path = Path(teitok_out) / f"{doc_name}.teitok.xml" if teitok_out else None
 
     if save_teitok and teitok_out_path:
@@ -559,9 +489,6 @@ def process_single_document(
             print(f"  [Error] Failed to create merged CoNLL-U for {doc_name}", file=sys.stderr)
             return False
 
-    # FIX #8: collect token rows and entity data in a single pass when either
-    # the document CSV or the summary CSV is needed.  This avoids reading the
-    # merged file twice.
     need_csv = save_csv and not doc_out_csv.exists()
     need_summary = bool(summary_csv)
 
@@ -572,8 +499,6 @@ def process_single_document(
         if need_summary:
             _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv)
     elif save_csv and not doc_out_csv.exists():
-        # Fallback: CSV only, no summary (should not normally reach here,
-        # but kept for safety).
         process_merged_file(doc_out_conllu, doc_out_csv)
 
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
@@ -591,25 +516,24 @@ def process_single_document(
         )
 
     if document_json_dir:
-        # Local import: avoids a module-load-time dependency cycle, since
-        # document_hook.py itself lazily imports this module's NER-tagset
-        # tables (see its _entity_type_fields docstring).
-        from api_util.document_hook import write_document_record
+        from api_util.document_hook import run_document_hook
 
-        doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
+        baseline_json = os.path.join(document_json_dir, f"{doc_name}.document.json")
+        out_json = baseline_json  # In-place accretion
+        if not os.path.exists(baseline_json):
+            baseline_json = None  # Graceful fallback to rule 3 (own part only)
+
         try:
-            write_document_record(
-                document_json_dir,
-                doc_name,
-                str(doc_out_conllu),
-                str(doc_in_alto) if doc_in_alto else None,
-                str(teitok_out_path) if teitok_out_path else None,
+            run_document_hook(
+                doc_id=doc_name,
+                teitok_path=str(teitok_out_path) if teitok_out_path else "",
+                conllu_path=str(doc_out_conllu),
+                baseline_json=baseline_json,
+                out_json=out_json,
                 run_id=document_run_id,
                 paradata_ref=document_paradata_ref,
                 license_detail=document_license_detail,
-                image_dir=pages_dir or None,
-                dpi=dpi,
-                alto_dpi=alto_dpi,
+                include_lines=include_lines
             )
         except Exception as exc:
             print(f"  [Warn] document-json hook failed for {doc_name}: {exc}", file=sys.stderr)
@@ -628,22 +552,23 @@ def process_single_document(
 
 # ── directory-level pipeline (used when running standalone) ──────────────────
 
-
 def process_pipeline(
-    conllu_dir,
-    tsv_dir,
-    output_dir,
-    alto_dir,
-    teitok_out,
-    save_conllu=True,
-    save_csv=True,
-    save_teitok=False,
-    pages_dir=None,
-    model_udpipe=None,
-    model_nametag=None,
-    summary_csv=None,
-    dpi=None,
-    alto_dpi=None,
+        conllu_dir,
+        tsv_dir,
+        output_dir,
+        alto_dir,
+        teitok_out,
+        save_conllu=True,
+        save_csv=True,
+        save_teitok=False,
+        pages_dir=None,
+        model_udpipe=None,
+        model_nametag=None,
+        summary_csv=None,
+        dpi=None,
+        alto_dpi=None,
+        document_json_dir=None,
+        include_lines=False,
 ):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
@@ -685,6 +610,8 @@ def process_pipeline(
             model_nametag=model_nametag,
             dpi=dpi,
             alto_dpi=alto_dpi,
+            document_json_dir=document_json_dir,
+            include_lines=include_lines,
         )
 
     print("\nPipeline Complete.")
@@ -692,40 +619,25 @@ def process_pipeline(
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
-
 def build_parser():
-    """Build the CLI parser (extracted from main() for in-process testing)."""
     parser = argparse.ArgumentParser()
 
     # --- Per-document args (used by api_4_stats.sh) ---
-    parser.add_argument(
-        "--conllu", default=None, help="Single CoNLL-U file to process (per-document mode)."
-    )
-    parser.add_argument(
-        "--ne-dir", default=None, help="Directory of per-page NE TSV files for this document."
-    )
-    parser.add_argument(
-        "--output-dir", default=None, help="Output directory for this document's results."
-    )
-    parser.add_argument(
-        "--summary-csv",
-        default=os.getenv("SUMMARY_CSV"),
-        help="Path to the global summary CSV to append entity counts to.",
-    )
+    parser.add_argument("--conllu", default=None, help="Single CoNLL-U file to process (per-document mode).")
+    parser.add_argument("--ne-dir", default=None, help="Directory of per-page NE TSV files for this document.")
+    parser.add_argument("--output-dir", default=None, help="Output directory for this document's results.")
+    parser.add_argument("--summary-csv", default=os.getenv("SUMMARY_CSV"),
+                        help="Path to the global summary CSV to append entity counts to.")
 
-    # Add to the argparse.ArgumentParser definition:
-    parser.add_argument(
-        "--dpi",
-        type=_float_or_none,
-        default=os.environ.get("IMAGE_DPI"),
-        help="Output image DPI for TEITOK scaling",
-    )
-    parser.add_argument(
-        "--alto-dpi",
-        type=_float_or_none,
-        default=os.environ.get("ALTO_DPI"),
-        help="Source ALTO DPI",
-    )
+    parser.add_argument("--dpi", type=_float_or_none, default=os.environ.get("IMAGE_DPI"),
+                        help="Output image DPI for TEITOK scaling")
+    parser.add_argument("--alto-dpi", type=_float_or_none, default=os.environ.get("ALTO_DPI"), help="Source ALTO DPI")
+
+    # --- Document Hook specific args ---
+    parser.add_argument("--state-dir", default=None, help="Directory containing paradata state files")
+    parser.add_argument("--document-json-dir", type=str, default=None,
+                        help="Directory containing baseline document JSONs for accretion")
+    parser.add_argument("--include-lines", action="store_true", help="DANGER: Opt-in to merge lines[] block.")
 
     # --- Directory-mode args (used when running standalone) ---
     parser.add_argument("--conllu-dir", default=os.getenv("CONLLU_INPUT_DIR"))
@@ -733,29 +645,17 @@ def build_parser():
     parser.add_argument("--out-dir", default=os.getenv("SUMMARY_OUTPUT_DIR"))
     parser.add_argument("--tt-dir", default=os.getenv("TEITOK_OUTPUT_DIR"))
     parser.add_argument("--alto-dir", default=os.getenv("ALTO_DIR"))
-    parser.add_argument(
-        "--pages-dir",
-        default=os.getenv("INPUT_PAGES_DIR"),
-        help="Directory containing per-page images (doc-N.png) used "
-        "to scale ALTO bboxes to the actual PNG resolution.",
-    )
+    parser.add_argument("--pages-dir", default=os.getenv("INPUT_PAGES_DIR"),
+                        help="Directory containing per-page images.")
 
     # --- Format flags ---
-    parser.add_argument(
-        "--save-conllu-ne",
-        default=os.getenv("SAVE_CONLLU_NE", "1"),
-        help="1/0 whether to keep the merged CoNLL-U per document.",
-    )
-    parser.add_argument(
-        "--save-csv",
-        default=os.getenv("SAVE_CSV", "1"),
-        help="1/0 whether to write the summary CSV per document.",
-    )
-    parser.add_argument(
-        "--save-teitok",
-        default=os.getenv("SAVE_TEITOK", "0"),
-        help="1/0 whether to write TEITOK-XML per document.",
-    )
+    parser.add_argument("--save-conllu-ne", default=os.getenv("SAVE_CONLLU_NE", "1"),
+                        help="1/0 whether to keep the merged CoNLL-U per document.")
+    parser.add_argument("--save-csv", default=os.getenv("SAVE_CSV", "1"),
+                        help="1/0 whether to write the summary CSV per document.")
+    parser.add_argument("--save-teitok", default=os.getenv("SAVE_TEITOK", "0"),
+                        help="1/0 whether to write TEITOK-XML per document.")
+
     return parser
 
 
@@ -767,13 +667,24 @@ def main(argv=None):
     save_csv = bool_from_str(args.save_csv, default=True)
     save_teitok = bool_from_str(args.save_teitok, default=False)
 
+    # Resolve Paradata State for Document JSON Accretion
+    document_run_id = "unknown-nlp-enrich-run"
+    document_paradata_ref = ""
+    document_license_detail = {}
+
+    if args.document_json_dir and args.state_dir:
+        state_files = glob.glob(os.path.join(args.state_dir, ".state_*.json"))
+        if state_files:
+            with open(state_files[0], 'r') as sf:
+                state_dict = json.load(sf)
+                document_run_id = state_dict.get("_run_id", document_run_id)
+                document_license_detail = state_dict.get("license_detail", {})
+                document_paradata_ref = state_dict.get("paradata_path", "")
+
     # ── per-document mode (invoked by api_4_stats.sh with --conllu) ──
     if args.conllu:
         if not args.ne_dir or not args.output_dir:
-            print(
-                "[Error] --ne-dir and --output-dir are required in per-document mode.",
-                file=sys.stderr,
-            )
+            print("[Error] --ne-dir and --output-dir are required in per-document mode.", file=sys.stderr)
             sys.exit(1)
         ok = process_single_document(
             conllu_file=args.conllu,
@@ -788,31 +699,27 @@ def main(argv=None):
             summary_csv=args.summary_csv,
             model_udpipe=os.getenv("MODEL_UDPIPE"),
             model_nametag=os.getenv("MODEL_NAMETAG"),
+            document_json_dir=args.document_json_dir,
+            document_run_id=document_run_id,
+            document_paradata_ref=document_paradata_ref,
+            document_license_detail=document_license_detail,
+            include_lines=args.include_lines,
         )
         sys.exit(0 if ok else 1)
 
     # ── directory mode (standalone / legacy) ──
     if not all([args.conllu_dir, args.tsv_dir, args.out_dir]):
         print(
-            "[Error] Provide either --conllu/--ne-dir/--output-dir (per-document) "
-            "or --conllu-dir/--tsv-dir/--out-dir (directory mode).",
-            file=sys.stderr,
-        )
+            "[Error] Provide either --conllu/--ne-dir/--output-dir (per-document) or --conllu-dir/--tsv-dir/--out-dir (directory mode).",
+            file=sys.stderr)
         sys.exit(1)
 
     if save_teitok:
-        # FIX #5: when alto_dir is absent, emit a warning rather than a hard
-        # error — the pipeline can still produce TEITOK output without bboxes.
-        # Only exit if the directory is explicitly set but does not exist on disk,
-        # which is most likely a configuration mistake worth surfacing loudly.
         if not args.alto_dir:
             print("[Warn] --alto-dir not set; TEITOK output will have no bboxes.", file=sys.stderr)
         elif not Path(args.alto_dir).exists():
-            print(
-                f"[Error] A valid --alto-dir is required when save-teitok=true "
-                f"('{args.alto_dir}' not found).",
-                file=sys.stderr,
-            )
+            print(f"[Error] A valid --alto-dir is required when save-teitok=true ('{args.alto_dir}' not found).",
+                  file=sys.stderr)
             sys.exit(1)
 
         if args.tt_dir:
@@ -833,6 +740,8 @@ def main(argv=None):
         summary_csv=args.summary_csv,
         dpi=args.dpi,
         alto_dpi=args.alto_dpi,
+        document_json_dir=args.document_json_dir,
+        include_lines=args.include_lines,
     )
 
 

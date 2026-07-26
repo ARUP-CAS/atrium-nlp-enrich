@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 # api_4_stats.sh – statistics + TEITOK generation + paradata
 set -euo pipefail
+
+DOC_JSON_DIR=""
+INCLUDE_LINES=""
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --document-json-dir) DOC_JSON_DIR="$2"; shift ;;
+        --include-lines) INCLUDE_LINES="--include-lines" ;;
+    esac
+    shift
+done
+
 # shellcheck disable=SC1090  # config path is dynamic (ATRIUM_CONFIG); not followed at lint time
 source "${ATRIUM_CONFIG:-config_api.txt}"
 
@@ -31,6 +43,11 @@ PARA_STATE=$(python3 atrium_paradata.py start \
 TOTAL=$(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f | wc -l)
 rm -f "${OUTPUT_DIR}/summary_ne_counts.csv"
 
+DOC_JSON_FLAGS=""
+if [ -n "$DOC_JSON_DIR" ]; then
+    DOC_JSON_FLAGS="--document-json-dir $DOC_JSON_DIR $INCLUDE_LINES"
+fi
+
 while IFS= read -r -d '' conllu; do
     rel_path="${conllu#"${OUTPUT_DIR}"/UDP/}"
     doc="${rel_path%.conllu}"
@@ -56,6 +73,7 @@ while IFS= read -r -d '' conllu; do
         continue
     fi
 
+    # shellcheck disable=SC2086 # Allow word-splitting for DOC_JSON_FLAGS
     if python3 api_util/summarize_nt_udp.py \
             --conllu     "$conllu" \
             --ne-dir     "$ne_dir" \
@@ -68,7 +86,9 @@ while IFS= read -r -d '' conllu; do
             --pages-dir      "${INPUT_PAGES_DIR:-}" \
             --dpi            "${IMAGE_DPI:-}" \
             --alto-dpi       "${ALTO_DPI:-}" \
-            --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv"; then
+            --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv" \
+            --state-dir      "${PARADATA_DIR}" \
+            $DOC_JSON_FLAGS; then
 
         if $csv_done && $conllu_done && $teitok_done; then
             python3 atrium_paradata.py skip \
