@@ -475,20 +475,28 @@ def _tok_xml(tok, id_map, sx=1.0, sy=1.0, dx=0, dy=0, indent=10):
     return f"{pad}<tok {' '.join(attrs)}>{escape(tok['form'])}</tok>\n"
 
 
-def write_teitok_merged(
+def parse_and_align_conllu(
     conllu_path,
-    teitok_path,
     alto_path=None,
     doc_id=None,
-    model_udpipe=None,
-    model_nametag=None,
     image_dir=None,
     dpi=None,
     alto_dpi=None,
 ):
+    """Parse a NER-merged CoNLL-U file and align its tokens to ALTO bboxes.
+
+    Single source of truth for the parse+align step so both the TEITOK XML
+    writer (``write_teitok_merged``) and any downstream consumer that needs
+    the same token/bbox data (e.g. building the ``entities``/``pages``
+    blocks of the paired ``atrium_document`` record, see
+    ``api_util/document_hook.py``) read the CoNLL-U + ALTO pair exactly once
+    and agree on the same token→bbox alignment. Returns ``None`` when the
+    CoNLL-U file cannot be read (mirrors ``write_teitok_merged``'s prior
+    inline behaviour of aborting on a read error).
+    """
     alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta = _parse_alto(alto_path)
 
-    _doc_id = doc_id or Path(teitok_path).stem
+    _doc_id = doc_id or Path(conllu_path).stem
     if not alto_strings:
         print(
             f"  [TEITOK] No ALTO input for {_doc_id}; producing text-only XML without bboxes.",
@@ -577,7 +585,7 @@ def write_teitok_merged(
             )
     except Exception as exc:
         print(f"  [Error] Reading CoNLL-U {conllu_path}: {exc}", file=sys.stderr)
-        return False
+        return None
 
     all_tokens = [tok for sent in sentences for tok in sent["tokens"]]
     all_bboxes = _align_tokens_to_alto(all_tokens, alto_strings)
@@ -589,6 +597,50 @@ def write_teitok_merged(
 
     matched = sum(1 for b in all_bboxes if b is not None)
     print(f"  [ALTO] matched {matched}/{len(all_tokens)} tokens to ALTO bboxes")
+
+    return {
+        "doc_id": _doc_id,
+        "sentences": sentences,
+        "conllu_meta": conllu_meta,
+        "alto_strings": alto_strings,
+        "alto_pages": alto_pages,
+        "alto_graphics": alto_graphics,
+        "alto_blocks": alto_blocks,
+        "alto_meta": alto_meta,
+        "scale_map": scale_map,
+    }
+
+
+def write_teitok_merged(
+    conllu_path,
+    teitok_path,
+    alto_path=None,
+    doc_id=None,
+    model_udpipe=None,
+    model_nametag=None,
+    image_dir=None,
+    dpi=None,
+    alto_dpi=None,
+):
+    parsed = parse_and_align_conllu(
+        conllu_path,
+        alto_path,
+        doc_id=doc_id,
+        image_dir=image_dir,
+        dpi=dpi,
+        alto_dpi=alto_dpi,
+    )
+    if parsed is None:
+        return False
+
+    _doc_id = parsed["doc_id"]
+    sentences = parsed["sentences"]
+    conllu_meta = parsed["conllu_meta"]
+    alto_pages = parsed["alto_pages"]
+    alto_graphics = parsed["alto_graphics"]
+    alto_blocks = parsed["alto_blocks"]
+    alto_meta = parsed["alto_meta"]
+    scale_map = parsed["scale_map"]
 
     doc_id_safe = escape(_doc_id)
     alto_filename = Path(alto_path).name if alto_path else "Unknown"
@@ -673,6 +725,7 @@ def write_teitok_merged(
             current_page = 0
             current_block = None
             current_line = None
+            name_counter = 0
 
             for s_idx, sent in enumerate(sentences, start=1):
                 first_bbox = next((t["_bbox"] for t in sent["tokens"] if t.get("_bbox")), None)
@@ -791,8 +844,11 @@ def write_teitok_merged(
                     if grp["kind"] == "name":
                         code = grp["code"]
                         conll_cat = _CNEC_TO_CONLL.get(code, "MISC")
+                        name_counter += 1
+                        name_id = f"{doc_id_safe}.name{name_counter}"
                         out.write(
-                            f'          <name type="{escape(conll_cat)}" cnec="{escape(code)}">\n'
+                            f'          <name id="{name_id}" type="{escape(conll_cat)}" '
+                            f'cnec="{escape(code)}">\n'
                         )
                         for tok in grp["tokens"]:
                             _emit_lb_if_changed(tok, 12)
@@ -814,3 +870,14 @@ def write_teitok_merged(
     except Exception as exc:
         print(f"  [Error] Writing TEITOK {teitok_path}: {exc}", file=sys.stderr)
         return False
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Public re-exports for downstream consumers (api_util/document_hook.py)
+# ──────────────────────────────────────────────────────────────────────────────
+# Same objects as used internally above, just given non-underscored names so a
+# consumer building the atrium_document ``entities``/``pages`` blocks from the
+# same parsed tokens doesn't need to reach into "private" module state.
+group_ner_spans = _group_ner_spans
+CNEC_TO_CONLL = _CNEC_TO_CONLL
+scale_bbox_tuple = _scale_bbox_tuple

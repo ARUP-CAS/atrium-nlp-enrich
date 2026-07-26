@@ -498,6 +498,10 @@ def process_single_document(
     model_nametag=None,
     dpi=None,
     alto_dpi=None,
+    document_json_dir=None,
+    document_run_id=None,
+    document_paradata_ref="",
+    document_license_detail=None,
 ):
     """Process one document: merge NER into CoNLL-U, write CSV/TEITOK, update summary.
 
@@ -506,6 +510,12 @@ def process_single_document(
     the collected data is passed directly to the two writers.  Previously
     the file was read twice (once by process_merged_file and once by
     append_summary_row).
+
+    `document_json_dir` (issue #13's paired-hook model, see
+    api_util/document_hook.py): when set, this document's `entities` and
+    `pages[].teitok_surface` blocks are written/merged into
+    `<document_json_dir>/<doc_name>.document.json`. Left unset (the
+    default), this is a complete no-op — standalone runs are unaffected.
     """
     conllu_path = Path(conllu_file)
     doc_name = conllu_path.stem
@@ -579,6 +589,30 @@ def process_single_document(
             dpi=dpi,
             alto_dpi=alto_dpi,
         )
+
+    if document_json_dir:
+        # Local import: avoids a module-load-time dependency cycle, since
+        # document_hook.py itself lazily imports this module's NER-tagset
+        # tables (see its _entity_type_fields docstring).
+        from api_util.document_hook import write_document_record
+
+        doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
+        try:
+            write_document_record(
+                document_json_dir,
+                doc_name,
+                str(doc_out_conllu),
+                str(doc_in_alto) if doc_in_alto else None,
+                str(teitok_out_path) if teitok_out_path else None,
+                run_id=document_run_id,
+                paradata_ref=document_paradata_ref,
+                license_detail=document_license_detail,
+                image_dir=pages_dir or None,
+                dpi=dpi,
+                alto_dpi=alto_dpi,
+            )
+        except Exception as exc:
+            print(f"  [Warn] document-json hook failed for {doc_name}: {exc}", file=sys.stderr)
 
     if not save_conllu:
         csv_done = not save_csv or doc_out_csv.exists()
