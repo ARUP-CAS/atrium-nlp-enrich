@@ -99,5 +99,16 @@
 - **#10** — Digest downgraded from "fully verified" per the 06-28 comment: test-covered only; stays open for real conversion experiments.
 - Digests/plans refreshed across the repo; gap: **#11 still has no issue-log export** (re-run of the export tool needed).
 
+## 2026-07-26: `atrium_document` Integration for nlp-enrich
+
+**Action:** Implemented the paradata-pair accretion model (`atrium_document.py`) into the `nlp-enrich` pipeline.
+**Details:**
+- **Refactoring:** Extracted and centralized CoNLL-U parsing and ALTO bbox alignment in `teitok_alto.py` to prevent data drift between the TEITOK XML writer and the new accretion hook.
+- **Reference Integrity:** Added stable `id="doc.nameN"` attributes to `<name>` tags in TEITOK XML to ensure the `entities[].teitok_ref` JSON field points to a dereferenceable element.
+- **Hook Implementation:** Built `api_util/document_hook.py` to handle ONTO and CNEC tagset detection, mapping entities dynamically to the central FAIR JSON schema and capturing union bounding boxes.
+- **Process Orchestration:** Wired `--document-json-dir` through `api_4_stats.sh` and `summarize_nt_udp.py`, reading paradata state via `.state_*.json` to extract `run_id` and `license_detail` across subprocess boundaries.
+- **Design Gap Addressed:** `lines[]` contribution is strictly gated behind an `--include-lines` opt-in flag. Because `nlp-enrich` processes raw ALTO coordinates without visibility into `alto-postprocess`'s 1-based layout reordering, a naive `merge_block("lines")` would risk silent duplicate rows and misalignment. 
+**Status:** Feature complete. Test suite and orchestration verified.
+
 ---
 _Timeline index refreshed 2026-07-12 against `test` HEAD and the refreshed digests/plans. Nothing removed from the issues themselves (per hub #29); this file is a derived reading aid in `agent_dev_logs/`._

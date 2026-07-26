@@ -100,7 +100,6 @@ def test_document_hook_cnec_extraction(mock_parse, mock_group, mock_document_rec
     assert entities[0]["surface"] == "Karel Novák"
     assert entities[0]["type_onto"] is None
     assert entities[0]["type_cnec"] == "p"
-    # Replaced "PERSON" with "PER" to match TEITOK specification
     assert entities[0]["type_teitok"] == "PER"
     assert entities[0]["bbox"] == [10.0, 10.0, 80.0, 20.0]
 
