@@ -85,6 +85,13 @@ CNEC_TYPE_MAP = {
     "unk": "Unknown Type",
     "O": "None",
     "C": "Complex bibliographic expression",
+    # Archaeo Domain
+    "ARTEFACT": "Archaeological Artifact",
+    "PERIOD": "Time Period",
+    "LOCATION": "Geographical Location",
+    "CONTEXT": "Archaeological Context",
+    "MATERIAL": "Material",
+    "SPECIES": "Biological Species",
 }
 
 # --- OntoNotes v5 Type Hierarchy Mapping ---
@@ -107,6 +114,7 @@ ONTO_TYPE_MAP = {
     "QUANTITY": "Measurements, as of weight or distance",
     "ORDINAL": '"first", "second", etc.',
     "CARDINAL": "Numerals that do not fall under another type",
+    "MISC": "Miscellaneous entities",
 }
 
 # --- CNEC to ONTO Mapping ---
@@ -127,7 +135,14 @@ CNEC_TO_ONTO_MAP = {
     "n": "CARDINAL", "N": "CARDINAL", "n_": "CARDINAL", "nc": "CARDINAL", "ns": "CARDINAL",
     "na": "DATE", "nb": "QUANTITY", "ni": "ORDINAL", "no": "ORDINAL",
     "a": "LOC", "A": "LOC", "ah": "FAC", "at": "CARDINAL", "az": "CARDINAL",
-    "me": "CARDINAL", "C": "WORK_OF_ART", "unk": "O", "O": "O"
+    "me": "CARDINAL", "C": "WORK_OF_ART", "unk": "O", "O": "O",
+    # Archaeo Domain
+    "LOCATION": "LOC",
+    "ARTEFACT": "MISC",
+    "PERIOD": "MISC",
+    "CONTEXT": "MISC",
+    "MATERIAL": "MISC",
+    "SPECIES": "MISC",
 }
 
 
