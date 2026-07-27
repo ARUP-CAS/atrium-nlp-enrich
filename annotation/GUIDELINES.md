@@ -66,6 +66,6 @@ Latin binomial followed by a colloquial name is annotated as two separate spans.
 ## Nesting (v1 = flat)
 
 v1 is flat: give each token one type. Where a genuine overlap exists (e.g.
-*bronze* as both MATERIAL and ARTEFACT), record it only if the doccano project has
+*bronze* as both MATERIAL and ARTEFACT), record it only if the Label Studio project has
 "Allow overlapping" enabled — the exporter will emit it as `B-MATERIAL|B-ARTEFACT`
 for a future seq2seq v2. Otherwise pick the most specific single type.
