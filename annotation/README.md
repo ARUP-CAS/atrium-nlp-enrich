@@ -1,83 +1,103 @@
-# Archaeo NER annotation (Label Studio)
+# Archaeo NER Annotation (Label Studio Setup & Workflow)
 
-Standalone [Label Studio](https://labelstud.io/) setup for building the
-human-corrected **IOB2 training data** for the domain-specific NameTag 3 model
-(issue [#7](https://github.com/ufal/atrium-nlp-enrich/issues/7); tool choice in
-issue [#18](https://github.com/ufal/atrium-nlp-enrich/issues/18)).
+Standalone [Label Studio](https://labelstud.io/) environment and conversion utilities for building human-corrected **IOB2 training data** for domain-specific NameTag 3 models.
 
-Workflow: **tokenise → (optional) pre-annotate → import → correct in Label Studio →
-export → convert to IOB2 → feed NameTag 3 training.** Label Studio was chosen as a
-lightweight, easy-to-setup option that seamlessly handles LLM pre-annotations.
+The core campaign workflow consists of:
+**Tokenised Input → Pre-Annotation Conversion → Label Studio Correction → Export → IOB2 Re-alignment → NameTag 3 Model Training**.
 
-Everything here is a **campaign deployment**, decoupled from the pipeline: the
-only contract with the pipeline is the exported IOB2 files. The two converters
-are pure-stdlib Python (no extra dependencies).
+---
 
 ## Contents
 
-| File                                 | Purpose                                                                |
-|--------------------------------------|------------------------------------------------------------------------|
-| `docker-compose.yml`, `.env.example` | Standalone Label Studio (host port 8001)                               |
-| `archaeo_labels.xml`                 | The 6-type label set — paste into the project's **Labeling Interface** |
-| `GUIDELINES.md`                      | Annotator boundary rules (hand this to annotators)                     |
-| `conllu_to_labelstudio.py`           | Tokenised input → Label Studio import JSON (with pre-annotations)      |
-| `labelstudio_to_iob2.py`             | Label Studio export JSON → NameTag 3 IOB2                              |
+| File                                 | Purpose                                                                     |
+|--------------------------------------|-----------------------------------------------------------------------------|
+| `docker-compose.yml`, `.env.example` | Standalone Label Studio campaign deployment (host port 8001)                |
+| `archaeo_labels.xml`                 | 6-type XML label configuration for Label Studio interface                   |
+| `GUIDELINES.md`                      | Boundary rules and entity definitions for annotators                        |
+| `conllu_to_ls.py`                    | Converts UDPipe CoNLL-U or NameTag TSV into Label Studio task JSON          |
+| `ls_to_iob2.py`                      | Converts Label Studio JSON exports back into NameTag-compatible IOB2 format |
 
-## 1. Deploy Label Studio
+---
+
+## 1. Quick Start & Deployment
+
+Deploy the campaign server using Docker Compose:
 
 ```bash
 cd annotation
-cp .env.example .env          # then edit LS_ADMIN_PASSWORD
-docker compose up -d          # http://localhost:8001
+cp .env.example .env          # Edit LS_ADMIN_USERNAME and LS_ADMIN_PASSWORD
+docker compose up -d          # Access interface at http://localhost:8001
 ```
 
-Log in with your admin credentials. Create annotator user accounts or add them to the project as members.
+Once online, create a project, select **Labeling Setup → Custom Template**, and paste the contents of `archaeo_labels.xml` into the template configuration.
 
-## 2. Create the project
+---
 
-1. **Create Project → Labeling Setup → Custom Template**.
-2. Paste the contents of `archaeo_labels.xml` into the Code block (loads the 6 types with hotkeys a/p/l/c/m/s and colours).
-3. Upload / share `GUIDELINES.md` with the annotators.
+## 2. Converting Data Samples to Label Studio Format
 
-## 3. Prepare + import documents
+Below are the commands to convert raw and pre-annotated repository data samples into Label Studio JSON import files.
 
-From a UDPipe CoNLL-U file (the pipeline's tokenisation — see `api_2_udp.sh` /
-`api_util/call_udpipe.py`):
+### Command 1: Converting Raw CoNLL-U Files
 
 ```bash
-python conllu_to_labelstudio.py --conllu ../data_samples/UDP/CTX000000001.conllu \
-    -o import.json
+python annotation/conllu_to_ls.py \
+    --conllu data_samples/UDP/CTX000000001.conllu \
+    -o import_raw.json
 ```
 
-**Pre-annotation (recommended for speed)** — seed spans so annotators *correct*
-instead of labelling from scratch. Either:
+* **Explanation:** Reads tokenised UDPipe output (`.conllu`) without existing entity tags and packages the text into a Label Studio import JSON array.
 
-* read them from a CoNLL-U `NER=` MISC field:
+* **Justification:** Ensures that raw text is rendered by joining tokens with single spaces and sentences with newlines. This deterministic token joining guarantees exact character-to-token alignment when annotations are later exported.
+
+---
+
+### Command 2: Converting CoNLL-U Files with Pre-Annotations
 
 ```bash
-python conllu_to_labelstudio.py --conllu merged_ner.conllu --ner-from-misc -o import.json
+python annotation/conllu_to_ls.py \
+    --conllu data_samples/UDP_NE/CTX000000001/CTX000000001.conllu \
+    --ner-from-misc \
+    -o import_preannotated.json
 ```
 
-* or from an IOB2 TSV:
+* **Explanation:** Parses CoNLL-U files that contain pre-existing entity annotations stored inside the `MISC` column's `NER=` feature (e.g., `NER=B-ARTEFACT`).
+
+* **Justification:** Pre-populates the Label Studio tasks with `predictions`. Importing pre-annotations shifts the annotator's task from manual span creation to fast verification and correction, drastically reducing annotation time per document.
+
+---
+
+### Command 3: Converting IOB2 TSV Files
 
 ```bash
-python conllu_to_labelstudio.py --tsv preannotated.tsv -o import.json
+python annotation/conllu_to_ls.py \
+    --tsv data_samples/NE/CTX000000001/CTX000000001-1.tsv \
+    -o import_tsv.json
 ```
 
-Then in Label Studio: **Import** → `import.json`.
+* **Explanation:** Ingests two-column or three-column IOB2 TSV files (written by `api_util/call_nametag.py` or LLM pre-annotation scripts) and formats them into Label Studio task JSONs.
 
-## 4. Annotate
+* **Justification:** Provides seamless interoperability with legacy model outputs and LLM pre-labeling pipelines, translating token-level `B-` / `I-` tags into character offset spans (`start`, `end`) expected by Label Studio.
 
-Annotators select spans and press the type hotkey. Multiple people can label the same documents.
+---
 
-## 5. Export + convert to IOB2
+## 3. Exporting Annotations Back to NameTag IOB2
 
-1. **Export → JSON** → `export.json`.
-2. Convert to NameTag IOB2:
+Once annotation or correction is complete in Label Studio, export the dataset via **Export → JSON**. Run the exporter command below:
 
 ```bash
-python labelstudio_to_iob2.py -i export.json -o archaeo.iob2
+python annotation/ls_to_iob2.py \
+    -i export.json \
+    -o archaeo_gold.iob2
 ```
 
-3. Normalise / validate with NameTag 3's `preprocessing/iob_to_iob2.py`, then use
-as `--train_data` for the `archaeo` tagset.
+* **Explanation:** Reads Label Studio's exported JSON array, extracts character-level spans from `annotations`, re-aligns them to whitespace tokens, and outputs vertical IOB2 format.
+
+* **Justification:** NameTag 3 requires token-level IOB2 files with two tab-separated columns (`token\tlabel`), `-DOCSTART-` document boundaries, and `|`-joined labels for overlapping/nested entities (e.g., `B-MATERIAL|B-ARTEFACT`). This script restores exact pipeline token alignment for direct model training.
+
+---
+
+## 4. Format & Design Guarantees
+
+1. **Token Alignment Preservation:** Text strings in `data.text` are constructed deterministically from tokens. The export parser re-tokenises on identical whitespace rules, keeping span offsets 100% token-aligned with UDPipe and NameTag.
+
+2. **Multi-Label / Overlap Handling:** Nested or overlapping spans marked in Label Studio are exported as pipe-separated IOB2 tags, fully compatible with `api_util/call_nametag.py` and `api_util/summarize_nt_udp.py`.
