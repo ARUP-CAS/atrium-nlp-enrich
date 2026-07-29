@@ -1,14 +1,17 @@
 #!/bin/bash
 # api_util/api_common.sh
 
-# 1. Load Configuration
+# 1. Load Configuration Paths
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PROJECT_ROOT="$SCRIPT_DIR/.."
 
-if [ -f "$PROJECT_ROOT/config_api.txt" ]; then
-    source "$PROJECT_ROOT/config_api.txt"
+CONFIG_PATH="${ATRIUM_CONFIG:-$PROJECT_ROOT/config_api.txt}"
+
+if [ -f "$CONFIG_PATH" ]; then
+    # shellcheck disable=SC1090  # CONFIG_PATH is dynamic; not followed at lint time
+    source "$CONFIG_PATH"
 else
-    echo "Error: config_api.txt not found in $PROJECT_ROOT"
+    echo "Error: Config file '$CONFIG_PATH' not found."
     exit 1
 fi
 
@@ -19,9 +22,11 @@ if [ ! -d "$INPUT_TABLES_DIR" ]; then
     exit 1
 fi
 
-# Check for required Python scripts
-for script in manifest.py chunk.py analyze.py \
-              build_manifest_row.py call_udpipe.py call_nametag.py; do
+# FIX #11: Removed manifest.py (superseded by build_manifest_row.py) and
+# analyze.py (superseded by summarize_nt_udp.py) from the required-scripts
+# list. They still exist on disk but are no longer called by any shell script,
+# so checking for them was creating false confidence.
+for script in chunk.py build_manifest_row.py call_udpipe.py call_nametag.py; do
     if [ ! -f "$SCRIPT_DIR/$script" ]; then
         echo "Error: Helper script '$script' not found in $SCRIPT_DIR"
         exit 1
@@ -63,11 +68,12 @@ api_call_with_retry() {
     local attempt=1
     local delay=1
 
-    while [ $attempt -le $MAX_RETRIES ]; do
+    while [ "$attempt" -le "$MAX_RETRIES" ]; do
         local http_code_file="${response_file}.code"
-        # Pass remaining arguments ("$@") to curl (flags like -F)
+        # Pass remaining arguments (\"$@\") to curl (flags like -F)
         curl -s -S -w "%{http_code}" "$@" "$url" -o "$response_file" > "$http_code_file"
-        local http_code=$(cat "$http_code_file")
+        local http_code
+        http_code=$(cat "$http_code_file")
         rm -f "$http_code_file"
 
         if [ "$http_code" = "200" ]; then

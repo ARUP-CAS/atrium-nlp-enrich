@@ -1,100 +1,147 @@
 #!/usr/bin/env python3
 """
 call_nametag.py  –  Send a CoNLL-U file to the NameTag 3 API, receive NER
-annotations, and write per-page TSV files.
-
-The per-page split follows the same convention as nametag.py: a new page begins
-whenever sent_id resets to 1.  Output files are named
-    <doc_id>-<page_num>.tsv
-
-Usage
------
-    python3 call_nametag.py \\
-        --input     OUTPUT/UDP/doc_id.conllu \\
-        --model     nametag3-czech-cnec2.0-240830 \\
-        --output-dir OUTPUT/NE/doc_id \\
-        [--url URL] [--timeout 60] [--retries 5]
+annotations, and write per-page TSV files. Retries automatically on network errors.
 """
 
+from __future__ import annotations
+
 import argparse
-import json
 import os
 import sys
-import time
 from collections import defaultdict
+from functools import lru_cache
+from typing import Any
 
 try:
     import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
 except ImportError:
-    print("[Error] 'requests' is required. Run: pip install requests", file=sys.stderr)
+    print(
+        "[Error] 'requests' library is required. Run: pip install requests urllib3", file=sys.stderr
+    )
     sys.exit(1)
 
 NAMETAG_URL = "https://lindat.mff.cuni.cz/services/nametag/api/recognize"
 
 
+@lru_cache(maxsize=1)
+def _lazy_load_torch():
+    import torch  # type: ignore
+
+    return torch
+
+
+@lru_cache(maxsize=1)
+def _lazy_load_transformers():
+    from transformers import AutoModel, AutoTokenizer  # type: ignore
+
+    return AutoTokenizer, AutoModel
+
+
+def process_data(data: Any) -> Any:
+    """
+    Example entry point that only imports heavy ML dependencies when needed.
+    """
+    torch = _lazy_load_torch()
+    AutoTokenizer, AutoModel = _lazy_load_transformers()
+
+    # Replace with real logic.
+    _ = torch
+    _ = AutoTokenizer
+    _ = AutoModel
+    return data
+
+
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def call_nametag(conllu_text: str, model: str, url: str, timeout: int, retries: int) -> dict | None:
+
+def get_robust_session(retries: int) -> requests.Session:
+    """Configures a requests session with exponential backoff for 429/5xx errors."""
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=retries,
+        backoff_factor=1.5,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["POST"],
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+def call_nametag(
+    session: requests.Session, conllu_text: str, model: str, url: str, timeout: int
+) -> dict | None:
     """POST CoNLL-U text to NameTag and return the parsed JSON dict."""
-    delay = 1.0
-    for attempt in range(1, retries + 1):
-        try:
-            resp = requests.post(
-                url,
-                data={
-                    "model": model,
-                    "input": "conllu",
-                    "output": "conll",
-                    "data": conllu_text,
-                },
-                timeout=timeout,
-            )
-            if resp.status_code == 200:
-                return resp.json()
-            print(
-                f"  [WARN] NameTag HTTP {resp.status_code} (attempt {attempt})",
-                file=sys.stderr,
-            )
-        except requests.exceptions.Timeout:
-            print(f"  [WARN] NameTag timed out (attempt {attempt})", file=sys.stderr)
-        except Exception as exc:
-            print(f"  [WARN] NameTag error: {exc} (attempt {attempt})", file=sys.stderr)
-
-        if attempt < retries:
-            time.sleep(delay)
-            delay = delay * 1.5 + 1
-
-    return None
+    try:
+        resp = session.post(
+            url,
+            data={
+                "model": model,
+                "input": "conllu",
+                "output": "conll",
+                "data": conllu_text,
+            },
+            timeout=timeout,
+        )
+        resp.raise_for_status()
+        return resp.json()
+    except requests.exceptions.RequestException as exc:
+        print(f"  [WARN] NameTag API failed permanently: {exc}", file=sys.stderr)
+        return None
 
 
 # ── sent_id → page mapping ────────────────────────────────────────────────────
 
-def build_sent_page_map(conllu_path: str) -> list[int]:
-    """Return a list mapping sentence index (0-based) → page number (1-based).
 
-    A new page starts whenever '# sent_id = 1' is encountered.
-    """
+def build_sent_page_map(conllu_path: str) -> list[int]:
+    """Return a list mapping sentence index (0-based) → page number (1-based)."""
     sent_to_page: list[int] = []
     current_page = 0
+    pending_page_break = False
+
     try:
         with open(conllu_path, "r", encoding="utf-8") as fh:
             for line in fh:
-                line = line.strip()
-                if not line.startswith("# sent_id"):
+                line_stripped = line.strip()
+
+                if line_stripped == "# page_break = true":
+                    pending_page_break = True
                     continue
-                if "=" in line:
-                    val = line.split("=", 1)[1].strip()
-                    if val == "1":
+
+                if not line_stripped.startswith("# sent_id"):
+                    continue
+
+                if "=" in line_stripped:
+                    val = line_stripped.split("=", 1)[1].strip()
+                    if val == "1" or pending_page_break:
                         current_page += 1
+                        pending_page_break = False
+
                 if current_page == 0:
                     current_page = 1
+
                 sent_to_page.append(current_page)
+
     except Exception as exc:
         print(f"[Error] reading CoNLL-U {conllu_path}: {exc}", file=sys.stderr)
+
+    if not sent_to_page:
+        print(
+            f"[Warn] No sent_id markers found in {conllu_path}; "
+            "treating entire document as a single page.",
+            file=sys.stderr,
+        )
+        sent_to_page = [1]
+
     return sent_to_page
 
 
 # ── NE suffix helper ──────────────────────────────────────────────────────────
+
 
 def _get_ne_suffix(tag: str) -> str:
     if not tag:
@@ -111,11 +158,9 @@ def _get_ne_suffix(tag: str) -> str:
 
 # ── response → per-page TSV ───────────────────────────────────────────────────
 
-def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, doc_id: str) -> int:
-    """Parse NameTag JSON result and write per-page TSV files.
 
-    Returns the number of TSV files written.
-    """
+def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, doc_id: str) -> int:
+    """Parse NameTag JSON result and write per-page TSV files."""
     tagged = response_json.get("result", "")
     sentences = [s for s in tagged.strip().split("\n\n") if s.strip()]
 
@@ -145,6 +190,7 @@ def write_tsv_files(response_json: dict, sent_to_page: list[int], out_dir: str, 
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Send CoNLL-U to NameTag API and write per-page TSV files."
@@ -153,7 +199,8 @@ def main() -> None:
     parser.add_argument("--model", required=True, help="NameTag model identifier.")
     parser.add_argument("--output-dir", required=True, help="Directory for per-page TSV output.")
     parser.add_argument(
-        "--url", default=os.environ.get("NAMETAG_URL", NAMETAG_URL),
+        "--url",
+        default=os.environ.get("NAMETAG_URL", NAMETAG_URL),
         help="NameTag API endpoint URL.",
     )
     parser.add_argument("--timeout", type=int, default=60)
@@ -166,15 +213,15 @@ def main() -> None:
 
     doc_id = os.path.splitext(os.path.basename(args.input))[0]
 
-    # Build sent_id → page mapping from the original CoNLL-U
     sent_to_page = build_sent_page_map(args.input)
 
-    # Read full CoNLL-U text for the API call
     with open(args.input, "r", encoding="utf-8") as fh:
         conllu_text = fh.read()
 
-    print(f"  [NameTag] Sending {doc_id} ({len(sent_to_page)} sentences)…")
-    response_json = call_nametag(conllu_text, args.model, args.url, args.timeout, args.retries)
+    print(f"  [NameTag] Sending {doc_id} ({len(sent_to_page)} sentences)...")
+
+    session = get_robust_session(args.retries)
+    response_json = call_nametag(session, conllu_text, args.model, args.url, args.timeout)
 
     if response_json is None:
         print(f"[Error] NameTag failed permanently for {doc_id}.", file=sys.stderr)

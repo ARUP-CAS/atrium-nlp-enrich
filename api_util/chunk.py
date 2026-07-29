@@ -1,12 +1,18 @@
-import sys
 import os
+import sys
 
 
-def write_chunk(output_dir, chunk_index, words_list):
-    """Helper to write a list of words to a file."""
+def write_chunk(output_dir, chunk_index, lines_list):
+    """Write a list of text lines to a numbered chunk file.
+
+    FIX #4: Lines are joined with newlines rather than spaces so that OCR
+    line boundaries are preserved.  UDPipe's tokeniser treats newlines as
+    sentence-boundary hints, which avoids merging OCR text lines (and thus
+    separate sentences) into a single run-on paragraph.
+    """
     filename = os.path.join(output_dir, f"chunk_{chunk_index}.txt")
-    with open(filename, 'w', encoding='utf-8') as out:
-        out.write(" ".join(words_list))
+    with open(filename, "w", encoding="utf-8") as out:
+        out.write("\n".join(lines_list))
 
 
 def main():
@@ -23,49 +29,55 @@ def main():
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    # Read the full text extracted from CSV
-    with open(infile, 'r', encoding='utf-8') as f:
+    # Read the full text extracted from CSV (newline-separated OCR lines)
+    with open(infile, "r", encoding="utf-8") as f:
         text = f.read().strip()
 
     if not text:
         sys.exit(0)
 
-    # Split by whitespace to get words
-    words = text.split()
-    current_chunk = []
+    # FIX #4: Split by lines rather than all whitespace to preserve OCR line
+    # structure.  Empty lines are discarded; each non-empty line is treated as
+    # one logical unit (typically one OCR text line / sentence fragment).
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+
+    current_chunk_lines = []
+    current_word_count = 0
     chunk_count = 0
 
-    i = 0
-    while i < len(words):
-        current_chunk.append(words[i])
-        i += 1
+    for line in lines:
+        words_in_line = len(line.split())
 
-        # Check if buffer reached limit
-        if len(current_chunk) >= limit:
-            cut_index = -1
+        # If adding this line would reach or exceed the word limit and we
+        # already have content, look back for a good sentence boundary.
+        if current_word_count + words_in_line >= limit and current_chunk_lines:
+            # Intelligent splitting: scan back for the last line ending with
+            # sentence-terminal punctuation.
+            cut_index = len(current_chunk_lines)  # default: flush everything
+            lookback_limit = max(0, len(current_chunk_lines) - 100)
 
-            # Intelligent splitting: look back for punctuation to avoid cutting mid-sentence
-            lookback_limit = max(0, len(current_chunk) - 100)
-
-            for j in range(len(current_chunk) - 1, lookback_limit, -1):
-                word = current_chunk[j]
-                if word and word[-1] in ['.', '?', '!']:
+            for j in range(len(current_chunk_lines) - 1, lookback_limit, -1):
+                last_word = (
+                    current_chunk_lines[j].split()[-1] if current_chunk_lines[j].split() else ""
+                )
+                if last_word and last_word[-1] in (".", "?", "!"):
                     cut_index = j + 1
                     break
 
-            # Fallback to hard limit if no punctuation found
-            if cut_index == -1:
-                cut_index = len(current_chunk)
-
-            write_chunk(outdir, chunk_count, current_chunk[:cut_index])
+            write_chunk(outdir, chunk_count, current_chunk_lines[:cut_index])
             chunk_count += 1
 
-            # Move leftovers to next chunk
-            current_chunk = current_chunk[cut_index:]
+            # Carry over any lines that were after the cut point.
+            leftover = current_chunk_lines[cut_index:]
+            current_chunk_lines = leftover
+            current_word_count = sum(len(ln.split()) for ln in leftover)
 
-    # Write final chunk
-    if current_chunk:
-        write_chunk(outdir, chunk_count, current_chunk)
+        current_chunk_lines.append(line)
+        current_word_count += words_in_line
+
+    # Write the final chunk
+    if current_chunk_lines:
+        write_chunk(outdir, chunk_count, current_chunk_lines)
 
 
 if __name__ == "__main__":
