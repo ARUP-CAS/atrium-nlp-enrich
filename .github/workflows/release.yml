@@ -36,6 +36,7 @@ jobs:
   version-guard:
     name: Verify tag == CITATION.cff == para_config.txt
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
       - name: Block release on version/tag mismatch
@@ -94,6 +95,7 @@ jobs:
     name: Create GitHub Release
     needs: version-guard
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout repository
