@@ -36,3 +36,12 @@ jobs:
     with:
       image-name: ufal/atrium-nlp-enrich
       apt-packages: ""
+      pre-install-torch: ""
+      requirements: "requirements.txt requirements-test.txt"
+      hf-model-cache: false
+      # base  -> ghcr.io/ufal/atrium-nlp-enrich       (batch run_pipeline.py)
+      # api   -> ghcr.io/ufal/atrium-nlp-enrich-api   (uvicorn :8000)
+      # llm   -> ghcr.io/ufal/atrium-nlp-enrich-llm   (GPU semantic enrichment)
+      # Targets are passed through verbatim since the template fix — "base"
+      # now genuinely builds the `AS base` stage, not the last one.
+      build-targets: '["base", "api", "llm"]'
