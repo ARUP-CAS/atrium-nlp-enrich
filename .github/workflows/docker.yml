@@ -17,8 +17,17 @@ concurrency:
 jobs:
   build:
     permissions:
+      # security-events:write is required because docker-tool.reusable.yml's
+      # build-and-push job uploads the post-publish Trivy SARIF. A reusable
+      # workflow's permissions are CAPPED BY THIS BLOCK, so omitting it makes
+      # GitHub reject the whole file at parse time with "requesting
+      # 'security-events: write', but is only allowed 'security-events: none'"
+      # — a startup_failure, not a step failure (#18). Same grant security.yml
+      # already makes for its own SARIF upload. Not an escalation: this job
+      # already holds packages: write.
       contents: read
       packages: write
+      security-events: write
     uses: ufal/atrium-project/.github/workflows/docker-tool.reusable.yml@test
     secrets:
       # Explicit instead of `secrets: inherit` — the reusable declares and
@@ -27,12 +36,3 @@ jobs:
     with:
       image-name: ufal/atrium-nlp-enrich
       apt-packages: ""
-      pre-install-torch: ""
-      requirements: "requirements.txt requirements-test.txt"
-      hf-model-cache: false
-      # base  -> ghcr.io/ufal/atrium-nlp-enrich       (batch run_pipeline.py)
-      # api   -> ghcr.io/ufal/atrium-nlp-enrich-api   (uvicorn :8000)
-      # llm   -> ghcr.io/ufal/atrium-nlp-enrich-llm   (GPU semantic enrichment)
-      # Targets are passed through verbatim since the template fix — "base"
-      # now genuinely builds the `AS base` stage, not the last one.
-      build-targets: '["base", "api", "llm"]'
