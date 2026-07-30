@@ -6,6 +6,12 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "test"
+    # Grouped into one PR. Without this these two repos opened a separate PR per
+    # dependency - visible all over their merge history (#18).
+    groups:
+      pip-deps:
+        patterns:
+          - "*"
     ignore:
       - dependency-name: "torch"
       - dependency-name: "transformers"
@@ -16,3 +22,9 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "test"
+    # Grouped into one PR. Without this these two repos opened a separate PR per
+    # dependency - visible all over their merge history (#18).
+    groups:
+      actions:
+        patterns:
+          - "*"
