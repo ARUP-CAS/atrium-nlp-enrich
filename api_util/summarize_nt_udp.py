@@ -538,6 +538,7 @@ def process_single_document(
         if not os.path.exists(baseline_json):
             baseline_json = None  # Graceful fallback to rule 3 (own part only)
 
+        doc_in_alto = Path(alto_dir) / f"{doc_name}.alto.xml" if alto_dir else None
         try:
             run_document_hook(
                 doc_id=doc_name,
@@ -548,6 +549,7 @@ def process_single_document(
                 run_id=document_run_id,
                 paradata_ref=document_paradata_ref,
                 license_detail=document_license_detail,
+                alto_path=str(doc_in_alto) if doc_in_alto and doc_in_alto.exists() else None,
                 include_lines=include_lines
             )
         except Exception as exc:
