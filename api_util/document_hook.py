@@ -145,6 +145,7 @@ def run_document_hook(
             "line": int(line),
             "char_span": char_span,
             "teitok_ref": f"{doc_id}.name{name_counter}",
+            "pid": {"wikidata": None, "geonames": None, "aat": None, "amcr": None},
         }
         if bbox:
             entity_record["bbox"] = bbox

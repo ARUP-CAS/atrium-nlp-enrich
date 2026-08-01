@@ -16,12 +16,15 @@ per-stage paradata JSON produced during THIS run into a single
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -493,6 +496,70 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
     }
 
 
+def _prepare_document_json_bridge(document_json: Optional[str]) -> Path:
+    """Seed a scratch directory for the 'stats' stage's existing --document-json-dir support.
+
+    api_4_stats.sh / api_util/summarize_nt_udp.py already implement the accretion read+write
+    correctly in directory form (one <doc_id>.document.json per document); this only translates
+    the single-file --document-json convenience flag into that existing shape rather than adding
+    a second implementation.
+
+    Scoped to a single document, matching --document-json/--document-json-out on the other tool
+    repos. If the baseline's declared `doc_id` does not match the doc_id nlp-enrich's own stages
+    derive from their input filenames, the baseline is silently not picked up (summarize_nt_udp.py
+    falls back to "own part only", per accretion rule 3) rather than erroring -- this is the same
+    `canonical_doc_id()` gap issue #13 already tracks as unresolved ecosystem-wide, not something
+    this bridge can paper over on its own.
+    """
+    scratch_dir = Path(tempfile.mkdtemp(prefix="atrium_document_json_"))
+    if document_json:
+        baseline = Path(document_json)
+        if not baseline.exists():
+            print(
+                f"[document] baseline {baseline} not found — nlp-enrich will emit its own part only",
+                file=sys.stderr,
+            )
+        else:
+            data = json.loads(baseline.read_text(encoding="utf-8"))
+            doc_id = data.get("doc_id")
+            if not doc_id:
+                print(
+                    f"[document] baseline {baseline} has no doc_id — cannot seed the accretion "
+                    "directory; nlp-enrich will emit its own part only",
+                    file=sys.stderr,
+                )
+            else:
+                shutil.copyfile(baseline, scratch_dir / f"{doc_id}.document.json")
+    return scratch_dir
+
+
+def _collect_document_json_output(scratch_dir: Path, document_json_out: str) -> None:
+    """Copy the 'stats' stage's accreted record out to the caller's requested path.
+
+    Exactly one *.document.json is expected (single-document scope, see
+    _prepare_document_json_bridge). Zero means the stage never reached the document-json hook
+    (e.g. no CoNLL-U was produced upstream) -- reported, not silently swallowed.
+    """
+    records = glob.glob(str(scratch_dir / "*.document.json"))
+    if not records:
+        print(
+            f"[document] no document record was produced in {scratch_dir} — "
+            f"{document_json_out} was NOT written",
+            file=sys.stderr,
+        )
+        return
+    if len(records) > 1:
+        print(
+            f"[document] {len(records)} document records found in {scratch_dir}, expected 1 "
+            "(this bridge is single-document only) — using the first",
+            file=sys.stderr,
+        )
+    out_path = Path(document_json_out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(records[0], out_path)
+    print(f"[document] Record written → {out_path}", flush=True)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Run the ATRIUM nlp-enrich pipeline end-to-end and merge "
@@ -538,6 +605,23 @@ def main(argv=None):
     parser.add_argument("-f", "--force", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--print-config", choices=["json"], default=None)
+
+    # Document JSON Integration Arguments (issue #13). File-pair form, matching
+    # alto-postprocess/translator/page-classification. The "stats" stage's own
+    # api_4_stats.sh / api_util/summarize_nt_udp.py already implement the accretion
+    # write via a directory-form --document-json-dir; this is a thin single-document
+    # bridge in front of that existing, working path rather than a second
+    # implementation — see _prepare_document_json_bridge().
+    parser.add_argument(
+        "--document-json", type=str, default=None,
+        help="Baseline ATRIUM Document JSON to read before the 'stats' stage and accrete "
+             "nlp-enrich's entities/pages contribution into.",
+    )
+    parser.add_argument(
+        "--document-json-out", type=str, default=None,
+        help="Path to write the updated ATRIUM Document JSON. Requires --stages to include "
+             "'stats' (the only stage that touches the document record).",
+    )
 
     args = parser.parse_args(argv)
 
@@ -587,6 +671,10 @@ def main(argv=None):
     if args.force:
         env["ATRIUM_FORCE_RUN"] = "1"
 
+    doc_json_scratch_dir: Optional[Path] = None
+    if args.document_json or args.document_json_out:
+        doc_json_scratch_dir = _prepare_document_json_bridge(args.document_json)
+
     before = _snapshot_paradata_dir(paradata_dir)
     results: List[StageResult] = []
     last_start: Optional[float] = None
@@ -608,7 +696,12 @@ def main(argv=None):
         last_start = _space_stages(last_start)
         snapshot = _snapshot_paradata_dir(paradata_dir)
         print(f"\n=== Stage: {name} — {label} ===")
-        rc = _run_subprocess(["bash", str(script_path)], env, _REPO_ROOT)
+        # Only "stats" (api_4_stats.sh) understands --document-json-dir — it's the stage that
+        # calls document_hook.run_document_hook via summarize_nt_udp.py.
+        stage_cmd = ["bash", str(script_path)]
+        if name == "stats" and doc_json_scratch_dir is not None:
+            stage_cmd += ["--document-json-dir", str(doc_json_scratch_dir)]
+        rc = _run_subprocess(stage_cmd, env, _REPO_ROOT)
 
         paradata, ppath = _collect_stage_paradata(paradata_dir, snapshot)
         results.append(StageResult(name, label, rc, paradata, ppath))
@@ -621,6 +714,9 @@ def main(argv=None):
             paradata.get("statistics", {}), strict=args.strict_empty
         ):
             empty_failures.append(name)
+
+    if doc_json_scratch_dir is not None and args.document_json_out:
+        _collect_document_json_output(doc_json_scratch_dir, args.document_json_out)
 
     if getattr(args, "kw", False):
         if plan["skips"]["keywords"]:
