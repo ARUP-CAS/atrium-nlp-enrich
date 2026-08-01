@@ -496,7 +496,22 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
     }
 
 
-def _prepare_document_json_bridge(document_json: Optional[str]) -> Path:
+def _pipeline_doc_id(input_tables_dir: str) -> Optional[str]:
+    """The doc_id nlp-enrich's own stages will derive for this run, from the single CSV in
+    INPUT_TABLES_DIR (mirrors summarize_nt_udp.py's doc_name = conllu_path.stem, which in
+    turn traces back to this same file's stem via the manifest). None when the directory
+    holds zero or multiple files -- batch runs have no single answer, so callers should fall
+    back to their prior, doc_id-agnostic behavior rather than guess.
+    """
+    if not input_tables_dir:
+        return None
+    matches = sorted(Path(input_tables_dir).glob("*.csv"))
+    if len(matches) != 1:
+        return None
+    return matches[0].stem
+
+
+def _prepare_document_json_bridge(document_json: Optional[str], doc_id: Optional[str] = None) -> Path:
     """Seed a scratch directory for the 'stats' stage's existing --document-json-dir support.
 
     api_4_stats.sh / api_util/summarize_nt_udp.py already implement the accretion read+write
@@ -505,11 +520,19 @@ def _prepare_document_json_bridge(document_json: Optional[str]) -> Path:
     a second implementation.
 
     Scoped to a single document, matching --document-json/--document-json-out on the other tool
-    repos. If the baseline's declared `doc_id` does not match the doc_id nlp-enrich's own stages
-    derive from their input filenames, the baseline is silently not picked up (summarize_nt_udp.py
-    falls back to "own part only", per accretion rule 3) rather than erroring -- this is the same
-    `canonical_doc_id()` gap issue #13 already tracks as unresolved ecosystem-wide, not something
-    this bridge can paper over on its own.
+    repos. Seeded under `doc_id` (nlp-enrich's OWN authoritative id, see _pipeline_doc_id) when
+    given, NOT the baseline's own declared `doc_id` field -- an upstream tool can get that field
+    wrong (verified: atrium-translator derives it from a per-page split filename like
+    "CTX000000003-1.alto.xml", producing doc_id "CTX000000003-1" instead of "CTX000000003" when
+    fed one page of a document rather than a whole standalone file). Seeding under the WRONG id
+    left the baseline as an orphaned file nlp-enrich's own stats stage never looked for and never
+    touched, alongside a second, baseline-less file it wrote under the id it actually computed --
+    _collect_document_json_output would then arbitrarily pick one, non-deterministically dropping
+    every upstream block (page_categories, translations, ...) about half the time (observed live:
+    ufal/atrium-project#18 e2e run 30690789869). Seeding under the caller-supplied `doc_id`
+    instead means both ends of the bridge always agree on one filename -- deterministically
+    correct when they match reality, and deterministically "own part only" (rule 3) on the rare
+    doc_id it still can't be determined for, never a coin flip.
     """
     scratch_dir = Path(tempfile.mkdtemp(prefix="atrium_document_json_"))
     if document_json:
@@ -520,40 +543,58 @@ def _prepare_document_json_bridge(document_json: Optional[str]) -> Path:
                 file=sys.stderr,
             )
         else:
-            data = json.loads(baseline.read_text(encoding="utf-8"))
-            doc_id = data.get("doc_id")
-            if not doc_id:
+            seed_id = doc_id
+            if not seed_id:
+                data = json.loads(baseline.read_text(encoding="utf-8"))
+                seed_id = data.get("doc_id")
+            if not seed_id:
                 print(
                     f"[document] baseline {baseline} has no doc_id — cannot seed the accretion "
                     "directory; nlp-enrich will emit its own part only",
                     file=sys.stderr,
                 )
             else:
-                shutil.copyfile(baseline, scratch_dir / f"{doc_id}.document.json")
+                shutil.copyfile(baseline, scratch_dir / f"{seed_id}.document.json")
     return scratch_dir
 
 
-def _collect_document_json_output(scratch_dir: Path, document_json_out: str) -> None:
+def _collect_document_json_output(
+    scratch_dir: Path, document_json_out: str, doc_id: Optional[str] = None
+) -> None:
     """Copy the 'stats' stage's accreted record out to the caller's requested path.
 
-    Exactly one *.document.json is expected (single-document scope, see
-    _prepare_document_json_bridge). Zero means the stage never reached the document-json hook
-    (e.g. no CoNLL-U was produced upstream) -- reported, not silently swallowed.
+    When `doc_id` is known (see _pipeline_doc_id), collects that exact
+    `<doc_id>.document.json` -- deterministic, and immune to an orphaned, differently-named
+    seed file left behind by a doc_id mismatch (see _prepare_document_json_bridge). Falls back
+    to globbing *.document.json only when doc_id couldn't be determined (batch runs); zero
+    files found means the stage never reached the document-json hook (e.g. no CoNLL-U was
+    produced upstream) -- reported, not silently swallowed either way.
     """
-    records = glob.glob(str(scratch_dir / "*.document.json"))
-    if not records:
-        print(
-            f"[document] no document record was produced in {scratch_dir} — "
-            f"{document_json_out} was NOT written",
-            file=sys.stderr,
-        )
-        return
-    if len(records) > 1:
-        print(
-            f"[document] {len(records)} document records found in {scratch_dir}, expected 1 "
-            "(this bridge is single-document only) — using the first",
-            file=sys.stderr,
-        )
+    if doc_id:
+        record = scratch_dir / f"{doc_id}.document.json"
+        if not record.exists():
+            print(
+                f"[document] no document record was produced at {record} — "
+                f"{document_json_out} was NOT written",
+                file=sys.stderr,
+            )
+            return
+        records = [str(record)]
+    else:
+        records = glob.glob(str(scratch_dir / "*.document.json"))
+        if not records:
+            print(
+                f"[document] no document record was produced in {scratch_dir} — "
+                f"{document_json_out} was NOT written",
+                file=sys.stderr,
+            )
+            return
+        if len(records) > 1:
+            print(
+                f"[document] {len(records)} document records found in {scratch_dir}, expected 1 "
+                "(this bridge is single-document only) — using the first",
+                file=sys.stderr,
+            )
     out_path = Path(document_json_out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(records[0], out_path)
@@ -672,8 +713,10 @@ def main(argv=None):
         env["ATRIUM_FORCE_RUN"] = "1"
 
     doc_json_scratch_dir: Optional[Path] = None
+    doc_json_doc_id: Optional[str] = None
     if args.document_json or args.document_json_out:
-        doc_json_scratch_dir = _prepare_document_json_bridge(args.document_json)
+        doc_json_doc_id = _pipeline_doc_id(values.get("INPUT_TABLES_DIR", ""))
+        doc_json_scratch_dir = _prepare_document_json_bridge(args.document_json, doc_json_doc_id)
 
     before = _snapshot_paradata_dir(paradata_dir)
     results: List[StageResult] = []
@@ -716,7 +759,7 @@ def main(argv=None):
             empty_failures.append(name)
 
     if doc_json_scratch_dir is not None and args.document_json_out:
-        _collect_document_json_output(doc_json_scratch_dir, args.document_json_out)
+        _collect_document_json_output(doc_json_scratch_dir, args.document_json_out, doc_json_doc_id)
 
     if getattr(args, "kw", False):
         if plan["skips"]["keywords"]:
