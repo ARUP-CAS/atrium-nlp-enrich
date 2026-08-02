@@ -110,5 +110,18 @@
 - **Design Gap Addressed:** `lines[]` contribution is strictly gated behind an `--include-lines` opt-in flag. Because `nlp-enrich` processes raw ALTO coordinates without visibility into `alto-postprocess`'s 1-based layout reordering, a naive `merge_block("lines")` would risk silent duplicate rows and misalignment. 
 **Status:** Feature complete. Test suite and orchestration verified.
 
----
-_Timeline index refreshed 2026-07-12 against `test` HEAD and the refreshed digests/plans. Nothing removed from the issues themselves (per hub #29); this file is a derived reading aid in `agent_dev_logs/`._
+## 2026-07-27
+
+* **#18** — Added a draft of Label Studio to the repo alongside data samples converted by scripts into import-friendly formats.
+
+## 2026-07-30
+
+* **#18** — Posted a screenshot of a local Label Studio run. Provided a GPT DeepResearch summary comparing tools: 
+INCEpTION remains the best fit for collaborative document curation and multi-user workflows, while Label Studio is 
+stronger for fast bulk ingestion and general-purpose labeling.
+
+## 2026-08-01
+
+* **#18** — Shared a Gemini Pro 3.1E Deep Research summary evaluating INCEpTION (top for curation), Label Studio 
+(top for bulk ingestion), Argilla (developer-centric/API-first), and Doccano (lightweight Docker). Posted screenshots 
+of the Doccano and Argilla interfaces.
