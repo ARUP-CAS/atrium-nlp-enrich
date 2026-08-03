@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  schemas/teitok/teitok.xsd
+
+  Output contract for `.teitok.xml` files produced by
+  api_util/teitok_alto.py (write_teitok_merged). This is NOT the full
+  upstream TEI/TEITOK schema — it is a minimal, purpose-built schema that
+  describes exactly the subset of TEI this pipeline emits, so that
+  api_util/validate_teitok_xml.py can catch generator regressions
+  (malformed attributes, dropped required elements, broken nesting)
+  before packaging.
+
+  Provenance: hand-authored against the real output of
+  api_util/teitok_alto.py::write_teitok_merged() as of the paired
+  atrium_document integration (issue #28), 2026-08-03. Not sourced from
+  teitok.org — this pipeline's TEITOK XML is a constrained subset/profile
+  of TEI, and no single canonical upstream .xsd covers this exact profile.
+  If TEITOK later publishes an authoritative schema for this profile,
+  prefer vendoring that instead of this hand-authored one.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tei="http://www.tei-c.org/ns/1.0"
+           targetNamespace="http://www.tei-c.org/ns/1.0"
+           xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           elementFormDefault="qualified">
+
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+             schemaLocation="xml.xsd"/>
+
+  <!-- ═══════════════════════ Root ═══════════════════════ -->
+  <xs:element name="TEI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:teiHeader"/>
+        <xs:element ref="tei:facsimile" minOccurs="0"/>
+        <xs:element ref="tei:text"/>
+      </xs:sequence>
+      <xs:attribute ref="xml:lang"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ═══════════════════════ teiHeader ═══════════════════════ -->
+  <xs:element name="teiHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:fileDesc"/>
+        <xs:element ref="tei:encodingDesc" minOccurs="0"/>
+        <xs:element ref="tei:revisionDesc" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="fileDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:titleStmt"/>
+        <xs:element ref="tei:publicationStmt"/>
+        <xs:element ref="tei:sourceDesc"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="titleStmt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:title"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="title" type="xs:string"/>
+
+  <xs:element name="publicationStmt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:p" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="sourceDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:p" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="p" type="xs:string"/>
+
+  <xs:element name="encodingDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:appInfo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="appInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:application" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="application">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:label"/>
+        <xs:element ref="tei:desc" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="ident" type="xs:string" use="required"/>
+      <xs:attribute name="version" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="label" type="xs:string"/>
+  <xs:element name="desc" type="xs:string"/>
+
+  <xs:element name="revisionDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:change" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="change">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="when" type="xs:string" use="required"/>
+          <xs:attribute name="who" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ═══════════════════════ facsimile ═══════════════════════ -->
+  <xs:element name="facsimile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:surface" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="surface">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:graphic"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="lrx" type="xs:integer" use="optional"/>
+      <xs:attribute name="lry" type="xs:integer" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="graphic">
+    <xs:complexType>
+      <xs:attribute name="url" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ═══════════════════════ text / body ═══════════════════════ -->
+  <xs:element name="text">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:body"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    Body is a flat, repeatable mix of page breaks, non-text figures, and
+    text-zone divs. teitok_alto.py emits these in document order but not
+    in a fixed 1:1 grouping (a page can have zero or many figures; a div
+    can span or restart within a page boundary), so we model it as a
+    repeatable choice rather than a strict pb->figure*->div* sequence.
+  -->
+  <xs:element name="body">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tei:pb"/>
+        <xs:element ref="tei:figure"/>
+        <xs:element ref="tei:div"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="pb">
+    <xs:complexType>
+      <xs:attribute name="n" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="facs" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="figure">
+    <xs:complexType>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="bbox" type="tei:bboxType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="div">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tei:s" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="bbox" type="tei:bboxType" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    <s> is a run of line-breaks, plain tokens, and named-entity spans in
+    the order the tokenizer/NER pass produced them.
+  -->
+  <xs:element name="s">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tei:lb"/>
+        <xs:element ref="tei:tok"/>
+        <xs:element ref="tei:name"/>
+      </xs:choice>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="text" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="lb">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="bbox" type="tei:bboxType" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Named-entity span: a run of (optional line-breaks +) tokens. -->
+  <xs:element name="name">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="tei:lb"/>
+        <xs:element ref="tei:tok"/>
+      </xs:choice>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="type" type="tei:nerCategoryType" use="required"/>
+      <xs:attribute name="cnec" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tok">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="id" type="xs:string" use="required"/>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="w"/>
+                <xs:enumeration value="pc"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="lemma" type="xs:string" use="optional"/>
+          <xs:attribute name="upos" type="xs:string" use="optional"/>
+          <xs:attribute name="xpos" type="xs:string" use="optional"/>
+          <xs:attribute name="feats" type="xs:string" use="optional"/>
+          <xs:attribute name="head" type="xs:string" use="optional"/>
+          <xs:attribute name="deprel" type="xs:string" use="optional"/>
+          <xs:attribute name="join" use="optional">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="right"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="bbox" type="tei:bboxType" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ═══════════════════════ Shared types ═══════════════════════ -->
+
+  <!-- "x1 y1 x2 y2" absolute pixel coordinates, as written by
+       api_util/bbox_scale.py::scale_bbox_coords(). -->
+  <xs:simpleType name="bboxType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="-?\d+ -?\d+ -?\d+ -?\d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- CoNLL-style category emitted via _CNEC_TO_CONLL in teitok_alto.py. -->
+  <xs:simpleType name="nerCategoryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PER"/>
+      <xs:enumeration value="ORG"/>
+      <xs:enumeration value="LOC"/>
+      <xs:enumeration value="MISC"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

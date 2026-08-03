@@ -115,4 +115,17 @@ while IFS= read -r -d '' conllu; do
     fi
 done < <(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f -print0)
 
+# XSD validation gate (issue #28): TEITOK XML is a formal output contract —
+# malformed documents must never reach packaging or the LINDAT release.
+# Runs after generation, before atrium_paradata.py finish, and over the
+# TEITOK_OUTPUT_DIR as a whole (not just this run's docs) so a resumed run
+# still re-checks everything currently on disk.
+if [ "${SAVE_TEITOK:-true}" = "true" ]; then
+    echo "Validating TEITOK XML output contract..."
+    if ! python3 api_util/validate_teitok_xml.py "${TEITOK_OUTPUT_DIR}"; then
+        echo "[CRITICAL ERROR] TEITOK XSD validation failed. Halting pipeline before packaging." >&2
+        exit 1
+    fi
+fi
+
 python3 atrium_paradata.py finish --state "$PARA_STATE" --input-total "$TOTAL"
