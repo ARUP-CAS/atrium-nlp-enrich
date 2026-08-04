@@ -31,3 +31,20 @@ for f in "$INPUT_DOCS_DIR"/*; do
         fi
     fi
 done
+
+# TEITOK output gate for this second emitter (issue #28). flexiconv writes
+# {stem}.teitok.xml into the same $TEITOK_OUTPUT_DIR that api_4_stats.sh later
+# validates in full, so unchecked output here surfaces as an unexplained
+# failure there instead of at its source.
+#
+# --wellformed-only is deliberate: this output comes from a third-party
+# converter across 13 input formats, and schemas/teitok/teitok.xsd describes
+# api_util/teitok_alto.py's profile specifically. Gating flexiconv against
+# that schema would reject documents for being a different — not a broken —
+# TEITOK profile. Well-formedness plus a <TEI> root is what we can assert
+# honestly today; see schemas/teitok/README.md for promoting this to the full
+# XSD once a genuine flexiconv sample exists to model the profile from.
+if ! python3 api_util/validate_teitok_xml.py "$TEITOK_OUTPUT_DIR" --allow-empty --wellformed-only; then
+    log "[CRITICAL ERROR] flexiconv TEITOK output is not well-formed. Halting."
+    exit 1
+fi

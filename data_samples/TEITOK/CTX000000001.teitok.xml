@@ -37,30 +37,30 @@
           <tok id="CTX000000001.s1.w4" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000001.s1.w3" deprel="punct" bbox="610 160 650 194">.</tok>
           <name type="MISC" cnec="n_">
               <tok id="CTX000000001.s1.w5" type="w" lemma="1" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000001.s1.w3" deprel="nummod" join="right" bbox="665 160 795 194">1</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s1.w6" type="pc" lemma="/" upos="PUNCT" xpos="Z:-------------" head="CTX000000001.s1.w7" deprel="punct" join="right" bbox="665 160 795 194">/</tok>
           <name type="MISC" cnec="ty">
               <tok id="CTX000000001.s1.w7" type="w" lemma="2024" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000001.s1.w5" deprel="compound" bbox="665 160 795 194">2024</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s1.w8" type="pc" lemma="—" upos="PUNCT" xpos="Z:-------------" head="CTX000000001.s1.w9" deprel="punct" bbox="815 160 845 194">—</tok>
           <name type="LOC" cnec="gu">
               <tok id="CTX000000001.s1.w9" type="w" lemma="hradiště" upos="NOUN" xpos="NNNS1-----A----" feats="Case=Nom|Gender=Neut|Number=Sing" head="CTX000000001.s1.w2" deprel="nmod" bbox="865 160 1045 194">Hradiště</tok>
               <tok id="CTX000000001.s1.w10" type="w" lemma="u" upos="ADP" xpos="RR--2----------" feats="AdpType=Prep|Case=Gen" head="CTX000000001.s1.w12" deprel="case" bbox="1065 160 1090 194">u</tok>
               <tok id="CTX000000001.s1.w11" type="w" lemma="horní" upos="ADJ" xpos="AAFS2----1A----" feats="Case=Gen|Degree=Pos|Gender=Fem|Number=Sing|Polarity=Pos" head="CTX000000001.s1.w12" deprel="amod" bbox="1105 160 1225 194">Horní</tok>
               <tok id="CTX000000001.s1.w12" type="w" lemma="mez" upos="NOUN" xpos="NNFP2-----A----" feats="Case=Gen|Gender=Fem|Number=Plur" head="CTX000000001.s1.w9" deprel="nmod" bbox="1245 160 1345 194">Mezí</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s1.w13" type="w" lemma="terénní" upos="ADJ" xpos="AAIS4----1A----" feats="Animacy=Inan|Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Polarity=Pos" head="CTX000000001.s1.w14" deprel="amod" bbox="220 210 380 244">Terénní</tok>
           <tok id="CTX000000001.s1.w14" type="w" lemma="výzkum" upos="NOUN" xpos="NNIS4-----A----" feats="Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing" head="CTX000000001.s1.w15" deprel="obj" bbox="400 210 560 244">výzkum</tok>
           <tok id="CTX000000001.s1.w15" type="w" lemma="provést" upos="VERB" xpos="VpYS----R-AAP--" feats="Aspect=Perf|Gender=Masc|Number=Sing|Polarity=Pos|Tense=Past|VerbForm=Part|Voice=Act" deprel="root" bbox="580 210 740 244">provedl</tok>
           <name type="PER" cnec="P">
               <tok id="CTX000000001.s1.w16" type="w" lemma="Jan" upos="PROPN" xpos="NNMS1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing" head="CTX000000001.s1.w15" deprel="nsubj" bbox="760 210 840 244">Jan</tok>
               <tok id="CTX000000001.s1.w17" type="w" lemma="Novotný" upos="PROPN" xpos="NNMS1-----A----" feats="Animacy=Anim|Case=Nom|Gender=Masc|NameType=Giv|Number=Sing" head="CTX000000001.s1.w16" deprel="flat" bbox="860 210 1030 244">Novotný</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s1.w18" type="w" lemma="v" upos="ADP" xpos="RR--6----------" feats="AdpType=Prep|Case=Loc" head="CTX000000001.s1.w19" deprel="case" bbox="1050 210 1075 244">v</tok>
           <name type="MISC" cnec="T">
               <tok id="CTX000000001.s1.w19" type="w" lemma="červen" upos="NOUN" xpos="NNIS6-----A----" feats="Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing" head="CTX000000001.s1.w15" deprel="obl" bbox="1090 210 1230 244">červnu</tok>
               <tok id="CTX000000001.s1.w20" type="w" lemma="2024" upos="NUM" xpos="C=-------------" feats="NumForm=Digit|NumType=Card" head="CTX000000001.s1.w19" deprel="nummod" join="right" bbox="1250 210 1360 244">2024</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s1.w21" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000001.s1.w15" deprel="punct" bbox="1250 210 1360 244">.</tok>
         </s>
       </div>
@@ -83,7 +83,7 @@
           <tok id="CTX000000001.s3.w5" type="w" lemma="projekt" upos="NOUN" xpos="NNIS2-----A----" feats="Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing" head="CTX000000001.s3.w3" deprel="obl" bbox="770 210 940 244">projektu</tok>
           <name type="ORG" cnec="ia">
               <tok id="CTX000000001.s3.w6" type="w" lemma="DEMO" upos="NOUN" xpos="BNXXX-----A----" feats="Abbr=Yes" head="CTX000000001.s3.w5" deprel="nmod" join="right" bbox="960 210 1080 244">DEMO</tok>
-          </n>
+          </name>
           <tok id="CTX000000001.s3.w7" type="pc" lemma="." upos="PUNCT" xpos="Z:-------------" head="CTX000000001.s3.w3" deprel="punct" join="right" bbox="960 210 1080 244">.</tok>
         </s>
       </div>

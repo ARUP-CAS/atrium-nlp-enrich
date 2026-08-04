@@ -9,6 +9,8 @@ FastAPI route, including the key robustness requirement: real TEITOK exports are
 transform must rewrite only coordinates and leave every other byte intact.
 """
 
+from pathlib import Path
+
 import pytest
 
 fastapi = pytest.importorskip("fastapi")
@@ -222,3 +224,41 @@ def test_endpoint_rejects_input_without_source_size(test_client):
     # Looks like TEITOK (has a bbox token) but no usable coordinates → 422.
     r = _post(test_client, content='<TEI><tok bbox="bad">x</tok></TEI>')
     assert r.status_code == 422
+
+
+# ── TEITOK output contract verdict (issue #28) ─────────────────────────────────
+# /rescale is the third TEITOK emitter in the repo. It reports conformance
+# instead of enforcing it: the endpoint faithfully transforms whatever it is
+# handed, including legacy documents predating the schema.
+
+
+def test_endpoint_reports_schema_verdict(test_client):
+    r = _post(test_client)
+    assert r.status_code == 200
+    body = r.json()
+    assert "schema_valid" in body and "schema_errors" in body
+    # SAMPLE_TEITOK is a minimal excerpt with no <teiHeader>, so it is a
+    # legitimately non-conformant document that must still rescale fine.
+    assert body["schema_valid"] is False
+    assert body["schema_errors"]
+
+
+def test_schema_verdict_is_advisory_not_fatal(test_client):
+    """A non-conformant document still gets a fully rescaled result."""
+    r = _post(test_client)
+    body = r.json()
+    assert body["schema_valid"] is False
+    assert 'lrx="500"' in body["teitok_xml"]
+    assert 'bbox="50 100 150 200"' in body["teitok_xml"]
+
+
+def test_schema_verdict_passes_for_a_conformant_document(test_client):
+    """A full document from the real writer's contract validates cleanly."""
+    fixture = (
+        Path(__file__).resolve().parent / "fixtures" / "teitok" / "CTX_valid.teitok.xml"
+    ).read_text(encoding="utf-8")
+    r = _post(test_client, content=fixture, width=827, height=1170)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["schema_valid"] is True, body["schema_errors"]
+    assert body["schema_errors"] == []

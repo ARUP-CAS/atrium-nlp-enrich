@@ -1,0 +1,111 @@
+# .github/workflows/teitok-schema.yml
+#
+# TEITOK XSD output-contract gate (issue #28).
+#
+# Standalone rather than a caller for a hub reusable workflow: nlp-enrich is the
+# only ATRIUM repo that emits TEITOK, so there is nothing to share. Same shape
+# as shellcheck.yml.
+#
+# Why a named check when tests/test_validate_teitok_xml.py already runs in the
+# main lane (atrium-project's docker-tool.reusable.yml, `pytest -m "not slow"`):
+# issue #28 asks for the validation step itself to execute in CI on the
+# fixtures, and a named status makes a schema failure legible at a glance
+# instead of being one assertion inside a large pytest run. The negative step is
+# the load-bearing one — it proves the gate can still fail, which a suite of
+# passing positives cannot.
+#
+# lxml is the only dependency (already in requirements.txt); no apt packages,
+# no xmllint, no models, no network.
+
+name: TEITOK Schema Contract
+
+on:
+  pull_request:
+    paths:
+      - "schemas/teitok/**"
+      - "api_util/validate_teitok_xml.py"
+      - "api_util/teitok_alto.py"
+      - "data_samples/TEITOK/**"
+      - "tests/fixtures/teitok/**"
+      - "tests/test_validate_teitok_xml.py"
+      - "api_4_stats.sh"
+      - "api_flexiconv.sh"
+      - ".github/workflows/teitok-schema.yml"
+  push:
+    branches: [test, master]
+    paths:
+      - "schemas/teitok/**"
+      - "api_util/validate_teitok_xml.py"
+      - "api_util/teitok_alto.py"
+      - "data_samples/TEITOK/**"
+      - "tests/fixtures/teitok/**"
+      - "tests/test_validate_teitok_xml.py"
+      - "api_4_stats.sh"
+      - "api_flexiconv.sh"
+      - ".github/workflows/teitok-schema.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read   # least privilege: this job only ever reads the tree
+
+jobs:
+  teitok-schema:
+    name: Validate TEITOK output contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install lxml
+        run: pip install lxml
+
+      - name: Schema compiles
+        run: |
+          python3 -c "
+          from lxml import etree
+          etree.XMLSchema(etree.parse('schemas/teitok/teitok.xsd'))
+          print('schemas/teitok/teitok.xsd compiles')
+          "
+
+      - name: Committed example outputs are conformant
+        # data_samples/TEITOK/ is what README.md advertises as the example
+        # output directory; it must satisfy the contract it illustrates.
+        run: python3 api_util/validate_teitok_xml.py data_samples/TEITOK
+
+      - name: Valid fixtures pass
+        run: |
+          for f in CTX_valid CTX_no_alto; do
+            mkdir -p "$RUNNER_TEMP/ok"
+            cp "tests/fixtures/teitok/$f.teitok.xml" "$RUNNER_TEMP/ok/"
+          done
+          python3 api_util/validate_teitok_xml.py "$RUNNER_TEMP/ok"
+
+      - name: Invalid fixture is REJECTED (negative test)
+        # The gate must fail on malformed TEITOK. If this step ever passes
+        # silently, the gate has stopped gating.
+        run: |
+          mkdir -p "$RUNNER_TEMP/bad"
+          cp tests/fixtures/teitok/CTX_invalid.teitok.xml "$RUNNER_TEMP/bad/"
+          rc=0
+          python3 api_util/validate_teitok_xml.py "$RUNNER_TEMP/bad" || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            echo "::error::validator accepted CTX_invalid.teitok.xml — the XSD gate is not gating"
+            exit 1
+          fi
+          echo "[expected] validator rejected the invalid fixture with exit $rc"
+
+      - name: Real writer round-trip and gate behaviour tests
+        # Includes the round-trip that generates TEITOK with
+        # api_util/teitok_alto.py and validates the result — the check that
+        # catches generator drift the curated fixtures cannot see.
+        run: python3 -m pytest tests/test_validate_teitok_xml.py -v --tb=short

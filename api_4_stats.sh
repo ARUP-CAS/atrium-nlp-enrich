@@ -120,10 +120,29 @@ done < <(find "${CONLLU_INPUT_DIR}" -name '*.conllu' -type f -print0)
 # Runs after generation, before atrium_paradata.py finish, and over the
 # TEITOK_OUTPUT_DIR as a whole (not just this run's docs) so a resumed run
 # still re-checks everything currently on disk.
+#
+# --allow-empty: TEITOK_OUTPUT_DIR is only created inside the per-document
+# loop above, so a run with zero input documents legitimately has nothing to
+# validate. That outcome belongs to the runner's FAIL_ON_EMPTY, not to this
+# gate — without the flag an empty run died here on "target directory does
+# not exist", masking the real reason.
+#
+# The failure path mirrors the summarize_nt_udp one above: record the reason
+# in paradata and mirror it into $LOG_FILE before halting, so a red run is
+# diagnosable from the log and the run record is not left dangling. We use an
+# inline tee rather than api_util/api_common.sh's log(): sourcing that file
+# would also re-source the config, validate INPUT_TABLES_DIR and mkdir
+# OUTPUT_DIR, side effects this script deliberately avoids.
 if [ "${SAVE_TEITOK:-true}" = "true" ]; then
     echo "Validating TEITOK XML output contract..."
-    if ! python3 api_util/validate_teitok_xml.py "${TEITOK_OUTPUT_DIR}"; then
-        echo "[CRITICAL ERROR] TEITOK XSD validation failed. Halting pipeline before packaging." >&2
+    if ! python3 api_util/validate_teitok_xml.py "${TEITOK_OUTPUT_DIR}" --allow-empty; then
+        python3 atrium_paradata.py skip \
+            --state "$PARA_STATE" \
+            --file  "${TEITOK_OUTPUT_DIR}" \
+            --reason "TEITOK XSD validation failed"
+
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] [CRITICAL ERROR] TEITOK XSD validation failed. Halting pipeline before packaging." \
+            | tee -a "${LOG_FILE:-/dev/null}" >&2
         exit 1
     fi
 fi

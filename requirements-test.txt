@@ -6,6 +6,10 @@ fastapi
 httpx
 python-multipart
 openapi-spec-validator
+# TEITOK XSD gate (issue #28). Also in requirements.txt — repeated here so a
+# lane that installs only the test deps can still collect
+# tests/test_validate_teitok_xml.py.
+lxml
 # Optional heavy deps only if the suite truly needs them:
 # torch
 # transformers

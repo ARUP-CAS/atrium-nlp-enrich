@@ -114,6 +114,24 @@ def _validate_params(kw_method: str, lang: str, num_keywords: int) -> None:
         raise HTTPException(422, "num_keywords must be between 1 and 100") from None
 
 
+def _schema_verdict(xml_text: str) -> tuple[bool | None, List[str]]:
+    """TEITOK XSD conformance verdict for a document this service produced
+    (issue #28), as ``(valid, diagnostics)``.
+
+    ``valid`` is ``None`` when no verdict could be reached — the validator or
+    lxml is unavailable — so callers can tell "not conformant" apart from
+    "not checked". Never raises: a reporting extra must not be able to fail a
+    transform that already succeeded.
+    """
+    try:
+        from api_util.validate_teitok_xml import validate_xml_text
+
+        errors = validate_xml_text(xml_text)
+    except Exception as exc:  # noqa: BLE001 - advisory field, never fatal
+        return None, [f"schema check unavailable: {exc}"]
+    return not errors, errors
+
+
 def _run_pipeline_sync(rows, doc_id, kw_method, num_keywords, lang):
     """Blocking pipeline call with graceful backend degradation configured."""
     return _manager.enrich(
@@ -352,6 +370,12 @@ async def rescale(
         result = rescale_teitok(xml_text, width, height, fix_name_tags=fix_names)
     except RescaleError as exc:
         raise HTTPException(422, str(exc)) from exc
+
+    # TEITOK output contract verdict (issue #28). Advisory, not a 4xx: this
+    # endpoint faithfully transforms whatever it is handed, including legacy
+    # documents that predate the schema, so rejecting them would break a
+    # working tool. Callers that care can gate on `schema_valid`.
+    result["schema_valid"], result["schema_errors"] = _schema_verdict(result["teitok_xml"])
 
     fmt = format if format in ("json", "xml") else "json"
     if fmt == "xml":
