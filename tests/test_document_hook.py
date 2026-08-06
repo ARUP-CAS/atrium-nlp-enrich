@@ -15,9 +15,14 @@ def _tok(form, lemma, ner, page_idx, line_id, left, top, right, bottom, space_af
         "ner": ner,
         "space_after": space_after,
         "_bbox": {
-            "left": left, "top": top, "right": right, "bottom": bottom,
-            "page_idx": page_idx, "line_id": line_id,
-            "block_id": "b1", "line_bbox": "0 0 100 30",
+            "left": left,
+            "top": top,
+            "right": right,
+            "bottom": bottom,
+            "page_idx": page_idx,
+            "line_id": line_id,
+            "block_id": "b1",
+            "line_bbox": "0 0 100 30",
         },
     }
 
@@ -77,7 +82,11 @@ def test_document_hook_onto_extraction(mock_parse, mock_group, mock_document_rec
 
     # Verify accretion initialization
     mock_record_class.open.assert_called_once_with(
-        "CTX000000001", "nlp-enrich", baseline=None, run_id="test-run-123", paradata_ref="paradata.json"
+        "CTX000000001",
+        "nlp-enrich",
+        baseline=None,
+        run_id="test-run-123",
+        paradata_ref="paradata.json",
     )
 
     entities = _merged_entities(mock_doc_instance)
@@ -396,9 +405,7 @@ def test_invalid_baseline_downgrades_own_output_refusal_to_a_warning(tmp_path, c
     gate degrades to a warning that says so, and the record is still written."""
     pytest.importorskip("jsonschema")
 
-    out_json = _run_real_hook(
-        tmp_path, _span_token(char_start=-1), baseline=_INVALID_BASELINE
-    )
+    out_json = _run_real_hook(tmp_path, _span_token(char_start=-1), baseline=_INVALID_BASELINE)
 
     assert out_json.exists()
     err = capsys.readouterr().err

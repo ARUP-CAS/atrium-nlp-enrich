@@ -413,8 +413,10 @@ class PipelineManager:
                 document_json_out = workspace / "out" / f"{doc_id}{FILE_SUFFIX}"
                 cmd.extend(
                     [
-                        "--document-json", str(baseline_path),
-                        "--document-json-out", str(document_json_out),
+                        "--document-json",
+                        str(baseline_path),
+                        "--document-json-out",
+                        str(document_json_out),
                     ]
                 )
 

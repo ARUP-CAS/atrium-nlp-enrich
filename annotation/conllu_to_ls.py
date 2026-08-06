@@ -92,38 +92,28 @@ def document_to_ls_task(doc: Document, doc_id: str | None) -> dict:
         # Build Label Studio 'result' items for each span
         for start, end, typ in sspans:
             # Extract literal text string for the span using local coordinates
-            span_text = stext[start - pos: end - pos]
-            results.append({
-                "value": {
-                    "start": start,
-                    "end": end,
-                    "text": span_text,
-                    "labels": [typ]
-                },
-                "from_name": "label",
-                "to_name": "text",
-                "type": "labels"
-            })
+            span_text = stext[start - pos : end - pos]
+            results.append(
+                {
+                    "value": {"start": start, "end": end, "text": span_text, "labels": [typ]},
+                    "from_name": "label",
+                    "to_name": "text",
+                    "type": "labels",
+                }
+            )
 
         pos += len(stext)
 
     full_text = "".join(texts)
 
     # Base Label Studio Task Schema
-    task: dict = {
-        "data": {
-            "text": full_text
-        }
-    }
+    task: dict = {"data": {"text": full_text}}
     if doc_id:
         task["data"]["doc_id"] = doc_id
 
     # Inject existing annotations as modifiable predictions
     if results:
-        task["predictions"] = [{
-            "model_version": "legacy_pipeline_export",
-            "result": results
-        }]
+        task["predictions"] = [{"model_version": "legacy_pipeline_export", "result": results}]
 
     return task
 
@@ -172,7 +162,7 @@ def parse_conllu(fh: TextIO, ner_from_misc: bool) -> list[tuple[str | None, Docu
         if ner_from_misc and len(cols) >= 10:
             for feat in cols[9].split("|"):
                 if feat.startswith("NER="):
-                    tag = feat[len("NER="):] or "O"
+                    tag = feat[len("NER=") :] or "O"
                     break
         cur_sent.append((form, tag))
     end_document()

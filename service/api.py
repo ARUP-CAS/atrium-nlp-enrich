@@ -224,9 +224,7 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, docum
     async with _semaphore:
         try:
             data, out_fmt, result = await asyncio.wait_for(
-                _run_enrichment(
-                    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json
-                ),
+                _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt, document_json),
                 timeout=API_JOB_TIMEOUT,
             )
         except asyncio.TimeoutError as exc:

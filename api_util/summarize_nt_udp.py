@@ -120,23 +120,71 @@ ONTO_TYPE_MAP = {
 
 # --- CNEC to ONTO Mapping ---
 CNEC_TO_ONTO_MAP = {
-    "p": "PERSON", "p_": "PERSON", "P": "PERSON", "pf": "PERSON",
-    "ps": "PERSON", "pm": "PERSON", "ph": "PERSON", "pd": "PERSON", "pp": "PERSON",
+    "p": "PERSON",
+    "p_": "PERSON",
+    "P": "PERSON",
+    "pf": "PERSON",
+    "ps": "PERSON",
+    "pm": "PERSON",
+    "ph": "PERSON",
+    "pd": "PERSON",
+    "pp": "PERSON",
     "pc": "NORP",
-    "g": "GPE", "G": "GPE", "g_": "GPE", "gu": "GPE", "gr": "GPE", "gc": "GPE",
-    "gl": "LOC", "gs": "LOC", "gt": "LOC", "gh": "LOC",
+    "g": "GPE",
+    "G": "GPE",
+    "g_": "GPE",
+    "gu": "GPE",
+    "gr": "GPE",
+    "gc": "GPE",
+    "gl": "LOC",
+    "gs": "LOC",
+    "gt": "LOC",
+    "gh": "LOC",
     "gq": "FAC",
-    "i": "ORG", "i_": "ORG", "I": "ORG", "if": "ORG", "io": "ORG", "ic": "ORG",
+    "i": "ORG",
+    "i_": "ORG",
+    "I": "ORG",
+    "if": "ORG",
+    "io": "ORG",
+    "ic": "ORG",
     "ia": "EVENT",
-    "o": "PRODUCT", "o_": "PRODUCT", "op": "PRODUCT",
-    "oa": "WORK_OF_ART", "oe": "QUANTITY", "om": "MONEY", "or": "LAW",
-    "m": "ORG", "mn": "WORK_OF_ART", "ms": "ORG", "mi": "ORG",
-    "t": "TIME", "T": "TIME", "th": "TIME", "tt": "TIME",
-    "td": "DATE", "tm": "DATE", "ty": "DATE", "tf": "EVENT",
-    "n": "CARDINAL", "N": "CARDINAL", "n_": "CARDINAL", "nc": "CARDINAL", "ns": "CARDINAL",
-    "na": "DATE", "nb": "QUANTITY", "ni": "ORDINAL", "no": "ORDINAL",
-    "a": "LOC", "A": "LOC", "ah": "FAC", "at": "CARDINAL", "az": "CARDINAL",
-    "me": "CARDINAL", "C": "WORK_OF_ART", "unk": "O", "O": "O",
+    "o": "PRODUCT",
+    "o_": "PRODUCT",
+    "op": "PRODUCT",
+    "oa": "WORK_OF_ART",
+    "oe": "QUANTITY",
+    "om": "MONEY",
+    "or": "LAW",
+    "m": "ORG",
+    "mn": "WORK_OF_ART",
+    "ms": "ORG",
+    "mi": "ORG",
+    "t": "TIME",
+    "T": "TIME",
+    "th": "TIME",
+    "tt": "TIME",
+    "td": "DATE",
+    "tm": "DATE",
+    "ty": "DATE",
+    "tf": "EVENT",
+    "n": "CARDINAL",
+    "N": "CARDINAL",
+    "n_": "CARDINAL",
+    "nc": "CARDINAL",
+    "ns": "CARDINAL",
+    "na": "DATE",
+    "nb": "QUANTITY",
+    "ni": "ORDINAL",
+    "no": "ORDINAL",
+    "a": "LOC",
+    "A": "LOC",
+    "ah": "FAC",
+    "at": "CARDINAL",
+    "az": "CARDINAL",
+    "me": "CARDINAL",
+    "C": "WORK_OF_ART",
+    "unk": "O",
+    "O": "O",
     # Archaeo Domain
     "LOCATION": "LOC",
     "ARTEFACT": "MISC",
@@ -197,8 +245,7 @@ def get_ne_explanation(raw_tag):
         if short_code in CNEC_TO_ONTO_MAP:
             onto_mapped = CNEC_TO_ONTO_MAP[short_code]
             return ONTO_TYPE_MAP.get(
-                onto_mapped,
-                CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
+                onto_mapped, CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
             )
 
         return CNEC_TYPE_MAP.get(short_code, f"Unknown Code ({short_code})")
@@ -308,9 +355,9 @@ def write_document_csv(rows, out_path):
                 misc_keys.add(k)
 
     header = (
-            ["page_id", "token", "lemma", "position", "nameTag", "NE"]
-            + sorted(list(feature_keys))
-            + sorted(list(misc_keys))
+        ["page_id", "token", "lemma", "position", "nameTag", "NE"]
+        + sorted(list(feature_keys))
+        + sorted(list(misc_keys))
     )
     try:
         with open(out_path, "w", encoding="utf-8", newline="") as f:
@@ -322,6 +369,7 @@ def write_document_csv(rows, out_path):
 
 
 # ── FIX #8: single-pass reader ───────────────────────────────────────────────
+
 
 def _collect_merged_rows(merged_filepath):
     all_rows = []
@@ -443,26 +491,27 @@ def append_summary_row(doc_name, merged_conllu_path, summary_csv_path):
 
 # ── per-document entry point (called from api_4_stats.sh) ────────────────────
 
+
 def process_single_document(
-        conllu_file,
-        ne_dir,
-        output_dir,
-        save_conllu=True,
-        save_csv=True,
-        save_teitok=False,
-        alto_dir=None,
-        teitok_out=None,
-        pages_dir=None,
-        summary_csv=None,
-        model_udpipe=None,
-        model_nametag=None,
-        dpi=None,
-        alto_dpi=None,
-        document_json_dir=None,
-        document_run_id=None,
-        document_paradata_ref="",
-        document_license_detail=None,
-        include_lines=False,
+    conllu_file,
+    ne_dir,
+    output_dir,
+    save_conllu=True,
+    save_csv=True,
+    save_teitok=False,
+    alto_dir=None,
+    teitok_out=None,
+    pages_dir=None,
+    summary_csv=None,
+    model_udpipe=None,
+    model_nametag=None,
+    dpi=None,
+    alto_dpi=None,
+    document_json_dir=None,
+    document_run_id=None,
+    document_paradata_ref="",
+    document_license_detail=None,
+    include_lines=False,
 ):
     conllu_path = Path(conllu_file)
     # canonical_doc_id(), not Path.stem (issue atrium-project#10, D3): `.conllu` is this
@@ -575,23 +624,24 @@ def process_single_document(
 
 # ── directory-level pipeline (used when running standalone) ──────────────────
 
+
 def process_pipeline(
-        conllu_dir,
-        tsv_dir,
-        output_dir,
-        alto_dir,
-        teitok_out,
-        save_conllu=True,
-        save_csv=True,
-        save_teitok=False,
-        pages_dir=None,
-        model_udpipe=None,
-        model_nametag=None,
-        summary_csv=None,
-        dpi=None,
-        alto_dpi=None,
-        document_json_dir=None,
-        include_lines=False,
+    conllu_dir,
+    tsv_dir,
+    output_dir,
+    alto_dir,
+    teitok_out,
+    save_conllu=True,
+    save_csv=True,
+    save_teitok=False,
+    pages_dir=None,
+    model_udpipe=None,
+    model_nametag=None,
+    summary_csv=None,
+    dpi=None,
+    alto_dpi=None,
+    document_json_dir=None,
+    include_lines=False,
 ):
     conllu_path_obj = Path(conllu_dir)
     if not conllu_path_obj.exists():
@@ -645,25 +695,52 @@ def process_pipeline(
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
+
 def build_parser():
     parser = argparse.ArgumentParser()
 
     # --- Per-document args (used by api_4_stats.sh) ---
-    parser.add_argument("--conllu", default=None, help="Single CoNLL-U file to process (per-document mode).")
-    parser.add_argument("--ne-dir", default=None, help="Directory of per-page NE TSV files for this document.")
-    parser.add_argument("--output-dir", default=None, help="Output directory for this document's results.")
-    parser.add_argument("--summary-csv", default=os.getenv("SUMMARY_CSV"),
-                        help="Path to the global summary CSV to append entity counts to.")
+    parser.add_argument(
+        "--conllu", default=None, help="Single CoNLL-U file to process (per-document mode)."
+    )
+    parser.add_argument(
+        "--ne-dir", default=None, help="Directory of per-page NE TSV files for this document."
+    )
+    parser.add_argument(
+        "--output-dir", default=None, help="Output directory for this document's results."
+    )
+    parser.add_argument(
+        "--summary-csv",
+        default=os.getenv("SUMMARY_CSV"),
+        help="Path to the global summary CSV to append entity counts to.",
+    )
 
-    parser.add_argument("--dpi", type=_float_or_none, default=os.environ.get("IMAGE_DPI"),
-                        help="Output image DPI for TEITOK scaling")
-    parser.add_argument("--alto-dpi", type=_float_or_none, default=os.environ.get("ALTO_DPI"), help="Source ALTO DPI")
+    parser.add_argument(
+        "--dpi",
+        type=_float_or_none,
+        default=os.environ.get("IMAGE_DPI"),
+        help="Output image DPI for TEITOK scaling",
+    )
+    parser.add_argument(
+        "--alto-dpi",
+        type=_float_or_none,
+        default=os.environ.get("ALTO_DPI"),
+        help="Source ALTO DPI",
+    )
 
     # --- Document Hook specific args ---
-    parser.add_argument("--state-dir", default=None, help="Directory containing paradata state files")
-    parser.add_argument("--document-json-dir", type=str, default=None,
-                        help="Directory containing baseline document JSONs for accretion")
-    parser.add_argument("--include-lines", action="store_true", help="DANGER: Opt-in to merge lines[] block.")
+    parser.add_argument(
+        "--state-dir", default=None, help="Directory containing paradata state files"
+    )
+    parser.add_argument(
+        "--document-json-dir",
+        type=str,
+        default=None,
+        help="Directory containing baseline document JSONs for accretion",
+    )
+    parser.add_argument(
+        "--include-lines", action="store_true", help="DANGER: Opt-in to merge lines[] block."
+    )
 
     # --- Directory-mode args (used when running standalone) ---
     parser.add_argument("--conllu-dir", default=os.getenv("CONLLU_INPUT_DIR"))
@@ -671,16 +748,28 @@ def build_parser():
     parser.add_argument("--out-dir", default=os.getenv("SUMMARY_OUTPUT_DIR"))
     parser.add_argument("--tt-dir", default=os.getenv("TEITOK_OUTPUT_DIR"))
     parser.add_argument("--alto-dir", default=os.getenv("ALTO_DIR"))
-    parser.add_argument("--pages-dir", default=os.getenv("INPUT_PAGES_DIR"),
-                        help="Directory containing per-page images.")
+    parser.add_argument(
+        "--pages-dir",
+        default=os.getenv("INPUT_PAGES_DIR"),
+        help="Directory containing per-page images.",
+    )
 
     # --- Format flags ---
-    parser.add_argument("--save-conllu-ne", default=os.getenv("SAVE_CONLLU_NE", "1"),
-                        help="1/0 whether to keep the merged CoNLL-U per document.")
-    parser.add_argument("--save-csv", default=os.getenv("SAVE_CSV", "1"),
-                        help="1/0 whether to write the summary CSV per document.")
-    parser.add_argument("--save-teitok", default=os.getenv("SAVE_TEITOK", "0"),
-                        help="1/0 whether to write TEITOK-XML per document.")
+    parser.add_argument(
+        "--save-conllu-ne",
+        default=os.getenv("SAVE_CONLLU_NE", "1"),
+        help="1/0 whether to keep the merged CoNLL-U per document.",
+    )
+    parser.add_argument(
+        "--save-csv",
+        default=os.getenv("SAVE_CSV", "1"),
+        help="1/0 whether to write the summary CSV per document.",
+    )
+    parser.add_argument(
+        "--save-teitok",
+        default=os.getenv("SAVE_TEITOK", "0"),
+        help="1/0 whether to write TEITOK-XML per document.",
+    )
 
     return parser
 
@@ -701,7 +790,7 @@ def main(argv=None):
     if args.document_json_dir and args.state_dir:
         state_files = glob.glob(os.path.join(args.state_dir, ".state_*.json"))
         if state_files:
-            with open(state_files[0], 'r') as sf:
+            with open(state_files[0], "r") as sf:
                 state_dict = json.load(sf)
                 document_run_id = state_dict.get("_run_id", document_run_id)
                 document_license_detail = state_dict.get("license_detail", {})
@@ -710,7 +799,10 @@ def main(argv=None):
     # ── per-document mode (invoked by api_4_stats.sh with --conllu) ──
     if args.conllu:
         if not args.ne_dir or not args.output_dir:
-            print("[Error] --ne-dir and --output-dir are required in per-document mode.", file=sys.stderr)
+            print(
+                "[Error] --ne-dir and --output-dir are required in per-document mode.",
+                file=sys.stderr,
+            )
             sys.exit(1)
         ok = process_single_document(
             conllu_file=args.conllu,
@@ -737,15 +829,18 @@ def main(argv=None):
     if not all([args.conllu_dir, args.tsv_dir, args.out_dir]):
         print(
             "[Error] Provide either --conllu/--ne-dir/--output-dir (per-document) or --conllu-dir/--tsv-dir/--out-dir (directory mode).",
-            file=sys.stderr)
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if save_teitok:
         if not args.alto_dir:
             print("[Warn] --alto-dir not set; TEITOK output will have no bboxes.", file=sys.stderr)
         elif not Path(args.alto_dir).exists():
-            print(f"[Error] A valid --alto-dir is required when save-teitok=true ('{args.alto_dir}' not found).",
-                  file=sys.stderr)
+            print(
+                f"[Error] A valid --alto-dir is required when save-teitok=true ('{args.alto_dir}' not found).",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         if args.tt_dir:

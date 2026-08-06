@@ -487,9 +487,7 @@ def test_enrich_endpoint_returns_accreted_record_with_upstream_blocks_intact(
     assert record["entities"][0]["surface"] == "Praha"
 
 
-def test_enrich_endpoint_omits_document_json_when_not_requested(
-    tmp_path, monkeypatch, test_client
-):
+def test_enrich_endpoint_omits_document_json_when_not_requested(tmp_path, monkeypatch, test_client):
     """Absent, not null: every existing client's envelope is unchanged by J3."""
     monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
     monkeypatch.setattr(enr.subprocess, "run", _fake_pipeline_run(tmp_path))

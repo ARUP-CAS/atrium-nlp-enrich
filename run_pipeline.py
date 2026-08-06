@@ -519,7 +519,9 @@ def _pipeline_doc_id(input_tables_dir: str) -> Optional[str]:
     return canonical_doc_id(matches[0])
 
 
-def _prepare_document_json_bridge(document_json: Optional[str], doc_id: Optional[str] = None) -> Path:
+def _prepare_document_json_bridge(
+    document_json: Optional[str], doc_id: Optional[str] = None
+) -> Path:
     """Seed a scratch directory for the 'stats' stage's existing --document-json-dir support.
 
     api_4_stats.sh / api_util/summarize_nt_udp.py already implement the accretion read+write
@@ -678,14 +680,18 @@ def main(argv=None):
     # bridge in front of that existing, working path rather than a second
     # implementation — see _prepare_document_json_bridge().
     parser.add_argument(
-        "--document-json", type=str, default=None,
+        "--document-json",
+        type=str,
+        default=None,
         help="Baseline ATRIUM Document JSON to read before the 'stats' stage and accrete "
-             "nlp-enrich's entities/pages contribution into.",
+        "nlp-enrich's entities/pages contribution into.",
     )
     parser.add_argument(
-        "--document-json-out", type=str, default=None,
+        "--document-json-out",
+        type=str,
+        default=None,
         help="Path to write the updated ATRIUM Document JSON. Requires --stages to include "
-             "'stats' (the only stage that touches the document record).",
+        "'stats' (the only stage that touches the document record).",
     )
 
     args = parser.parse_args(argv)

@@ -2,7 +2,6 @@ from api_util.summarize_nt_udp import get_ne_explanation
 
 
 class TestNameTagExplanationMapping:
-
     def test_native_onto_tags(self):
         """Test that native ONTO tags are correctly resolved to their descriptions."""
         assert get_ne_explanation("B-PERSON") == "People, including fictional"

@@ -167,16 +167,16 @@ def _augment_tokens_with_position(tokens: List[dict]) -> None:
 
 
 def run_document_hook(
-        doc_id: str,
-        teitok_path: str,
-        conllu_path: str,
-        baseline_json: Optional[str],
-        out_json: str,
-        run_id: str,
-        paradata_ref: str,
-        license_detail: Dict[str, Any],
-        alto_path: Optional[str] = None,
-        include_lines: bool = False,
+    doc_id: str,
+    teitok_path: str,
+    conllu_path: str,
+    baseline_json: Optional[str],
+    out_json: str,
+    run_id: str,
+    paradata_ref: str,
+    license_detail: Dict[str, Any],
+    alto_path: Optional[str] = None,
+    include_lines: bool = False,
 ):
     """
     Integrates nlp-enrich outputs (entities, TEITOK refs) into the AtriumDocument pair.
@@ -289,11 +289,9 @@ def run_document_hook(
     #     so nothing is emitted.
     baseline_was_invalid = _baseline_is_invalid(baseline_json)
 
-    with DocumentRecord.open(doc_id, "nlp-enrich",
-                             baseline=baseline_json,
-                             run_id=run_id,
-                             paradata_ref=paradata_ref) as doc:
-
+    with DocumentRecord.open(
+        doc_id, "nlp-enrich", baseline=baseline_json, run_id=run_id, paradata_ref=paradata_ref
+    ) as doc:
         if license_detail:
             doc.add_license_detail(license_detail)
 
@@ -315,8 +313,7 @@ def run_document_hook(
 
         pages_present = sorted({t.get("_page", "1") for t in tokens})
         page_updates = [
-            {"page": p, "teitok_surface": f"{doc_id}.surface{p}"}
-            for p in pages_present
+            {"page": p, "teitok_surface": f"{doc_id}.surface{p}"} for p in pages_present
         ]
         doc.merge_block("pages", page_updates)
         # nlp-enrich owns exactly one field in pages[] — teitok_surface — so this is
@@ -326,7 +323,8 @@ def run_document_hook(
 
         if include_lines:
             logger.warning(
-                "DANGER: `lines` block merged from nlp-enrich. This may cause silent duplicate rows due to layout reordering mismatches with alto-postprocess.")
+                "DANGER: `lines` block merged from nlp-enrich. This may cause silent duplicate rows due to layout reordering mismatches with alto-postprocess."
+            )
             # Line extraction logic omitted by default to protect the integrity of the OCR pipeline layout
             # NOTE: whoever enables this must add the matching
             # doc.assert_fields_survived("lines", line_updates) after the merge, as the

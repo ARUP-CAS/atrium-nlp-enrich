@@ -57,10 +57,7 @@ _MULTI_DOT_NAMES = [
 _UDPIPE_CONLLU = "CTX000000001.udpipe.conllu"
 
 _CONLLU_BODY = (
-    "# sent_id = 1\n"
-    "# text = Praha\n"
-    "1\tPraha\tPraha\tPROPN\t_\t_\t0\troot\t_\tNE=B-LOC\n"
-    "\n"
+    "# sent_id = 1\n# text = Praha\n1\tPraha\tPraha\tPROPN\t_\t_\t0\troot\t_\tNE=B-LOC\n\n"
 )
 
 
