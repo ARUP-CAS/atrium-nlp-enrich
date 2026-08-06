@@ -11,6 +11,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 from api_util.bbox_scale import dpi_scale, scale_bbox_coords
+from atrium_document import canonical_doc_id
 
 _CNEC_TO_CONLL = {
     "p": "PER",
@@ -496,7 +497,11 @@ def parse_and_align_conllu(
     """
     alto_strings, alto_pages, alto_graphics, alto_blocks, alto_meta = _parse_alto(alto_path)
 
-    _doc_id = doc_id or Path(conllu_path).stem
+    # canonical_doc_id() for the fallback, not Path.stem (issue atrium-project#10, D3):
+    # _doc_id ends up in the TEITOK @xml:id / <title> and in the teitok_ref strings the
+    # document record's entities[] carry, so "X.udpipe" from an X.udpipe.conllu input would
+    # point at a document nothing else in the pipeline calls by that name.
+    _doc_id = doc_id or canonical_doc_id(conllu_path)
     if not alto_strings:
         print(
             f"  [TEITOK] No ALTO input for {_doc_id}; producing text-only XML without bboxes.",

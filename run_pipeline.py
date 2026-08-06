@@ -29,6 +29,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from atrium_document import canonical_doc_id
 from atrium_paradata import merge_run_paradata
 
 # ───────────────────────────────────────────────────────────────────────────────
@@ -498,17 +499,24 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
 
 def _pipeline_doc_id(input_tables_dir: str) -> Optional[str]:
     """The doc_id nlp-enrich's own stages will derive for this run, from the single CSV in
-    INPUT_TABLES_DIR (mirrors summarize_nt_udp.py's doc_name = conllu_path.stem, which in
-    turn traces back to this same file's stem via the manifest). None when the directory
-    holds zero or multiple files -- batch runs have no single answer, so callers should fall
-    back to their prior, doc_id-agnostic behavior rather than guess.
+    INPUT_TABLES_DIR (mirrors summarize_nt_udp.py's doc_name, which in turn traces back to
+    this same file via the manifest). None when the directory holds zero or multiple files
+    -- batch runs have no single answer, so callers should fall back to their prior,
+    doc_id-agnostic behavior rather than guess.
+
+    Both ends of that chain now go through `atrium_document.canonical_doc_id()` (issue
+    atrium-project#10, D3). This used to be `matches[0].stem`, and "mirrors" was the whole
+    load-bearing property: the bridge seeds and collects `<doc_id>.document.json`, so if
+    this predicts "X.v2" where the stats stage writes "X", the seeded baseline is orphaned
+    and every upstream block is silently dropped (rule 3) -- the same failure mode
+    _prepare_document_json_bridge already documents for a wrong upstream doc_id.
     """
     if not input_tables_dir:
         return None
     matches = sorted(Path(input_tables_dir).glob("*.csv"))
     if len(matches) != 1:
         return None
-    return matches[0].stem
+    return canonical_doc_id(matches[0])
 
 
 def _prepare_document_json_bridge(document_json: Optional[str], doc_id: Optional[str] = None) -> Path:
@@ -558,17 +566,32 @@ def _prepare_document_json_bridge(document_json: Optional[str], doc_id: Optional
     return scratch_dir
 
 
+#: (atrium-project#10, J4) The one stdout token an automated caller greps for. On STDOUT and
+#: at the END of the run, deliberately: the failure this reports is a document hook that
+#: failed and degraded to a stderr warning per rule 3 — correct behaviour, but it left the
+#: CLI exiting 0 with the promised --document-json-out file absent and the only evidence
+#: buried mid-stream in stderr, hundreds of lines above the summary. Keeping the graceful
+#: degradation and adding a terminal, greppable line is what makes it *detectable* without
+#: making an inherited upstream gap fatal.
+DOC_JSON_NOT_WRITTEN_MARKER = "[document-json] NOT WRITTEN"
+
+
 def _collect_document_json_output(
     scratch_dir: Path, document_json_out: str, doc_id: Optional[str] = None
-) -> None:
+) -> bool:
     """Copy the 'stats' stage's accreted record out to the caller's requested path.
+
+    Returns True when `document_json_out` was written, False when no record was produced --
+    the caller reports that once, on stdout, at the end of the run (see
+    DOC_JSON_NOT_WRITTEN_MARKER).
 
     When `doc_id` is known (see _pipeline_doc_id), collects that exact
     `<doc_id>.document.json` -- deterministic, and immune to an orphaned, differently-named
     seed file left behind by a doc_id mismatch (see _prepare_document_json_bridge). Falls back
     to globbing *.document.json only when doc_id couldn't be determined (batch runs); zero
     files found means the stage never reached the document-json hook (e.g. no CoNLL-U was
-    produced upstream) -- reported, not silently swallowed either way.
+    produced upstream, or the hook itself raised and summarize_nt_udp.py warned and carried
+    on) -- reported, not silently swallowed either way.
     """
     if doc_id:
         record = scratch_dir / f"{doc_id}.document.json"
@@ -578,7 +601,7 @@ def _collect_document_json_output(
                 f"{document_json_out} was NOT written",
                 file=sys.stderr,
             )
-            return
+            return False
         records = [str(record)]
     else:
         records = glob.glob(str(scratch_dir / "*.document.json"))
@@ -588,7 +611,7 @@ def _collect_document_json_output(
                 f"{document_json_out} was NOT written",
                 file=sys.stderr,
             )
-            return
+            return False
         if len(records) > 1:
             print(
                 f"[document] {len(records)} document records found in {scratch_dir}, expected 1 "
@@ -599,6 +622,7 @@ def _collect_document_json_output(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(records[0], out_path)
     print(f"[document] Record written → {out_path}", flush=True)
+    return True
 
 
 def main(argv=None):
@@ -758,8 +782,11 @@ def main(argv=None):
         ):
             empty_failures.append(name)
 
+    doc_json_written: Optional[bool] = None
     if doc_json_scratch_dir is not None and args.document_json_out:
-        _collect_document_json_output(doc_json_scratch_dir, args.document_json_out, doc_json_doc_id)
+        doc_json_written = _collect_document_json_output(
+            doc_json_scratch_dir, args.document_json_out, doc_json_doc_id
+        )
 
     if getattr(args, "kw", False):
         if plan["skips"]["keywords"]:
@@ -846,6 +873,21 @@ def main(argv=None):
                 empty_failures.append("llm")
 
     _finalize_merge(results, paradata_dir, args, before, skipped_names)
+
+    # (atrium-project#10, J4) The promise the run made and did not keep, restated on stdout
+    # where an automated caller sees it. Still exit 0: a document hook that failed degrades
+    # gracefully by design (rule 3 -- nlp-enrich's own outputs are all present and valid, and
+    # a missing upstream baseline must not fail a standalone run), so turning this into a
+    # non-zero exit would break every caller that does not use the flag's output. Detectable,
+    # not fatal.
+    if doc_json_written is False:
+        print(
+            f"{DOC_JSON_NOT_WRITTEN_MARKER} — --document-json-out "
+            f"{args.document_json_out} was requested but the 'stats' stage produced no "
+            f"document record; see the [document] lines on stderr for the reason. "
+            f"nlp-enrich's other outputs are unaffected.",
+            flush=True,
+        )
 
     if empty_failures and fail_on_empty:
         print(

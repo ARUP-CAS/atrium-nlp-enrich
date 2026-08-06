@@ -23,7 +23,7 @@ attribute). Instead:
 - **Method:** hand-authored to encode the element/attribute shapes that writer
   produces, on both its code paths (with a source ALTO file, i.e. bbox-annotated
   and `<facsimile>`-bearing; and the text-only fallback without one).
-- **Verified by:** `tests/test_validate_teitok_xml.py::TestRealWriterRoundTrip`,
+- **Verified by:** `tests/test_validate_teitok.py::TestRealWriterRoundTrip`,
   which *runs* the writer and validates its output. That round-trip is the only
   thing that keeps this schema honest — see "How this schema went wrong once".
 - **`xml.xsd`:** trimmed subset of `https://www.w3.org/2001/xml.xsd`,

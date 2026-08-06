@@ -1,6 +1,10 @@
 pytest>=9.1.1
 pytest-cov
 requests
+# atrium_document.schema.json validation (issue atrium-project#10, D4). Also in
+# requirements.txt — repeated here so the fast lane, which may install only the test deps,
+# exercises the real Layer D gate instead of its jsonschema-missing degraded branch.
+jsonschema
 # API meta-contract test deps (issue #32).
 fastapi
 httpx
@@ -8,7 +12,7 @@ python-multipart
 openapi-spec-validator
 # TEITOK XSD gate (issue #28). Also in requirements.txt — repeated here so a
 # lane that installs only the test deps can still collect
-# tests/test_validate_teitok_xml.py.
+# tests/test_validate_teitok.py.
 lxml
 # Optional heavy deps only if the suite truly needs them:
 # torch

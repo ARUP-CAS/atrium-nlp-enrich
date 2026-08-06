@@ -9,13 +9,14 @@ import pytest
 fastapi = pytest.importorskip("fastapi")
 pytest.importorskip("fastapi.testclient")
 
+import json  # noqa: E402
 from pathlib import Path  # noqa: E402
 from unittest.mock import MagicMock, patch  # noqa: E402
 
 from fastapi.testclient import TestClient  # noqa: E402
 
 import service.enrichment as enr  # noqa: E402
-from service.api import app  # noqa: E402
+from service.api import _build_envelope, app  # noqa: E402
 from service.enrichment import (  # noqa: E402
     PipelineManager,
     _detect_kw_method_used,
@@ -311,6 +312,9 @@ def _make_stub(monkeypatch, returncode=0, doc_id="document"):
             self.pages = 1
             self.stages = []
             self.stdout_tail = "..."
+            # Mirrors EnrichmentResult: unset means the caller did not opt into the
+            # document-JSON accretion flow, so the envelope omits the key (#10 J3).
+            self.document_json_out = None
 
     def _stub_enrich(*a, **k):
         if returncode == 3:
@@ -333,3 +337,211 @@ def client():
     from service import api
 
     return api, None
+
+
+# ── document_json accretion part (atrium-project#10, J3) ──────────────────────
+#
+# The reason J3 shipped is that run_pipeline.py supported --document-json/-out all along
+# and the service's subprocess call simply never appended them — invisible because nothing
+# asserted on the argv the service builds, and because no test ever sent a baseline. Both
+# gaps are closed below: one test on the argv, one end-to-end through the endpoint with a
+# real baseline whose upstream blocks must come back untouched.
+
+
+_UPSTREAM_BASELINE = {
+    "schema_version": "1.0",
+    "record_type": "atrium-document",
+    "doc_id": "CTX000000001",
+    "page_categories": {"1": "Drawing"},
+    "pages": [{"page": "1", "page_index": 1, "quality_score": 0.87}],
+    "lines": [{"page": "1", "line": 1, "text": "Praha", "categ": "Text"}],
+}
+
+
+def _fake_pipeline_run(tmp_root):
+    """A stand-in for ``run_pipeline.py`` that honours the document-JSON contract.
+
+    Does what the real stats stage does and nothing else: reads the baseline it was
+    pointed at, merges nlp-enrich's own two blocks into it, writes the record to
+    ``--document-json-out``, and emits the TEITOK file the manager requires as proof of a
+    non-empty run. No network, no models — the point of the test is the wiring, not the
+    NLP.
+    """
+
+    def _run(cmd, **_kwargs):
+        from types import SimpleNamespace
+
+        workspace = Path(cmd[cmd.index("--config") + 1]).parent
+        teitok_dir = workspace / "out" / "TEITOK"
+        teitok_dir.mkdir(parents=True, exist_ok=True)
+        (teitok_dir / "CTX000000001.teitok.xml").write_text("<TEI/>", encoding="utf-8")
+
+        if "--document-json-out" in cmd:
+            baseline_path = Path(cmd[cmd.index("--document-json") + 1])
+            record = json.loads(baseline_path.read_text(encoding="utf-8"))
+            record["entities"] = [
+                {
+                    "page": "1",
+                    "line": 1,
+                    "char_span": [0, 5],
+                    "surface": "Praha",
+                    "type_onto": "LOC",
+                }
+            ]
+            record["pages"][0]["teitok_surface"] = "CTX000000001.surface1"
+            out = Path(cmd[cmd.index("--document-json-out") + 1])
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(record), encoding="utf-8")
+
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    del tmp_root
+    return _run
+
+
+def test_enrich_threads_document_json_flags_into_run_pipeline(tmp_path, monkeypatch):
+    """The argv assertion. Nothing else in the suite looks at the command the service
+    builds, which is exactly why a missing pair of flags survived: the pipeline it shells
+    out to accepted them, the service just never sent them."""
+    monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
+    monkeypatch.setattr(enr, "_KEEP_WORKSPACES", True)  # keep the record readable below
+    captured = {}
+
+    inner = _fake_pipeline_run(tmp_path)
+
+    def _run(cmd, **kwargs):
+        captured["cmd"] = list(cmd)
+        return inner(cmd, **kwargs)
+
+    monkeypatch.setattr(enr.subprocess, "run", _run)
+
+    result = PipelineManager().enrich(
+        [{"text": "Praha", "page_num": 1, "line_num": 1}],
+        "CTX000000001.csv",
+        kw_method="none",
+        document_json=json.dumps(_UPSTREAM_BASELINE).encode("utf-8"),
+    )
+
+    assert "--document-json" in captured["cmd"]
+    assert "--document-json-out" in captured["cmd"]
+    assert result.document_json_out is not None and result.document_json_out.exists()
+    # The record lands under out/, so `format=zip` ships it with the other outputs.
+    assert result.document_json_out.parent == result.output_dir
+
+
+def test_enrich_without_document_json_sends_no_flags(tmp_path, monkeypatch):
+    """Opt-in, matching translator and llm-enrich: with no baseline there is nothing to
+    accrete onto, and a bare own-part record nobody asked for would be a second,
+    undocumented output. The envelope must not grow a key either."""
+    monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
+    captured = {}
+    inner = _fake_pipeline_run(tmp_path)
+
+    def _run(cmd, **kwargs):
+        captured["cmd"] = list(cmd)
+        return inner(cmd, **kwargs)
+
+    monkeypatch.setattr(enr.subprocess, "run", _run)
+
+    result = PipelineManager().enrich(
+        [{"text": "Praha", "page_num": 1, "line_num": 1}], "CTX000000001.csv", kw_method="none"
+    )
+
+    assert "--document-json" not in captured["cmd"]
+    assert "--document-json-out" not in captured["cmd"]
+    assert result.document_json_out is None
+    assert "document_json" not in _build_envelope(result, "none")
+
+
+def test_enrich_endpoint_returns_accreted_record_with_upstream_blocks_intact(
+    tmp_path, monkeypatch, test_client
+):
+    """The end-to-end gate: POST a real baseline alongside the CSV and assert the record
+    comes back with (a) nlp-enrich's own contribution merged in, (b) every upstream block
+    byte-identical, and (c) the same ``doc_id`` it went in with — a re-keyed record is how
+    D1/D2 silently orphaned whole documents elsewhere in the ecosystem."""
+    monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
+    monkeypatch.setattr(enr.subprocess, "run", _fake_pipeline_run(tmp_path))
+
+    response = test_client.post(
+        "/enrich",
+        files={
+            "file": ("CTX000000001.csv", create_dummy_csv(), "text/csv"),
+            "document_json": (
+                "CTX000000001.document.json",
+                json.dumps(_UPSTREAM_BASELINE).encode("utf-8"),
+                "application/json",
+            ),
+        },
+        data={"kw_method": "none", "format": "json"},
+    )
+
+    assert response.status_code == 200
+    record = response.json()["document_json"]
+    assert record is not None, "the service accepted a baseline and returned no record"
+    assert record["doc_id"] == _UPSTREAM_BASELINE["doc_id"]
+    assert record["page_categories"] == _UPSTREAM_BASELINE["page_categories"]
+    assert record["lines"] == _UPSTREAM_BASELINE["lines"]
+    assert record["pages"][0]["quality_score"] == 0.87  # alto-postprocess's field
+    assert record["pages"][0]["teitok_surface"] == "CTX000000001.surface1"
+    assert record["entities"][0]["surface"] == "Praha"
+
+
+def test_enrich_endpoint_omits_document_json_when_not_requested(
+    tmp_path, monkeypatch, test_client
+):
+    """Absent, not null: every existing client's envelope is unchanged by J3."""
+    monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
+    monkeypatch.setattr(enr.subprocess, "run", _fake_pipeline_run(tmp_path))
+
+    response = test_client.post(
+        "/enrich",
+        files={"file": ("CTX000000001.csv", create_dummy_csv(), "text/csv")},
+        data={"kw_method": "none", "format": "json"},
+    )
+
+    assert response.status_code == 200
+    assert "document_json" not in response.json()
+
+
+def test_enrich_text_accepts_an_inline_baseline(tmp_path, monkeypatch, test_client):
+    """/enrich_text takes the baseline as an embedded object rather than an upload part,
+    matching llm-enrich's /extract_keywords_text."""
+    monkeypatch.setattr(enr, "_API_JOBS_ROOT", tmp_path)
+    monkeypatch.setattr(enr.subprocess, "run", _fake_pipeline_run(tmp_path))
+
+    response = test_client.post(
+        "/enrich_text",
+        json={
+            "doc_id": "CTX000000001",
+            "lines": ["Praha"],
+            "kw_method": "none",
+            "document_json": _UPSTREAM_BASELINE,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["document_json"]["page_categories"] == {"1": "Drawing"}
+
+
+def test_enrich_text_rejects_a_non_object_baseline(test_client):
+    response = test_client.post(
+        "/enrich_text",
+        json={"lines": ["Praha"], "kw_method": "none", "document_json": "not-an-object"},
+    )
+    assert response.status_code == 422
+
+
+def test_document_json_part_is_advertised_in_the_openapi_schema():
+    """The part has to be discoverable, not just accepted: /docs and every generated
+    client are built from this schema, and an undocumented optional part is one nobody
+    outside this repo can use."""
+    from service.api import app as service_app
+
+    for path in ("/enrich", "/jobs"):
+        schema_ref = service_app.openapi()["paths"][path]["post"]["requestBody"]["content"][
+            "multipart/form-data"
+        ]["schema"]
+        name = schema_ref["$ref"].rsplit("/", 1)[-1]
+        properties = service_app.openapi()["components"]["schemas"][name]["properties"]
+        assert "document_json" in properties, f"{path} does not advertise document_json"

@@ -14,6 +14,7 @@ if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
 from api_util.teitok_alto import write_teitok_merged  # noqa: E402
+from atrium_document import canonical_doc_id  # noqa: E402
 
 # Increase CSV field size limit just in case
 csv.field_size_limit(sys.maxsize)
@@ -464,7 +465,11 @@ def process_single_document(
         include_lines=False,
 ):
     conllu_path = Path(conllu_file)
-    doc_name = conllu_path.stem
+    # canonical_doc_id(), not Path.stem (issue atrium-project#10, D3): `.conllu` is this
+    # repo's working currency and `Path("X.udpipe.conllu").stem` is "X.udpipe", which then
+    # travels into teitok_ref, the summary CSV's doc column and the document record's
+    # entities[]/pages[] — a second identity for a document every other stage calls "X".
+    doc_name = canonical_doc_id(conllu_path)
     doc_out_dir = Path(output_dir)
     doc_out_conllu = doc_out_dir / f"{doc_name}.conllu"
     doc_out_csv = doc_out_dir / f"{doc_name}.csv"
@@ -598,7 +603,10 @@ def process_pipeline(
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     for conllu_file in conllu_files:
-        doc_name = conllu_file.stem
+        # Same derivation as process_single_document() below — both must agree, or the
+        # resume check here looks for outputs under a different name than the one that
+        # writes them (issue atrium-project#10, D3).
+        doc_name = canonical_doc_id(conllu_file)
         doc_out_dir = Path(output_dir) / doc_name
         doc_out_conllu = doc_out_dir / f"{doc_name}.conllu"
         doc_out_csv = doc_out_dir / f"{doc_name}.csv"

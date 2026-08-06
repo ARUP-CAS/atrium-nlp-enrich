@@ -1,15 +1,34 @@
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+# Inject project root into sys.path so the vendored, hub-canonical `atrium_document`
+# resolves when this module is reached with only api_util/ on the path (keywords.py and
+# llm_utils.py both insert api_util/ before importing it). Same idiom as
+# api_util/summarize_nt_udp.py.
+_project_root = Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from atrium_document import canonical_doc_id  # noqa: E402
+
 
 def doc_id_from_path(path: str | Path) -> str:
-    """Strips .conllu or .teitok.xml to produce a clean document ID."""
-    name = Path(path).name
-    if name.lower().endswith(".teitok.xml"):
-        return name[:-11]
-    if name.lower().endswith(".conllu"):
-        return name[:-7]
-    return Path(path).stem
+    """Strips .conllu or .teitok.xml to produce a clean document ID.
+
+    Delegates to `atrium_document.canonical_doc_id()` — the one derivation the whole
+    ecosystem shares (issue atrium-project#10, D3). Kept as a named wrapper because
+    keywords.py, llm_utils.py and tests/test_teitok_read.py all call it, so one change
+    point moves every caller.
+
+    The literal-length slices this used to do (`name[:-7]` for ".conllu") stripped only
+    the LAST suffix, so `X.udpipe.conllu` — the working currency of this repo's own
+    UDPipe stage — became doc_id "X.udpipe" while every other stage called the same
+    document "X", forking the accretion record in two. canonical_doc_id() matches the
+    longest known pipeline suffix first (KNOWN_PIPELINE_SUFFIXES), which is exactly the
+    ordering that case needs.
+    """
+    return canonical_doc_id(path)
 
 
 def read_teitok_rows(path: str | Path) -> list[dict]:

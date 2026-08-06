@@ -22,6 +22,17 @@ from typing import Any, Dict, List, Optional, Tuple
 _SERVICE_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _SERVICE_DIR.parent
 
+# The record's filename convention and reader come from the hub-canonical module rather
+# than from a literal ".document.json" and a bare json.load() here, so this service reads
+# what the CLI writes even after a schema migration. The sys.path insert is the same idiom
+# as api_util/summarize_nt_udp.py: `uvicorn service.api:app` runs from the repo root and
+# resolves the vendored copy anyway, but the insert keeps the import working if the module
+# is ever reached with only service/ on the path.
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from atrium_document import FILE_SUFFIX, load_document  # noqa: E402
+
 _CONFIG_TEMPLATE = _REPO_ROOT / "config_api.txt"
 _RUN_PIPELINE = _REPO_ROOT / "run_pipeline.py"
 
@@ -70,6 +81,11 @@ class EnrichmentResult:
     pages: int = 0
     stages: List[Dict[str, Any]] = field(default_factory=list)
     stdout_tail: str = ""
+    #: Where run_pipeline.py was told to write the accreted ATRIUM Document JSON, or None
+    #: when the caller did not opt into the accretion flow (atrium-project#10, J3). Not
+    #: "the file exists": the path being set is what says the client ASKED for a record,
+    #: which is the only way api.py can tell "not requested" from "requested and missing".
+    document_json_out: Optional[Path] = None
 
 
 # ── input normalization helpers ───────────────────────────────────────────────
@@ -359,6 +375,7 @@ class PipelineManager:
         kw_method: str = "keybert",
         num_keywords: int = 20,
         lang: str = "cs",
+        document_json: Optional[bytes] = None,
     ) -> EnrichmentResult:
         if kw_method not in _KW_METHODS:
             raise ValueError(f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}.")
@@ -378,6 +395,28 @@ class PipelineManager:
 
             cmd = [sys.executable, str(_RUN_PIPELINE), "--config", str(cfg)]
             cmd.extend(["--kw-fallback", "--strict-empty", "--lang", lang])
+
+            # (atrium-project#10, J3) Rule 1: a service accepts and returns an optional
+            # document_json part. run_pipeline.py has supported both flags since the
+            # document-JSON bridge landed; this subprocess call simply never appended
+            # them, so the CLI honoured the accretion contract and the deployed API
+            # surface did not. Threaded only on opt-in, matching translator's and
+            # llm-enrich's services: without a baseline there is nothing to accrete onto,
+            # and emitting a bare own-part record nobody asked for would be a second,
+            # undocumented output.
+            document_json_out: Optional[Path] = None
+            if document_json is not None:
+                baseline_path = workspace / f"baseline{FILE_SUFFIX}"
+                baseline_path.write_bytes(document_json)
+                # Under out/, so `format=zip` carries the updated record too, and beside
+                # every other per-document output rather than in the private workspace.
+                document_json_out = workspace / "out" / f"{doc_id}{FILE_SUFFIX}"
+                cmd.extend(
+                    [
+                        "--document-json", str(baseline_path),
+                        "--document-json-out", str(document_json_out),
+                    ]
+                )
 
             if kw_method != "none":
                 cmd.extend(["--kw", "--kw-method", kw_method])
@@ -440,6 +479,7 @@ class PipelineManager:
                 pages=pages,
                 stages=self._read_stage_records(workspace / "out" / "paradata"),
                 stdout_tail=tail,
+                document_json_out=document_json_out,
             )
 
         except Exception:
@@ -522,6 +562,25 @@ class PipelineManager:
                 rec["entities"] = ents
                 out.append(rec)
         return out
+
+    @staticmethod
+    def collect_document_json(result: EnrichmentResult) -> Optional[Dict[str, Any]]:
+        """The accreted ATRIUM Document JSON this run produced, or None (#10 J3).
+
+        None has two distinct causes and the caller can tell them apart from
+        ``result.document_json_out``: unset means the client never opted in; set with no
+        file means the stats stage never reached the document hook (no CoNLL-U, or the
+        hook itself failed and degraded per rule 3 — run_pipeline.py says so on stdout,
+        see its `[document-json] NOT WRITTEN` line). Reads through load_document() so an
+        older schema_version migrates on the way out, exactly as a CLI consumer would.
+        """
+        out = result.document_json_out
+        if out is None or not out.exists():
+            return None
+        try:
+            return load_document(str(out))
+        except (OSError, ValueError, json.JSONDecodeError):
+            return None
 
     @staticmethod
     def collect_merged_paradata(result: EnrichmentResult) -> Optional[Dict[str, Any]]:

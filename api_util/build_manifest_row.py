@@ -10,6 +10,17 @@ import argparse
 import csv
 import os
 import sys
+from pathlib import Path
+
+# Inject project root into sys.path so the vendored `atrium_document` resolves when this
+# script is invoked directly (api_1_manifest.sh runs `python3 api_util/build_manifest_row.py`,
+# which puts api_util/ — not the repo root — on sys.path). Same idiom as
+# api_util/summarize_nt_udp.py.
+_project_root = Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from atrium_document import canonical_doc_id  # noqa: E402
 
 csv.field_size_limit(sys.maxsize)
 
@@ -103,7 +114,11 @@ def main():
         print(f"[Error] File not found: {args.input_file}", file=sys.stderr)
         sys.exit(1)
 
-    doc_id = args.doc_id or os.path.splitext(os.path.basename(args.input_file))[0]
+    # canonical_doc_id(), not os.path.splitext(): this row IS the doc_id every later stage
+    # inherits (UDP/<file>.conllu → NE/<file> → the document record), so a derivation that
+    # strips only the last extension forks the whole run's identity on any multi-dot input
+    # (issue atrium-project#10, D3).
+    doc_id = args.doc_id or canonical_doc_id(args.input_file)
     full_text, page_count = get_sorted_text_and_page_count(args.input_file)
 
     if full_text is None:

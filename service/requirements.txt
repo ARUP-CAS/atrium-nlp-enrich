@@ -1,11 +1,27 @@
-pytest>=9.1.1
-pytest-cov
-requests
-# API meta-contract test deps (issue #32).
-fastapi
-httpx
-python-multipart
-openapi-spec-validator
-# Optional heavy deps only if the suite truly needs them:
-# torch
-# transformers
+# service/requirements.txt — RUNTIME deps for the nlp-enrich FastAPI service.
+#
+# (atrium-project#10, G3) This file used to carry only pytest/pytest-cov/requests plus the
+# §32 meta-contract test deps — no ASGI server at all — while `Dockerfile`'s `api` stage
+# ends in `ENTRYPOINT ["uvicorn", "service.api:app", ...]`, docker-compose.yaml's `nlp-api`
+# profile runs that image, and setup_api_service.sh's last line is
+# `exec uvicorn service.api:app`. `grep -rn uvicorn --include="*.txt"` matched nothing in
+# the whole repo, so the documented API path could not start from a clean install. CI never
+# saw it: the contract tests drive the app in-process through TestClient (which never needs
+# a server), and docker-build-smoke only BUILDS the image. tests/test_service_requirements.py
+# is the gate that now can — it reads the Dockerfile/compose/setup script and asserts every
+# executable they invoke is declared here.
+#
+# Test-only deps live in ../requirements-test.txt (which already declared all of them);
+# they are not runtime deps of a served API and do not belong in the image's API layer.
+#
+# NOT `-r ../requirements.txt` — llm-enrich can include its parent that way because its
+# Dockerfile copies `service/requirements.txt` into `service/`, preserving the relative
+# path. This repo's Dockerfile flattens it to `./service_requirements.txt`, where `../`
+# escapes /app and the build would fail. Both install paths pull the pipeline requirements
+# in explicitly instead: the `api` stage inherits them from `base`, and
+# setup_api_service.sh installs `requirements.txt` before this file. That is also where
+# `jsonschema` (the Layer D document gate, D4) comes from — it is a pipeline dependency,
+# not a serving one.
+fastapi>=0.141.1
+uvicorn[standard]>=0.52.1
+python-multipart>=0.0.32

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import configparser
+import json
 import os
 import time
 from contextlib import asynccontextmanager
@@ -132,15 +133,39 @@ def _schema_verdict(xml_text: str) -> tuple[bool | None, List[str]]:
     return not errors, errors
 
 
-def _run_pipeline_sync(rows, doc_id, kw_method, num_keywords, lang):
+async def _read_document_json(part: UploadFile | None) -> bytes | None:
+    """Read an optional ``document_json`` upload part, or None (#10 J3).
+
+    A zero-byte part counts as "not supplied": clients and form builders routinely send an
+    empty file field for an optional upload, and treating that as a baseline would seed the
+    bridge with an unparseable file and then report "no doc_id" — a confusing way to say
+    "you sent nothing". Enforces the same size ceiling as the primary upload, since this
+    part is caller-controlled too.
+    """
+    if part is None:
+        return None
+    data = await part.read()
+    if not data:
+        return None
+    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
+        raise HTTPException(413, f"document_json exceeds {MAX_UPLOAD_MB} MB.") from None
+    return data
+
+
+def _run_pipeline_sync(rows, doc_id, kw_method, num_keywords, lang, document_json=None):
     """Blocking pipeline call with graceful backend degradation configured."""
     return _manager.enrich(
-        rows, doc_id, kw_method=kw_method, num_keywords=num_keywords, lang=lang
+        rows,
+        doc_id,
+        kw_method=kw_method,
+        num_keywords=num_keywords,
+        lang=lang,
+        document_json=document_json,
     ), kw_method
 
 
 def _build_envelope(result, requested_method) -> Dict[str, Any]:
-    return {
+    envelope = {
         "doc_id": result.doc_id,
         "pages": result.pages,
         "stages": result.stages,
@@ -152,13 +177,22 @@ def _build_envelope(result, requested_method) -> Dict[str, Any]:
         "method_used": result.kw_method_used,
         "llm": None,
     }
+    # (atrium-project#10, J3) Present only when the client opted into the accretion flow,
+    # so the envelope of every existing caller is byte-for-byte what it was. `null` here
+    # is meaningful rather than absent-by-default: it says the record was requested and
+    # the pipeline produced none (see PipelineManager.collect_document_json).
+    if result.document_json_out is not None:
+        envelope["document_json"] = PipelineManager.collect_document_json(result)
+    return envelope
 
 
-async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> tuple[Any, str, Any]:
+async def _run_enrichment(
+    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json=None
+) -> tuple[Any, str, Any]:
     loop = asyncio.get_event_loop()
     try:
         result, requested = await loop.run_in_executor(
-            None, _run_pipeline_sync, rows, doc_id, kw_method, num_keywords, lang
+            None, _run_pipeline_sync, rows, doc_id, kw_method, num_keywords, lang, document_json
         )
     except KeywordPreflightError as exc:
         raise HTTPException(503, str(exc)) from exc
@@ -176,7 +210,7 @@ async def _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt) -> t
         raise
 
 
-async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
+async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, document_json=None):
     _validate_params(kw_method, lang, num_keywords)
     if not rows:
         raise HTTPException(422, "No usable text rows found in input.") from None
@@ -190,7 +224,9 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
     async with _semaphore:
         try:
             data, out_fmt, result = await asyncio.wait_for(
-                _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt),
+                _run_enrichment(
+                    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json
+                ),
                 timeout=API_JOB_TIMEOUT,
             )
         except asyncio.TimeoutError as exc:
@@ -208,12 +244,22 @@ async def _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt):
             return JSONResponse(data)
 
 
-async def _run_job_background(job: Job, rows, doc_id, kw_method, num_keywords, lang):
+async def _run_job_background(
+    job: Job, rows, doc_id, kw_method, num_keywords, lang, document_json=None
+):
     try:
         job.status = "running"
         async with _semaphore:
             data, out_fmt, result = await asyncio.wait_for(
-                _run_enrichment(rows, doc_id, kw_method, num_keywords, lang, fmt="json"),
+                _run_enrichment(
+                    rows,
+                    doc_id,
+                    kw_method,
+                    num_keywords,
+                    lang,
+                    fmt="json",
+                    document_json=document_json,
+                ),
                 timeout=API_JOB_TIMEOUT,
             )
             PipelineManager.cleanup(result)
@@ -291,6 +337,19 @@ async def health(deep: bool = False) -> JSONResponse:
     )
 
 
+#: Shared wording for the optional accretion part, so /enrich, /enrich_text and /jobs
+#: describe one contract in one place (atrium-project#10, J3).
+_DOCUMENT_JSON_HELP = (
+    "Optional baseline ATRIUM Document JSON (accretion model, docs/document_schema.md / "
+    "issue #13). When given, the response's `document_json` carries the record back with "
+    "only nlp-enrich's contribution merged in — its `entities[]` rows and `pages[]."
+    "teitok_surface` — while every other tool's block (page_categories, lines, "
+    "translations, enrichment, ...) passes through untouched. A baseline that does not "
+    "validate against atrium_document.schema.json is still accepted (rule 6); the "
+    "pipeline warns and accretes onto it anyway."
+)
+
+
 @app.post("/enrich")
 async def enrich(
     file: UploadFile = File(...),  # noqa: B008
@@ -298,6 +357,7 @@ async def enrich(
     num_keywords: int = Form(20),
     lang: str = Form("cs"),
     format: str = Form("json"),
+    document_json: UploadFile = File(None, description=_DOCUMENT_JSON_HELP),  # noqa: B008
 ):
     data = await file.read()
     if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
@@ -308,7 +368,8 @@ async def enrich(
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
     fmt = format if format in ("json", "zip") else "json"
-    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
+    baseline = await _read_document_json(document_json)
+    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, baseline)
 
 
 @app.post("/enrich_text")
@@ -328,7 +389,13 @@ async def enrich_text(payload: Dict[str, Any]):
     lang = payload.get("lang", "cs")
     fmt = payload.get("format", "json")
     fmt = fmt if fmt in ("json", "zip") else "json"
-    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt)
+    # Inline JSON in, inline JSON out — an embedded object rather than an upload part,
+    # matching llm-enrich's /extract_keywords_text (#10 J3).
+    baseline = payload.get("document_json")
+    if baseline is not None and not isinstance(baseline, dict):
+        raise HTTPException(422, "'document_json' must be an object.") from None
+    baseline_bytes = json.dumps(baseline).encode("utf-8") if baseline is not None else None
+    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, baseline_bytes)
 
 
 @app.post("/rescale")
@@ -399,6 +466,7 @@ async def submit_job(
     kw_method: str = Form(DEFAULT_KW_METHOD),
     num_keywords: int = Form(20),
     lang: str = Form("cs"),
+    document_json: UploadFile = File(None, description=_DOCUMENT_JSON_HELP),  # noqa: B008
 ):
     _validate_params(kw_method, lang, num_keywords)
     data = await file.read()
@@ -409,6 +477,9 @@ async def submit_job(
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     doc_id = file.filename or "document"
+    # Read here, not in the background task: the UploadFile's spooled temp file is tied
+    # to the request and is closed once this handler returns (#10 J3).
+    baseline = await _read_document_json(document_json)
 
     now = time.time()
     to_del = [
@@ -422,7 +493,9 @@ async def submit_job(
         del _jobs[jid]
 
     job = await create_job()
-    asyncio.create_task(_run_job_background(job, rows, doc_id, kw_method, num_keywords, lang))
+    asyncio.create_task(
+        _run_job_background(job, rows, doc_id, kw_method, num_keywords, lang, baseline)
+    )
     return {"job_id": job.job_id, "status": "queued"}
 
 

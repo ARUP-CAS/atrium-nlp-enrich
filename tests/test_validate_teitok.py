@@ -1,6 +1,6 @@
 """Tests for api_util/validate_teitok_xml.py (issue #28).
 
-Run from the repo root: pytest tests/test_validate_teitok_xml.py -v
+Run from the repo root: pytest tests/test_validate_teitok.py -v
 
 Two layers here, and the second is the load-bearing one:
 

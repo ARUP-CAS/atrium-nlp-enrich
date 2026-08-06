@@ -2,3 +2,18 @@
 .idea
 /.idea/
 /venv-nlp/
+# Recursive, not "/__pycache__/": running the suite drops one of these next to
+# every package it imports (tests/, api_util/, service/, annotation/, utils/),
+# so an anchored rule leaves the tree full of untracked bytecode dirs after any
+# `pytest` run. Matches page-classification's .gitignore, which took the same
+# fix on 2026-07-22 (atrium-project#10).
+__pycache__/
+*.pyc
+# pytest / coverage scratch. CONTRIBUTING.md's "Running the test suite" documents
+# `pytest -m "not slow" --cov=. --cov-report=term-missing`, so following the repo's own
+# instructions used to leave three untracked artefacts behind (atrium-project#10).
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/

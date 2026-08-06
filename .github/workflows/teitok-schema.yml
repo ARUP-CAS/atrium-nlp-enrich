@@ -6,7 +6,7 @@
 # only ATRIUM repo that emits TEITOK, so there is nothing to share. Same shape
 # as shellcheck.yml.
 #
-# Why a named check when tests/test_validate_teitok_xml.py already runs in the
+# Why a named check when tests/test_validate_teitok.py already runs in the
 # main lane (atrium-project's docker-tool.reusable.yml, `pytest -m "not slow"`):
 # issue #28 asks for the validation step itself to execute in CI on the
 # fixtures, and a named status makes a schema failure legible at a glance
@@ -14,8 +14,9 @@
 # the load-bearing one — it proves the gate can still fail, which a suite of
 # passing positives cannot.
 #
-# lxml is the only dependency (already in requirements.txt); no apt packages,
-# no xmllint, no models, no network.
+# lxml is the only *runtime* dependency (already in requirements.txt); no apt
+# packages, no xmllint, no models, no network. pytest is needed too — see the
+# install step below.
 
 name: TEITOK Schema Contract
 
@@ -27,7 +28,7 @@ on:
       - "api_util/teitok_alto.py"
       - "data_samples/TEITOK/**"
       - "tests/fixtures/teitok/**"
-      - "tests/test_validate_teitok_xml.py"
+      - "tests/test_validate_teitok.py"
       - "api_4_stats.sh"
       - "api_flexiconv.sh"
       - ".github/workflows/teitok-schema.yml"
@@ -39,7 +40,7 @@ on:
       - "api_util/teitok_alto.py"
       - "data_samples/TEITOK/**"
       - "tests/fixtures/teitok/**"
-      - "tests/test_validate_teitok_xml.py"
+      - "tests/test_validate_teitok.py"
       - "api_4_stats.sh"
       - "api_flexiconv.sh"
       - ".github/workflows/teitok-schema.yml"
@@ -66,8 +67,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install lxml
-        run: pip install lxml
+      - name: Install lxml + pytest
+        # pytest, not just lxml (atrium-project#10, G1): the last step below runs
+        # `python3 -m pytest`, and actions/setup-python provisions a bare
+        # interpreter from the tool cache — pip/setuptools/wheel and nothing else.
+        # The workflow's first and only run (30926646761) therefore died at that
+        # step with "No module named pytest", *before* it could even report the
+        # wrong test filename the same commit introduced. Both defects had to be
+        # fixed for the gate to run at all, which is why the run's conclusion
+        # named neither.
+        run: pip install lxml pytest
 
       - name: Schema compiles
         run: |
@@ -108,4 +117,4 @@ jobs:
         # Includes the round-trip that generates TEITOK with
         # api_util/teitok_alto.py and validates the result — the check that
         # catches generator drift the curated fixtures cannot see.
-        run: python3 -m pytest tests/test_validate_teitok_xml.py -v --tb=short
+        run: python3 -m pytest tests/test_validate_teitok.py -v --tb=short

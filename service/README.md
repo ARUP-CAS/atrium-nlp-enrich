@@ -37,11 +37,12 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 
 | Field          | Default    | Notes                                                   |
 |----------------|------------|---------------------------------------------------------|
-| `file`         | *required* | `.csv` (needs a `text` column), `.xlsx`, or `.txt`      |
-| `kw_method`    | `keybert`  | `keybert` \| `yake` \| `legacy` \| `none`               |
-| `num_keywords` | `20`       | 1–100                                                   |
-| `lang`         | `cs`       | Czech-pinned in v1                                      |
-| `format`       | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR` |
+| `file`          | *required* | `.csv` (needs a `text` column), `.xlsx`, or `.txt`      |
+| `kw_method`     | `keybert`  | `keybert` \| `yake` \| `legacy` \| `none`               |
+| `num_keywords`  | `20`       | 1–100                                                   |
+| `lang`          | `cs`       | Czech-pinned in v1                                      |
+| `format`        | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR` |
+| `document_json` | *optional* | baseline ATRIUM Document JSON to accrete onto — see below |
 
 `keybert` is the best/default backend. If its preflight fails at runtime the
 service **degrades once to `yake`** and reports `method_requested` vs
@@ -51,8 +52,33 @@ service **degrades once to `yake`** and reports `method_requested` vs
 
 ```json
 { "doc_id": "CTX1", "lines": ["Výzkum odhalil základy kostela.", "..."],
-  "kw_method": "keybert", "num_keywords": 20, "format": "json" }
+  "kw_method": "keybert", "num_keywords": 20, "format": "json",
+  "document_json": { "...optional baseline record, inline..." } }
 ```
+
+### The `document_json` accretion part
+
+Rule 1 of the document-JSON contract (`docs/document_schema.md`, issue
+[#13](https://github.com/ufal/atrium-project/issues/13)): a service **accepts and returns an
+optional `document_json` part**. `/enrich` and `/jobs` take it as an upload part;
+`/enrich_text` takes it as an embedded object.
+
+When supplied, the response's `document_json` carries the record back with only
+nlp-enrich's contribution merged in — its `entities[]` rows and `pages[].teitok_surface` —
+while every other tool's block (`page_categories`, `lines`, `translations`, `enrichment`, …)
+passes through **untouched**. This is the same accretion the CLI performs via
+`run_pipeline.py --document-json/--document-json-out`; the service simply threads the flags
+through to it, so there is one implementation, not two.
+
+* Omit the part and the key is **absent** from the envelope — not `null`. Existing clients
+  see no change at all.
+* Supply it and get `null` back, and the pipeline produced no record (no CoNLL-U reached the
+  document hook, or the hook failed and degraded per rule 3). `run_pipeline.py` prints
+  `[document-json] NOT WRITTEN` on stdout in that case; the service's `stages` and the
+  pipeline log say why.
+* A baseline that does not validate against `atrium_document.schema.json` is still accepted
+  (rule 6): the pipeline warns, names the schema error, and accretes onto it anyway rather
+  than turning one bad upstream record into a stalled pipeline.
 
 ### JSON envelope
 
@@ -65,12 +91,14 @@ service **degrades once to `yake`** and reports `method_requested` vs
   "ne_summary": [ {"file": "...", "page": "1", "entities": [...] } ],
   "paradata": { "...merged pipeline-run record incl. license union..." },
   "method_requested": "keybert", "method_used": "keybert",
-  "llm": null
+  "llm": null,
+  "document_json": { "...only when a baseline was supplied..." }
 }
 ```
 
 `format=zip` instead streams the full workspace `OUTPUT_DIR`
-(`TEITOK/`, `UDP_NE/`, `KW_PER_DOC_*/`, summary CSVs, `paradata/`).
+(`TEITOK/`, `UDP_NE/`, `KW_PER_DOC_*/`, summary CSVs, `paradata/`, and
+`<doc_id>.document.json` when a baseline was supplied).
 
 ### `POST /rescale` (multipart form)
 

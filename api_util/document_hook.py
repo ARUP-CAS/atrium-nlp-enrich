@@ -1,11 +1,117 @@
 import logging
+import os
+import sys
 from typing import Any, Dict, List, Optional
 
-from atrium_document import DocumentRecord
+from atrium_document import DocumentRecord, load_document
+
+# Aliased on import, deliberately (atrium-project#10, D4). This repo has a SECOND,
+# unrelated `validate_document()` in api_util/validate_teitok_xml.py — TEITOK XML
+# against the XSD (issue #28) — and the two are different contracts that happen to
+# share a name: one returns a list of diagnostics, the other raises. Importing the
+# hub one under an explicit name means neither a reader nor a future edit can mistake
+# which gate is being invoked here.
+from atrium_document import validate_document as validate_document_record
 
 from .teitok_alto import CNEC_TO_CONLL, group_ner_spans, parse_and_align_conllu
 
 logger = logging.getLogger(__name__)
+
+#: (atrium-project#10, D4) One-shot latch for the "validation is unavailable" warning.
+#: The gate below runs once per document and api_4_stats.sh walks a whole corpus, so
+#: repeating the same line per record would bury every other diagnostic of the run.
+#: Loud once is the point; loud once per document is noise that gets filtered.
+_VALIDATION_UNAVAILABLE_WARNED = False
+
+
+def _warn(message: str) -> None:
+    """stderr in atrium_document's own ``[document]`` voice.
+
+    print(), not ``logger.warning()``: these lines interleave with the module's own
+    unconditional stderr diagnostics ("baseline … not found", "contributed no block",
+    "Record written →"), and the accretion trace of a run is only readable if all of
+    it lands in one stream with one prefix. The ``logger`` above stays for this
+    module's own advisory messages.
+    """
+    print(f"[document] WARNING – {message}", file=sys.stderr)
+
+
+def _warn_validation_unavailable(reason: str) -> None:
+    """(D4) The gate could not run at all. Announced ONCE, loudly, never silently:
+    ``validate_document()`` deliberately raises rather than passing when ``jsonschema``
+    is absent, because a gate that quietly becomes a no-op is indistinguishable from a
+    passing one. Degrading loudly keeps that property while honouring rule 3 — a
+    missing optional dependency must not stop a standalone run producing its output.
+    """
+    global _VALIDATION_UNAVAILABLE_WARNED
+    if _VALIDATION_UNAVAILABLE_WARNED:
+        return
+    _VALIDATION_UNAVAILABLE_WARNED = True
+    _warn(
+        f"schema validation is DISABLED for this run — {reason}. This is a DEGRADED "
+        f"gate, not a pass: records are being written unchecked. Install the missing "
+        f"dependency (requirements.txt declares jsonschema for exactly this call)."
+    )
+
+
+def _baseline_is_invalid(path: Optional[str]) -> bool:
+    """Validate the INHERITED baseline before nlp-enrich accretes onto it (D4).
+
+    Warns and returns True on a schema failure rather than refusing to run: the defect
+    belongs to whichever upstream tool wrote it, and turning one bad record into a
+    stalled pipeline is worse than passing it through (rule 6 already commits to
+    carrying unknown content forward). The flag downgrades the own-output gate below
+    from raise to warn, so this stage is not blamed for a defect it inherited.
+
+    A baseline that cannot be READ at all is not this function's problem —
+    ``DocumentRecord.open()`` reports on it a few lines later, with the right message.
+    """
+    if not path or not os.path.exists(path):
+        return False
+    try:
+        record = load_document(path)
+    except Exception:
+        return False
+    try:
+        validate_document_record(record)
+    except (RuntimeError, FileNotFoundError) as exc:
+        # RuntimeError = jsonschema missing; FileNotFoundError = the schema itself was
+        # not vendored next to the module. Neither means "the record is bad".
+        _warn_validation_unavailable(str(exc))
+        return False
+    except Exception as exc:
+        _warn(
+            f"inherited baseline {path} does not validate against "
+            f"atrium_document.schema.json — {exc}. Accreting onto it anyway; this "
+            f"stage's own output gate is downgraded to a warning as a result."
+        )
+        return True
+    return False
+
+
+def _validate_own_output(doc: DocumentRecord, baseline_was_invalid: bool) -> None:
+    """The Layer D gate on nlp-enrich's own output, called before ``finalize()`` (D4).
+
+    Raises on a schema failure so the record is never emitted — ``DocumentRecord``'s
+    context manager only finalises when the body leaves without an exception, so
+    raising here is what makes "no doc.json is emitted if validation fails" true. The
+    one exception is an already-invalid baseline: the failure is then almost certainly
+    the inherited one, and refusing to write would discard this stage's work along with
+    the upstream stage's.
+    """
+    try:
+        validate_document_record(doc.to_dict())
+    except (RuntimeError, FileNotFoundError) as exc:
+        _warn_validation_unavailable(str(exc))
+    except Exception as exc:
+        if baseline_was_invalid:
+            _warn(
+                f"nlp-enrich output for {doc.doc_id} does not validate — {exc}. "
+                f"Emitting it anyway: the inherited baseline was already invalid, so "
+                f"this is very likely not our defect to refuse."
+            )
+            return
+        raise
 
 
 def _augment_tokens_with_position(tokens: List[dict]) -> None:
@@ -138,22 +244,51 @@ def run_document_hook(
         entity_record = {
             "surface": surface,
             "lemma": lemma,
-            "type_onto": type_onto,
-            "type_cnec": type_cnec,
             "type_teitok": type_teitok,
             "page": str(page),
             "line": int(line),
             "char_span": char_span,
             "teitok_ref": f"{doc_id}.name{name_counter}",
-            "pid": {"wikidata": None, "geonames": None, "aat": None, "amcr": None},
         }
+        # Only the tagset that actually applies is written — never the other one as an
+        # explicit null (atrium-project#10, caught by D4's gate the moment it was wired).
+        # `entities[].type_onto` and `.type_cnec` are typed `{"type": "string"}` in
+        # atrium_document.schema.json with no null member, so a record carrying
+        # `"type_cnec": null` FAILS validation. Every real NameTag run produces exactly
+        # one tagset, so before this the hook emitted a schema-invalid record for every
+        # document that had a single entity — invisible only because nothing validated.
+        # Absent is also the truthful encoding: the field does not apply, rather than
+        # applying with an empty value.
+        if type_onto is not None:
+            entity_record["type_onto"] = type_onto
+        if type_cnec is not None:
+            entity_record["type_cnec"] = type_cnec
         if bbox:
             entity_record["bbox"] = bbox
+        # `pid` is deliberately NOT set here (atrium-project#10, D10): it is
+        # llm-enrich's field in BLOCK_FIELD_OWNERS["entities"], and merge_block()
+        # filtered the placeholder out on every single call — so it never persisted a
+        # wrong value, but it did invite a future edit to assume ownership. With the
+        # assert_fields_survived() call below in place it would now raise, which is the
+        # mechanism working exactly as intended.
 
         entities.append(entity_record)
         name_counter += 1
 
     # 2. Document Integration via Accretion
+    #
+    # This function is the repo's single document-write chokepoint — api_4_stats.sh →
+    # summarize_nt_udp.process_single_document() is the only caller — so it is also
+    # where the Layer D guarantees are enforced once for every stage that reaches the
+    # record (atrium-project#10, D4/D8):
+    #
+    #   * the inherited baseline is validated and a failure only WARNED about;
+    #   * every merge_block() is followed by assert_fields_survived(), which RAISES
+    #     when a field handed in was filtered away;
+    #   * nlp-enrich's own output is validated before finalize(), and a failure RAISES
+    #     so nothing is emitted.
+    baseline_was_invalid = _baseline_is_invalid(baseline_json)
+
     with DocumentRecord.open(doc_id, "nlp-enrich",
                              baseline=baseline_json,
                              run_id=run_id,
@@ -169,6 +304,14 @@ def run_document_hook(
         # writes pid) — merge_block(), never set_block(), or a re-run of nlp-enrich
         # alone erases every downstream contribution on the same rows.
         doc.merge_block("entities", entities)
+        # (#10 D8) merge_block()'s field filtering is silent by design, and that
+        # silence is how a wrong grant produced rows stripped down to their key that
+        # still validated (entities[] requires nothing at all). Deliberately the
+        # raising form rather than the blunt global warn_dropped_fields=True: it fires
+        # only when THIS repo hands over a field its own declared grant in
+        # BLOCK_FIELD_OWNERS does not cover, which is a code bug here, not data
+        # variance — so a red test is the correct outcome, at dev time.
+        doc.assert_fields_survived("entities", entities)
 
         pages_present = sorted({t.get("_page", "1") for t in tokens})
         page_updates = [
@@ -176,12 +319,27 @@ def run_document_hook(
             for p in pages_present
         ]
         doc.merge_block("pages", page_updates)
+        # nlp-enrich owns exactly one field in pages[] — teitok_surface — so this is
+        # the assertion most likely to catch a well-meaning future edit that adds a
+        # page-level field here instead of to the originator that owns it.
+        doc.assert_fields_survived("pages", page_updates)
 
         if include_lines:
             logger.warning(
                 "DANGER: `lines` block merged from nlp-enrich. This may cause silent duplicate rows due to layout reordering mismatches with alto-postprocess.")
             # Line extraction logic omitted by default to protect the integrity of the OCR pipeline layout
+            # NOTE: whoever enables this must add the matching
+            # doc.assert_fields_survived("lines", line_updates) after the merge, as the
+            # two blocks above do — nlp-enrich's lines[] grant is
+            # ["lemma", "upos", "feats", "teitok_ref", "bbox"] and `text` is
+            # alto-postprocess's, which merge_block() would drop in silence (#10 D8).
             pass
+
+        # Layer D on the way out (#10 D4). Before finalize(), inside the `with` body:
+        # DocumentRecord.__exit__ only finalises when the body left without an
+        # exception, so raising HERE is what makes "no doc.json is emitted if
+        # validation fails" true, rather than emitting and then complaining.
+        _validate_own_output(doc, baseline_was_invalid)
 
         # Rule: the caller decides where the record lands (in-place accretion or a
         # fresh path) — write there explicitly rather than falling through to
