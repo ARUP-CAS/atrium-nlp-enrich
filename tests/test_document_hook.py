@@ -654,3 +654,58 @@ def test_teitok_surface_is_written_for_alto_pages(mock_document_record):
         call[0][1] for call in mock_doc_instance.merge_block.call_args_list if call[0][0] == "pages"
     )
     assert pages == [{"page": "2", "teitok_surface": "facs-2"}]
+
+
+# ── (atrium-project#68) a seed keyed unlike the input ────────────────────────
+#
+# An AMČR seed is keyed by the AMČR file id, never by the input's name. alto-postprocess
+# and llm-enrich wrote their record under the seed's id and read back the file named after
+# the input, so they returned the untouched seed. This repo writes to an explicit path —
+# in place, from the stats stage (summarize_nt_udp.py: `out_json = baseline_json`) — and
+# this test keeps it that way, through the real CLI bridge and the real DocumentRecord.
+
+
+def test_in_place_accretion_onto_a_seed_keyed_unlike_the_input(tmp_path):
+    import shutil
+
+    from run_pipeline import _collect_document_json_output, _prepare_document_json_bridge
+
+    seed_id = "C-202000543A-DT-27"
+    seed = tmp_path / "seed.document.json"
+    seed.write_text(json.dumps(_VALID_BASELINE | {"doc_id": seed_id}), encoding="utf-8")
+    out_path = tmp_path / "out" / "4_nlp.json"
+
+    scratch = _prepare_document_json_bridge(str(seed), "upload")
+    try:
+        in_place = scratch / "upload.document.json"
+        aligned = _tok("Praha", "Praha", "B-LOC", 1, "line_1", 10, 10, 50, 20)
+        with (
+            patch(
+                "api_util.document_hook.parse_and_align_conllu",
+                return_value={"sentences": [{"tokens": [aligned]}], "alto_pages": [{"idx": 1}]},
+            ),
+            patch(
+                "api_util.document_hook.group_ner_spans",
+                return_value=[{"kind": "name", "code": "LOC", "tokens": [_span_token()]}],
+            ),
+        ):
+            run_document_hook(
+                doc_id="upload",
+                teitok_path="TEITOK/upload.teitok.xml",
+                conllu_path="UDP/upload.conllu",
+                baseline_json=str(in_place),
+                out_json=str(in_place),
+                run_id="260927-120000",
+                paradata_ref="paradata/260927-120000_nlp-enrich.json",
+                license_detail={"effective_license": "CC BY-NC-SA 4.0"},
+            )
+        assert _collect_document_json_output(scratch, str(out_path), "upload")
+        left_in_scratch = sorted(p.name for p in scratch.iterdir())
+    finally:
+        shutil.rmtree(scratch, ignore_errors=True)
+
+    record = json.loads(out_path.read_text(encoding="utf-8"))
+    assert record["doc_id"] == seed_id
+    assert record["entities"][0]["surface"] == "Praha"
+    assert record["page_categories"] == _VALID_BASELINE["page_categories"]
+    assert left_in_scratch == ["upload.document.json"]
