@@ -110,6 +110,7 @@ while IFS= read -r -d '' conllu; do
             --model-nametag  "${MODEL_NAMETAG:-}" \
             --summary-csv    "${OUTPUT_DIR}/summary_ne_counts.csv" \
             --state-dir      "${PARADATA_DIR}" \
+            --para-state     "$PARA_STATE" \
             $DOC_JSON_FLAGS; then
 
         if $csv_done && $conllu_done && $teitok_done; then

@@ -52,6 +52,7 @@ from collections import Counter  # noqa: E402
 from concurrent.futures import ProcessPoolExecutor, as_completed  # noqa: E402
 from typing import List, Optional, Tuple, Union  # noqa: E402
 
+import tool_limits  # noqa: E402
 from api_util.teitok_read import (  # noqa: E402
     doc_id_from_path,
     read_teitok_text,
@@ -411,6 +412,44 @@ def _get_keybert_model(model_name: str):
     return _keybert_model_instance
 
 
+def keybert_window(kw_model) -> Tuple[object, Optional[int]]:
+    """``(tokenizer, max_seq_length)`` of a loaded KeyBERT model's sentence encoder, or
+    ``(None, None)`` when it cannot say. A chunk longer than ``max_seq_length`` tokens is
+    embedded from its start only (atrium-project#53: tool_limits.keybert_max_seq_tokens)."""
+    encoder = getattr(getattr(kw_model, "model", None), "embedding_model", None)
+    window = getattr(encoder, "max_seq_length", None)
+    if not isinstance(window, int) or window <= 0:
+        return None, None
+    return getattr(encoder, "tokenizer", None), window
+
+
+def _chunk_words(words: List[str], size: int, overlap: int) -> List[str]:
+    """Overlapping chunks of ``size`` words, each ``size - overlap`` words after the last
+    (at least one), covering every word."""
+    return [
+        chunk
+        for i in range(0, len(words), max(1, size - overlap))
+        if (chunk := " ".join(words[i : i + size]))
+    ]
+
+
+def _count_over_window(kw_model, chunks: List[str]) -> Tuple[int, Optional[int]]:
+    """How many ``chunks`` are longer than the encoder's token window, and the window."""
+    tokenizer, window = keybert_window(kw_model)
+    if tokenizer is None or window is None:
+        return 0, window
+    try:
+        # A token covers at most one word here, so a chunk of fewer words than the window
+        # (less two for the special tokens) cannot be over it: only the others are tokenised.
+        return sum(
+            1
+            for chunk in chunks
+            if len(chunk.split()) > window - 2 and len(tokenizer(chunk)["input_ids"]) > window
+        ), window
+    except Exception:  # a tokenizer that cannot say must not fail the extraction
+        return 0, window
+
+
 def _extract_keybert(
     file_path: Union[str, List[str]],
     num_keywords: int,
@@ -418,8 +457,17 @@ def _extract_keybert(
     keybert_model: str = DEFAULT_KEYBERT_MODEL,
     use_mmr: bool = True,
     diversity: float = 0.5,
+    limit_counts: Optional[dict] = None,
     **_,
 ) -> Union[Keywords, List[Keywords]]:
+    """KeyBERT keywords of one document or a batch.
+
+    A document longer than ``KEYBERT_CHUNK_WORDS`` words is embedded in chunks that overlap
+    by ``KEYBERT_CHUNK_OVERLAP`` words and its keywords merged (best score wins). With
+    *limit_counts* (a dict), adds how many documents were chunked (``"split"``) and how
+    many chunks were longer than the encoder's token window (``"trimmed"``, and
+    ``"window"``) — the limits that shaped the result (atrium-project#53).
+    """
     is_batch = isinstance(file_path, list)
     paths = file_path if is_batch else [file_path]
 
@@ -436,22 +484,30 @@ def _extract_keybert(
 
     kw_model = _get_keybert_model(keybert_model)
 
-    chunk_size = 400
-    overlap = 50
+    # Settings since atrium-project#53 (tool_limits.py); they were the literals 400 and 50.
+    chunk_size = tool_limits.KEYBERT_CHUNK_WORDS.get()
+    overlap = tool_limits.KEYBERT_CHUNK_OVERLAP.get()
     all_chunks = []
     doc_chunk_map = []
+    chunked_docs = 0
 
     for doc_idx, text in enumerate(texts):
         words = text.split()
         if len(words) > chunk_size:
-            for i in range(0, len(words), max(1, chunk_size - overlap)):
-                chunk = " ".join(words[i : i + chunk_size])
-                if chunk:
-                    all_chunks.append(chunk)
-                    doc_chunk_map.append(doc_idx)
+            chunked_docs += 1
+            for chunk in _chunk_words(words, chunk_size, overlap):
+                all_chunks.append(chunk)
+                doc_chunk_map.append(doc_idx)
         else:
             all_chunks.append(text)
             doc_chunk_map.append(doc_idx)
+
+    if limit_counts is not None:
+        over, window = _count_over_window(kw_model, all_chunks)
+        limit_counts["split"] = limit_counts.get("split", 0) + chunked_docs
+        limit_counts["trimmed"] = limit_counts.get("trimmed", 0) + over
+        if window is not None:
+            limit_counts["window"] = window
 
     try:
         results = kw_model.extract_keywords(
@@ -529,7 +585,9 @@ def extract_keywords(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
+def _process_document_task(task: tuple) -> Tuple[List[Tuple[str, Keywords]], dict]:
+    """One task in a worker process: its documents' keywords, and the limit counts
+    (``_extract_keybert``) the parent records in the paradata (atrium-project#53)."""
     (
         file_paths,
         method,
@@ -545,6 +603,7 @@ def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
     is_batch = isinstance(file_paths, list)
     paths = file_paths if is_batch else [file_paths]
 
+    limit_counts: dict = {}
     results = extract_keywords(
         file_paths,
         method=method,
@@ -554,6 +613,7 @@ def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
         keybert_model=keybert_model,
         use_mmr=use_mmr,
         diversity=diversity,
+        limit_counts=limit_counts,
     )
 
     keywords_list = results if is_batch else [results]
@@ -574,7 +634,7 @@ def _process_document_task(task: tuple) -> List[Tuple[str, Keywords]]:
 
         output.append((doc_id, keywords))
 
-    return output
+    return output, limit_counts
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -638,6 +698,29 @@ def _sort_csv_file(file_path: str) -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _note_keybert_limits(logger: ParadataLogger, counts: dict) -> None:
+    """Record the KeyBERT limits that shaped the keywords (``limits_applied``, #53)."""
+    if counts.get("split"):
+        logger.note_limit(
+            "keybert_chunk_words",
+            tool_limits.KEYBERT_CHUNK_WORDS.get(),
+            "split",
+            counts["split"],
+            "document(s) longer than KEYBERT_CHUNK_WORDS were embedded in overlapping chunks "
+            "and their keywords merged",
+        )
+    if counts.get("trimmed"):
+        window = counts.get("window")
+        logger.note_limit(
+            "keybert_max_seq_tokens",
+            window,
+            "trimmed",
+            counts["trimmed"],
+            f"chunk(s) longer than the KeyBERT encoder's {window}-token window were embedded "
+            "from their start; lower KEYBERT_CHUNK_WORDS to embed them whole",
+        )
 
 
 def main(argv: Optional[List[str]] = None) -> None:
@@ -798,6 +881,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
 
     processed_count = 0
+    limit_counts: dict = {}
     try:
         mp_context = multiprocessing.get_context("spawn")
 
@@ -807,7 +891,11 @@ def main(argv: Optional[List[str]] = None) -> None:
             for future in as_completed(futures):
                 batch_paths = futures[future]
                 try:
-                    batch_results = future.result()
+                    batch_results, counts = future.result()
+                    for name in ("split", "trimmed"):
+                        limit_counts[name] = limit_counts.get(name, 0) + counts.get(name, 0)
+                    if "window" in counts:
+                        limit_counts["window"] = counts["window"]
                     for doc_id, keywords in batch_results:
                         _write_csv_row(args.output_file, doc_id, keywords, args.num_keywords)
                         processed_count += 1
@@ -823,6 +911,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                     else:
                         _logger.log_skip(str(batch_paths), str(exc))
     finally:
+        _note_keybert_limits(_logger, limit_counts)
         _logger.finalize(input_total=len(all_files))
 
     print("--- Sorting master results … ---")

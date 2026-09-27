@@ -14,6 +14,9 @@ class Job:
     created_at: float = field(default_factory=time.time)
     finished_at: Optional[float] = None
     workspace: Optional[str] = None
+    #: The §4.4 reason code of a failed job (``limit_exceeded`` when API_JOB_TIMEOUT stopped
+    #: it, atrium-project#53), else None.
+    reason: Optional[str] = None
 
 
 _jobs: Dict[str, Job] = {}

@@ -28,18 +28,30 @@ class RescaleError(ValueError):
     """Raised when the request is unprocessable (bad target or no source size)."""
 
 
+class RescaleTooLarge(RescaleError):
+    """A page's target size is over ``max_dim`` (MAX_RESCALE_DIM); ``observed`` is its
+    largest side in pixels."""
+
+    def __init__(self, message: str, observed: int) -> None:
+        super().__init__(message)
+        self.observed = observed
+
+
 def rescale_teitok(
     xml_text: str,
     target_w: Optional[int] = None,
     target_h: Optional[int] = None,
     fix_name_tags: bool = True,
     scale: Optional[float] = None,
+    max_dim: Optional[int] = None,
 ) -> Dict[str, Any]:
     """Rescale a TEITOK document's coordinates to page images of another size.
 
     ``target_w`` × ``target_h``: every page image has that size (a single-page document,
     or one whose pages all share a size). ``scale``: every page image is ``scale`` times
-    its ``<surface>`` -- the form for documents whose pages differ in size.
+    its ``<surface>`` -- the form for documents whose pages differ in size. With
+    ``max_dim``, a page whose target width or height would be over it raises
+    :class:`RescaleTooLarge` (MAX_RESCALE_DIM covers ``scale`` too, atrium-project#53).
     """
     if scale is not None:
         if target_w is not None or target_h is not None:
@@ -73,6 +85,15 @@ def rescale_teitok(
         if scale is not None:
             return round(surface.width * scale), round(surface.height * scale)
         return target_w, target_h
+
+    if max_dim is not None:
+        biggest = max(max(target(s)) for s in (sized or [default]))
+        if biggest > max_dim:
+            raise RescaleTooLarge(
+                f"The rescaled page images would be {biggest} px on a side; the limit is "
+                f"{max_dim} px (MAX_RESCALE_DIM).",
+                biggest,
+            )
 
     boxes_rescaled = 0
 

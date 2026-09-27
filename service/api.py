@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Dict, List
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
@@ -21,11 +21,14 @@ from starlette.background import BackgroundTask
 from .atrium_service import (
     ServiceState,
     add_cors,
+    attach_error_handlers,
     attach_health,
     attach_inflight_middleware,
     build_info,
+    busy,
+    check_body_size,
     read_tool_version,
-    resolve_max_upload_mb,
+    read_upload_bounded,
     serve_lifecycle,
 )
 from .enrichment import (
@@ -40,21 +43,87 @@ from .enrichment import (
     sanitize_doc_id,
 )
 from .jobs import Job, _jobs, create_job
-from .rescale import RescaleError, rescale_teitok
+from .rescale import RescaleError, RescaleTooLarge, rescale_teitok
 
-# ── operator-tunable limits ───────────────────────────────────────────────────
-MAX_CONCURRENT_JOBS = int(os.environ.get("MAX_CONCURRENT_JOBS", "2"))
-MAX_UPLOAD_MB = resolve_max_upload_mb(5.0)
-MAX_WORDS = int(os.environ.get("MAX_WORDS", "30000"))
-API_JOB_TIMEOUT = int(os.environ.get("API_JOB_TIMEOUT", "600"))
-MAX_RESCALE_DIM = int(os.environ.get("MAX_RESCALE_DIM", "100000"))
+# isort: split
+# The repo root is on sys.path from here on (service/enrichment.py puts it there, for the
+# `python api.py` start from service/), so the repo-root modules are imported below it.
+from atrium_limits import LimitExceeded  # noqa: E402
+from tool_limits import (  # noqa: E402
+    API_JOB_TIMEOUT,
+    JOB_TTL_S,
+    LIMITS,
+    MAX_CONCURRENT_JOBS,
+    MAX_QUEUED_JOBS,
+    MAX_RESCALE_DIM,
+    MAX_UPLOAD,
+    MAX_WORDS,
+)
+
+# ── limits ─────────────────────────────────────────────────────────────────────
+# Every limit is declared in tool_limits.py (atrium-project#53, factor III) and read per
+# request; /info reports them all. The upload limit's import-time value stays here for
+# the callers and tests that read it.
+MAX_UPLOAD_MB = MAX_UPLOAD.get()
 DEFAULT_KW_METHOD = os.environ.get("DEFAULT_KW_METHOD", "keybert")
 
 _ALLOWED_KW = ("keybert", "yake", "legacy", "none")
 _ALLOWED_LANG = ("cs",)
 
+#: Retry-After of a `busy` refusal: a pipeline run takes tens of seconds to minutes.
+_BUSY_RETRY_AFTER_S = 30
+
+
+class _Slots:
+    """The MAX_CONCURRENT_JOBS processing slots, shared by the synchronous endpoints and
+    /jobs (read per call, like every limit).
+
+    A slot is held until the pipeline run has really ended: the run stops itself at
+    API_JOB_TIMEOUT (service/bounded_run.py), so no ``asyncio.wait_for`` frees it while the
+    pipeline still runs in its executor thread -- which is how MAX_CONCURRENT_JOBS used to
+    be exceeded after every timeout (atrium-project#53).
+    """
+
+    def __init__(self) -> None:
+        self.running = 0
+        self._freed: asyncio.Condition | None = None
+
+    def _condition(self) -> asyncio.Condition:
+        if self._freed is None:  # built in the running loop, not at import
+            self._freed = asyncio.Condition()
+        return self._freed
+
+    def locked(self) -> bool:
+        """Every slot is taken."""
+        return self.running >= MAX_CONCURRENT_JOBS.get()
+
+    def free(self) -> int:
+        return max(0, MAX_CONCURRENT_JOBS.get() - self.running)
+
+    def take(self) -> bool:
+        """Take a slot now, or say there is none (the synchronous endpoints)."""
+        if self.locked():
+            return False
+        self.running += 1
+        return True
+
+    async def acquire(self) -> None:
+        """Wait for a slot (a /jobs job)."""
+        cond = self._condition()
+        async with cond:
+            while self.locked():
+                await cond.wait()
+            self.running += 1
+
+    async def release(self) -> None:
+        cond = self._condition()
+        async with cond:
+            self.running -= 1
+            cond.notify_all()
+
+
 _manager = PipelineManager()
-_semaphore = asyncio.Semaphore(MAX_CONCURRENT_JOBS)
+_semaphore = _Slots()
 _SERVICE_DIR = Path(__file__).resolve().parent
 _state = ServiceState()
 
@@ -94,6 +163,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 attach_inflight_middleware(app, _state)
+# §4.4 error body {status, reason, detail} for every error (atrium-project#32 item 2, #53).
+attach_error_handlers(app)
 
 # Safely mount static directories if they exist
 if (_SERVICE_DIR / "frontend").exists():
@@ -154,11 +225,9 @@ async def _read_document_json(part: UploadFile | None) -> bytes | None:
     """
     if part is None:
         return None
-    data = await part.read()
+    data = await read_upload_bounded(part, MAX_UPLOAD.get(), "document_json")
     if not data:
         return None
-    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"document_json exceeds {MAX_UPLOAD_MB} MB.") from None
     return data
 
 
@@ -166,7 +235,9 @@ async def _read_layout(filename: str, data: bytes, alto: UploadFile | None) -> L
     """The layout source of an upload (issue #38, F): the file itself when it is a TEITOK
     document (flexiconv's conversion: text *and* layout), else an optional ``alto`` part for
     a table. No GPL code runs here: conversion to TEITOK stays in the CLI."""
-    alto_data = await alto.read() if alto is not None else b""
+    alto_data = (
+        await read_upload_bounded(alto, MAX_UPLOAD.get(), "alto") if alto is not None else b""
+    )
     if is_teitok_upload(filename, data):
         if alto_data:
             raise HTTPException(
@@ -179,8 +250,6 @@ async def _read_layout(filename: str, data: bytes, alto: UploadFile | None) -> L
         raise HTTPException(
             422, "An alto part goes with a .csv or .xlsx table of that page's lines."
         ) from None
-    if len(alto_data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"alto exceeds {MAX_UPLOAD_MB} MB.") from None
     try:
         return read_alto_upload(alto.filename or "upload.alto.xml", alto_data)
     except ValueError as exc:
@@ -190,7 +259,8 @@ async def _read_layout(filename: str, data: bytes, alto: UploadFile | None) -> L
 def _run_pipeline_sync(
     rows, doc_id, kw_method, num_keywords, lang, document_json=None, layout=None
 ):
-    """Blocking pipeline call with graceful backend degradation configured."""
+    """Blocking pipeline call with graceful backend degradation configured, stopped at
+    API_JOB_TIMEOUT (LimitExceeded, 504)."""
     return _manager.enrich(
         rows,
         doc_id,
@@ -199,11 +269,13 @@ def _run_pipeline_sync(
         lang=lang,
         document_json=document_json,
         layout=layout,
+        timeout=API_JOB_TIMEOUT.get(),
     ), kw_method
 
 
 def _build_envelope(result, requested_method) -> Dict[str, Any]:
     teitok_xml = PipelineManager.collect_teitok(result)
+    paradata = PipelineManager.collect_merged_paradata(result)
     envelope = {
         "doc_id": result.doc_id,
         "pages": result.pages,
@@ -211,7 +283,10 @@ def _build_envelope(result, requested_method) -> Dict[str, Any]:
         "teitok_xml": teitok_xml,
         "keywords": PipelineManager.collect_keywords(result),
         "ne_summary": PipelineManager.collect_ne_summary(result),
-        "paradata": PipelineManager.collect_merged_paradata(result),
+        "paradata": paradata,
+        # Every limit that shaped this result without refusing it (atrium-project#53): the
+        # stages record them in their paradata, the run's merged record carries them.
+        "limits_applied": list((paradata or {}).get("limits_applied") or []),
         "method_requested": requested_method,
         "method_used": result.kw_method_used,
         "llm": None,
@@ -263,64 +338,74 @@ async def _run_enrichment(
         raise
 
 
+def _check_rows(rows) -> None:
+    """The input checks every endpoint makes before a pipeline runs: some text, and no
+    more than MAX_WORDS words (413 limit_exceeded)."""
+    if not rows:
+        raise HTTPException(422, "No usable text rows found in input.") from None
+    words = count_words(rows)
+    limit = MAX_WORDS.get()
+    MAX_WORDS.check(
+        words,
+        value=limit,
+        detail=f"Input too large: {words} words > {limit} (MAX_WORDS).",
+    )
+
+
 async def _enrich_common(
     rows, doc_id, kw_method, num_keywords, lang, fmt, document_json=None, layout=None
 ):
     _validate_params(kw_method, lang, num_keywords)
-    if not rows:
-        raise HTTPException(422, "No usable text rows found in input.") from None
-    words = count_words(rows)
-    if words > MAX_WORDS:
-        raise HTTPException(413, f"Input too large: {words} words > {MAX_WORDS}.") from None
+    _check_rows(rows)
 
-    if _semaphore.locked():
-        raise HTTPException(429, "Server busy; max concurrent jobs reached.") from None
+    if not _semaphore.take():
+        raise busy(
+            f"Server busy: all {MAX_CONCURRENT_JOBS.get()} processing slots are taken "
+            "(MAX_CONCURRENT_JOBS). Retry later, or submit to /jobs.",
+            retry_after_s=_BUSY_RETRY_AFTER_S,
+        )
+    try:
+        data, out_fmt, result = await _run_enrichment(
+            rows, doc_id, kw_method, num_keywords, lang, fmt, document_json, layout
+        )
+    finally:
+        await _semaphore.release()
 
-    async with _semaphore:
-        try:
-            data, out_fmt, result = await asyncio.wait_for(
-                _run_enrichment(
-                    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json, layout
-                ),
-                timeout=API_JOB_TIMEOUT,
-            )
-        except asyncio.TimeoutError as exc:
-            raise HTTPException(504, "Pipeline execution timed out.") from exc
-
-        if out_fmt == "zip":
-            return FileResponse(
-                str(data),
-                media_type="application/zip",
-                filename=f"{doc_id}_enriched.zip",
-                background=BackgroundTask(PipelineManager.cleanup, result),
-            )
-        else:
-            PipelineManager.cleanup(result)
-            return JSONResponse(data)
+    if out_fmt == "zip":
+        return FileResponse(
+            str(data),
+            media_type="application/zip",
+            filename=f"{doc_id}_enriched.zip",
+            background=BackgroundTask(PipelineManager.cleanup, result),
+        )
+    PipelineManager.cleanup(result)
+    return JSONResponse(data)
 
 
 async def _run_job_background(
     job: Job, rows, doc_id, kw_method, num_keywords, lang, document_json=None, layout=None
 ):
     try:
-        job.status = "running"
-        async with _semaphore:
-            data, out_fmt, result = await asyncio.wait_for(
-                _run_enrichment(
-                    rows,
-                    doc_id,
-                    kw_method,
-                    num_keywords,
-                    lang,
-                    fmt="json",
-                    document_json=document_json,
-                    layout=layout,
-                ),
-                timeout=API_JOB_TIMEOUT,
+        # "queued" until the job holds a slot (atrium-project#53): it used to report
+        # "running" while it waited for one.
+        await _semaphore.acquire()
+        try:
+            job.status = "running"
+            data, out_fmt, result = await _run_enrichment(
+                rows,
+                doc_id,
+                kw_method,
+                num_keywords,
+                lang,
+                fmt="json",
+                document_json=document_json,
+                layout=layout,
             )
             PipelineManager.cleanup(result)
             job.result = data
             job.status = "done"
+        finally:
+            await _semaphore.release()
     except asyncio.CancelledError:
         # issue #55: this task is now tracked via _state.track() (see submit_job), so
         # serve_lifecycle awaits it on shutdown rather than cancelling it — a clean run
@@ -333,8 +418,9 @@ async def _run_job_background(
         job.error = "Cancelled: server shutdown interrupted this job before it finished."
         job.status = "failed"
         raise  # the outer `finally` below still records finished_at
-    except asyncio.TimeoutError:
-        job.error = "Pipeline execution timed out."
+    except LimitExceeded as e:  # API_JOB_TIMEOUT: the run was stopped, its workspace removed
+        job.error = e.detail
+        job.reason = "limit_exceeded"
         job.status = "failed"
     except HTTPException as e:
         job.error = str(e.detail)
@@ -360,11 +446,7 @@ async def info() -> Dict[str, Any]:
     return build_info(
         app,
         "atrium-nlp-enrich",
-        limits={
-            "max_upload_mb": MAX_UPLOAD_MB,
-            "max_words": MAX_WORDS,
-            "max_concurrent_jobs": MAX_CONCURRENT_JOBS,
-        },
+        limits=LIMITS,
         stage_plan=["manifest", "udp", "nt", "stats"],
         core_stages_mandatory=True,
         models={
@@ -455,9 +537,7 @@ async def enrich(
     document_json: UploadFile = File(None, description=_DOCUMENT_JSON_HELP),  # noqa: B008
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
 ):
-    data = await file.read()
-    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
+    data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     filename = file.filename or "upload.csv"
     layout = await _read_layout(filename, data, alto)
     try:
@@ -471,7 +551,9 @@ async def enrich(
 
 
 @app.post("/enrich_text")
-async def enrich_text(payload: Dict[str, Any]):
+async def enrich_text(payload: Dict[str, Any], request: Request):
+    # The body is bounded like an upload (atrium-project#53): it had no size limit at all.
+    await check_body_size(request, MAX_UPLOAD.get(), "Request body")
     lines = payload.get("lines")
     if not isinstance(lines, list) or not lines:
         raise HTTPException(422, "'lines' must be a non-empty list.") from None
@@ -526,14 +608,17 @@ async def rescale(
             raise HTTPException(422, "scale must be a number in (0, 100].") from None
     elif width is None or height is None:
         raise HTTPException(422, "Give width and height, or scale.") from None
-    elif not (1 <= width <= MAX_RESCALE_DIM and 1 <= height <= MAX_RESCALE_DIM):
-        raise HTTPException(
-            422, f"width and height must be integers between 1 and {MAX_RESCALE_DIM}."
-        ) from None
+    elif width < 1 or height < 1:
+        raise HTTPException(422, "width and height must be positive integers.") from None
+    max_dim = MAX_RESCALE_DIM.get()
+    if width is not None and height is not None:
+        MAX_RESCALE_DIM.check(
+            max(width, height),
+            value=max_dim,
+            detail=f"width and height must be integers between 1 and {max_dim} (MAX_RESCALE_DIM).",
+        )
 
-    data = await file.read()
-    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
+    data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     try:
         xml_text = data.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
@@ -544,7 +629,11 @@ async def rescale(
         ) from None
 
     try:
-        result = rescale_teitok(xml_text, width, height, fix_name_tags=fix_names, scale=scale)
+        result = rescale_teitok(
+            xml_text, width, height, fix_name_tags=fix_names, scale=scale, max_dim=max_dim
+        )
+    except RescaleTooLarge as exc:  # `scale` reached past MAX_RESCALE_DIM on some page
+        raise MAX_RESCALE_DIM.exceeded(exc.observed, value=max_dim, detail=str(exc)) from exc
     except RescaleError as exc:
         raise HTTPException(422, str(exc)) from exc
 
@@ -580,9 +669,7 @@ async def submit_job(
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
 ):
     _validate_params(kw_method, lang, num_keywords)
-    data = await file.read()
-    if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-        raise HTTPException(413, f"Upload exceeds {MAX_UPLOAD_MB} MB.") from None
+    data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     filename = file.filename or "upload.csv"
     # Read here, not in the background task, like document_json below.
     layout = await _read_layout(filename, data, alto)
@@ -590,21 +677,26 @@ async def submit_job(
         rows = normalize_upload(filename, data)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
+    # Refused now, with the synchronous endpoints' answer, rather than accepted as a job
+    # that the pipeline then fails or runs over MAX_WORDS (atrium-project#53).
+    _check_rows(rows)
     doc_id = file.filename or "document"
     # Read here, not in the background task: the UploadFile's spooled temp file is tied
     # to the request and is closed once this handler returns (#10 J3).
     baseline = await _read_document_json(document_json)
 
-    now = time.time()
-    to_del = [
-        jid
-        for jid, j in _jobs.items()
-        if hasattr(j, "finished_at")
-        and getattr(j, "finished_at", None)
-        and now - j.finished_at > 3600
-    ]
-    for jid in to_del:
-        del _jobs[jid]
+    _evict_finished_jobs()
+    # The queue is bounded (atrium-project#53): jobs waiting for a slot may fill the slots
+    # that are free now plus MAX_QUEUED_JOBS; the README promised a 429 the service never
+    # gave.
+    queued = sum(1 for j in _jobs.values() if j.status == "queued")
+    if queued >= _semaphore.free() + MAX_QUEUED_JOBS.get():
+        raise busy(
+            f"Server busy: {queued} job(s) already wait for one of the "
+            f"{MAX_CONCURRENT_JOBS.get()} processing slots (MAX_QUEUED_JOBS="
+            f"{MAX_QUEUED_JOBS.get()}). Retry later.",
+            retry_after_s=_BUSY_RETRY_AFTER_S,
+        )
 
     job = await create_job()
     # issue #55, D1a: tracked, not a bare asyncio.create_task(). A submitted job
@@ -618,6 +710,14 @@ async def submit_job(
         _run_job_background(job, rows, doc_id, kw_method, num_keywords, lang, baseline, layout)
     )
     return {"job_id": job.job_id, "status": "queued"}
+
+
+def _evict_finished_jobs() -> None:
+    """Forget the jobs that finished more than JOB_TTL_S seconds ago."""
+    ttl = JOB_TTL_S.get()
+    now = time.time()
+    for jid in [jid for jid, j in _jobs.items() if j.finished_at and now - j.finished_at > ttl]:
+        del _jobs[jid]
 
 
 # nlp-enrich is the ecosystem's only stateful service: _jobs is a process-local
@@ -636,7 +736,7 @@ async def get_job_status(job_id: str):
     job = _jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail=_JOB_NOT_FOUND_DETAIL) from None
-    return {"job_id": job_id, "status": job.status, "error": job.error}
+    return {"job_id": job_id, "status": job.status, "error": job.error, "reason": job.reason}
 
 
 @app.get("/jobs/{job_id}/result")

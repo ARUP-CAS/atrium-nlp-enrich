@@ -13,6 +13,7 @@ _project_root = Path(__file__).resolve().parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
+import tool_limits  # noqa: E402
 from api_util import doc_identity as _doc_identity  # noqa: E402
 from api_util import page_rows as _page_rows  # noqa: E402
 from api_util.teitok_alto import write_teitok_merged  # noqa: E402
@@ -444,11 +445,19 @@ def process_merged_file(merged_filepath, output_csv_path, rows=None, doc_id=""):
 
 
 def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
+    """Append one summary row per page: its NE_SUMMARY_TOP_N most frequent entities.
+
+    Returns how many pages had more distinct entities than that, which the caller
+    records as a ``trimmed`` note (atrium-project#53; the TEITOK and the document record
+    carry every entity). The top N was the literal 20 before it became a setting; a CSV
+    written under another N keeps its own header, so write one file per setting.
+    """
     from collections import Counter
 
     if not summary_csv_path or not entities_by_page:
-        return
-    top_n = 20
+        return 0
+    top_n = tool_limits.NE_SUMMARY_TOP_N.get()
+    trimmed = 0
     write_header = not os.path.isfile(summary_csv_path)
     try:
         with open(summary_csv_path, "a", newline="", encoding="utf-8-sig") as fh:
@@ -459,7 +468,9 @@ def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
                 ]
                 w.writerow(header)
             for page_num, ents in sorted(entities_by_page.items()):
-                c = Counter(ents).most_common(top_n)
+                counts = Counter(ents)
+                trimmed += len(counts) > top_n
+                c = counts.most_common(top_n)
                 row = [doc_name, page_num]
                 for (ne_text, ne_type), cnt in c:
                     row.extend([ne_text, ne_type, cnt])
@@ -469,11 +480,43 @@ def _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path):
                 w.writerow(row)
     except Exception as exc:
         print(f"  [Warn] writing summary CSV: {exc}", file=sys.stderr)
+    return trimmed
 
 
 def append_summary_row(doc_name, merged_conllu_path, summary_csv_path, rows=None):
     _, entities_by_page = _collect_merged_rows(merged_conllu_path, rows, doc_name)
-    _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path)
+    return _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv_path)
+
+
+def note_summary_trimmed(para_state, pages):
+    """Record in the stage's paradata (the ``atrium_paradata.py start`` state file) that
+    ``pages`` pages kept only their NE_SUMMARY_TOP_N most frequent entities."""
+    if not para_state or not pages:
+        return
+    import subprocess
+
+    top_n = tool_limits.NE_SUMMARY_TOP_N.get()
+    subprocess.run(
+        [
+            sys.executable,
+            str(_project_root / "atrium_paradata.py"),
+            "note-limit",
+            "--state",
+            str(para_state),
+            "--limit",
+            "ne_summary_top_n",
+            "--value",
+            str(top_n),
+            "--effect",
+            "trimmed",
+            "--count",
+            str(pages),
+            "--detail",
+            f"page(s) with more than {top_n} distinct entities kept their {top_n} most frequent "
+            "in the entity summary (the TEITOK and the document record carry every entity)",
+        ],
+        check=False,
+    )
 
 
 # ── layout source: ALTO, or a flexiconv TEITOK file (FLEXICONV_ANNOTATE) ──────
@@ -512,6 +555,7 @@ def process_single_document(
     bbox_origin="page",
     flexiconv_dir=None,
     text_dir=None,
+    para_state=None,
 ):
     conllu_path = Path(conllu_file)
     # canonical_doc_id(), not Path.stem (issue atrium-project#10, D3): `.conllu` is this
@@ -566,7 +610,8 @@ def process_single_document(
         if need_csv:
             write_document_csv(csv_rows, doc_out_csv)
         if need_summary:
-            _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv)
+            trimmed = _write_summary_rows_from_data(doc_name, entities_by_page, summary_csv)
+            note_summary_trimmed(para_state, trimmed)
 
     layout = layout_source(doc_name, alto_dir, flexiconv_dir)
     if save_teitok and teitok_out_path and not teitok_out_path.exists():
@@ -758,6 +803,12 @@ def build_parser():
         "--state-dir", default=None, help="Directory containing paradata state files"
     )
     parser.add_argument(
+        "--para-state",
+        default=None,
+        help="The stage's paradata state file (atrium_paradata.py start); limits that "
+        "shaped the summary are recorded in it (atrium-project#53).",
+    )
+    parser.add_argument(
         "--document-json-dir",
         type=str,
         default=None,
@@ -873,6 +924,7 @@ def main(argv=None):
             bbox_origin=args.bbox_origin,
             flexiconv_dir=args.flexiconv_dir or None,
             text_dir=args.text_dir or None,
+            para_state=args.para_state,
         )
         sys.exit(0 if ok else 1)
 

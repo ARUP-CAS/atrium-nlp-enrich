@@ -451,6 +451,11 @@ BBOX_ORIGIN="page"             # page (TEITOK norm) | printspace (images cropped
 REGENERATE_TEITOK="${REGENERATE_TEITOK:-false}"  # true: rewrite existing .teitok.xml instead of resuming
 ```
 
+`TIMEOUT`, `MAX_RETRIES` and `WORD_CHUNK_LIMIT` are limits (atrium-project#53). For an API job
+each is also an environment setting — `LINDAT_TIMEOUT_S`, `LINDAT_MAX_RETRIES` and
+`WORD_CHUNK_LIMIT`, which win over this file — and `GET /info` reports the value in force; see
+[service/README.md § Limits](service/README.md#limits) for every limit of the service.
+
 #### Backing Service Endpoints
 
 `UDPIPE_URL` and `NAMETAG_URL` are **attachable** (12-factor IV): point them at a

@@ -34,12 +34,20 @@ _REPO_ROOT = _SERVICE_DIR.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+import tool_limits  # noqa: E402
 from atrium_document import FILE_SUFFIX, load_document  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
 _CONFIG_TEMPLATE = _REPO_ROOT / "config_api.txt"
 _RUN_PIPELINE = _REPO_ROOT / "run_pipeline.py"
+#: Runs the pipeline in a process group of its own and stops the whole group at
+#: API_JOB_TIMEOUT (atrium-project#53); exits with _TIMED_OUT when it had to.
+_BOUNDED_RUN = _SERVICE_DIR / "bounded_run.py"
+_TIMED_OUT = 124
+#: Extra seconds the service waits for bounded_run.py itself, past API_JOB_TIMEOUT, before
+#: it gives up on it (its SIGTERM grace is 5 s).
+_SUPERVISOR_GRACE_S = 30
 
 _API_JOBS_ROOT = Path(os.environ.get("API_JOBS_ROOT", _REPO_ROOT / "TEMP" / "api_jobs"))
 
@@ -131,10 +139,13 @@ def _coerce_int(value: Any) -> int:
 
 def _write_canonical_csvs(rows: List[Dict[str, Any]], dest_dir: Path, fallback_id: str) -> int:
     dest_dir.mkdir(parents=True, exist_ok=True)
+    # One request is one document, written as <doc_id>.csv. A row's `_source_path` used to
+    # name the file it went to; nothing in this service sets it, so it could only come
+    # from the caller -- a CSV column or an /enrich_text item -- and "../../x.csv" wrote
+    # outside the job's workspace (atrium-project#53, D9). It is ignored.
     groups = collections.defaultdict(list)
     for r in rows:
-        path = r.get("_source_path", f"{fallback_id}.csv")
-        groups[path].append(r)
+        groups[f"{fallback_id}.csv"].append(r)
 
     max_page = 0
     for path_str, group_rows in groups.items():
@@ -351,6 +362,12 @@ def _derive_config(workspace: Path, layout_kind: Optional[str] = None) -> Path:
         "TEITOK_FLEXICONV_DIR": f'"{ws}/layout/flexiconv"',
         "FLEXICONV_ANNOTATE": '"true"' if layout_kind == "teitok" else '"false"',
     }
+    # The stage limits that are config_api.txt keys (atrium-project#53): the environment
+    # wins over the template, which wins over the code default (tool_limits.py).
+    limits = tool_limits.LIMITS
+    overrides["WORD_CHUNK_LIMIT"] = str(limits.get(tool_limits.WORD_CHUNK_LIMIT.key))
+    overrides["TIMEOUT"] = str(limits.get(tool_limits.LINDAT_TIMEOUT_S.key))
+    overrides["MAX_RETRIES"] = str(limits.get(tool_limits.LINDAT_MAX_RETRIES.key))
 
     seen: set = set()
     lines_out: List[str] = []
@@ -554,7 +571,11 @@ class PipelineManager:
         lang: str = "cs",
         document_json: Optional[bytes] = None,
         layout: Optional[Layout] = None,
+        timeout: Optional[float] = None,
     ) -> EnrichmentResult:
+        """Run the pipeline on *rows*. With *timeout* (seconds, the service passes
+        API_JOB_TIMEOUT), the run and every process it started are stopped when it is up,
+        the workspace is removed, and ``LimitExceeded`` (504) is raised."""
         if kw_method not in _KW_METHODS:
             raise ValueError(f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}.")
         doc_id = sanitize_doc_id(doc_id)
@@ -613,7 +634,7 @@ class PipelineManager:
                 if num_keywords is not None:
                     cmd.extend(["--num-keywords", str(num_keywords)])
 
-            rc, tail = _run_and_log(cmd, cwd=_REPO_ROOT, env=_stage_env(job_id))
+            rc, tail = self._run_bounded(cmd, job_id, timeout)
 
             if rc == 1:
                 raise PipelineError(
@@ -678,6 +699,38 @@ class PipelineManager:
             raise
 
     @staticmethod
+    def _run_bounded(cmd: List[str], job_id: str, timeout: Optional[float]) -> Tuple[int, str]:
+        """Run the pipeline command, under bounded_run.py when there is a *timeout*.
+
+        ``subprocess.run(timeout=)`` alone kills only its direct child: the stage scripts and
+        their UDPipe/NameTag/KeyBERT processes kept running after the service had answered
+        504, and the executor thread -- with the job's slot -- was released before they
+        ended, so MAX_CONCURRENT_JOBS was exceeded (atrium-project#53).
+        """
+        if not timeout:
+            return _run_and_log(cmd, cwd=_REPO_ROOT, env=_stage_env(job_id))
+        bounded = [sys.executable, str(_BOUNDED_RUN), f"{timeout:g}", "--", *cmd]
+        try:
+            rc, tail = _run_and_log(
+                bounded,
+                cwd=_REPO_ROOT,
+                env=_stage_env(job_id),
+                timeout=timeout + _SUPERVISOR_GRACE_S,
+            )
+        except subprocess.TimeoutExpired:
+            rc, tail = _TIMED_OUT, ""
+        if rc == _TIMED_OUT:
+            raise tool_limits.API_JOB_TIMEOUT.exceeded(
+                None,
+                value=timeout,
+                detail=(
+                    f"Pipeline execution timed out: over {timeout:g} s (API_JOB_TIMEOUT). The run "
+                    "and every process it started were stopped."
+                ),
+            )
+        return rc, tail
+
+    @staticmethod
     def _read_stage_records(paradata_dir: Path) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
         if not paradata_dir.exists():
@@ -740,10 +793,15 @@ class PipelineManager:
         out: List[Dict[str, Any]] = []
         with open(summary, "r", encoding="utf-8-sig") as fh:
             reader = csv.DictReader(fh)
+            # As many entity columns as the file has: NE_SUMMARY_TOP_N (#53), 20 by default.
+            fields = set(reader.fieldnames or ())
+            top_n = 0
+            while f"ne{top_n + 1}" in fields:
+                top_n += 1
             for row in reader:
                 rec = {"file": row.get("file"), "page": row.get("page")}
                 ents = []
-                for i in range(1, 21):
+                for i in range(1, top_n + 1):
                     ne = row.get(f"ne{i}")
                     typ = row.get(f"type{i}")
                     cnt = row.get(f"cnt-{i}")

@@ -30,15 +30,15 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 | Method | Path                | Purpose                                                                                                                                                                      |
 |--------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GET    | `/`                 | minimal landing page (see `/docs` for OpenAPI UI)                                                                                                                            |
-| GET    | `/info`             | service id, endpoints, stage plan, pinned models, keyword methods + default, limits                                                                                          |
+| GET    | `/info`             | service id, endpoints, stage plan, pinned models, keyword methods + default, `limits` (every [limit](#limits), current value) and `limits_meta` (the variable behind each)   |
 | GET    | `/health`           | liveness — 200 always, even mid-shutdown. `?deep=true` adds config validity via `run_pipeline.py --dry-run` + UDPipe/NameTag reachability (503 on failure or while draining) |
 | GET    | `/ready`            | readiness — 503 until warmup finishes, 200 while serving, 503 the instant `SIGTERM` arrives. The Kubernetes `readinessProbe`/`startupProbe` target                           |
 | POST   | `/enrich`           | **single-file entry point** — upload CSV/XLSX/TXT, or a converted TEITOK `.xml`; optionally the ALTO of a table's pages                                                      |
 | POST   | `/enrich_text`      | same pipeline for inline JSON                                                                                                                                                |
-| POST   | `/jobs`             | the `/enrich` form as a background job: returns `{"job_id", "status": "queued"}` at once                                                                                     |
-| GET    | `/jobs/{id}`        | the job's `status` (`queued`, `running`, `done`, `failed`) and `error`                                                                                                       |
+| POST   | `/jobs`             | the `/enrich` form as a background job: returns `{"job_id", "status": "queued"}` at once; 429 `busy` when `MAX_QUEUED_JOBS` jobs already wait                                |
+| GET    | `/jobs/{id}`        | the job's `status` (`queued` until it holds a slot, `running`, `done`, `failed`), `error` and `reason` (`limit_exceeded` when `API_JOB_TIMEOUT` stopped it)                  |
 | GET    | `/jobs/{id}/result` | the `/enrich` JSON envelope of a finished job (409 while it runs)                                                                                                            |
-| DELETE | `/jobs/{id}`        | forget a job (finished jobs are also forgotten an hour after they end); job ids are local to the replica                                                                     |
+| DELETE | `/jobs/{id}`        | forget a job (finished jobs are also forgotten `JOB_TTL_S`, an hour, after they end); job ids are local to the replica                                                       |
 | POST   | `/rescale`          | rescale a TEITOK's bboxes to page images of another size, page by page                                                                                                       |
 
 ### `POST /enrich` (multipart form)
@@ -124,6 +124,8 @@ through to it, so there is one implementation, not two.
   "keywords": [ {"keyword": "...", "score": 0.91} ],
   "ne_summary": [ {"file": "...", "page": "1", "entities": [...] } ],
   "paradata": { "...merged pipeline-run record incl. license union..." },
+  "limits_applied": [ {"limit": "keybert_chunk_words", "value": 400, "effect": "split",
+                       "count": 1, "detail": "...", "program": "nlp-enrich"} ],
   "method_requested": "keybert", "method_used": "keybert",
   "llm": null,
   "layout_source": "rows",
@@ -131,6 +133,11 @@ through to it, so there is one implementation, not two.
   "document_json": { "...only when a baseline was supplied..." }
 }
 ```
+
+`limits_applied` lists every [limit](#limits) that shaped the result without refusing it
+(atrium-project#53) — a document embedded in KeyBERT chunks, chunks longer than the encoder's
+window, pages whose entity summary kept its top N. The stages record them in their paradata;
+this is the merged record's list (`[]` when no limit applied).
 
 `layout_source` is `rows`, `alto` or `teitok` ([Layout inputs](#layout-inputs)).
 `teitok_schema_valid`/`teitok_schema_errors` are the output-contract verdict on `teitok_xml`
@@ -223,7 +230,9 @@ path and no input type bypasses a mandatory step.
 The runner's exit codes map to HTTP: `0`→200; `3` (keyword preflight)→retry with
 `yake`, else 503; `4` (keyword backend failed at runtime)→503; `5` (the TEITOK failed its
 output contract — a writer defect, "please report it")→500; `1` (empty run)/`2` (missing
-stage)/other→502; oversize→413; queue full→429; an unusable upload→422.
+stage)/other→502; an input over a limit → 413/422 `limit_exceeded`, a run over
+`API_JOB_TIMEOUT` → 504 `limit_exceeded`, every slot or the queue full → 429 `busy`
+([Limits](#limits), [Errors](#errors)); an unusable upload→422.
 
 UDPipe/NameTag models stay operator-pinned in `config_api.txt` and are surfaced
 read-only via `/info`. The layout comes with the upload ([Layout inputs](#layout-inputs)):
@@ -243,16 +252,14 @@ layout declares.
 | `RELOAD`              | `false`   | filesystem auto-reload — development only                                                 |
 | `LOG_LEVEL`           | `INFO`    | root logger level for the `python -m service.api` start path (issue #61)                  |
 | `ALLOWED_ORIGINS`     | `*`       | CORS origins                                                                              |
-| `MAX_UPLOAD_MB`       | `5`       | upload size guard — no shared default across the five services                            |
 | `UDPIPE_URL`          | LINDAT    | attachable UDPipe 2 endpoint (issue #63); same variable name as atrium-translator         |
 | `NAMETAG_URL`         | LINDAT    | attachable NameTag 3 endpoint (issue #63)                                                 |
-| `MAX_CONCURRENT_JOBS` | `2`       | concurrent pipeline runs (also shields LINDAT)                                            |
 | `DEFAULT_KW_METHOD`   | `keybert` | default keyword backend                                                                   |
-| `API_JOB_TIMEOUT`     | `600`     | seconds a single job may run before it is killed                                          |
-| `MAX_WORDS`           | `30000`   | sync request word cap                                                                     |
-| `MAX_RESCALE_DIM`     | `100000`  | max target width/height for `/rescale`                                                    |
 | `API_JOBS_ROOT`       | see below | where per-job workspaces are created; computed from the repo root, not a literal          |
 | `API_KEEP_WORKSPACES` | unset     | keep per-request workspaces for debugging -- survives only as long as the pod (#35)       |
+
+Every limit — `MAX_UPLOAD_MB`, `MAX_WORDS`, `MAX_CONCURRENT_JOBS`, `API_JOB_TIMEOUT` and the
+rest — is listed under [Limits](#limits).
 
 `PORT` and `HOST` are read by `service/api.py`'s `__main__` block, which is what the `api`
 image's `ENTRYPOINT` (`python -m service.api`) runs. Before issue #58 the entrypoint baked
@@ -264,6 +271,61 @@ and not the listener, and the container reported unhealthy forever.
 > `service/healthcheck.py` always probes loopback by design and never reads `HOST`, so a
 > loopback bind passes every probe while being unreachable from outside the container.
 
+## Limits
+
+Every limit is an environment setting (atrium-project#53, factor III), declared in
+`tool_limits.py` and reported with its current value by `GET /info` (`limits`; `limits_meta`
+says which variable sets it and whether the value came from the environment, `config_api.txt`
+or the default). A malformed value stops the service at startup, naming the variable. An input
+over a limit is refused with the [harmonised error](#errors); a limit that shapes a result
+without refusing it is named in `limits_applied`. The three stage limits are also keys of
+`config_api.txt` (named in the table): for an API job the variable wins over the template,
+which wins over the default, and the service writes the effective value into the job's
+config. `tests/test_limits_contract.py` checks this table against `tool_limits.py` and
+`.env.example`.
+
+| Key (`/info`)            | Variable                                                            | Default | Unit     | Over the limit                                                                                                                                      |
+|--------------------------|---------------------------------------------------------------------|---------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `max_upload_mb`          | `MAX_UPLOAD_MB`                                                     | 5       | MB       | 413 `limit_exceeded` — per part (the file, `document_json`, `alto`) and for the whole `/enrich_text` body                                           |
+| `max_words`              | `MAX_WORDS`                                                         | 30000   | words    | 413 `limit_exceeded` — `/enrich`, `/enrich_text` and `/jobs` alike                                                                                  |
+| `max_concurrent_jobs`    | `MAX_CONCURRENT_JOBS`                                               | 2       | jobs     | a synchronous request: 429 `busy` with `Retry-After: 30`; a `/jobs` job stays `queued`                                                              |
+| `max_queued_jobs`        | `MAX_QUEUED_JOBS`                                                   | 8       | jobs     | `/jobs`: 429 `busy` with `Retry-After: 30` (0: a job only when a slot is free)                                                                      |
+| `api_job_timeout`        | `API_JOB_TIMEOUT`                                                   | 600     | s        | the run and every process it started are stopped, the workspace removed: 504 `limit_exceeded`; a `/jobs` job ends `failed`, reason `limit_exceeded` |
+| `job_ttl_s`              | `JOB_TTL_S`                                                         | 3600    | s        | a finished job is forgotten: `/jobs/{id}` answers 404                                                                                               |
+| `max_rescale_dim`        | `MAX_RESCALE_DIM`                                                   | 100000  | px       | 422 `limit_exceeded` — `width`/`height` over it, or a page that `scale` takes past it                                                               |
+| `word_chunk_limit`       | `WORD_CHUNK_LIMIT`                                                  | 900     | words    | UDPipe gets the text in pieces cut at a line end, annotated in full (`config_api.txt` `WORD_CHUNK_LIMIT`)                                           |
+| `lindat_timeout_s`       | `LINDAT_TIMEOUT_S`                                                  | 60      | s        | the UDPipe or NameTag call is retried (`config_api.txt` `TIMEOUT`)                                                                                  |
+| `lindat_max_retries`     | `LINDAT_MAX_RETRIES`                                                | 5       | retries  | the stage fails → 502 (`config_api.txt` `MAX_RETRIES`)                                                                                              |
+| `keybert_chunk_words`    | `KEYBERT_CHUNK_WORDS`                                               | 400     | words    | a longer document is embedded in overlapping chunks and its keywords merged — `split` note                                                          |
+| `keybert_chunk_overlap`  | `KEYBERT_CHUNK_OVERLAP`                                             | 50      | words    | the words two consecutive KeyBERT chunks share                                                                                                      |
+| `ne_summary_top_n`       | `NE_SUMMARY_TOP_N`                                                  | 20      | entities | a page keeps its N most frequent entities in `ne_summary` — `trimmed` note (the TEITOK and `document_json` carry every entity)                      |
+| `keybert_max_seq_tokens` | — (derived from the KeyBERT model, `kw_config.txt` `KEYBERT_MODEL`) | —       | tokens   | a longer chunk is embedded from its start — `trimmed` note; 128 for the default model, `null` until it is loaded                                    |
+
+`KEYBERT_CHUNK_WORDS` stays 400 until an evaluation says otherwise: with the default encoder's
+128-token window, most 400-word chunks are embedded from their start, and `limits_applied`
+now says how many.
+
+Not settings: `num_keywords` (1–100) is a bound on a request parameter, part of the API schema
+(atrium-project#32 item 1); Starlette's multipart parser keeps its own defaults.
+
+## Errors
+
+Every error has one JSON body (hub `docs/agent_skill_strategy.md` §4.4, atrium-project#32
+item 2): `{"status": <int>, "reason": <code or null>, "detail": "<text>"}`. `detail` is always
+a string. A limit refusal adds `limit` (`{key, env, value, observed, unit}`); a request
+validation error adds FastAPI's list of problems as `errors`.
+
+| Status | `reason`         | When                                                                                                              |
+|--------|------------------|-------------------------------------------------------------------------------------------------------------------|
+| 409    | `null`           | `/jobs/{id}/result` of a job that is not `done`                                                                   |
+| 413    | `limit_exceeded` | over `MAX_UPLOAD_MB` or `MAX_WORDS`                                                                               |
+| 422    | `limit_exceeded` | `/rescale` over `MAX_RESCALE_DIM`                                                                                 |
+| 422    | `null`           | an unusable upload, a bad parameter, or request validation                                                        |
+| 429    | `busy`           | every processing slot taken (synchronous endpoints), or the `/jobs` queue full; retry after `Retry-After` seconds |
+| 500    | `null`           | the TEITOK failed its output contract (exit 5) — a writer defect, please report it                                |
+| 502    | `null`           | a stage failed: an empty run, a missing stage, UDPipe or NameTag after their retries                              |
+| 503    | `null`           | the keyword backend failed (exit 3/4), or the replica is shutting down                                            |
+| 504    | `limit_exceeded` | the run took longer than `API_JOB_TIMEOUT` and was stopped                                                        |
 
 ## Shutdown behavior (issue #55)
 
