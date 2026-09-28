@@ -22,6 +22,16 @@
 # setup_api_service.sh installs `requirements.txt` before this file. That is also where
 # `jsonschema` (the Layer D document gate, D4) comes from — it is a pipeline dependency,
 # not a serving one.
-fastapi>=0.141.1
+#
+# fastapi and pydantic are pinned EXACTLY (atrium-project#32 round 2): the committed
+# service/openapi.json -- attached to every release, and what the AMČR pipeline generates its
+# clients from -- is a function of the code AND of these two versions, and the image is built
+# at tag time. requirements-test.txt pins the same two (and requirements.txt's
+# `pydantic>=2.13.5` and requirements_llm.txt's `pydantic==2.13.5` agree with them);
+# tests/test_openapi_contract.py fails when the pins disagree or the installed versions
+# differ. Bump them together, by hand, and regenerate the spec (dependabot ignores both):
+# python atrium_openapi.py export --app service.api:app
+fastapi==0.141.1
+pydantic==2.13.5
 uvicorn[standard]>=0.53.0
 python-multipart>=0.0.32

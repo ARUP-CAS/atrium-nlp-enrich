@@ -5,8 +5,11 @@ requests
 # requirements.txt — repeated here so the fast lane, which may install only the test deps,
 # exercises the real Layer D gate instead of its jsonschema-missing degraded branch.
 jsonschema
-# API meta-contract test deps (issue #32).
-fastapi
+# API meta-contract test deps (issue #32). fastapi and pydantic are pinned exactly: the
+# committed service/openapi.json depends on both (atrium-project#32 round 2; see
+# service/requirements.txt).
+fastapi==0.141.1
+pydantic==2.13.5
 # httpx, NOT httpx2, even though starlette's TestClient warns that httpx is
 # deprecated and the other three service repos already declare httpx2. Swapping it
 # here breaks the transformers stack, which reaches httpx through huggingface_hub,

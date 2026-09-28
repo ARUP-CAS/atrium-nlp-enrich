@@ -1,5 +1,19 @@
 """
 service/api.py — FastAPI surface for the nlp-enrich pipeline.
+
+The typed contract (atrium-project#32 round 2). Every route declares its response model and
+its error statuses, so the committed ``service/openapi.json`` — attached to every release,
+and what the AMČR pipeline generates its clients from — types every field. The models below
+DOCUMENT the responses (``response_model=None``): the bytes sent are what the handlers build,
+and ``tests/test_api_contract.py`` validates real responses against the published schema.
+The parameters with a closed set of values (``kw_method``, ``lang``, ``format``) are enums
+in the spec, and the default keyword method is the SERVER's (``DEFAULT_KW_METHOD``, reported
+in ``/info``), no longer baked into the spec from the environment. Refusals carry registered
+reasons: an unsupported file type is 415 ``unsupported_media_type``, a record that cannot be
+opened is 422 ``invalid_record`` (it was dropped with a warning before). Regenerate the spec
+after an API change::
+
+    python atrium_openapi.py export --app service.api:app --out service/openapi.json
 """
 
 from __future__ import annotations
@@ -11,22 +25,32 @@ import os
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, ConfigDict, Field
 from starlette.background import BackgroundTask
 
 from .atrium_service import (
+    AtriumDocument,
+    AtriumHTTPError,
+    CreateAction,
+    InfoBase,
+    LimitNote,
     ServiceState,
     add_cors,
     attach_error_handlers,
     attach_health,
     attach_inflight_middleware,
+    attach_openapi_contract,
     build_info,
     busy,
     check_body_size,
+    error_responses,
+    operation_id,
+    parse_record_part,
     read_tool_version,
     read_upload_bounded,
     serve_lifecycle,
@@ -36,6 +60,7 @@ from .enrichment import (
     Layout,
     PipelineError,
     PipelineManager,
+    UnsupportedUploadType,
     count_words,
     is_teitok_upload,
     normalize_upload,
@@ -65,13 +90,278 @@ from tool_limits import (  # noqa: E402
 # request; /info reports them all. The upload limit's import-time value stays here for
 # the callers and tests that read it.
 MAX_UPLOAD_MB = MAX_UPLOAD.get()
+# The server's default keyword method. It is applied per request when a client sends none,
+# and reported in /info `keyword_methods.default`; it is NOT the spec's default for the
+# `kw_method` parameter (atrium-project#32 round 2): a spec that changed with this setting
+# would not match the one attached to the release the image was built from.
 DEFAULT_KW_METHOD = os.environ.get("DEFAULT_KW_METHOD", "keybert")
+
+#: The tool id (/info `service`, the spec's `x-atrium-service`): the repository name.
+SERVICE = "atrium-nlp-enrich"
 
 _ALLOWED_KW = ("keybert", "yake", "legacy", "none")
 _ALLOWED_LANG = ("cs",)
 
+#: The closed parameter sets, as the spec's enums (atrium-project#32 round 2). The handlers
+#: still check them with their own messages (`_validate_params`); the enums tell a generated
+#: client the values before it sends one.
+KwMethod = Literal["keybert", "yake", "legacy", "none"]
+Lang = Literal["cs"]
+EnrichFormat = Literal["json", "zip"]
+RescaleFormat = Literal["json", "xml"]
+
 #: Retry-After of a `busy` refusal: a pipeline run takes tens of seconds to minutes.
 _BUSY_RETRY_AFTER_S = 30
+
+
+# ── the typed contract (atrium-project#32 round 2) ──────────────────────────────────────────
+# These models document the responses the handlers build; they do not filter them. A field
+# the handlers always send has no default (required); one they send only sometimes defaults
+# to None. Descriptions are published in service/openapi.json, so they are written for the
+# client.
+
+
+class StageSummary(BaseModel):
+    """One pipeline stage of the run, from its paradata."""
+
+    model_config = ConfigDict(extra="allow")
+
+    script: Optional[str] = Field(description="The stage script.")
+    successfully_processed: Optional[int] = Field(description="Inputs the stage processed.")
+    skipped_files: Optional[int] = Field(description="Inputs the stage skipped.")
+    output_counts_by_type: Dict[str, Any] = Field(description="Outputs written, per type.")
+
+
+class Keyword(BaseModel):
+    """One keyword of the document, by the keyword method used."""
+
+    model_config = ConfigDict(extra="allow")
+
+    keyword: str
+    score: float = Field(description="The method's score (higher is more relevant).")
+
+
+class NamedEntity(BaseModel):
+    """One named entity of a page, with how often it occurs."""
+
+    model_config = ConfigDict(extra="allow")
+
+    text: str
+    type: Optional[str] = Field(description="The NameTag entity type.")
+    count: Optional[str] = Field(
+        description="How often it occurs on the page (as the summary CSV has it)."
+    )
+
+
+class NamedEntitySummary(BaseModel):
+    """The most frequent named entities of one page."""
+
+    model_config = ConfigDict(extra="allow")
+
+    file: Optional[str]
+    page: Optional[str]
+    entities: List[NamedEntity]
+
+
+class EnrichResponse(BaseModel):
+    """The enriched document: TEITOK XML, keywords, entities, paradata, and the record when asked."""
+
+    model_config = ConfigDict(extra="allow")
+
+    doc_id: str = Field(
+        description="The document's id (from the upload's name, or the body's `doc_id`)."
+    )
+    pages: int = Field(description="The number of pages (the highest page number).")
+    stages: List[StageSummary] = Field(description="What each pipeline stage did.")
+    teitok_xml: Optional[str] = Field(
+        description="The NLP-enriched TEITOK XML; null when none was produced."
+    )
+    keywords: List[Keyword] = Field(
+        description="The document's keywords; empty with `kw_method=none`."
+    )
+    ne_summary: List[NamedEntitySummary] = Field(description="Named entities per page.")
+    paradata: Optional[CreateAction] = Field(
+        description=(
+            "The run's provenance. Transitional until atrium-project#67 R2: the merged pipeline-run paradata "
+            "record, which carries the paradata properties of the `CreateAction` without its own members."
+        )
+    )
+    limits_applied: List[LimitNote] = Field(
+        description="Every limit that shaped the result without refusing it."
+    )
+    method_requested: str = Field(
+        description="The keyword method asked for (the server default when none was)."
+    )
+    method_used: Optional[str] = Field(
+        description="The keyword method that ran: `keybert`, `yake`, `legacy`, `none`."
+    )
+    llm: Optional[Any] = Field(description="Reserved; always null.")
+    layout_source: str = Field(
+        description="Where the pages and boxes came from: `alto`, `teitok` or `rows`."
+    )
+    teitok_schema_valid: Optional[bool] = Field(
+        description="The TEITOK XSD verdict; null when it could not be checked."
+    )
+    teitok_schema_errors: List[str] = Field(description="The XSD diagnostics.")
+    document_json: Optional[AtriumDocument] = Field(
+        None,
+        description=(
+            "Only when a record was sent: the record with nlp-enrich's `entities` merged in (null when the "
+            "pipeline produced none)."
+        ),
+    )
+
+
+class Size(BaseModel):
+    """A page or image size, in its own units."""
+
+    model_config = ConfigDict(extra="allow")
+
+    width: float
+    height: float
+
+
+class RescaleFactors(BaseModel):
+    """The scale factors applied to the first page."""
+
+    model_config = ConfigDict(extra="allow")
+
+    sx: float
+    sy: float
+
+
+class RescaledPage(BaseModel):
+    """One page's `<surface>` before and after."""
+
+    model_config = ConfigDict(extra="allow")
+
+    surface: Optional[str]
+    source: Size
+    target: Size
+
+
+class RescaleResponse(BaseModel):
+    """The rescaled TEITOK document and what was changed."""
+
+    model_config = ConfigDict(extra="allow")
+
+    teitok_xml: str
+    source: Size
+    source_kind: str = Field(
+        description="Where the source size came from: `surface` or `bbox-extent`."
+    )
+    target: Size
+    scale: RescaleFactors
+    pages: List[RescaledPage]
+    boxes_rescaled: int
+    clamped: int = Field(description="Coordinates moved onto the page.")
+    name_tags_fixed: int = Field(description="Malformed `<name>…</n>` closings repaired.")
+    schema_valid: Optional[bool] = Field(
+        description="The TEITOK XSD verdict; null when it could not be checked."
+    )
+    schema_errors: List[str]
+
+
+class JobAccepted(BaseModel):
+    """A job was accepted; poll `GET /jobs/{job_id}`."""
+
+    model_config = ConfigDict(extra="allow")
+
+    job_id: str
+    status: str = Field(description="`queued`.")
+
+
+class JobStatus(BaseModel):
+    """A job's state."""
+
+    model_config = ConfigDict(extra="allow")
+
+    job_id: str
+    status: str = Field(description="`queued`, `running`, `done` or `failed`.")
+    error: Optional[str] = Field(description="Why the job failed.")
+    reason: Optional[str] = Field(
+        description="A registered reason code for the failure (`limit_exceeded`), or null."
+    )
+
+
+class JobDeleted(BaseModel):
+    """The job was forgotten."""
+
+    model_config = ConfigDict(extra="allow")
+
+    status: str = Field(description="`deleted`.")
+
+
+class NlpModels(BaseModel):
+    """The LINDAT models the pipeline calls."""
+
+    model_config = ConfigDict(extra="allow")
+
+    udpipe: Optional[str]
+    nametag: Optional[str]
+
+
+class KeywordMethods(BaseModel):
+    """The keyword methods: the server default (used when a request names none), and each one."""
+
+    model_config = ConfigDict(extra="allow")
+
+    default: str = Field(description="The server's `DEFAULT_KW_METHOD`.")
+    available: Dict[str, str]
+
+
+class NlpInfo(InfoBase):
+    """`/info` of atrium-nlp-enrich."""
+
+    stage_plan: List[str]
+    core_stages_mandatory: bool
+    models: NlpModels
+    keyword_methods: KeywordMethods
+
+
+class EnrichTextRequest(BaseModel):
+    """The body of `/enrich_text`: the lines, and the options `/enrich` takes as form fields."""
+
+    model_config = ConfigDict(extra="allow")
+
+    lines: List[Union[str, Dict[str, Any]]] = Field(
+        min_length=1,
+        description=(
+            "The text lines: strings (one per line, all on page 1), or objects with `text` and optional "
+            "`page_num`/`line_num`. An object without a non-empty `text` is skipped."
+        ),
+    )
+    doc_id: str = Field("document", description="The document's id.")
+    kw_method: Optional[KwMethod] = Field(
+        None, description="The keyword method; the server default when absent."
+    )
+    num_keywords: int = Field(20, ge=1, le=100, description="How many keywords to return.")
+    lang: Lang = "cs"
+    format: EnrichFormat = Field(
+        "json", description="`json` (the envelope) or `zip` (the workspace output)."
+    )
+    document_json: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Optional baseline ATRIUM Document JSON, or an AMČR seed (`doc_id`, `source`): see `/enrich`. One "
+            "that is not a JSON object is refused (422 `invalid_record`)."
+        ),
+    )
+
+
+def _enrich_200() -> Dict[str, Any]:
+    """The 200 of /enrich and /enrich_text: the envelope, or the ZIP.
+
+    A function, not a shared dict: FastAPI copies `responses` shallowly and merges into
+    `content`, so one dict used by two routes would be mutated by both.
+    """
+    return {
+        "model": EnrichResponse,
+        "description": "The enriched document (`format=json`), or the workspace output as a ZIP (`format=zip`).",
+        "content": {
+            "application/zip": {"schema": {"type": "string", "contentMediaType": "application/zip"}}
+        },
+    }
 
 
 class _Slots:
@@ -161,10 +451,18 @@ app = FastAPI(
     description="Text lines (a table, a .txt, or a converted TEITOK file) → NLP-enriched "
     "TEITOK XML + keywords.",
     lifespan=lifespan,
+    # The typed contract (atrium-project#32 round 2): every route documents the §4.4 error
+    # body for 422 and 500 (and FastAPI's own 422 body, which is not what is sent, goes);
+    # operationIds are the handler names; the spec never depends on a root_path.
+    responses=error_responses(422, 500),
+    generate_unique_id_function=operation_id,
+    root_path_in_servers=False,
 )
 attach_inflight_middleware(app, _state)
 # §4.4 error body {status, reason, detail} for every error (atrium-project#32 item 2, #53).
 attach_error_handlers(app)
+# The published spec: reason registry, record schema, service id (atrium-project#32 item 3).
+attach_openapi_contract(app, SERVICE)
 
 # Safely mount static directories if they exist
 if (_SERVICE_DIR / "frontend").exists():
@@ -226,7 +524,11 @@ async def _read_document_json(part: UploadFile | None) -> bytes | None:
     if part is None:
         return None
     data = await read_upload_bounded(part, MAX_UPLOAD.get(), "document_json")
-    if not data:
+    # A record that cannot be opened is refused here, before the pipeline, with 422
+    # `invalid_record` (atrium-project#32 round 2). It used to reach the stats stage, which
+    # warned and ran on, so the response came back with `document_json: null` and no word of
+    # why. The bytes go on as sent; an empty part still counts as none.
+    if parse_record_part(data, "document_json") is None:
         return None
     return data
 
@@ -440,12 +742,16 @@ async def root():
     return RedirectResponse(url="/frontend")
 
 
-@app.get("/info")
+@app.get(
+    "/info",
+    response_model=None,
+    responses={200: {"model": NlpInfo, "description": "Identity, limits, capabilities."}},
+)
 async def info() -> Dict[str, Any]:
     facts = _manager.config_facts()
     return build_info(
         app,
-        "atrium-nlp-enrich",
+        SERVICE,
         limits=LIMITS,
         stage_plan=["manifest", "udp", "nt", "stats"],
         core_stages_mandatory=True,
@@ -505,9 +811,10 @@ _DOCUMENT_JSON_HELP = (
     "entity's TEITOK `<name id>`; `pages[].teitok_surface` is only set for pages with a "
     "layout: an `alto` part, or a TEITOK file with page images) — while every other tool's "
     "block (page_categories, lines, "
-    "translations, enrichment, ...) passes through untouched. A baseline that does not "
-    "validate against atrium_document.schema.json is still accepted (rule 6); the "
-    "pipeline warns and accretes onto it anyway."
+    "translations, enrichment, ...) passes through untouched. An AMČR seed (`doc_id`, "
+    "`source`) is a valid baseline. A baseline that does not validate against "
+    "atrium_document.schema.json is still accepted (rule 6); the pipeline warns and accretes "
+    "onto it anyway. One that is not a JSON object is refused (422 `invalid_record`)."
 )
 
 #: The optional layout part of /enrich and /jobs (issue #38, F).
@@ -527,64 +834,110 @@ _FILE_HELP = (
 )
 
 
-@app.post("/enrich")
+#: The keyword-method parameter's description, for /enrich and /jobs.
+_KW_METHOD_HELP = (
+    "The keyword method. Absent: the server's default (`/info` `keyword_methods.default`, the "
+    "`DEFAULT_KW_METHOD` setting)."
+)
+
+#: The statuses the enrichment endpoints refuse or fail with (§4.4), beyond the app-wide 422/500.
+_ENRICH_ERRORS = (413, 429, 502, 503, 504)
+
+
+def _normalize(filename: str, data: bytes):
+    """The upload's rows, or the §4.4 refusal: 415 for a type it does not read, else 422."""
+    try:
+        return normalize_upload(filename, data)
+    except UnsupportedUploadType as exc:
+        raise AtriumHTTPError(
+            415, str(exc), reason="unsupported_media_type", accepted=list(exc.accepted)
+        ) from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+
+@app.post(
+    "/enrich",
+    response_model=None,
+    responses={200: _enrich_200(), **error_responses(415, *_ENRICH_ERRORS)},
+)
 async def enrich(
     file: UploadFile = File(..., description=_FILE_HELP),  # noqa: B008
-    kw_method: str = Form(DEFAULT_KW_METHOD),
-    num_keywords: int = Form(20),
-    lang: str = Form("cs"),
-    format: str = Form("json"),
-    document_json: UploadFile = File(None, description=_DOCUMENT_JSON_HELP),  # noqa: B008
+    kw_method: Optional[KwMethod] = Form(None, description=_KW_METHOD_HELP),  # noqa: B008
+    num_keywords: int = Form(20, ge=1, le=100),
+    lang: Lang = Form("cs"),  # noqa: B008
+    format: EnrichFormat = Form("json"),  # noqa: B008
+    document_json: UploadFile = File(  # noqa: B008
+        None,
+        description=_DOCUMENT_JSON_HELP,
+        json_schema_extra={"contentMediaType": "application/json"},
+    ),
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
 ):
     data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     filename = file.filename or "upload.csv"
     layout = await _read_layout(filename, data, alto)
-    try:
-        rows = normalize_upload(filename, data)
-    except ValueError as exc:
-        raise HTTPException(422, str(exc)) from exc
+    rows = _normalize(filename, data)
     doc_id = file.filename or "document"
-    fmt = format if format in ("json", "zip") else "json"
     baseline = await _read_document_json(document_json)
-    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, baseline, layout)
+    return await _enrich_common(
+        rows, doc_id, kw_method or DEFAULT_KW_METHOD, num_keywords, lang, format, baseline, layout
+    )
 
 
-@app.post("/enrich_text")
-async def enrich_text(payload: Dict[str, Any], request: Request):
+@app.post(
+    "/enrich_text",
+    response_model=None,
+    responses={200: _enrich_200(), **error_responses(*_ENRICH_ERRORS)},
+)
+async def enrich_text(payload: EnrichTextRequest, request: Request):
+    """The `/enrich` pipeline on inline lines (§4.3, the JSON sibling of the upload endpoint).
+
+    Since atrium-project#32 round 2 the body is a typed model: a malformed value (a
+    non-numeric `num_keywords`, an unknown `format`) is a 422 validation error where it
+    used to be a 500 or, for `format`, silently JSON.
+    """
     # The body is bounded like an upload (atrium-project#53): it had no size limit at all.
     await check_body_size(request, MAX_UPLOAD.get(), "Request body")
-    lines = payload.get("lines")
-    if not isinstance(lines, list) or not lines:
-        raise HTTPException(422, "'lines' must be a non-empty list.") from None
     rows: List[Dict[str, Any]] = []
-    for i, item in enumerate(lines, start=1):
+    for i, item in enumerate(payload.lines, start=1):
         if isinstance(item, str):
             rows.append({"text": item, "page_num": 1, "line_num": i})
         elif isinstance(item, dict) and item.get("text"):
             rows.append(item)
-    doc_id = payload.get("doc_id", "document")
-    kw_method = payload.get("kw_method", DEFAULT_KW_METHOD)
-    num_keywords = int(payload.get("num_keywords", 20))
-    lang = payload.get("lang", "cs")
-    fmt = payload.get("format", "json")
-    fmt = fmt if fmt in ("json", "zip") else "json"
     # Inline JSON in, inline JSON out — an embedded object rather than an upload part,
     # matching llm-enrich's /extract_keywords_text (#10 J3).
-    baseline = payload.get("document_json")
-    if baseline is not None and not isinstance(baseline, dict):
-        raise HTTPException(422, "'document_json' must be an object.") from None
+    baseline = parse_record_part(payload.document_json, "document_json")
     baseline_bytes = json.dumps(baseline).encode("utf-8") if baseline is not None else None
-    return await _enrich_common(rows, doc_id, kw_method, num_keywords, lang, fmt, baseline_bytes)
+    return await _enrich_common(
+        rows,
+        payload.doc_id,
+        payload.kw_method or DEFAULT_KW_METHOD,
+        payload.num_keywords,
+        payload.lang,
+        payload.format,
+        baseline_bytes,
+    )
 
 
-@app.post("/rescale")
+@app.post(
+    "/rescale",
+    response_model=None,
+    responses={
+        200: {
+            "model": RescaleResponse,
+            "description": "The rescaled document (`format=json`), or the `.teitok.xml` file itself (`format=xml`).",
+            "content": {"application/xml": {"schema": {"type": "string"}}},
+        },
+        **error_responses(413),
+    },
+)
 async def rescale(
-    file: UploadFile = File(...),  # noqa: B008
+    file: UploadFile = File(..., description="A TEITOK facsimile document (.teitok.xml)."),  # noqa: B008
     width: int | None = Form(None),
     height: int | None = Form(None),
     scale: float | None = Form(None),
-    format: str = Form("json"),
+    format: RescaleFormat = Form("json"),  # noqa: B008
     fix_names: bool = Form(True),
 ):
     """Rescale a TEITOK document's coordinates to page images of another size.
@@ -643,8 +996,7 @@ async def rescale(
     # working tool. Callers that care can gate on `schema_valid`.
     result["schema_valid"], result["schema_errors"] = _schema_verdict(result["teitok_xml"])
 
-    fmt = format if format in ("json", "xml") else "json"
-    if fmt == "xml":
+    if format == "xml":
         name = Path(file.filename or "document").name
         for suf in (".teitok.xml", ".xml"):
             if name.lower().endswith(suf):
@@ -659,24 +1011,33 @@ async def rescale(
     return JSONResponse(result)
 
 
-@app.post("/jobs")
+@app.post(
+    "/jobs",
+    response_model=None,
+    responses={
+        200: {"model": JobAccepted, "description": "Accepted; poll `GET /jobs/{job_id}`."},
+        **error_responses(413, 415, 429),
+    },
+)
 async def submit_job(
     file: UploadFile = File(..., description=_FILE_HELP),  # noqa: B008
-    kw_method: str = Form(DEFAULT_KW_METHOD),
-    num_keywords: int = Form(20),
-    lang: str = Form("cs"),
-    document_json: UploadFile = File(None, description=_DOCUMENT_JSON_HELP),  # noqa: B008
+    kw_method: Optional[KwMethod] = Form(None, description=_KW_METHOD_HELP),  # noqa: B008
+    num_keywords: int = Form(20, ge=1, le=100),
+    lang: Lang = Form("cs"),  # noqa: B008
+    document_json: UploadFile = File(  # noqa: B008
+        None,
+        description=_DOCUMENT_JSON_HELP,
+        json_schema_extra={"contentMediaType": "application/json"},
+    ),
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
 ):
+    kw_method = kw_method or DEFAULT_KW_METHOD
     _validate_params(kw_method, lang, num_keywords)
     data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     filename = file.filename or "upload.csv"
     # Read here, not in the background task, like document_json below.
     layout = await _read_layout(filename, data, alto)
-    try:
-        rows = normalize_upload(filename, data)
-    except ValueError as exc:
-        raise HTTPException(422, str(exc)) from exc
+    rows = _normalize(filename, data)
     # Refused now, with the synchronous endpoints' answer, rather than accepted as a job
     # that the pipeline then fails or runs over MAX_WORDS (atrium-project#53).
     _check_rows(rows)
@@ -731,7 +1092,14 @@ _JOB_NOT_FOUND_DETAIL = (
 )
 
 
-@app.get("/jobs/{job_id}")
+@app.get(
+    "/jobs/{job_id}",
+    response_model=None,
+    responses={
+        200: {"model": JobStatus, "description": "The job's state."},
+        **error_responses(404),
+    },
+)
 async def get_job_status(job_id: str):
     job = _jobs.get(job_id)
     if not job:
@@ -739,7 +1107,17 @@ async def get_job_status(job_id: str):
     return {"job_id": job_id, "status": job.status, "error": job.error, "reason": job.reason}
 
 
-@app.get("/jobs/{job_id}/result")
+@app.get(
+    "/jobs/{job_id}/result",
+    response_model=None,
+    responses={
+        200: {
+            "model": EnrichResponse,
+            "description": "The finished job's envelope, as `/enrich` returns it.",
+        },
+        **error_responses(404, 409),
+    },
+)
 async def get_job_result(job_id: str):
     job = _jobs.get(job_id)
     if not job:
@@ -749,7 +1127,14 @@ async def get_job_result(job_id: str):
     return job.result
 
 
-@app.delete("/jobs/{job_id}")
+@app.delete(
+    "/jobs/{job_id}",
+    response_model=None,
+    responses={
+        200: {"model": JobDeleted, "description": "The job was forgotten."},
+        **error_responses(404),
+    },
+)
 async def cleanup_job(job_id: str):
     if job_id in _jobs:
         del _jobs[job_id]

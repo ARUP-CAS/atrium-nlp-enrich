@@ -174,3 +174,144 @@ def test_deep_health_reports_draining_with_operator_fields():
         assert "in_flight" in body
     finally:
         _state.warm, _state.draining = was_warm, was_draining
+
+
+# --- the typed contract (atrium-project#32 round 2) --------------------------------------------
+# tests/test_openapi_contract.py (canonical, vendored) checks the committed spec itself. What
+# these add is the part only this repo can do: drive the real endpoints (the pipeline replaced
+# by a stand-in for run_pipeline.py, as tests/test_api_service.py does) and hold every
+# response — 200s and refusals alike — to the schema the PUBLISHED spec declares for it.
+
+from pathlib import Path  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+import atrium_openapi  # noqa: E402
+from service import enrichment as _enr  # noqa: E402
+
+_SPEC = atrium_openapi.load(Path(__file__).resolve().parent.parent / "service" / "openapi.json")
+
+_TEITOK = """<?xml version="1.0" encoding="utf-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="cs">
+  <facsimile><surface id="d.surface1" lrx="1000" lry="2000"><graphic url="d-1.png"/></surface></facsimile>
+  <text><body><pb n="1" id="d.pb1" facs="d-1.png"/>
+    <div type="Zone" id="d.b1" bbox="100 200 300 400"><s id="d.s1" text="Praha"><tok id="d.s1.w1" bbox="100 200 150 240">Praha</tok></s></div>
+  </body></text>
+</TEI>
+"""
+
+
+@pytest.fixture
+def pipeline(tmp_path, monkeypatch):
+    """A stand-in for run_pipeline.py: a TEITOK output and nothing else (no network, no models)."""
+    calls = []
+
+    def _run(cmd, **_kwargs):
+        calls.append(list(cmd))
+        workspace = Path(cmd[cmd.index("--config") + 1]).parent
+        teitok_dir = workspace / "out" / "TEITOK"
+        teitok_dir.mkdir(parents=True, exist_ok=True)
+        (teitok_dir / "doc.teitok.xml").write_text("<TEI/>", encoding="utf-8")
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(_enr, "_API_JOBS_ROOT", tmp_path)
+    monkeypatch.setattr(_enr.subprocess, "run", _run)
+    return calls
+
+
+def _conforms(method, path, status, response, spec_path=None):
+    pytest.importorskip("jsonschema")
+    assert response.status_code == status, response.text
+    atrium_openapi.validate_response(_SPEC, spec_path or path, method, status, response.json())
+    return response.json()
+
+
+def test_enrich_response_conforms_to_the_published_schema(pipeline):
+    response = client.post(
+        "/enrich",
+        files={"file": ("doc.csv", b"text\nPraha\n", "text/csv")},
+        data={"kw_method": "none"},
+    )
+    body = _conforms("post", "/enrich", 200, response)
+    assert body["method_requested"] == "none" and body["llm"] is None
+
+
+def test_enrich_text_uses_the_server_default_method_and_conforms(pipeline, monkeypatch):
+    """No `kw_method`: the server's DEFAULT_KW_METHOD applies — the spec's default is null."""
+    from service import api
+
+    monkeypatch.setattr(api, "DEFAULT_KW_METHOD", "none")
+    body = _conforms(
+        "post", "/enrich_text", 200, client.post("/enrich_text", json={"lines": ["Praha"]})
+    )
+    assert body["method_requested"] == "none"
+    kw = _SPEC["components"]["schemas"]["EnrichTextRequest"]["properties"]["kw_method"]
+    assert kw.get("default") is None
+
+
+def test_an_unsupported_file_type_is_415_unsupported_media_type(pipeline):
+    response = client.post("/enrich", files={"file": ("doc.pdf", b"%PDF-1.7", "application/pdf")})
+    body = _conforms("post", "/enrich", 415, response)
+    assert body["reason"] == "unsupported_media_type" and ".csv" in body["accepted"]
+    assert body["detail"].startswith("Unsupported file type '.pdf'.")
+    assert pipeline == []
+
+
+@pytest.mark.parametrize(
+    "part", [b"[1]", b"{not json", b'{"schema_version": "3.0", "doc_id": "x"}']
+)
+def test_a_record_that_cannot_be_opened_is_422_invalid_record_before_the_pipeline(pipeline, part):
+    files = {
+        "file": ("doc.csv", b"text\nPraha\n", "text/csv"),
+        "document_json": ("doc.document.json", part, "application/json"),
+    }
+    body = _conforms(
+        "post", "/enrich", 422, client.post("/enrich", files=files, data={"kw_method": "none"})
+    )
+    assert body["reason"] == "invalid_record" and pipeline == []
+
+
+def test_an_inline_record_that_cannot_be_opened_is_422_invalid_record(pipeline):
+    response = client.post(
+        "/enrich_text",
+        json={"lines": ["Praha"], "kw_method": "none", "document_json": {"schema_version": "2.0"}},
+    )
+    body = _conforms("post", "/enrich_text", 422, response)
+    assert body["reason"] == "invalid_record" and pipeline == []
+
+
+@pytest.mark.parametrize(
+    "data",
+    [{"kw_method": "bogus"}, {"format": "tar"}, {"lang": "de"}, {"num_keywords": "0"}],
+    ids=["kw_method", "format", "lang", "num_keywords"],
+)
+def test_a_value_outside_the_published_enum_or_bounds_is_422(pipeline, data):
+    """The spec's enums and bounds are what the server enforces (an unknown `format` used to
+    fall back to JSON silently)."""
+    files = {"file": ("doc.csv", b"text\nPraha\n", "text/csv")}
+    body = _conforms("post", "/enrich", 422, client.post("/enrich", files=files, data=data))
+    assert body["reason"] is None and body["errors"] and pipeline == []
+
+
+def test_the_jobs_api_conforms_to_the_published_schema(pipeline):
+    accepted = client.post(
+        "/jobs",
+        files={"file": ("doc.csv", b"text\nPraha\n", "text/csv")},
+        data={"kw_method": "none"},
+    )
+    job_id = _conforms("post", "/jobs", 200, accepted)["job_id"]
+    status = client.get(f"/jobs/{job_id}")
+    _conforms("get", f"/jobs/{job_id}", 200, status, spec_path="/jobs/{job_id}")
+    missing = client.get("/jobs/no-such-job")
+    _conforms("get", "/jobs/no-such-job", 404, missing, spec_path="/jobs/{job_id}")
+    unfinished = client.get("/jobs/no-such-job/result")
+    _conforms("get", "/jobs/no-such-job/result", 404, unfinished, spec_path="/jobs/{job_id}/result")
+
+
+def test_rescale_response_conforms_to_the_published_schema():
+    response = client.post(
+        "/rescale",
+        files={"file": ("d.teitok.xml", _TEITOK.encode(), "application/xml")},
+        data={"scale": "0.5"},
+    )
+    body = _conforms("post", "/rescale", 200, response)
+    assert body["pages"][0]["target"] == {"width": 500, "height": 1000}

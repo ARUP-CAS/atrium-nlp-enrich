@@ -69,6 +69,17 @@ _DOC_ID_RE = re.compile(r"[^A-Za-z0-9._-]")
 _DEFAULT_DOC_ID = "document"
 
 
+class UnsupportedUploadType(ValueError):
+    """An upload of a type the pipeline does not read (atrium-project#32 round 2).
+
+    A ``ValueError`` still, so every caller that caught the old one keeps working; the API
+    answers it with 415 ``unsupported_media_type`` and ``accepted``, where any other
+    ``ValueError`` of an upload stays a 422.
+    """
+
+    accepted = (".csv", ".xlsx", ".txt", ".xml")
+
+
 # ── exit-code → HTTP mapping ──────────────────────────────────────────────────
 class PipelineError(Exception):
     def __init__(self, message: str, http_status: int, returncode: int) -> None:
@@ -282,7 +293,7 @@ def normalize_upload(filename: str, data: bytes) -> List[Dict[str, Any]]:
         return _read_txt_bytes(data)
     if ext == ".xlsx":
         return _read_xlsx_bytes(data)
-    raise ValueError(
+    raise UnsupportedUploadType(
         f"Unsupported file type '{ext}'. Allowed: .csv, .xlsx, .txt, and a TEITOK .xml "
         "(e.g. flexiconv's conversion of a PDF or DOCX)."
     )

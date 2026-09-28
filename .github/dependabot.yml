@@ -16,6 +16,13 @@ updates:
       - dependency-name: "torch"
       - dependency-name: "transformers"
         versions: [">=5.0.0"]
+      # Pinned exactly in service/requirements.txt and requirements-test.txt: the committed
+      # service/openapi.json is a function of both (atrium-project#32 round 2). Bump them
+      # together by hand and regenerate the spec in the same commit
+      # (python atrium_openapi.py export --app service.api:app), so the release's
+      # breaking-change check sees what the upgrade changes.
+      - dependency-name: "fastapi"
+      - dependency-name: "pydantic"
 
   - package-ecosystem: "github-actions"
     directory: "/"

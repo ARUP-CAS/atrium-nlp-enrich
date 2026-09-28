@@ -43,15 +43,15 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 
 ### `POST /enrich` (multipart form)
 
-| Field           | Default    | Notes                                                                                                                                                                                                                           |
-|-----------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `file`          | *required* | `.csv` (needs a `text` column; optional `page_num`, `line_num`), `.xlsx`, `.txt` (a form feed starts a new page), or a TEITOK `.xml` (`*.teitok.xml`, or any `.xml` starting with `<TEI`) — see [Layout inputs](#layout-inputs) |
-| `alto`          | *optional* | ALTO XML of the pages a `.csv`/`.xlsx` lists the lines of — see [Layout inputs](#layout-inputs)                                                                                                                                 |
-| `kw_method`     | `keybert`  | `keybert` \| `yake` \| `legacy` \| `none`                                                                                                                                                                                       |
-| `num_keywords`  | `20`       | 1–100                                                                                                                                                                                                                           |
-| `lang`          | `cs`       | Czech-pinned in v1                                                                                                                                                                                                              |
-| `format`        | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR`                                                                                                                                                                         |
-| `document_json` | *optional* | baseline ATRIUM Document JSON to accrete onto — see below                                                                                                                                                                       |
+| Field           | Default    | Notes                                                                                                                                                                                                                                 |
+|-----------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `file`          | *required* | `.csv` (needs a `text` column; optional `page_num`, `line_num`), `.xlsx`, `.txt` (a form feed starts a new page), or a TEITOK `.xml` (`*.teitok.xml`, or any `.xml` starting with `<TEI`) — see [Layout inputs](#layout-inputs)       |
+| `alto`          | *optional* | ALTO XML of the pages a `.csv`/`.xlsx` lists the lines of — see [Layout inputs](#layout-inputs)                                                                                                                                       |
+| `kw_method`     | server's   | `keybert` \| `yake` \| `legacy` \| `none`; absent → the server's `DEFAULT_KW_METHOD` (`keybert` unless set; `/info` `keyword_methods.default`). The spec's default is null: it no longer changes with the setting (atrium-project#32) |
+| `num_keywords`  | `20`       | 1–100                                                                                                                                                                                                                                 |
+| `lang`          | `cs`       | Czech-pinned in v1                                                                                                                                                                                                                    |
+| `format`        | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR`; any other value → 422 (it silently became `json` before atrium-project#32 round 2)                                                                                           |
+| `document_json` | *optional* | baseline ATRIUM Document JSON (or an AMČR seed) to accrete onto — see below; not a JSON object → 422 `invalid_record`                                                                                                                 |
 
 `keybert` is the best/default backend. If its preflight fails at runtime the
 service **degrades once to `yake`** and reports `method_requested` vs
@@ -113,6 +113,11 @@ through to it, so there is one implementation, not two.
 * A baseline that does not validate against `atrium_document.schema.json` is still accepted
   (rule 6): the pipeline warns, names the schema error, and accretes onto it anyway rather
   than turning one bad upstream record into a stalled pipeline.
+* A baseline that cannot be opened at all — not UTF-8 JSON, not a JSON object, or a
+  `schema_version` with a newer major — is refused before the pipeline runs, with 422
+  `reason: invalid_record` (atrium-project#32 round 2). It used to reach the stats stage,
+  which warned and ran on, so the envelope came back with `document_json: null` and no word
+  of why.
 
 ### JSON envelope
 
@@ -315,17 +320,19 @@ item 2): `{"status": <int>, "reason": <code or null>, "detail": "<text>"}`. `det
 a string. A limit refusal adds `limit` (`{key, env, value, observed, unit}`); a request
 validation error adds FastAPI's list of problems as `errors`.
 
-| Status | `reason`         | When                                                                                                              |
-|--------|------------------|-------------------------------------------------------------------------------------------------------------------|
-| 409    | `null`           | `/jobs/{id}/result` of a job that is not `done`                                                                   |
-| 413    | `limit_exceeded` | over `MAX_UPLOAD_MB` or `MAX_WORDS`                                                                               |
-| 422    | `limit_exceeded` | `/rescale` over `MAX_RESCALE_DIM`                                                                                 |
-| 422    | `null`           | an unusable upload, a bad parameter, or request validation                                                        |
-| 429    | `busy`           | every processing slot taken (synchronous endpoints), or the `/jobs` queue full; retry after `Retry-After` seconds |
-| 500    | `null`           | the TEITOK failed its output contract (exit 5) — a writer defect, please report it                                |
-| 502    | `null`           | a stage failed: an empty run, a missing stage, UDPipe or NameTag after their retries                              |
-| 503    | `null`           | the keyword backend failed (exit 3/4), or the replica is shutting down                                            |
-| 504    | `limit_exceeded` | the run took longer than `API_JOB_TIMEOUT` and was stopped                                                        |
+| Status | `reason`                 | When                                                                                                                         |
+|--------|--------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| 409    | `null`                   | `/jobs/{id}/result` of a job that is not `done`                                                                              |
+| 413    | `limit_exceeded`         | over `MAX_UPLOAD_MB` or `MAX_WORDS`                                                                                          |
+| 415    | `unsupported_media_type` | the upload is not `.csv`, `.xlsx`, `.txt` or a TEITOK `.xml`; `accepted` lists them (a 422 before atrium-project#32 round 2) |
+| 422    | `invalid_record`         | the `document_json` sent cannot be opened (not UTF-8 JSON, not an object, a newer `schema_version` major)                    |
+| 422    | `limit_exceeded`         | `/rescale` over `MAX_RESCALE_DIM`                                                                                            |
+| 422    | `null`                   | an unusable upload, a bad parameter (a value outside the spec's enums or bounds), or request validation (`errors`)           |
+| 429    | `busy`                   | every processing slot taken (synchronous endpoints), or the `/jobs` queue full; retry after `Retry-After` seconds            |
+| 500    | `null`                   | the TEITOK failed its output contract (exit 5) — a writer defect, please report it                                           |
+| 502    | `null`                   | a stage failed: an empty run, a missing stage, UDPipe or NameTag after their retries                                         |
+| 503    | `null`                   | the keyword backend failed (exit 3/4), or the replica is shutting down                                                       |
+| 504    | `limit_exceeded`         | the run took longer than `API_JOB_TIMEOUT` and was stopped                                                                   |
 
 ## Shutdown behavior (issue #55)
 
@@ -357,8 +364,35 @@ The container exits **143** (128 + SIGTERM) after a clean shutdown, not 0 — uv
 re-raises the captured signal on purpose so a supervisor sees the real cause. That is a
 normal stop, not a crash.
 
+## OpenAPI (the typed contract)
+
+The service's OpenAPI document is committed as [`service/openapi.json`](openapi.json) and
+attached to every release as `openapi.json` with its `openapi.json.sha256` (atrium-project#32
+round 2). It is what a client is generated from: every request and response field is typed
+(the envelope as `EnrichResponse`, the jobs API, `/rescale`), every error response is the
+body above, the registered `reason` codes are listed in `x-atrium-reason-codes`, and a
+returned record is typed by the vendored record schema (`AtriumDocument`). `paradata` is
+typed as the `CreateAction` of atrium-project#67 R2; until R2 lands it holds the merged
+pipeline-run record, which carries the action's paradata properties without its own members.
+`GET /info` reports `openapi_sha256`, the digest of the spec the running image serves — equal
+to the release's `openapi.json.sha256` for an image built from that tag.
+
+- **After an API change**, regenerate and commit it:
+  `python atrium_openapi.py export --app service.api:app --out service/openapi.json`.
+  `tests/test_openapi_contract.py` fails while it is stale, and when any setting
+  (`DEFAULT_KW_METHOD`, every limit) changes it.
+- **Compatibility.** Each release compares its spec with the previous release's
+  (`release.yml`, `atrium_openapi.py compare` with oasdiff): a breaking change fails the
+  release unless the major version went up (for 0.x, that means 1.0), and a removed reason
+  code always fails. New fields, endpoints and reason codes are additive.
+- **fastapi and pydantic are pinned** exactly (`service/requirements.txt`,
+  `requirements-test.txt`): the spec is generated by them. Bump both by hand and regenerate.
+
 ## Tests
 
+`tests/test_api_contract.py` drives every endpoint with the pipeline stood in and holds each
+response — 200s and refusals — to the published schema; `tests/test_openapi_contract.py`
+(vendored from the hub) checks the committed spec itself.
 `tests/test_api_service.py` is fully hermetic (no LINDAT, no models): it
 monkeypatches the pipeline subprocess to drop fixture outputs into the
 workspace, then exercises the full HTTP contract via FastAPI `TestClient`,
