@@ -1,6 +1,13 @@
 services:
   nlp:
     image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}
+    # The host uid, group 0 (atrium-project#69, roadmap B6). ./data is in the clone
+    # (data/.gitkeep), owned by whoever cloned it, while the images run as uid 10001 by
+    # default -- so without this every write to /data fails with EACCES. Every path the
+    # images write is group-0 writable, so any uid with group 0 works. On Linux set
+    # ATRIUM_UID in .env (`echo "ATRIUM_UID=$(id -u)" >> .env`); Docker Desktop needs
+    # nothing. Unset, this is the images' own uid 10001.
+    user: "${ATRIUM_UID:-10001}:0"
     build:
       context: .
       target: base
@@ -32,12 +39,17 @@ services:
 
   nlp-api:
     profiles: [api]
-    image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-api
+    # The published names (atrium-project#69, roadmap B2): the target is part of the image
+    # NAME, as docker-tool.reusable.yml publishes it -- `atrium-nlp-enrich-api:<version>`,
+    # never `atrium-nlp-enrich:<version>-api` -- so `docker compose --profile api pull`
+    # fetches the released image. Same for `-llm` below.
+    image: ghcr.io/ufal/atrium-nlp-enrich-api:${ATRIUM_VERSION:-dev}
+    user: "${ATRIUM_UID:-10001}:0"   # see the nlp service above (roadmap B6)
     build:
       context: .
       target: api
       args:
-        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-api
+        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich-api:${ATRIUM_VERSION:-dev}
         ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
         ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
     # env_file delivers every OTHER variable in .env.example into the container --
@@ -83,16 +95,17 @@ services:
 
   nlp-llm:
     profiles: [llm]
-    image: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+    image: ghcr.io/ufal/atrium-nlp-enrich-llm:${ATRIUM_VERSION:-dev}
+    user: "${ATRIUM_UID:-10001}:0"   # see the nlp service above (roadmap B6)
     build:
       context: .
       target: llm
       args:
-        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+        ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich-llm:${ATRIUM_VERSION:-dev}
         ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
         ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
     environment:
-      ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich:${ATRIUM_VERSION:-dev}-llm
+      ATRIUM_RUNNER_IMAGE: ghcr.io/ufal/atrium-nlp-enrich-llm:${ATRIUM_VERSION:-dev}
       ATRIUM_RUNNER_REPO: https://github.com/ufal/atrium-nlp-enrich
       ATRIUM_RUNNER_REF: ${ATRIUM_RUNNER_REF:-dev}
       HF_HOME: /cache/huggingface

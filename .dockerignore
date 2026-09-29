@@ -12,6 +12,12 @@ venv-nlp/
 venv/
 env/
 data_samples/
+# Not runtime (atrium-project#69, roadmap H5): ker_data/ holds two IDF pickles (26 MB) that
+# no shipped code reads; the test suite runs on the CI runner; the dev logs are
+# documentation.
+ker_data/
+tests/
+agent_dev_logs/
 TEMP/
 *.log
 *.png

@@ -17,4 +17,8 @@ __pycache__/
 .coverage
 coverage.xml
 htmlcov/
+# ./data is the compose bind mount; the directory is committed (data/.gitkeep) so a
+# clone owns it, and everything a run writes into it stays untracked. (atrium-project#69)
+/data/*
+!/data/.gitkeep
 .env

@@ -1906,10 +1906,23 @@ in each stage's paradata record (and therefore the merged record). This ties a
 run back to the exact image/commit that produced it.
 
 ```bash
-ATRIUM_RUNNER_IMAGE="ghcr.io/ufal/atrium-nlp-enrich:v0.11.0" \
+ATRIUM_RUNNER_IMAGE="ghcr.io/ufal/atrium-nlp-enrich:0.22.0" \
 ATRIUM_RUNNER_REF="$(git rev-parse --short HEAD)" \
 python3 run_pipeline.py --kw
 ```
+
+The published images are `ghcr.io/ufal/atrium-nlp-enrich:<version>` (the batch runner),
+`ghcr.io/ufal/atrium-nlp-enrich-api:<version>` and `ghcr.io/ufal/atrium-nlp-enrich-llm:<version>`,
+where `<version>` is the release **without** its leading `v` (`0.22.0` for `v0.22.0`) — the
+target is part of the image name, not the tag. `ATRIUM_RUNNER_REF` is the git ref and keeps the `v`.
+
+> [!NOTE]
+> **Docker on Linux: run as yourself.** `./data` is part of the clone and belongs to you, while
+> the images run as uid 10001 by default. `docker-compose.yaml` runs every service as
+> `user: "${ATRIUM_UID:-10001}:0"`, so put your uid in `.env` once —
+> `echo "ATRIUM_UID=$(id -u)" >> .env` — and the container writes `./data` as you. With
+> `docker run`, pass `--user "$(id -u):0"`. Docker Desktop (macOS, Windows) needs neither.
+> (atrium-project#69)
 
 #### Exit codes
 
