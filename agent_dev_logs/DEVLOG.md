@@ -446,6 +446,28 @@ released yet: v0.22.0 is suggested in `CONTRIBUTING.md`.
 
   **Not pushed: files delivered in chat.**
 
+## 2026-09-30 (after the meeting): keywords leave for `ufal/atrium-keyword-extractor` (#40)
+
+* **What arrived:** the meeting with AMČR gave both keyword kinds a repository of their own (the report's §2.2 row
+  `keyword-extractor` · `/extract_keywords`); K4TEL opened #40 at 13:50: nlp-enrich keeps only the LINDAT calls.
+  This supersedes #67's *"Statistical keywords belong to nlp-enrich"* (09-30 06:56) and #73's owner line.
+* **Dev logs:**
+  * `40.*` 🆕 — the repository seeded with the history of both sources (llm-enrich's copy is the base for the three
+    diverged files: `llm_utils.py` 404 diff lines, `vocab_build.py` 43, `llm_run.py` 11); one service,
+    `/extract_keywords` (`kind=statistical|controlled|both`, KeyBERT default); the `keywords` block and the successor
+    of the `llm-enrich` program; the vocabulary as a release asset; nlp-enrich 0.23.0 (keyword parameters deprecated)
+    then 1.0.0 (removed; CPU-only image).
+  * `6.*` 🔄 status: the code moves with #40; still deferred.
+  * `7.*`, `18.*` 🧭 banners: custom NER stays here (served through NameTag); the LLM pre-annotation uses
+    keyword-extractor's engine.
+  * `plans/teitok_conformance_plan.md` — Stage 9 (nlp-enrich writes `keywords`) marked superseded; the projection
+    reads the block via `/project_record` after keyword-extractor.
+* **Found:** the default keyword method differs between the CLI (`keywords.py:80`, `yake`) and the service
+  (`service/api.py:97`, `keybert`); the base image installs `yake`, `keybert`, `sentence-transformers`
+  (`requirements.txt:7-9`), which is what makes it a torch image.
+
+  **Not pushed: files delivered in chat.**
+
 ---
 _Timeline index refreshed 2026-09-26 (AMČR baseline entry and header); 2026-09-24 (round 4) against `test` HEAD `3654e73` and again after the push (round 5) against `8003051`, using the `CONTRIBUTING.md` changelog, commit
 subjects, the issue exports in `issues/`, GitHub Actions runs and tags, and the TEITOK/flexi* audit. Nothing removed from the issues themselves (per hub #29);

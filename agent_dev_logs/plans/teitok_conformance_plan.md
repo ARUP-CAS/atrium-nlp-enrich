@@ -15,7 +15,7 @@
 > stays off the AMČR production chain** (GPL-3.0, CLI only); the line-table input AMČR sends is `/enrich` with a table
 > plus its ALTO, with Trash and Empty lines left out. Two stages are added for the pilot — **Stage 8**, TEITOK layout
 > from the record's `lines[].bbox` + `pages[].canvas` for born-digital documents, and **Stage 9**, the nlp-enrich
-> `keywords` block (#67 R5) — both in §5. Decision 2's xmltokenizer path and the roadmap's flexipipe/xmltokenizer and
+> `keywords` block (#67 R5; **superseded 2026-09-30**: the block moves to keyword-extractor with #40) — both in §5. Decision 2's xmltokenizer path and the roadmap's flexipipe/xmltokenizer and
 > JSON→TEITOK items are marked off the production chain or moved.
 
 ## 0. Progress (updated 2026-09-24, round 4)
@@ -330,6 +330,13 @@ already carries `lines[].bbox` and `pages[].canvas`. Requested by motyc on llm-e
   pages but no boxes — stated in the README.
 
 ### Stage 9 — the `keywords` block in the record ([atrium-project#67](https://github.com/ufal/atrium-project/issues/67) R5)
+
+> 🧭 **2026-09-30 — superseded after the meeting.** The block is written by `ufal/atrium-keyword-extractor`
+> ([#40](https://github.com/ufal/atrium-nlp-enrich/issues/40)), not by this repository; its shape is
+> [atrium-project#73](https://github.com/ufal/atrium-project/issues/73)'s plan §A (`items[]` with the method on every
+> keyword, document and per-page keywords). What stays here: the TEITOK projection reads the block, as
+> `/project_record` called after keyword-extractor (#40 plan §C.4). The KeyBERT/YAKE default alignment moves with
+> `keywords.py`. The text below is kept as the record of the pre-meeting plan.
 
 *Why:* AMČR wants the **statistical** keywords — KeyBERT by default, YAKE selectable — with their method and score, in
 the record, *next to* the **controlled** keywords llm-enrich writes (`enrichment.items[].extracted_keywords_*`).
