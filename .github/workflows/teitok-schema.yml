@@ -48,6 +48,9 @@ on:
       - "api_util/call_nametag.py"
       - "api_util/summarize_nt_udp.py"
       - "api_util/document_hook.py"
+      # the opt-in record projection (atrium-project#70): header + pb/@ana
+      - "api_util/teitok_project.py"
+      - "tests/test_teitok_project.py"
       - "fix_teitok_bboxes.py"
       - "service/rescale.py"
       - "service/enrichment.py"
@@ -90,6 +93,9 @@ on:
       - "api_util/call_nametag.py"
       - "api_util/summarize_nt_udp.py"
       - "api_util/document_hook.py"
+      # the opt-in record projection (atrium-project#70): header + pb/@ana
+      - "api_util/teitok_project.py"
+      - "tests/test_teitok_project.py"
       - "fix_teitok_bboxes.py"
       - "service/rescale.py"
       - "service/enrichment.py"
@@ -159,8 +165,9 @@ jobs:
         run: python3 api_util/validate_teitok_xml.py data_samples/TEITOK
 
       - name: Valid fixtures pass
+        # CTX_projected is CTX000000001 with the opt-in record projection (atrium-project#70).
         run: |
-          for f in CTX_valid CTX_no_alto; do
+          for f in CTX_valid CTX_no_alto CTX_projected; do
             mkdir -p "$RUNNER_TEMP/ok"
             cp "tests/fixtures/teitok/$f.teitok.xml" "$RUNNER_TEMP/ok/"
           done
@@ -179,6 +186,25 @@ jobs:
             exit 1
           fi
           echo "[expected] validator rejected the invalid fixture with exit $rc"
+
+      - name: Broken projection is REJECTED (negative test)
+        # A pb/@ana naming no <category>: the projection's pointers are gated too.
+        run: |
+          mkdir -p "$RUNNER_TEMP/badproj"
+          sed 's/ana="#pcat-DRAW"/ana="#pcat-NOPE"/' tests/fixtures/teitok/CTX_projected.teitok.xml \
+            > "$RUNNER_TEMP/badproj/CTX_projected.teitok.xml"
+          rc=0
+          python3 api_util/validate_teitok_xml.py "$RUNNER_TEMP/badproj" || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            echo "::error::validator accepted a dangling pb/@ana — the projection is not gated"
+            exit 1
+          fi
+          echo "[expected] validator rejected the broken projection with exit $rc"
+
+      - name: Record projection (opt-in, atrium-project#70)
+        # Encoding, idempotence, refusals, the body left as the writer wrote it, and the
+        # committed CTX_projected fixture being what the projector writes.
+        run: python3 -m pytest tests/test_teitok_project.py -v --tb=short
 
       - name: Real writer round-trip and gate behaviour tests
         # Includes the round-trip that generates TEITOK with
@@ -216,3 +242,6 @@ jobs:
         run: >-
           python3 -m pytest tests/test_teitok_conformance.py tests/test_flexiconv_convert.py
           tests/test_flexiconv_annotate.py tests/test_teitok_pages.py -v --tb=short
+
+      - name: flexiconv still reads a projected document
+        run: python3 -m pytest tests/test_teitok_project.py -k flexiconv -v --tb=short

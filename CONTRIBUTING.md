@@ -277,7 +277,10 @@ and inspect `summary_ne_counts.csv`. A TEITOK writer change also moves, in the s
 must stay green: it reads the output the way the TEITOK tools do. The writer has two layout
 sources, ALTO (`_parse_alto`) and a flexiconv TEITOK file (`api_util/teitok_layout.py`), which
 return the same structures. A change to what one of them returns needs the other too, and
-`tests/test_teitok_layout.py` / `tests/test_flexiconv_annotate.py` stay green.
+`tests/test_teitok_layout.py` / `tests/test_flexiconv_annotate.py` stay green. The opt-in record
+projection (`api_util/teitok_project.py`, atrium-project#70) writes only the header and `pb/@ana`;
+a change to what it writes moves the XSD and `tests/fixtures/teitok/CTX_projected.teitok.xml`
+(`python -m tests.test_teitok_project`) in the same commit.
 4. **Config and generated artefact move in the same commit.** Editing
 `data_samples/taxonomy_*.json`, `llm_config.txt` or `prompts/system_prompt.txt` without
 regenerating is the failure this repo has already shipped twice (`a5e3c8a`, `d4c46b2`):
@@ -310,6 +313,7 @@ follow this pattern:
 | `BBOX_ORIGIN`        | TEITOK bbox origin: `page` or `printspace`                                                            | `page`  |
 | `REGENERATE_TEITOK`  | Rewrite existing `.teitok.xml` instead of resuming                                                    | `false` |
 | `FLEXICONV_ANNOTATE` | Annotate flexiconv-converted documents too (stage 1 text, stage 4 layout from `TEITOK_FLEXICONV_DIR`) | `false` |
+| `TEITOK_ENRICHMENT`  | Project the record's page categories and the keywords into the TEITOK headers (`run_pipeline.py`)     | `false` |
 
 New flags must be documented here and in `config_api.txt`.
 

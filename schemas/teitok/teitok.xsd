@@ -19,6 +19,12 @@
   namespace, `<name>` without `@id` all still validate. What no longer
   validates is a negative bbox coordinate.
 
+  The opt-in record projection (api_util/teitok_project.py, atrium-project#70)
+  adds, additively and only in the header plus `pb/@ana`: `encodingDesc/classDecl`
+  (taxonomies of page categories and keyword schemes), `application/@id`,
+  `profileDesc/textClass/keywords/term`, and a `change` of type "enriched".
+  A document without them validates exactly as before.
+
   NO TARGET NAMESPACE — this is deliberate, not an oversight.
   write_teitok_merged() emits `<TEI xmlnsoff="http://www.tei-c.org/ns/1.0">`:
   `xmlnsoff`, not `xmlns`. That is TEITOK's own convention for keeping
@@ -129,6 +135,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="appInfo"/>
+        <xs:element ref="classDecl" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -149,16 +156,98 @@
       </xs:sequence>
       <xs:attribute name="ident" type="xs:string" use="required"/>
       <xs:attribute name="version" type="xs:string" use="optional"/>
+      <!-- "app-…": an application the record projection names in keywords/@resp. -->
+      <xs:attribute name="id" type="xs:string" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="label" type="xs:string"/>
   <xs:element name="desc" type="xs:string"/>
 
+  <!-- ═══════════ Record projection (opt-in, api_util/teitok_project.py) ═══════════ -->
+  <!-- Taxonomies the projection points at: the page categories pb/@ana names
+       (category/@corresp = the atrium_vocab concept URI), the AMČR/TEATER
+       vocabulary and a statistical keyword method (keywords/@scheme). -->
+  <xs:element name="classDecl">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="taxonomy" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="taxonomy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="desc" minOccurs="0"/>
+        <xs:element ref="category" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="category">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="catDesc" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="corresp" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="catDesc">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="lang" type="xs:string" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="profileDesc">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="langUsage"/>
+        <xs:element ref="langUsage" minOccurs="0"/>
+        <xs:element ref="textClass" minOccurs="0"/>
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- One keywords list per source: @resp names the application, @scheme the
+       taxonomy, @lang the language of controlled keywords, and @corresp the page
+       a per-page statistical list belongs to. -->
+  <xs:element name="textClass">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="keywords" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="keywords">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="term" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="scheme" type="xs:string" use="optional"/>
+      <xs:attribute name="resp" type="xs:string" use="optional"/>
+      <xs:attribute name="lang" type="xs:string" use="optional"/>
+      <xs:attribute name="corresp" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- @type: teater-category | extracted-keyword | statistical-keyword; @ref: concept
+       URIs; @cert: the category's confidence in [0, 1]; @score: a statistical method's
+       score (a TEITOK-style attribute, like @bbox); @n: the rank; @corresp: the pages. -->
+  <xs:element name="term">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="type" type="xs:string" use="optional"/>
+          <xs:attribute name="ref" type="xs:string" use="optional"/>
+          <xs:attribute name="cert" type="probabilityType" use="optional"/>
+          <xs:attribute name="score" type="xs:double" use="optional"/>
+          <xs:attribute name="corresp" type="xs:string" use="optional"/>
+          <xs:attribute name="n" type="xs:string" use="optional"/>
+          <xs:attribute name="lang" type="xs:string" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
   <xs:element name="langUsage">
@@ -269,6 +358,8 @@
       <xs:attribute name="facs" type="xs:string" use="optional"/>
       <xs:attribute name="corresp" type="xs:string" use="optional"/>
       <xs:attribute name="bbox" type="bboxType" use="optional"/>
+      <!-- "#pcat-…": the page's category (record projection, opt-in). -->
+      <xs:attribute name="ana" type="xs:string" use="optional"/>
     </xs:complexType>
   </xs:element>
 
@@ -403,6 +494,14 @@
   <xs:simpleType name="bboxType">
     <xs:restriction base="xs:string">
       <xs:pattern value="\d+ \d+ \d+ \d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- A probability, TEI teidata.probability. -->
+  <xs:simpleType name="probabilityType">
+    <xs:restriction base="xs:double">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
     </xs:restriction>
   </xs:simpleType>
 

@@ -40,11 +40,13 @@ yake              = AGPL-3.0        ; conditional ; YAKE statistical keyword ext
 keybert           = MIT             ; conditional ; KeyBERT embedding-based keyword extraction
 sentence_transformers = Apache-2.0  ; conditional ; sentence-transformers backbone for KeyBERT
 flexiconv         = GPL-3.0         ; conditional ; flexiconv document → TEITOK converter (api_flexiconv.sh)
-#   * The AMCR heslar and the TEATER thesaurus are both CC BY-NC 4.0 (AMCR's OAI
-#     Identify response carries a rightsReference to by-nc/4.0; TEATER declares the
-#     same on its home page). Conditional, because a core run
+#   * The AMCR `heslo` vocabularies (https://api.aiscr.cz/2.2/oai) and the TEATER
+#     thesaurus are CC0, as stated by their rights holder (AMCR, atrium-project#6,
+#     comment 5867861653, 2026-09-28). They were labelled CC BY-NC 4.0 before, after
+#     the OAI-PMH Identify response for the whole repository; paradata written before
+#     that date says so. Conditional, because a core run
 #     (manifest -> udp -> nt -> stats) never touches the vocabulary -- only the
-#     vocabulary build and the LLM enrichment stage do. Names match
-#     atrium-translator's para_config.txt so both repos resolve the same licence.
-amcr_vocab        = CC BY-NC 4.0    ; conditional ; AMCR heslar controlled vocabulary (vocab_sources.harvest_amcr)
-teater_data       = CC BY-NC 4.0    ; conditional ; TEATER thesaurus data (vocab_sources.harvest_teater)
+#     vocabulary build and the LLM enrichment stage do. Names and licences match
+#     atrium-translator's and atrium-llm-enrich's para_config.txt.
+amcr_vocab        = CC0             ; conditional ; AMCR heslar controlled vocabulary (vocab_sources.harvest_amcr)
+teater_data       = CC0             ; conditional ; TEATER thesaurus data (vocab_sources.harvest_teater)

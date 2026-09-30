@@ -15,7 +15,8 @@ Why this module exists separately from ``vocab_manager.py``:
   * Only this stage needs the network. Splitting it out makes re-nesting a pure,
     offline, deterministic operation that can be re-run whenever the taxonomy changes.
 
-Two sources, both CC BY-NC 4.0:
+Two sources, both CC0 (the rights holder's statement, atrium-project#6 comment
+5867861653, 2026-09-28; artefacts built before it say CC BY-NC 4.0):
 
   AMCR    OAI-PMH ``api.aiscr.cz/2.2/oai?set=heslo``. The ``heslo`` record carries far
           more than a cs/en label pair: ``ident_cely`` (stable id), ``nazev_heslare``
@@ -362,7 +363,7 @@ def harvest_amcr(
         "pages": page,
         "records": len(records),
         "without_en": sum(1 for r in records if not r.en),
-        "license": "CC BY-NC 4.0",
+        "license": "CC0",
     }
     if error:
         meta["error"] = error
@@ -521,7 +522,7 @@ def harvest_teater(
     """
     sess = _session(session)
     out: Dict[str, VocabRecord] = {}
-    meta: Dict[str, Any] = {"name": "teater", "license": "CC BY-NC 4.0"}
+    meta: Dict[str, Any] = {"name": "teater", "license": "CC0"}
 
     if mode == "live":
         try:
@@ -835,7 +836,7 @@ def skos_triples(
             (
                 scheme,
                 "dct:license",
-                ("uri", "https://creativecommons.org/licenses/by-nc/4.0/", None),
+                ("uri", "https://creativecommons.org/publicdomain/zero/1.0/", None),
             )
         )
 

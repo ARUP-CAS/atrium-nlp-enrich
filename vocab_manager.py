@@ -85,10 +85,10 @@ DEFAULT_COMPOSITE_SEPARATORS = ("/",)
 OVERRIDE_KEYS = frozenset({"facet", "sub", "qualifier_cs", "same_as", "same_as_suppress", "reason"})
 
 # Which para_config.txt [components] entry each vocabulary source is declared as. Both
-# are CC BY-NC 4.0 and both are declared *conditional*, meaning they only constrain a
-# run's effective licence when log_component() actually names them — so a run that
-# injects this vocabulary into its prompt and never logs the component under-reports
-# its own licence. Kept here, beside the sources themselves, so the mapping travels
+# are CC0 (atrium-project#6; earlier paradata says CC BY-NC 4.0) and both are declared
+# *conditional*, meaning they only enter a run's effective licence when log_component()
+# actually names them — so a run that injects this vocabulary into its prompt and never
+# logs the component leaves its own sources unrecorded. Kept here, beside the sources themselves, so the mapping travels
 # with the vocabulary core into atrium-llm-enrich rather than being re-derived there.
 PARADATA_COMPONENTS = {"amcr": "amcr_vocab", "teater": "teater_data"}
 

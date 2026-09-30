@@ -40,18 +40,20 @@ python service/test_api.py -f data_samples/DOC_LINE_CATEG/CTX000000001.csv
 | GET    | `/jobs/{id}/result` | the `/enrich` JSON envelope of a finished job (409 while it runs)                                                                                                            |
 | DELETE | `/jobs/{id}`        | forget a job (finished jobs are also forgotten `JOB_TTL_S`, an hour, after they end); job ids are local to the replica                                                       |
 | POST   | `/rescale`          | rescale a TEITOK's bboxes to page images of another size, page by page                                                                                                       |
+| POST   | `/project_record`   | project a finished record's page categories and llm-enrich categories/keywords onto its TEITOK header (opt-in, atrium-project#70)                                            |
 
 ### `POST /enrich` (multipart form)
 
-| Field           | Default    | Notes                                                                                                                                                                                                                                 |
-|-----------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `file`          | *required* | `.csv` (needs a `text` column; optional `page_num`, `line_num`), `.xlsx`, `.txt` (a form feed starts a new page), or a TEITOK `.xml` (`*.teitok.xml`, or any `.xml` starting with `<TEI`) — see [Layout inputs](#layout-inputs)       |
-| `alto`          | *optional* | ALTO XML of the pages a `.csv`/`.xlsx` lists the lines of — see [Layout inputs](#layout-inputs)                                                                                                                                       |
-| `kw_method`     | server's   | `keybert` \| `yake` \| `legacy` \| `none`; absent → the server's `DEFAULT_KW_METHOD` (`keybert` unless set; `/info` `keyword_methods.default`). The spec's default is null: it no longer changes with the setting (atrium-project#32) |
-| `num_keywords`  | `20`       | 1–100                                                                                                                                                                                                                                 |
-| `lang`          | `cs`       | Czech-pinned in v1                                                                                                                                                                                                                    |
-| `format`        | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR`; any other value → 422 (it silently became `json` before atrium-project#32 round 2)                                                                                           |
-| `document_json` | *optional* | baseline ATRIUM Document JSON (or an AMČR seed) to accrete onto — see below; not a JSON object → 422 `invalid_record`                                                                                                                 |
+| Field               | Default    | Notes                                                                                                                                                                                                                                                             |
+|---------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `file`              | *required* | `.csv` (needs a `text` column; optional `page_num`, `line_num`), `.xlsx`, `.txt` (a form feed starts a new page), or a TEITOK `.xml` (`*.teitok.xml`, or any `.xml` starting with `<TEI`) — see [Layout inputs](#layout-inputs)                                   |
+| `alto`              | *optional* | ALTO XML of the pages a `.csv`/`.xlsx` lists the lines of — see [Layout inputs](#layout-inputs)                                                                                                                                                                   |
+| `kw_method`         | server's   | `keybert` \| `yake` \| `legacy` \| `none`; absent → the server's `DEFAULT_KW_METHOD` (`keybert` unless set; `/info` `keyword_methods.default`). The spec's default is null: it no longer changes with the setting (atrium-project#32)                             |
+| `num_keywords`      | `20`       | 1–100                                                                                                                                                                                                                                                             |
+| `lang`              | `cs`       | Czech-pinned in v1                                                                                                                                                                                                                                                |
+| `format`            | `json`     | `json` envelope, or `zip` of the workspace `OUTPUT_DIR`; any other value → 422 (it silently became `json` before atrium-project#32 round 2)                                                                                                                       |
+| `document_json`     | *optional* | baseline ATRIUM Document JSON (or an AMČR seed) to accrete onto — see below; not a JSON object → 422 `invalid_record`                                                                                                                                             |
+| `teitok_enrichment` | `false`    | opt-in (atrium-project#70): the returned TEITOK also carries the record's page categories (`pb/@ana`) and this run's keywords, per document and per page, in its header — see [`POST /project_record`](#post-project_record-multipart-form). `/jobs` takes it too |
 
 `keybert` is the best/default backend. If its preflight fails at runtime the
 service **degrades once to `yake`** and reports `method_requested` vs
@@ -84,7 +86,8 @@ The TEITOK the service returns has the layout of what it was given (issue
 ```json
 { "doc_id": "CTX1", "lines": ["Výzkum odhalil základy kostela.", "..."],
   "kw_method": "keybert", "num_keywords": 20, "format": "json",
-  "document_json": { "...optional baseline record, inline..." } }
+  "document_json": { "...optional baseline record, inline..." },
+  "teitok_enrichment": false }
 ```
 
 ### The `document_json` accretion part
@@ -221,6 +224,42 @@ curl -s -F "file=@mixed_pages.teitok.xml" -F "scale=0.5" \
 
 `source`, `target` and `scale` describe the first page; `pages` lists every page with a sized
 `<surface>`.
+
+### `POST /project_record` (multipart form)
+
+A standalone header transform (no pipeline) for a record that is complete only after this
+service ran: after page-classification and llm-enrich (atrium-project#70 item 2, ufal/flexiconv#1).
+Opt-in by being called; AMČR's stored TEITOK keeps linguistics and layout only.
+
+| Field           | Default    | Notes                                                                                   |
+|-----------------|------------|-----------------------------------------------------------------------------------------|
+| `file`          | *required* | the document's `.teitok.xml` as nlp-enrich wrote it (format `teitok-2`)                 |
+| `document_json` | *required* | the document's finished record                                                          |
+| `format`        | `json`     | `json` envelope, or `xml` to download the projected `.teitok.xml`                       |
+
+What is written — `pb/@ana` and a `classDecl` taxonomy for the page categories,
+`profileDesc/textClass/keywords` for llm-enrich's TEATER/AMČR categories and controlled
+keywords, each pointing at its pages — is the table in the main README's
+[Record projection onto TEITOK](../README.md#record-projection-onto-teitok-opt-in). Nothing
+below the header changes but `pb/@ana`; projecting again replaces an earlier projection. 422
+when the TEITOK is not the record's document (its `<title>` is neither `doc_id` nor the id of
+`source.filename`), is not this writer's `teitok-2` output, or does not validate.
+
+```bash
+curl -F file=@TEITOK/CTX000000001.teitok.xml -F document_json=@CTX000000001.document.json \
+     http://localhost:8000/project_record                  # JSON envelope
+curl -F file=@TEITOK/CTX000000001.teitok.xml -F document_json=@CTX000000001.document.json \
+     -F format=xml -OJ http://localhost:8000/project_record  # download the projected XML
+```
+
+```json
+{ "doc_id": "CTX000000001", "teitok_xml": "<?xml ...",
+  "report": { "page_categories": 2, "teater_categories": 1,
+              "controlled_keywords": { "cs": 2, "en": 2 },
+              "statistical_keywords": { "document": 0, "pages": 0 },
+              "unresolved_pages": [], "notes": [], "changed": true },
+  "schema_valid": true, "schema_errors": [] }
+```
 
 ## How it works
 
@@ -399,10 +438,12 @@ workspace, then exercises the full HTTP contract via FastAPI `TestClient`,
 plus input normalization, `doc_id` sanitization, and exit-code→HTTP mapping.
 `tests/test_rescale.py` covers the `/rescale` transform and endpoint (including
 the non-well-formed `<name>…</n>` TEITOK quirk and documents whose pages differ in size).
+`tests/test_teitok_project.py` covers the record projection, `/project_record` and the
+`teitok_enrichment` switch.
 `tests/test_service_layout_inputs.py` runs the real stage-1 and stage-4 scripts in the
 service's workspace (UDPipe/NameTag stood in for) with a TEITOK upload, a table with and
 without its ALTO, and the refused combinations.
 
 ```bash
-pytest -m "not slow" tests/test_api_service.py tests/test_rescale.py tests/test_service_layout_inputs.py
+pytest -m "not slow" tests/test_api_service.py tests/test_rescale.py tests/test_service_layout_inputs.py tests/test_teitok_project.py
 ```

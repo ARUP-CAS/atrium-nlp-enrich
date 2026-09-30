@@ -37,11 +37,19 @@ xmltokenizer), not just a shape of its own:
 | Pages       | From the layout (ALTO, a converted file, else the input table's pages via stage 1's rows file), never from UDPipe's chunks (issue #38). `<pb/>` may sit inside `<s>` and `<name>` when a sentence or entity runs over a page break; pages only move forward; `@n` is the label (`"I"`, `"7a"`); `@facs`, `@corresp` and `@bbox="0 0 W H"` only for a page with a `<surface>`. |
 | Coordinates | `bbox="x1 y1 x2 y2"`: non-negative page-image pixels, origin at the page's top-left corner (`BBOX_ORIGIN=page`, the TEITOK norm). `BBOX_ORIGIN=printspace` measures from the ALTO PrintSpace instead. `<surface lrx lry>` (and `pb@bbox`) is always the extent the boxes are measured in. Punctuation split off an OCR string has no bbox; the word keeps the string's.       |
 | Header      | `notesStmt/note[@n="orgfile"]` (the ALTO file, the converted file's original, or the input table); `revisionDesc/change@type` = `converted`, `tagged` + `subtype="parsed"`, `ner` (the phases TEITOK/flexicorp detect); `rescaled` after `/rescale` or `fix_teitok_bboxes.py`.                                                                                                |
+| Projection  | Opt-in (atrium-project#70, `api_util/teitok_project.py`): `encodingDesc/classDecl/taxonomy/category[@id @corresp]/catDesc`, `application@id` (`app-pc`, `app-llm-enrich`, `app-kw`), `profileDesc/textClass/keywords[@scheme @resp @lang @corresp]/term[@type @ref @cert @score @corresp @n]`, `pb@ana` (`#pcat-…`), and `change@type="enriched"`. Absent unless switched on. |
 
 Format-1 documents (before 2026-09: TEI namespace, `CTX.s1.w1` ids, `MarginTextZone-P`,
 one `<tok>` per line) still validate — `tests/fixtures/teitok/legacy/CTX_format1.teitok.xml`
 keeps it that way — except for negative bbox coordinates, which the old PrintSpace shift
 could produce. Set `REGENERATE_TEITOK=true` once to rewrite them.
+
+The stamp stays `teitok-2` with the opt-in record projection (atrium-project#70) too: the
+schema grew by the header elements in the table above and `pb@ana`, all optional, so a file
+without a projection validates exactly as before; an older gate refuses a projected file, so
+the projector and this XSD ship in the same release. `tests/fixtures/teitok/CTX_projected.teitok.xml`
+is `data_samples/TEITOK/CTX000000001.teitok.xml` projected (regenerate with
+`python -m tests.test_teitok_project`).
 
 The stamp stayed `teitok-2` through issue #38: the schema only grew (`<pb>` inside `<s>` and
 `<name>`, `pb@facs` optional, `pb@bbox`), so every earlier format-2 file still validates, and
@@ -96,14 +104,17 @@ separately, by reading the output the way the tools do:
   workflow installs it for that step.
 - `api_util/validate_teitok_xml.py --profile core` checks rules that hold for *any*
   TEITOK document: `<TEI>` root, `<text>`, `@id` unique across all elements, resolvable
-  `@head` and `#` references (`sameAs`, `corresp`), no whitespace after a `join="right"`
-  token, and non-negative bboxes.
+  `@head` and `#` references (`sameAs`, `corresp`, and the projection's `ana`, `resp`,
+  `scheme`), no whitespace after a `join="right"` token, and non-negative bboxes.
 - The default profile, `contract`, is what the stage-4 gate runs: the XSD for every file,
   plus `core` and `lint_writer` for files stamped `teitok-2`. `lint_writer` checks the page
   rules the XSD cannot state: `pb-K` strictly increasing, `lb-P.L`/`b-P.K`/`fig-P.K` on page P,
   `lb` numbers increasing on a page, `pb@corresp` naming a `<surface>`, and every `<surface>`
   with its `<pb>`. Before issue #38 the gate was the XSD alone, which types ids as plain
-  strings: a duplicate `pb` id or a `sameAs` pointing nowhere passed it.
+  strings: a duplicate `pb` id or a `sameAs` pointing nowhere passed it. `lint_projection`
+  (also for `teitok-2` files) checks that each projection pointer names the right kind of
+  element: `pb@ana` a `<category>`, `keywords@resp` an `<application>`, `keywords@scheme` a
+  `<taxonomy>`, and a page reference (`term`/`keywords` `@corresp`) a `<pb>`.
 - `tests/test_teitok_pages.py` also reads a `<pb/>` inside `<s>` and `<name>` through the pinned
   flexiconv. (xmltokenizer, too, treats `pb`/`lb`/`cb` as anchors that may sit inside `<s>`.)
 

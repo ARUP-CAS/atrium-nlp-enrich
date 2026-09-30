@@ -340,8 +340,8 @@ def main(config_path: str = "llm_config.txt") -> None:
         output_types=["json"],
     )
 
-    # Both vocabulary sources are CC BY-NC 4.0 and declared *conditional* in
-    # para_config.txt, so they constrain a run's effective licence only when named
+    # Both vocabulary sources are CC0 (atrium-project#6) and declared *conditional*
+    # in para_config.txt, so they enter a run's effective licence only when named
     # here. Logged per source actually present in the build, not hard-wired to both:
     # an AMCR-only artifact must not claim it used TEATER data.
     print(prompt_template.describe(config))

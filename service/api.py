@@ -109,6 +109,7 @@ KwMethod = Literal["keybert", "yake", "legacy", "none"]
 Lang = Literal["cs"]
 EnrichFormat = Literal["json", "zip"]
 RescaleFormat = Literal["json", "xml"]
+ProjectFormat = Literal["json", "xml"]
 
 #: Retry-After of a `busy` refusal: a pipeline run takes tens of seconds to minutes.
 _BUSY_RETRY_AFTER_S = 30
@@ -262,6 +263,26 @@ class RescaleResponse(BaseModel):
     schema_errors: List[str]
 
 
+class ProjectRecordResponse(BaseModel):
+    """The TEITOK document with the record projected onto its header (atrium-project#70)."""
+
+    model_config = ConfigDict(extra="allow")
+
+    doc_id: Optional[str] = Field(description="The record's `doc_id`.")
+    teitok_xml: str
+    report: Dict[str, Any] = Field(
+        description=(
+            "What was projected: `page_categories`, `teater_categories`, `controlled_keywords` "
+            "(per language), `statistical_keywords` (always 0 here), `unresolved_pages`, `notes`, "
+            "and `changed`."
+        )
+    )
+    schema_valid: Optional[bool] = Field(
+        description="The TEITOK XSD verdict; null when it could not be checked."
+    )
+    schema_errors: List[str]
+
+
 class JobAccepted(BaseModel):
     """A job was accepted; poll `GET /jobs/{job_id}`."""
 
@@ -345,6 +366,13 @@ class EnrichTextRequest(BaseModel):
         description=(
             "Optional baseline ATRIUM Document JSON, or an AMČR seed (`doc_id`, `source`): see `/enrich`. One "
             "that is not a JSON object is refused (422 `invalid_record`)."
+        ),
+    )
+    teitok_enrichment: bool = Field(
+        False,
+        description=(
+            "Opt-in, default false: see `/enrich`. Projects the record's page categories and "
+            "this run's keywords (per document and per page) into the TEITOK header."
         ),
     )
 
@@ -559,7 +587,14 @@ async def _read_layout(filename: str, data: bytes, alto: UploadFile | None) -> L
 
 
 def _run_pipeline_sync(
-    rows, doc_id, kw_method, num_keywords, lang, document_json=None, layout=None
+    rows,
+    doc_id,
+    kw_method,
+    num_keywords,
+    lang,
+    document_json=None,
+    layout=None,
+    teitok_enrichment=False,
 ):
     """Blocking pipeline call with graceful backend degradation configured, stopped at
     API_JOB_TIMEOUT (LimitExceeded, 504)."""
@@ -572,6 +607,7 @@ def _run_pipeline_sync(
         document_json=document_json,
         layout=layout,
         timeout=API_JOB_TIMEOUT.get(),
+        teitok_enrichment=teitok_enrichment,
     ), kw_method
 
 
@@ -609,7 +645,15 @@ def _build_envelope(result, requested_method) -> Dict[str, Any]:
 
 
 async def _run_enrichment(
-    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json=None, layout=None
+    rows,
+    doc_id,
+    kw_method,
+    num_keywords,
+    lang,
+    fmt,
+    document_json=None,
+    layout=None,
+    teitok_enrichment=False,
 ) -> tuple[Any, str, Any]:
     loop = asyncio.get_event_loop()
     try:
@@ -623,6 +667,7 @@ async def _run_enrichment(
             lang,
             document_json,
             layout,
+            teitok_enrichment,
         )
     except KeywordPreflightError as exc:
         raise HTTPException(503, str(exc)) from exc
@@ -655,7 +700,15 @@ def _check_rows(rows) -> None:
 
 
 async def _enrich_common(
-    rows, doc_id, kw_method, num_keywords, lang, fmt, document_json=None, layout=None
+    rows,
+    doc_id,
+    kw_method,
+    num_keywords,
+    lang,
+    fmt,
+    document_json=None,
+    layout=None,
+    teitok_enrichment=False,
 ):
     _validate_params(kw_method, lang, num_keywords)
     _check_rows(rows)
@@ -668,7 +721,15 @@ async def _enrich_common(
         )
     try:
         data, out_fmt, result = await _run_enrichment(
-            rows, doc_id, kw_method, num_keywords, lang, fmt, document_json, layout
+            rows,
+            doc_id,
+            kw_method,
+            num_keywords,
+            lang,
+            fmt,
+            document_json,
+            layout,
+            teitok_enrichment,
         )
     finally:
         await _semaphore.release()
@@ -685,7 +746,15 @@ async def _enrich_common(
 
 
 async def _run_job_background(
-    job: Job, rows, doc_id, kw_method, num_keywords, lang, document_json=None, layout=None
+    job: Job,
+    rows,
+    doc_id,
+    kw_method,
+    num_keywords,
+    lang,
+    document_json=None,
+    layout=None,
+    teitok_enrichment=False,
 ):
     try:
         # "queued" until the job holds a slot (atrium-project#53): it used to report
@@ -702,6 +771,7 @@ async def _run_job_background(
                 fmt="json",
                 document_json=document_json,
                 layout=layout,
+                teitok_enrichment=teitok_enrichment,
             )
             PipelineManager.cleanup(result)
             job.result = data
@@ -843,6 +913,13 @@ _KW_METHOD_HELP = (
 #: The statuses the enrichment endpoints refuse or fail with (§4.4), beyond the app-wide 422/500.
 _ENRICH_ERRORS = (413, 429, 502, 503, 504)
 
+_TEITOK_ENRICHMENT_HELP = (
+    "Opt-in, default false (atrium-project#70). When true, the returned TEITOK also carries the "
+    "record's page categories (`pb/@ana` + a `classDecl` taxonomy; from `document_json`) and "
+    "this run's keywords, for the document and for each page, in `profileDesc/textClass`. "
+    "AMČR's stored TEITOK leaves it off."
+)
+
 
 def _normalize(filename: str, data: bytes):
     """The upload's rows, or the §4.4 refusal: 415 for a type it does not read, else 422."""
@@ -873,6 +950,7 @@ async def enrich(
         json_schema_extra={"contentMediaType": "application/json"},
     ),
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
+    teitok_enrichment: bool = Form(False, description=_TEITOK_ENRICHMENT_HELP),
 ):
     data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
     filename = file.filename or "upload.csv"
@@ -881,7 +959,15 @@ async def enrich(
     doc_id = file.filename or "document"
     baseline = await _read_document_json(document_json)
     return await _enrich_common(
-        rows, doc_id, kw_method or DEFAULT_KW_METHOD, num_keywords, lang, format, baseline, layout
+        rows,
+        doc_id,
+        kw_method or DEFAULT_KW_METHOD,
+        num_keywords,
+        lang,
+        format,
+        baseline,
+        layout,
+        teitok_enrichment,
     )
 
 
@@ -917,6 +1003,7 @@ async def enrich_text(payload: EnrichTextRequest, request: Request):
         payload.lang,
         payload.format,
         baseline_bytes,
+        teitok_enrichment=payload.teitok_enrichment,
     )
 
 
@@ -1012,6 +1099,77 @@ async def rescale(
 
 
 @app.post(
+    "/project_record",
+    response_model=None,
+    responses={
+        200: {
+            "model": ProjectRecordResponse,
+            "description": "The projected document (`format=json`), or the `.teitok.xml` file itself (`format=xml`).",
+            "content": {"application/xml": {"schema": {"type": "string"}}},
+        },
+        **error_responses(413),
+    },
+)
+async def project_record(
+    file: UploadFile = File(  # noqa: B008
+        ..., description="The document's TEITOK file (.teitok.xml), as nlp-enrich wrote it."
+    ),
+    document_json: UploadFile = File(  # noqa: B008
+        ...,
+        description="The document's finished record (after page-classification and llm-enrich).",
+        json_schema_extra={"contentMediaType": "application/json"},
+    ),
+    format: ProjectFormat = Form("json"),  # noqa: B008
+):
+    """Project a finished record onto its TEITOK file (atrium-project#70, flexiconv#1).
+
+    Pure XML transform (no pipeline), for a record that is complete only after this service ran:
+    the page categories become ``pb/@ana`` plus a ``classDecl`` taxonomy, and llm-enrich's
+    TEATER/AMČR categories and controlled keywords become ``profileDesc/textClass/keywords``,
+    each pointing at its pages. Only the header and ``pb/@ana`` change. Re-projecting replaces
+    an earlier projection. Refused (422) when the TEITOK is not the record's document (its
+    ``<title>`` is neither ``doc_id`` nor the id of ``source.filename``), not this writer's
+    ``teitok-2`` output, or not valid. Off AMČR's production chain, whose stored TEITOK keeps
+    linguistics and layout only.
+    """
+    data = await read_upload_bounded(file, MAX_UPLOAD.get(), "Upload")
+    try:
+        xml_text = data.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(422, "Uploaded file is not valid UTF-8 text.") from exc
+    record_bytes = await read_upload_bounded(document_json, MAX_UPLOAD.get(), "document_json")
+    record = parse_record_part(record_bytes, "document_json")
+    if record is None:
+        raise HTTPException(422, "document_json is empty: send the record to project.") from None
+
+    from api_util.teitok_project import ProjectionError
+    from api_util.teitok_project import project_record as project_teitok
+
+    try:
+        out, report = project_teitok(xml_text, record)
+    except ProjectionError as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+    if format == "xml":
+        doc_id = sanitize_doc_id(str(record.get("doc_id") or "document")) or "document"
+        return Response(
+            content=out,
+            media_type="application/xml",
+            headers={"Content-Disposition": f'attachment; filename="{doc_id}.teitok.xml"'},
+        )
+    valid, errors = _schema_verdict(out)
+    return JSONResponse(
+        {
+            "doc_id": record.get("doc_id"),
+            "teitok_xml": out,
+            "report": report,
+            "schema_valid": valid,
+            "schema_errors": errors,
+        }
+    )
+
+
+@app.post(
     "/jobs",
     response_model=None,
     responses={
@@ -1030,6 +1188,7 @@ async def submit_job(
         json_schema_extra={"contentMediaType": "application/json"},
     ),
     alto: UploadFile = File(None, description=_ALTO_HELP),  # noqa: B008
+    teitok_enrichment: bool = Form(False, description=_TEITOK_ENRICHMENT_HELP),
 ):
     kw_method = kw_method or DEFAULT_KW_METHOD
     _validate_params(kw_method, lang, num_keywords)
@@ -1068,7 +1227,9 @@ async def submit_job(
     # waits for this job before letting the process exit, so a rolling restart no
     # longer kills it mid-run.
     _state.track(
-        _run_job_background(job, rows, doc_id, kw_method, num_keywords, lang, baseline, layout)
+        _run_job_background(
+            job, rows, doc_id, kw_method, num_keywords, lang, baseline, layout, teitok_enrichment
+        )
     )
     return {"job_id": job.job_id, "status": "queued"}
 

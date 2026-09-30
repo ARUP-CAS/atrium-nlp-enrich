@@ -17,14 +17,16 @@ Usage:
 Profiles:
     contract    (default) ``xsd`` for every document; for documents this writer stamps as
                 its current format (``<application ident="atrium-nlp-enrich"
-                version="teitok-2">``) also ``core`` and the writer's page/line/id rules
-                (``lint_writer``). Older documents on disk (format 1, from resumed runs)
-                are held to the XSD only, as before.
+                version="teitok-2">``) also ``core``, the writer's page/line/id rules
+                (``lint_writer``) and, when the opt-in record projection is present, its
+                pointer rules (``lint_projection``). Older documents on disk (format 1, from
+                resumed runs) are held to the XSD only, as before.
     xsd         the pinned XSD alone
     core        TEITOK-core lint that holds for *any* TEITOK profile (e.g. flexiconv
                 output): <TEI> root, a <text>, unique ids, resolvable heads and
                 ``#`` references (``sameAs``, ``corresp``), no whitespace after a
-                join="right" token, non-negative bboxes
+                join="right" token, non-negative bboxes (``#`` references also in ``ana``,
+                ``resp`` and ``scheme``)
     wellformed  well-formedness + <TEI> root only (``--wellformed-only`` is an alias)
 
 The XSD types ids as plain strings, so a duplicate ``pb``/``lb`` id or a ``sameAs``
@@ -159,8 +161,10 @@ def _token_gaps(root):
 
 
 _XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
-# Attributes holding space-separated local references ("#w-1 #w-2").
-_REF_ATTRS = ("sameAs", "corresp")
+# Attributes holding space-separated local references ("#w-1 #w-2"). `ana`, `resp` and
+# `scheme` carry the opt-in record projection's pointers (api_util/teitok_project.py,
+# atrium-project#70); a "#" reference that names nothing is an error in any TEITOK profile.
+_REF_ATTRS = ("sameAs", "corresp", "ana", "resp", "scheme")
 
 
 def lint_core(doc) -> list[str]:
@@ -170,7 +174,7 @@ def lint_core(doc) -> list[str]:
     documents our schema does not describe (and tokens without ``@id`` before TEITOK
     renumbers them), so only rules those tools rely on are checked here: ids are unique
     across the document (TEITOK addresses every element by id), and a ``#id`` in
-    ``sameAs``/``corresp`` names one of them.
+    ``sameAs``/``corresp``/``ana``/``resp``/``scheme`` names one of them.
     """
     root = doc.getroot()
     errors = []
@@ -288,6 +292,45 @@ def lint_writer(doc) -> list[str]:
     return errors
 
 
+#: What each projection pointer must name (api_util/teitok_project.py): the attribute, on which
+#: element, and the element its ``#`` references must resolve to.
+_PROJECTION_TARGETS = (
+    ("pb", "ana", "category"),
+    ("keywords", "resp", "application"),
+    ("keywords", "scheme", "taxonomy"),
+    ("keywords", "corresp", "pb"),
+    ("term", "corresp", "pb"),
+)
+
+
+def lint_projection(doc) -> list[str]:
+    """The record projection's pointers name the right KIND of element (issue #70): a
+    ``pb@ana`` a ``<category>``, a ``keywords@resp`` an ``<application>``, a
+    ``keywords@scheme`` a ``<taxonomy>``, and a page reference (``term``/``keywords``
+    ``@corresp``) a ``<pb>``. ``core`` already checks that they resolve at all; a document
+    without a projection has none of these attributes and passes."""
+    root = doc.getroot()
+    kinds = {}
+    for el in root.iter():
+        el_id = el.get("id") or el.get(_XML_ID)
+        if el_id:
+            kinds[el_id] = _local(el.tag)
+    errors = []
+    for el in root.iter():
+        tag = _local(el.tag)
+        for on, attr, target in _PROJECTION_TARGETS:
+            if tag != on:
+                continue
+            for ref in (el.get(attr) or "").split():
+                kind = kinds.get(ref[1:]) if ref.startswith("#") else None
+                if kind is not None and kind != target:
+                    errors.append(
+                        f"line {el.sourceline}: {tag}@{attr} {ref!r} names a <{kind}>, "
+                        f"expected a <{target}>"
+                    )
+    return errors
+
+
 def _check(schema, doc, profile: str) -> list[str]:
     """Run ``profile`` on an already-parsed, namespace-normalised document."""
     root = doc.getroot()
@@ -299,7 +342,7 @@ def _check(schema, doc, profile: str) -> list[str]:
         return lint_core(doc)
     errors = [] if schema.validate(doc) else [str(err) for err in schema.error_log]
     if profile == "contract" and writer_format(doc) == WRITER_FORMAT:
-        errors += lint_core(doc) + lint_writer(doc)
+        errors += lint_core(doc) + lint_writer(doc) + lint_projection(doc)
     return errors
 
 

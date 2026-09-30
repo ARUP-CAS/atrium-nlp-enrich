@@ -432,6 +432,70 @@
         }
       }
     },
+    "/project_record": {
+      "post": {
+        "summary": "Project Record",
+        "description": "Project a finished record onto its TEITOK file (atrium-project#70, flexiconv#1).\n\nPure XML transform (no pipeline), for a record that is complete only after this service ran:\nthe page categories become ``pb/@ana`` plus a ``classDecl`` taxonomy, and llm-enrich's\nTEATER/AMČR categories and controlled keywords become ``profileDesc/textClass/keywords``,\neach pointing at its pages. Only the header and ``pb/@ana`` change. Re-projecting replaces\nan earlier projection. Refused (422) when the TEITOK is not the record's document (its\n``<title>`` is neither ``doc_id`` nor the id of ``source.filename``), not this writer's\n``teitok-2`` output, or not valid. Off AMČR's production chain, whose stored TEITOK keeps\nlinguistics and layout only.",
+        "operationId": "project_record",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_project_record"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The projected document (`format=json`), or the `.teitok.xml` file itself (`format=xml`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectRecordResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unusable or invalid input: request validation (`errors`), a bad parameter, a record that cannot be opened (`reason: invalid_record`), or a parameter or per-input budget over its limit (`reason: limit_exceeded`). Do not retry unchanged.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Processing failed. Report it; do not retry blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request content is over a limit (`reason: limit_exceeded`). Split the input or raise the limit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/jobs": {
       "post": {
         "summary": "Submit Job",
@@ -1144,7 +1208,8 @@
                     "full",
                     "standard",
                     "minimal"
-                  ]
+                  ],
+                  "description": "Cue profile of the rendered Markdown (llm-enrich json_to_md/xml_to_md): full = every layout cue; standard = one box per block, no page margins; minimal = page skeleton and structure only. See docs/document_schema.md, Detail profiles (atrium-project#70)."
                 }
               }
             }
@@ -1554,7 +1619,7 @@
             }
           },
           "entities": {
-            "description": "Owner: nlp-enrich; translator writes translation_en; llm-enrich writes pid. Carries all three tagsets so no mapping is lost.",
+            "description": "Owner: nlp-enrich; llm-enrich writes pid. `translation_en` is RESERVED: declared for the translator, written by no tool (atrium-project#70). Carries all three tagsets so no mapping is lost.",
             "type": "array",
             "items": {
               "type": "object",
@@ -1600,7 +1665,8 @@
                   "type": "string"
                 },
                 "translation_en": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "RESERVED, written by no tool. Declared for the translator, which runs before nlp-enrich creates entities[]; English is produced only for free-text metadata in the AMČR pilot (atrium-project#70)."
                 },
                 "pid": {
                   "type": "object",
@@ -1849,6 +1915,12 @@
             "contentMediaType": "application/octet-stream",
             "title": "Alto",
             "description": "Optional ALTO XML of the pages a .csv/.xlsx `file` lists the lines of (e.g. alto-postprocess's DOC_LINE_CATEG table and its source ALTO): the TEITOK then carries bboxes, text blocks and a facsimile. Not with a TEITOK `file`, which brings its own layout. PAGE XML and hOCR: convert with api_flexiconv.sh and upload the TEITOK."
+          },
+          "teitok_enrichment": {
+            "type": "boolean",
+            "title": "Teitok Enrichment",
+            "description": "Opt-in, default false (atrium-project#70). When true, the returned TEITOK also carries the record's page categories (`pb/@ana` + a `classDecl` taxonomy; from `document_json`) and this run's keywords, for the document and for each page, in `profileDesc/textClass`. AMČR's stored TEITOK leaves it off.",
+            "default": false
           }
         },
         "type": "object",
@@ -1856,6 +1928,37 @@
           "file"
         ],
         "title": "Body_enrich"
+      },
+      "Body_project_record": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "The document's TEITOK file (.teitok.xml), as nlp-enrich wrote it."
+          },
+          "document_json": {
+            "type": "string",
+            "contentMediaType": "application/json",
+            "title": "Document Json",
+            "description": "The document's finished record (after page-classification and llm-enrich)."
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "xml"
+            ],
+            "title": "Format",
+            "default": "json"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "document_json"
+        ],
+        "title": "Body_project_record"
       },
       "Body_rescale": {
         "properties": {
@@ -1969,6 +2072,12 @@
             "contentMediaType": "application/octet-stream",
             "title": "Alto",
             "description": "Optional ALTO XML of the pages a .csv/.xlsx `file` lists the lines of (e.g. alto-postprocess's DOC_LINE_CATEG table and its source ALTO): the TEITOK then carries bboxes, text blocks and a facsimile. Not with a TEITOK `file`, which brings its own layout. PAGE XML and hOCR: convert with api_flexiconv.sh and upload the TEITOK."
+          },
+          "teitok_enrichment": {
+            "type": "boolean",
+            "title": "Teitok Enrichment",
+            "description": "Opt-in, default false (atrium-project#70). When true, the returned TEITOK also carries the record's page categories (`pb/@ana` + a `classDecl` taxonomy; from `document_json`) and this run's keywords, for the document and for each page, in `profileDesc/textClass`. AMČR's stored TEITOK leaves it off.",
+            "default": false
           }
         },
         "type": "object",
@@ -2358,6 +2467,12 @@
             ],
             "title": "Document Json",
             "description": "Optional baseline ATRIUM Document JSON, or an AMČR seed (`doc_id`, `source`): see `/enrich`. One that is not a JSON object is refused (422 `invalid_record`)."
+          },
+          "teitok_enrichment": {
+            "type": "boolean",
+            "title": "Teitok Enrichment",
+            "description": "Opt-in, default false: see `/enrich`. Projects the record's page categories and this run's keywords (per document and per page) into the TEITOK header.",
+            "default": false
           }
         },
         "additionalProperties": true,
@@ -3023,6 +3138,62 @@
         "title": "NlpModels",
         "description": "The LINDAT models the pipeline calls."
       },
+      "ProjectRecordResponse": {
+        "properties": {
+          "doc_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doc Id",
+            "description": "The record's `doc_id`."
+          },
+          "teitok_xml": {
+            "type": "string",
+            "title": "Teitok Xml"
+          },
+          "report": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Report",
+            "description": "What was projected: `page_categories`, `teater_categories`, `controlled_keywords` (per language), `statistical_keywords` (always 0 here), `unresolved_pages`, `notes`, and `changed`."
+          },
+          "schema_valid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schema Valid",
+            "description": "The TEITOK XSD verdict; null when it could not be checked."
+          },
+          "schema_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Schema Errors"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "doc_id",
+          "teitok_xml",
+          "report",
+          "schema_valid",
+          "schema_errors"
+        ],
+        "title": "ProjectRecordResponse",
+        "description": "The TEITOK document with the record projected onto its header (atrium-project#70)."
+      },
       "ReadyBody": {
         "properties": {
           "status": {
@@ -3336,6 +3507,6 @@
   },
   "x-atrium-record-schema": {
     "schema_version": "1.0",
-    "sha256": "6874cd5120b6d6f7fa84d860bf33615668b148145eac9b883b7ca432744bb1ad"
+    "sha256": "08d45f422dd82a9ada180631c71dcb60fad72b812f5b98081c45728c830947cf"
   }
 }

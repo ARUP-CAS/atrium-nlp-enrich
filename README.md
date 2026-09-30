@@ -205,8 +205,10 @@ TEITOK-conformant.
 
 ### How a TEITOK document is composed
 
-Nothing in the pipeline edits TEITOK in place. Stage 4 builds each file in one pass from the
-formats the earlier stages leave on disk, so every element can be traced to one of them:
+Nothing in the default pipeline edits TEITOK in place. Stage 4 builds each file in one pass from
+the formats the earlier stages leave on disk, so every element can be traced to one of them (the
+opt-in [record projection](#record-projection-onto-teitok-opt-in) is the one later writer, and
+it touches only the header and `pb/@ana`):
 
 | Source (stage)                                                                                                                                                       | Format on disk                                                                                                                           | Becomes in the TEITOK file                                                                                                                                                                                                                                        |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -216,7 +218,7 @@ formats the earlier stages leave on disk, so every element can be traced to one 
 | Layout (stage 4, `api_4_stats.sh`): the ALTO file in `INPUT_ALTO_DIR`; else a flexiconv conversion in `TEITOK_FLEXICONV_DIR` (`FLEXICONV_ANNOTATE=true`); else none  | ALTO `Page`/`PrintSpace`/`TextBlock`/`TextLine`/`String` (+ `Illustration`, `GraphicalElement`); or TEITOK `pb`/`lb`/`tok@bbox`          | `<facsimile>` with one `<surface lrx lry>` and `<graphic url>` per page; `<pb n id facs corresp bbox>`; `<div type="TextBlock" bbox>`; `<lb bbox>`; `<figure type bbox>`; `@bbox` on every token aligned to an OCR string (tokens are matched to strings by text) |
 | Page images (`INPUT_PAGES_DIR`), or `IMAGE_DPI`                                                                                                                      | PNG, JPEG or TIFF named `<doc_id>-<N>.<ext>`                                                                                             | the scale from layout units to image pixels, `<surface lrx lry>` and the `graphic@url`/`pb@facs` names                                                                                                                                                            |
 | Provenance                                                                                                                                                           | ALTO `Description`, the models in `config_api.txt`, the run date                                                                         | `teiHeader`: `note[@n="orgfile"]`, `appInfo` (writer + format, UDPipe/NameTag models, OCR software), `revisionDesc/change` (`converted`, `tagged`/`parsed`, `ner`)                                                                                                |
-| Document record (`--document-json`)                                                                                                                                  | `atrium_document` JSON                                                                                                                   | nothing: the record points into the file (`entities[].teitok_ref` = `n-N`, `pages[].teitok_surface` = `facs-P`)                                                                                                                                                   |
+| Document record (`--document-json`)                                                                                                                                  | `atrium_document` JSON                                                                                                                   | nothing by default: the record points into the file (`entities[].teitok_ref` = `n-N`, `pages[].teitok_surface` = `facs-P`); the opt-in projection adds page categories and keywords to the header |
 
 The line table can come from any input alto-postprocess reads: ALTO, the other OCR formats (PAGE
 XML, hOCR, ABBYY FineReader XML, DjVuXML, Tesseract TSV, OCR JSON), PDF, office and text files (its
@@ -227,8 +229,51 @@ conversion of the same document (PAGE XML, hOCR), or there are none.
 The writer is [api_util/teitok_alto.py](api_util/teitok_alto.py) 📎 (`write_teitok_merged`, called by
 `summarize_nt_udp.py`); the gate is [api_util/validate_teitok_xml.py](api_util/validate_teitok_xml.py) 📎
 (`contract` profile). Keywords, TEATER topics, page categories and line quality are not written
-into TEITOK: they live in the document record (the three-format decision recorded on
-ufal/atrium-project#24, 2026-08-01).
+into TEITOK by default: they live in the document record (the three-format decision recorded on
+ufal/atrium-project#24, 2026-08-01; the AMČR storage contract keeps page classification and line
+quality "only in the record"). The opt-in projection below writes page categories, TEATER
+categories and keywords, never line quality.
+
+### Record projection onto TEITOK (opt-in)
+
+For TEITOK users who want the record's page-level facts in the file itself (ufal/flexiconv#1:
+keywords per page and the page category; the LINDAT dataset), atrium-project#70 item 2 adds a
+projection, **off by default**. [api_util/teitok_project.py](api_util/teitok_project.py) 📎
+writes, in the header and `pb/@ana` only:
+
+| From                                                          | Into the TEITOK file                                                                                                                                                                                                                                            |
+|---------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| page category (`pages[].category`, else `page_categories[P]`) | `<pb ana="#pcat-DRAW"/>`, and `encodingDesc/classDecl/taxonomy[@id="tax-page-category"]/category[@id="pcat-DRAW"]` with `@corresp` = the `atrium_vocab` concept URI and the definition in `catDesc`                                                             |
+| TEATER/AMČR category (llm-enrich `enrichment.items[]`)        | `profileDesc/textClass/keywords[@scheme="#tax-amcr-teater"][@resp="#app-llm-enrich"]/term[@type="teater-category"]`: `@ref` = the concept URIs of `teater_category_ids`, `@cert` = the highest confidence, `@corresp` = its pages; the meta sentinel is skipped |
+| controlled keywords, cs and en                                | `keywords[@resp="#app-llm-enrich"][@lang]/term[@type="extracted-keyword"][@corresp]`                                                                                                                                                                            |
+| statistical keywords (this run's `keywords.py` method)        | `keywords[@resp="#app-kw"][@scheme="#kw-<method>"]/term[@type="statistical-keyword"][@n=rank][@score]` for the document, and one more such list per page with `@corresp="#pb-K"` (top N clamped to 5-20)                                                        |
+| provenance                                                    | `appInfo/application` with `@id` `app-pc`, `app-llm-enrich` or `app-kw` after the writer's own, and `revisionDesc/change[@type="enriched"]`                                                                                                                     |
+
+Pages resolve through `pages[].teitok_surface`, then `page_index`, then a numeric page key (`pb-K`),
+then the `<pb n>` label; an llm-enrich item's page (its `## Page` label) through the record's page of
+that label, then `<pb n>`, then as a number. A page that resolves to nothing is reported, not fatal.
+Nothing inside `<s>`, `<tok>` or `<name>` changes, so `teitok_read`, `teitok_layout`, flexiconv's
+reader and alto-postprocess read the same text, and the writer's own header lines stay as they were.
+The projection is idempotent (it replaces its own earlier output), refuses another document's
+TEITOK (the `<title>` must be the record's `doc_id` or the id of its `source.filename`), and
+validates its output with the `contract` profile before writing. Per-page keywords are computed from
+the TEITOK file's own tokens, page by page, with the same backend as the document's.
+
+```bash
+# in the pipeline: a `project` stage after `keywords` (reachable with --start-from project)
+python3 run_pipeline.py --kw --kw-method yake --teitok-enrichment \
+    --document-json CTX.document.json --document-json-out CTX.document.json
+TEITOK_ENRICHMENT=true python3 run_pipeline.py --kw      # or switch it on in config_api.txt
+
+# after llm-enrich, on a finished record
+python3 -m api_util.teitok_project --teitok TEITOK/CTX.teitok.xml --record CTX.document.json --in-place
+curl -F file=@TEITOK/CTX.teitok.xml -F document_json=@CTX.document.json http://localhost:8000/project_record
+```
+
+The service takes `teitok_enrichment=true` on `/enrich`, `/enrich_text` and `/jobs`. A TEITOK
+regeneration (`REGENERATE_TEITOK`, a stage-4 re-run) writes the file anew without the projection;
+project again after it. Line-level anchoring (a keyword on its `<lb>`) is not done: llm-enrich's
+line numbers and the writer's `lb` numbering are not the same count.
 
 ### Importing into a TEITOK project
 
@@ -1648,8 +1693,10 @@ count and pinned ref (TEATER's harvest commit). A run is reproducible only if th
 vocabulary it saw is identifiable, and every placement decision is a function of those
 two sha256s.
 * **Both vocabulary sources as licence components.** The AMCR heslář and the TEATER
-thesaurus are CC BY-NC 4.0 and declared *conditional* in [para_config.txt](para_config.txt) 📎,
-so they constrain a run's effective licence only when `log_component()` names them.
+thesaurus are CC0, as their rights holder stated on 2026-09-28 (atrium-project#6; records
+written earlier say CC BY-NC 4.0), and declared *conditional* in
+[para_config.txt](para_config.txt) 📎, so they are components of a run's licence only when
+`log_component()` names them — and, being CC0, never make it more restrictive.
 Logged per source actually present in the build — an AMCR-only artifact does not claim
 it used TEATER data.
 * Total processed lines (`json` success events).

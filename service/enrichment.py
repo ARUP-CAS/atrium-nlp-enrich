@@ -372,6 +372,9 @@ def _derive_config(workspace: Path, layout_kind: Optional[str] = None) -> Path:
         "INPUT_PAGES_DIR": '""',
         "TEITOK_FLEXICONV_DIR": f'"{ws}/layout/flexiconv"',
         "FLEXICONV_ANNOTATE": '"true"' if layout_kind == "teitok" else '"false"',
+        # The request's `teitok_enrichment` alone switches the projection on (run_pipeline's
+        # --teitok-enrichment); an environment TEITOK_ENRICHMENT must not do it for every call.
+        "TEITOK_ENRICHMENT": '"false"',
     }
     # The stage limits that are config_api.txt keys (atrium-project#53): the environment
     # wins over the template, which wins over the code default (tool_limits.py).
@@ -583,10 +586,12 @@ class PipelineManager:
         document_json: Optional[bytes] = None,
         layout: Optional[Layout] = None,
         timeout: Optional[float] = None,
+        teitok_enrichment: bool = False,
     ) -> EnrichmentResult:
         """Run the pipeline on *rows*. With *timeout* (seconds, the service passes
         API_JOB_TIMEOUT), the run and every process it started are stopped when it is up,
-        the workspace is removed, and ``LimitExceeded`` (504) is raised."""
+        the workspace is removed, and ``LimitExceeded`` (504) is raised. *teitok_enrichment*
+        adds run_pipeline.py's opt-in ``project`` stage (atrium-project#70)."""
         if kw_method not in _KW_METHODS:
             raise ValueError(f"Invalid kw_method '{kw_method}'. Choose from {_KW_METHODS}.")
         doc_id = sanitize_doc_id(doc_id)
@@ -644,6 +649,8 @@ class PipelineManager:
                 cmd.extend(["--kw", "--kw-method", kw_method])
                 if num_keywords is not None:
                     cmd.extend(["--num-keywords", str(num_keywords)])
+            if teitok_enrichment:
+                cmd.append("--teitok-enrichment")
 
             rc, tail = self._run_bounded(cmd, job_id, timeout)
 

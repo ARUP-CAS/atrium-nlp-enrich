@@ -337,9 +337,10 @@ def run_document_hook(
         if teitok_path:
             doc.add_derived_from("teitok", teitok_path)
 
-        # entities[] is field-split (translator writes translation_en, llm-enrich
-        # writes pid) — merge_block(), never set_block(), or a re-run of nlp-enrich
-        # alone erases every downstream contribution on the same rows.
+        # entities[] is field-split (llm-enrich writes pid; the translator's
+        # translation_en is granted but reserved and unwritten, atrium-project#70) —
+        # merge_block(), never set_block(), or a re-run of nlp-enrich alone erases
+        # every downstream contribution on the same rows.
         doc.merge_block("entities", entities)
         # (#10 D8) merge_block()'s field filtering is silent by design, and that
         # silence is how a wrong grant produced rows stripped down to their key that

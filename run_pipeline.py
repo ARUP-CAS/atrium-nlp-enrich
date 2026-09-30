@@ -6,8 +6,10 @@ Runs the four shell stages in order
 
     api_1_manifest.sh → api_2_udp.sh → api_3_nt.sh → api_4_stats.sh
 
-optionally followed by the keyword-extraction stage (keywords.py) and the
-optional LLM semantic-enrichment stage (llm_run.py), then merges every
+optionally followed by the keyword-extraction stage (keywords.py), the opt-in
+record projection onto the TEITOK files (api_util/teitok_project.py,
+--teitok-enrichment; atrium-project#70) and the optional LLM
+semantic-enrichment stage (llm_run.py), then merges every
 per-stage paradata JSON produced during THIS run into a single
 ``pipeline-run-merged`` summary record via
 ``atrium_paradata.merge_run_paradata``.
@@ -53,7 +55,7 @@ _CORE_STAGES: Dict[str, Tuple[str, str]] = {
     "stats": ("api_4_stats.sh", "Statistics + TEITOK"),
 }
 _CORE_ORDER = ["manifest", "udp", "nt", "stats"]
-_FULL_STAGE_ORDER = _CORE_ORDER + ["keywords", "llm"]
+_FULL_STAGE_ORDER = _CORE_ORDER + ["keywords", "project", "llm"]
 
 # --with-flexiconv: api_flexiconv.sh runs first, and FLEXICONV_ANNOTATE=true makes the manifest
 # take the converted documents in and stage 4 take their layout from them (issue #10, stage 6).
@@ -100,10 +102,20 @@ def _parse_config(config_path: Path) -> Dict[str, str]:
                 rhs = rhs.split("#", 1)[0].strip()
 
             def _expand(match: "re.Match[str]") -> str:
-                name = match.group(1) or match.group(2)
-                return values.get(name, os.environ.get(name, ""))
+                name = match.group(1) or match.group(3)
+                value = values.get(name, os.environ.get(name, ""))
+                # `${NAME:-default}`, as the stages' `source` reads it: the default when
+                # NAME is unset or empty. config_api.txt writes its env-overridable knobs
+                # this way (REGENERATE_TEITOK, FLEXICONV_ANNOTATE, TEITOK_ENRICHMENT).
+                if match.group(2) is not None and not value:
+                    return match.group(2)
+                return value
 
-            rhs = re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)", _expand, rhs)
+            rhs = re.sub(
+                r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-([^}]*))?\}|\$([A-Za-z_][A-Za-z0-9_]*)",
+                _expand,
+                rhs,
+            )
 
             values[key] = rhs
 
@@ -425,6 +437,18 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
                 "skip": skips["keywords"],
             }
         )
+    teitok_enrichment = bool(getattr(args, "teitok_enrichment", False)) or _config_bool(
+        values, "TEITOK_ENRICHMENT", False
+    )
+    if teitok_enrichment:
+        plan_stages.append(
+            {
+                "name": "project",
+                "script": "api_util/teitok_project.py",
+                "label": "Record projection onto TEITOK (opt-in)",
+                "skip": skips["project"],
+            }
+        )
     if getattr(args, "llm", False):
         plan_stages.append(
             {
@@ -450,6 +474,10 @@ def _build_plan(args: argparse.Namespace, values: Dict[str, str]) -> Dict[str, A
         "kw_method": getattr(args, "kw_method", "yake"),
         "llm": bool(getattr(args, "llm", False)),
         "llm_config": getattr(args, "llm_config", "llm_config.txt"),
+        "teitok_enrichment": teitok_enrichment,
+        "teitok_output_dir": values.get("TEITOK_OUTPUT_DIR")
+        or (f"{output_dir}/TEITOK" if output_dir else "TEITOK"),
+        "teitok_flexiconv_dir": values.get("TEITOK_FLEXICONV_DIR", ""),
         "stage_plan": plan_stages,
         "skips": skips,
         "with_flexiconv": with_flexiconv,
@@ -631,6 +659,14 @@ def main(argv=None):
         "--strict-empty", action="store_true", help="Treat all-skipped runs as failures"
     )
     parser.add_argument("--lang", default="cs", help="Language code passed to extraction")
+    parser.add_argument(
+        "--teitok-enrichment",
+        action="store_true",
+        help="Opt-in (default off; also TEITOK_ENRICHMENT=true in the config): after the "
+        "keywords stage, project the document record's page categories and llm-enrich "
+        "categories/keywords, and this run's per-page and per-document keywords, into the "
+        "TEITOK headers (api_util/teitok_project.py, atrium-project#70).",
+    )
     parser.add_argument("--llm", action="store_true")
     parser.add_argument("--llm-config", default="llm_config.txt")
     parser.add_argument("--merged-out", default=None)
@@ -816,6 +852,7 @@ def main(argv=None):
 
             paradata, ppath = _collect_stage_paradata(paradata_dir, snapshot)
             results.append(StageResult("keywords", label, rc, paradata, ppath))
+            effective_kw_method = kw_method
 
             if rc != 0 and not args.force:
                 _finalize_merge(results, paradata_dir, args, before, skipped_names)
@@ -825,6 +862,26 @@ def main(argv=None):
                 paradata.get("statistics", {}), strict=args.strict_empty
             ):
                 empty_failures.append("keywords")
+
+    if plan["teitok_enrichment"]:
+        label = "Record projection onto TEITOK (opt-in)"
+        if plan["skips"]["project"]:
+            print(f"\n-- SKIPPED: project — {label}")
+            skipped_names.append("project")
+        else:
+            last_start = _space_stages(last_start)
+            snapshot = _snapshot_paradata_dir(paradata_dir)
+            print(f"\n=== Stage: project — {label} ===")
+            cmd = _project_command(
+                plan, args, paradata_dir, doc_json_scratch_dir, effective_kw_method
+            )
+            rc = _run_subprocess(cmd, env, _REPO_ROOT)
+            paradata, ppath = _collect_stage_paradata(paradata_dir, snapshot)
+            results.append(StageResult("project", label, rc, paradata, ppath))
+
+            if rc != 0 and not args.force:
+                _finalize_merge(results, paradata_dir, args, before, skipped_names)
+                return rc
 
     if getattr(args, "llm", False):
         if plan["skips"]["llm"]:
@@ -874,6 +931,51 @@ def main(argv=None):
         return 1
 
     return 0
+
+
+def _project_command(
+    plan: Dict[str, Any],
+    args: argparse.Namespace,
+    paradata_dir: Path,
+    record_dir: Optional[Path],
+    kw_method: str,
+) -> List[str]:
+    """The ``project`` stage: api_util/teitok_project.py over this run's TEITOK directory.
+
+    The record comes from the 'stats' stage's document-json directory when the run has one
+    (``--document-json``/``--document-json-out``); without it only this run's keywords
+    project. Statistical keywords are projected when the run extracts them (``--kw``): the
+    per-document list keywords.py wrote, and per-page lists with the same method. flexiconv's
+    own TEITOK profile (TEITOK_FLEXICONV_DIR) is left alone.
+    """
+    teitok_dir = plan["teitok_output_dir"]
+    cmd = [
+        sys.executable,
+        "-m",
+        "api_util.teitok_project",
+        "--teitok-dir",
+        teitok_dir,
+        "--in-place",
+        "--exclude",
+        plan["teitok_flexiconv_dir"] or str(Path(teitok_dir) / "flexiconv"),
+        "--paradata-dir",
+        str(paradata_dir),
+        "-l",
+        args.lang,
+    ]
+    if record_dir is not None:
+        cmd += ["--record-dir", str(record_dir)]
+    if getattr(args, "kw", False):
+        suffix = {"legacy": "L", "yake": "Y", "keybert": "KB"}.get(kw_method, kw_method.upper())
+        cmd += [
+            "--kw-method",
+            kw_method,
+            "--kw-per-doc-dir",
+            str(Path(plan["output_dir"]) / f"KW_PER_DOC_{suffix}"),
+        ]
+        if args.num_keywords is not None:
+            cmd += ["-n", str(args.num_keywords)]
+    return cmd
 
 
 def _resolve_llm_paradata_dir(llm_config_path: str, default_dir: Path) -> Path:

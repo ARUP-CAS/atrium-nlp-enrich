@@ -17,13 +17,13 @@
     "same_as_links": 13,
     "total": 1040
   },
-  "generated_utc": "2026-09-15T12:36:51Z",
+  "generated_utc": "2026-09-30T11:52:15Z",
   "generator": "vocab_build.py",
   "schema_version": 1,
   "sources": [
     {
       "endpoint": "https://api.aiscr.cz/2.2/oai",
-      "license": "CC BY-NC 4.0",
+      "license": "CC0",
       "metadata_prefix": "oai_amcr",
       "name": "amcr",
       "pages": 16,
@@ -52,5 +52,5 @@
     "path": "data_samples/taxonomy_overrides.json",
     "sha256": "b205ee82f89a0c4f4ef46962b76b719b582649772192476b033d87915461dffe"
   },
-  "tool_version": "v0.20.2"
+  "tool_version": "v0.22.0"
 }

@@ -33,6 +33,18 @@ class TestParseConfig:
         values = rp._parse_config(cfg)
         assert values["INPUT_TABLES_DIR"] == "./out/DOC_LINE_CATEG"
 
+    def test_default_form_takes_the_environment_or_the_default(self, tmp_path, monkeypatch):
+        """config_api.txt's env-overridable knobs (`TEITOK_ENRICHMENT="${TEITOK_ENRICHMENT:-false}"`)
+        were kept literally, so an exported TEITOK_ENRICHMENT=true never reached the runner."""
+        cfg = self._write(tmp_path, 'KNOB="${KNOB:-false}"\nOTHER="${UNSET_KNOB:-}"\n')
+        monkeypatch.delenv("KNOB", raising=False)
+        monkeypatch.delenv("UNSET_KNOB", raising=False)
+        assert rp._parse_config(cfg) == {"KNOB": "false", "OTHER": ""}
+        monkeypatch.setenv("KNOB", "true")
+        assert rp._parse_config(cfg)["KNOB"] == "true"
+        monkeypatch.setenv("KNOB", "")
+        assert rp._parse_config(cfg)["KNOB"] == "false"
+
     def test_comment_and_blank_lines_ignored(self, tmp_path):
         cfg = self._write(tmp_path, "# comment\n\nOUTPUT_DIR=x\n")
         values = rp._parse_config(cfg)

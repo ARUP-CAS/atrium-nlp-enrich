@@ -670,13 +670,25 @@ def test_provenance_is_empty_without_a_sidecar(tmp_path):
     assert vocabulary_provenance(str(tmp_path / "absent.json")) == {}
 
 
-def test_shipped_vocabulary_declares_both_non_commercial_sources():
+def test_shipped_vocabulary_declares_both_sources_cc0():
+    """Both sources are CC0, as their rights holder stated (atrium-project#6, comment
+    5867861653, 2026-09-28). The shipped artefact and para_config.txt must say the same:
+    the artefact's `sources` is what the vocabulary itself claims, para_config.txt is
+    what a run's effective licence is computed from."""
     from vocab_manager import vocabulary_provenance
 
     prov = vocabulary_provenance(str(_repo_root() / "data_samples" / "vocab" / "union_nested.json"))
     assert prov["components"] == ["amcr_vocab", "teater_data"]
-    assert {s["license"] for s in prov["sources"].values()} == {"CC BY-NC 4.0"}
+    assert {s["license"] for s in prov["sources"].values()} == {"CC0"}
     assert prov["taxonomy"]["config_sha256"] and prov["taxonomy"]["overrides_sha256"]
+
+    text = (_repo_root() / "para_config.txt").read_text(encoding="utf-8")
+    declared = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].split(";", 1)[0].strip()
+        for line in text.splitlines()
+        if "=" in line and not line.strip().startswith("#")
+    }
+    assert declared["amcr_vocab"] == declared["teater_data"] == "CC0"
 
 
 def test_every_paradata_component_name_is_declared_in_para_config():
