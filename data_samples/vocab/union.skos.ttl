@@ -1,7 +1,7 @@
 # ATRIUM SKOS view of the harvested source vocabularies.
 #
-# source: name=amcr records=1460 strategy=oai-pmh set=heslo endpoint=https://api.aiscr.cz/2.2/oai license=CC BY-NC 4.0
-# source: name=teater records=4134 strategy=snapshot snapshot_ref=2106c59103556731c56dc116573c4b02e1199466 endpoint=https://raw.githubusercontent.com/ARUP-CAS/aiscr-teater/2106c59103556731c56dc116573c4b02e1199466/backend/json/import_{n}.json license=CC BY-NC 4.0
+# source: name=amcr records=1460 strategy=oai-pmh set=heslo endpoint=https://api.aiscr.cz/2.2/oai license=CC0
+# source: name=teater records=4134 strategy=snapshot snapshot_ref=2106c59103556731c56dc116573c4b02e1199466 endpoint=https://raw.githubusercontent.com/ARUP-CAS/aiscr-teater/2106c59103556731c56dc116573c4b02e1199466/backend/json/import_{n}.json license=CC0
 #
 # Concept URIs are the sources' own; see skos_triples() for what is asserted.
 
@@ -60786,11 +60786,11 @@
     skos:prefLabel "sedimentologische Forschung (e)"@de .
 
 <https://w3id.org/atrium/scheme/amcr-harvest> dct:description "ATRIUM's harvested view of the AMCR controlled lists (heslare), gathered over OAI-PMH. The concepts are AMCR's and keep their own api.aiscr.cz identifiers; this scheme describes the harvest, which is ATRIUM's artifact."@en ;
-    dct:license <https://creativecommons.org/licenses/by-nc/4.0/> ;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dct:title "ATRIUM harvest of the AMCR heslar"@en ;
     rdf:type skos:ConceptScheme .
 
 <https://w3id.org/atrium/scheme/teater-harvest> dct:description "ATRIUM's harvested view of TEATER, the Thesaurus of Archaeological Terminology. The concepts are TEATER's and keep their own teater.aiscr.cz identifiers; this scheme describes the harvest."@en ;
-    dct:license <https://creativecommons.org/licenses/by-nc/4.0/> ;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dct:title "ATRIUM harvest of TEATER"@en ;
     rdf:type skos:ConceptScheme .
