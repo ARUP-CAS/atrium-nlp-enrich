@@ -1476,7 +1476,9 @@ runner harvests and uploads the artifacts.
 
 Two read-only tools turn the built vocabulary into sheets a domain reviewer can rule on.
 Neither writes to the vocabulary, and neither guesses a semantic verdict — they rank and
-surface candidates; a human decides, and the decision goes back as a config edit.
+surface candidates; a human decides, and the decision goes back as a config edit. Both run from a
+checkout and are left out of the published images (`.dockerignore`,
+[atrium-project#72](https://github.com/ufal/atrium-project/issues/72)).
 
 [`vocab_review.py`](vocab_review.py) 📎 — **eight sheets, offline and pure**, built from
 the committed `*_flat.json` plus the taxonomy config:

@@ -51,3 +51,7 @@ jobs:
       # `base` and `llm` are batch CLIs — probing either would fail an image that is
       # behaving exactly as intended.
       probe-targets: '["api"]'
+      # atrium-project#72: `api` is this stage's production image, the one AMČR pins; its
+      # first-party files are declared in .github/production-image.json and checked by
+      # workflow-lint. `base` (run_pipeline.py) and `llm` are batch targets: published, never
+      # pinned; `llm` leaves with the keyword code (#40).

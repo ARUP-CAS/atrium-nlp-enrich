@@ -468,6 +468,14 @@ released yet: v0.22.0 is suggested in `CONTRIBUTING.md`.
 
   **Not pushed: files delivered in chat.**
 
+## 2026-09-30 — atrium-project#72 round 1: the production image declared; review tools off the images
+* `.github/production-image.json` (the `api` target: the service, `run_pipeline.py`, the `api_*.sh` scripts and the
+  `api_util/*.py` they run; the keyword/LLM files as `moving` rows until #40 takes them out), checked by the hub's
+  `tools/ci/image_closure.py`.
+* `.dockerignore` keeps `corpus_review.py` and `vocab_review.py` out of the images (unreached by every entrypoint);
+  README notes they run from a checkout. `docker.yml` names `api` as the production target.
+* Revendored the three declared-rename files. Tag draft: `v0.23.0`. **Not pushed: files delivered in chat.**
+
 ---
 _Timeline index refreshed 2026-09-26 (AMČR baseline entry and header); 2026-09-24 (round 4) against `test` HEAD `3654e73` and again after the push (round 5) against `8003051`, using the `CONTRIBUTING.md` changelog, commit
 subjects, the issue exports in `issues/`, GitHub Actions runs and tags, and the TEITOK/flexi* audit. Nothing removed from the issues themselves (per hub #29);
